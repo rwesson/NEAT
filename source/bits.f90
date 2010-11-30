@@ -50,7 +50,7 @@ subroutine fileread(optical, infrared, ultraviolet, filename1, filename2, filena
         INTEGER :: I
                 
         if(filename1 .ne. "          ")then
-                temp1 = readfile(filename1)
+		temp1 = readfile(filename1)
                 call w_assign(optical, infrared, ultraviolet, temp1, message)
                 PRINT*, message, filename1
         endif
@@ -85,13 +85,13 @@ function readfile(filename)
         DOUBLE PRECISION :: temp,temp2,temp3
 
         I = 1
-        OPEN(202, file=filename, iostat=IO, status='old')
+        OPEN(199, file=filename, iostat=IO, status='old')
                 DO WHILE (IO >= 0)
-                        READ(202,*,end=110) temp, temp2, temp3
+                        READ(199,*,end=110) temp, temp2, temp3
                         readfile(:,I) =  (/ temp, temp2, temp3 /) 
                         I = I + 1
                 END DO
-        CLOSE(202)
+        CLOSE(199)
 
         110 PRINT*, "Reached end of file, I = ", I
                 
@@ -102,7 +102,6 @@ subroutine w_assign(optical, infrared, ultraviolet, temp, message)
         CHARACTER*20 :: message 
                 
         if(temp(1,1) < 100)then
-                
                 infrared = temp
                 infrared(1,:) = infrared(1,:) * 10000 !converting microns to angstroms
                 message = "file = infrared"
@@ -132,12 +131,13 @@ contains
 
 !this fantastically ugly function gets the location of certain ions in the important ions array using their name as a key.
 
-integer function get_ion(ionname, iontable)
+integer function get_ion(ionname, iontable, Iint)
         CHARACTER*11 :: ionname
         TYPE(line), DIMENSION(51) :: iontable 
         INTEGER :: i
+	INTEGER, INTENT(IN) :: Iint
         
-        do i = 1, 51
+        do i = 1, Iint
                 
                 !PRINT*, trim(iontable(i)%name), trim(ionname)
                 
@@ -308,10 +308,10 @@ double precision function flambda(X,switch)
 
 end function        
 
-subroutine deredden(lines, number, m_ext)
+subroutine deredden(lines, number, m_ext, cerror)
         TYPE(line), DIMENSION(:) :: lines
         INTEGER :: number
-        DOUBLE PRECISION :: m_ext, fl
+        DOUBLE PRECISION :: m_ext, fl, cerror
         INTEGER :: i
         
         do i = 1,number
@@ -321,27 +321,38 @@ subroutine deredden(lines, number, m_ext)
                 if( (lines(i)%freq .gt. 7.14) .AND. (lines(i)%freq .lt. 10.0))then !far UV
                         fl = flambda(lines(i)%freq, 1)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
-                elseif((lines(i)%freq .gt. 3.65) .AND. (lines(i)%freq .lt. 7.14))then ! mid UV
+                        lines(i)%int_dered_err = ((lines(i)%int_err / lines(i)%intensity)**2 + (log(10.0)*cerror*fl)**2)**0.5
+		
+		elseif((lines(i)%freq .gt. 3.65) .AND. (lines(i)%freq .lt. 7.14))then ! mid UV
                         fl = flambda(lines(i)%freq, 2)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
-                elseif((lines(i)%freq .gt. 2.75) .AND. (lines(i)%freq .lt. 3.65))then ! near UV
+                        lines(i)%int_dered_err = ((lines(i)%int_err / lines(i)%intensity)**2 + (log(10.0)*cerror*fl)**2)**0.5
+		
+		elseif((lines(i)%freq .gt. 2.75) .AND. (lines(i)%freq .lt. 3.65))then ! near UV
                         fl = flambda(lines(i)%freq, 3)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
-                elseif((lines(i)%freq .gt. 1.83) .AND. (lines(i)%freq .lt. 2.75))then ! optical
+                        lines(i)%int_dered_err = ((lines(i)%int_err / lines(i)%intensity)**2 + (log(10.0)*cerror*fl)**2)**0.5
+		
+		elseif((lines(i)%freq .gt. 1.83) .AND. (lines(i)%freq .lt. 2.75))then ! optical
                         fl = flambda(lines(i)%freq, 4)
-                        lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
-                elseif(lines(i)%freq .lt. 1.83)then !IR
+                        
+			lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
+                        lines(i)%int_dered_err = ((lines(i)%int_err / lines(i)%intensity)**2 + (log(10.0)*cerror*fl)**2)**0.5
+		
+		elseif(lines(i)%freq .lt. 1.83)then !IR
                         fl = flambda(lines(i)%freq, 5)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
-                endif
+                        lines(i)%int_dered_err = ((lines(i)%int_err / lines(i)%intensity)**2 + (log(10.0)*cerror*fl)**2)**0.5
+		
+		endif
                 
         end do
 
 end subroutine
 
-subroutine deredden_O(O_red, O_dered, m_ext )
+subroutine deredden_O(O_red, O_dered, m_ext, cerror)
         REAL*8, DIMENSION(3,335) :: O_red, O_dered
-        DOUBLE PRECISION :: m_ext, fl
+        DOUBLE PRECISION :: m_ext, fl, cerror
         INTEGER :: I
         REAL*8 :: X
 
@@ -349,13 +360,13 @@ subroutine deredden_O(O_red, O_dered, m_ext )
             X =  DBLE(DBLE(10000)/DBLE(O_red(1,I)))
             if (X .lt. 1.83) then 
                 fl = flambda(X, 5) 
-                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)), O_red(3,I)*(10**(m_ext*fl)) /)
+                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)), ((O_red(3,I)/O_red(2,I))**2 + (log(10.0)**(cerror*fl) )**2)**0.5 /)
             elseif (X .gt. 1.83 .and. X .lt. 2.75) then
                 fl = flambda(X, 4)
-                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)), O_red(3,I)*(10**(m_ext*fl)) /)
-            elseif (X .gt. 2.75 .and. X .lt. 3.63) then
+                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)), O_red(3,I)*(10**(m_ext*fl) ) /)
+	    elseif (X .gt. 2.75 .and. X .lt. 3.63) then
                 fl = flambda(X, 3)
-                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)), O_red(3,I)*(10**(m_ext*fl)) /)
+                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)), O_red(3,I)*(10**(m_ext*fl) ) /)
             endif 
         end do
 

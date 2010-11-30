@@ -2,7 +2,7 @@
       contains
 
       subroutine get_helium(TEh2,NEh2,IHeII4686,IHeI4471,IHeI5876,      &
-     & IHeI6678,abheii,abheiii,Hetotabund)
+     & IHeI6678,abheii,abheiii,Hetotabund,Abb4471,Abb4686,Abb6678,Abb5876)
 
       IMPLICIT NONE
       REAL GAMM4861_v,GAMM4686_v,GAMM4471_v,GAMM5876_v,GAMM6678_v,      &
@@ -12,7 +12,9 @@
      & IHeII6683,AB4686,AB4471,AB5876,AB6678,ABHeII,ABHeIII,hetotabund
       integer flag1,flag2
       character*10 tech, nech, i4686ch,i4471ch,i5876ch,i6678ch
-
+	
+      double precision :: Abb4471, Abb4686, Abb6678, Abb5876
+      
       INTEGER IODATA
       CHARACTER*20 ODATA
 
@@ -28,21 +30,35 @@
       TEh2=TEh2/10000.
 
       D=1.+3130.*TEh2**(-0.50)/NEh2
-      C4471=(6.95*TEh2**(0.15)*exp(-4.545/TEh2) +                     &
-     &  0.22*TEh2**(-0.55)*exp(-4.884/TEh2))/D
-      C5876=(6.78*TEh2**(0.07)*exp(-3.776/TEh2) +                     &
-     &  1.67*TEh2**(-0.15)*exp(-4.545/TEh2) +                         &
-     &  0.60*TEh2**(-0.34)*exp(-4.901/TEh2))/D
-      C6678=(3.15*TEh2**(-0.54)*exp(-3.776/TEh2) +                    &
-     &  0.51*TEh2**(-0.51)*exp(-4.545/TEh2) +                         &
-     &  0.20*TEh2**(-0.66)*exp(-4.901/TEh2))/D
+      C4471=(  6.95*TEh2**(0.15)*exp(-4.545/TEh2)  + 0.22*TEh2**(-0.55)*exp(-4.884/TEh2)  )/D
+      C5876=(  6.78*TEh2**(0.07)*exp(-3.776/TEh2)  + 1.67*TEh2**(-0.15)*exp(-4.545/TEh2) + 0.60*TEh2**(-0.34)*exp(-4.901/TEh2)  )/D
+      C6678=(  3.15*TEh2**(-0.54)*exp(-3.776/TEh2) + 0.51*TEh2**(-0.51)*exp(-4.545/TEh2) + 0.20*TEh2**(-0.66)*exp(-4.901/TEh2)  )/D
 
            AB4686=IHeII4686/100.*A4686
            AB4471=IHeI4471/100.*A4471/(1.+C4471)
            AB5876=IHeI5876/100.*A5876/(1.+C5876)
            AB6678=IHeI6678/100.*A6678/(1.+C6678)
 
-           ABHeII=(AB4471+AB5876*3+AB6678)/5
+	   Abb4471 = AB4471
+	   Abb4686 = AB4686
+	   Abb6678 = AB6678
+	   Abb5876 = AB5876  
+           !ABHeII=(AB4471+AB5876*3+AB6678)/5
+	   
+	   if( (AB4471 > 0 .AND. AB6678 > 0) .AND. AB5876 > 0)then
+	   	ABHeII = ( AB4471 + AB6678 + AB5876*3 )/5
+	   elseif((AB4471 > 0 .and. AB6678 > 0) .AND. AB5876 == 0 )then
+	   	ABHeII = ( AB4471 + AB6678)/2
+	   elseif((AB6678 > 0 .and. AB4471 == 0) .AND. AB5876 == 0)then	
+	   	ABHeII = AB6678	
+	   elseif((AB6678 == 0 .and. AB4471 > 0) .AND. AB5876 == 0)then	
+	   	ABHeII = AB4471	
+	   elseif((AB6678 == 0 .and. AB4471 == 0) .AND. AB5876 > 0)then	
+	   	ABHeII = AB5876	
+	   else
+	   	ABHeII = 0
+	   endif		      
+	   
            ABHeIII=AB4686
 
            hetotabund = ABHeII+ABHeIII

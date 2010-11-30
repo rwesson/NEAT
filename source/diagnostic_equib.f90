@@ -93,15 +93,20 @@
 !      read(inratioch,*) inratio
 !      read(fixedqch,*) fixedq
 
-      do i = 1,ndim2 
-          g(i)=0 
-          do j = 1, 2 
-             itrana(j,i)=0 
-             itranb(j,i)=0 
-             itranc(j,i)=0 
-          enddo 
-      enddo 
+     ! do i = 1,ndim2 
+     !     g(i)=0 
+     !     do j = 1, 2 
+     !        itrana(j,i)=0 
+     !        itranb(j,i)=0 
+     !        itranc(j,i)=0 
+     !     enddo 
+     ! enddo 
 
+      g=0
+      itrana=0
+      itranb=0
+      itranc=0
+      
       READ(levu,*) ((ITRANA(LL,KK),LL=1,2),KK=1,150)
       READ(levl,*) ((ITRANB(LL,KK),LL=1,2),KK=1,150)
                                                                         
@@ -255,16 +260,23 @@
           TLOGT = LOG10 (TEMP) 
           TEMP2= SQRT (TEMP) 
                                                                  !Form 
-          DO I = 1, NDIM2 
-            DO J = 1, NDIM2 
-              X(I,J) = 0.D0 
-              CS(I,J)=0.D0 
-              QEFF(I,J)=0.D0 
-              TNIJ(I,J)=0.D0 
-            ENDDO 
-            Y(I) = 0.D0 
-          ENDDO 
-          IOPT=0 
+         ! DO I = 1, NDIM2 
+         !   DO J = 1, NDIM2 
+         !     X(I,J) = 0.D0 
+         !     CS(I,J)=0.D0 
+         !     QEFF(I,J)=0.D0 
+         !     TNIJ(I,J)=0.D0 
+         !   ENDDO 
+         !   Y(I) = 0.D0 
+         ! ENDDO 
+          
+	  X=0.0
+	  CS=0.0
+	  QEFF=0.0
+	  TNIJ=0.0
+	  Y=0.0
+	  
+	  IOPT=0 
           IF (NTEMP.EQ.1) THEN 
             WRITE (6,*) 
             WRITE (6,*)                                                 &
@@ -486,6 +498,8 @@
       endif
 !      print 1000,valtest(1:2)
 
+	DEALLOCATE(RESULTS) !thanks Bruce!
+      
       RETURN
 
  1000 FORMAT(1X,T4,F5.0,T32,F5.0)
@@ -539,6 +553,8 @@
  6100 FORMAT (' PROCESSING COMPLETED'/                                  &
      & ' GOODBYE!!'///)                                                 
  7000 FORMAT (4(2I4,2X,1PE10.3)) 
+      
+      
       END subroutine get_diagnostic                 
 !                                                                       
 !---- PROC LUSLV                                                        

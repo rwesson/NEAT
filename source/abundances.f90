@@ -1,5 +1,5 @@
 !INPUT: CALL ./PROGRAM OPTICAL.DAT IR.DAT UV.DAT
-program abundances
+subroutine abundances(fname1, fname2, fname3, run)
 use mod_abundmaths
 use mod_abundtypes
 use mod_diagnostics
@@ -10,20 +10,21 @@ use mod_recombination_lines
 
 implicit none
 
-        INTEGER :: count, Iint, fIL, i, j, ion_no1, ion_no2, ion_no3, ion_no4
-        INTEGER :: opt
-        CHARACTER*80 :: fname1, fname2, fname3, fnameIL, blank
+        INTEGER :: count, Iint, fIL, i, j, ion_no1, ion_no2, ion_no3, ion_no4, iii, ion_no5, ion_no6
+        INTEGER :: opt, runonce, run
+        CHARACTER*80, INTENT(IN) :: fname1, fname2, fname3
+	CHARACTER*80 :: fnameIL, blank
         CHARACTER*8 :: lion
-        DOUBLE PRECISION :: normalise, oiiNratio, oiiDens, oiiiTratio, oiiiTemp, oiiiIRNratio, oiiiIRTratio, niiTratio, niiTemp, arivNratio, arivDens, cliiiNratio, cliiiDens, siiNratio, siiDens, siiTratio, siiTemp, oiiTratio, oiiTemp, neiiiTratio, neiiiIRTratio, neiiiTemp, neiiiIRTemp, abund, meandensity, meantemp
-        DOUBLE PRECISION :: ciiiNratio,neivNratio,nevTratio,siiiTratio,ariiiTratio,arvTratio,lowtemp,lowdens,medtemp,ciiidens,meddens,siiitemp,ariiitemp,hightemp,neivdens,highdens,arvtemp,nevtemp
+        DOUBLE PRECISION :: normalise, oiiNratio, oiiDens, oiiiTratio, oiiiTemp, oiiiIRNratio, oiiiIRTratio, niiTratio, niiTemp, arivNratio, arivDens, cliiiNratio, cliiiDens, siiNratio, siiDens, siiTratio, siiTemp, oiiTratio, oiiTemp, neiiiTratio, neiiiIRTratio, neiiiTemp, neiiiIRTemp, abund, meandensity, meantemp, oitemp, citemp
+        DOUBLE PRECISION :: ciiiNratio,neivNratio,nevTratio,siiiTratio,ariiiTratio,arvTratio,lowtemp,lowdens,medtemp,ciiidens,meddens,siiitemp,ariiitemp,hightemp,neivdens,highdens,arvtemp,nevtemp,oiTratio,ciTratio
         DOUBLE PRECISION :: oiiRLabund, niiRLabund, ciiRLabund, cii4267rlabund, neiiRLabund, ciiiRLabund, niiiRLabund, RLabundtemp, weight
-        DOUBLE PRECISION :: ciiiCELabund, niiCELabund, niiiIRCELabund, niiiUVCELabund, oiiCELabund, oiiiCELabund, oiiiIRCELabund, neiiIRCELabund, neiiiIRCELabund, neiiiCELabund, neivCELabund, siiCELabund, siiiCELabund, siiiIRCELabund, sivIRCELabund, cliiiCELabund, ariiiCELabund, arivCELabund, ariiiIRCELabund, nivCELabund, niCELabund, niiiCELabund, ciiCELabund, civCELabund, nvCELabund, nevCELabund, arvCELabund, CELabundtemp
+        DOUBLE PRECISION :: ciiiCELabund, niiCELabund, niiiIRCELabund, niiiUVCELabund, oiiCELabund, oiiiCELabund, oiiiIRCELabund, neiiIRCELabund, neiiiIRCELabund, neiiiCELabund, neivCELabund, siiCELabund, siiiCELabund, siiiIRCELabund, sivIRCELabund, cliiiCELabund, ariiiCELabund, arivCELabund, ariiiIRCELabund, nivCELabund, niCELabund, niiiCELabund, ciiCELabund, civCELabund, nvCELabund, nevCELabund, arvCELabund, CELabundtemp, ciCELabund, oiCELabund
         DOUBLE PRECISION :: CELicfO, CELicfC, CELicfN, CELicfNe, CELicfAr, CELicfS
         DOUBLE PRECISION :: RLicfO, RLicfC, RLicfN, RLicfNe
-        DOUBLE PRECISION :: CabundRL, CabundCEL, NabundRL, NabundCEL, OabundRL, OabundCEL, NeabundRL, NeabundCEL, SabundCEL, ArabundCEL
+        DOUBLE PRECISION :: CabundRL, CabundCEL, NabundRL, NabundCEL, OabundRL, OabundCEL, NeabundRL, NeabundCEL, SabundCEL, ArabundCEL, NOabundCEL, NCabundCEL
         DOUBLE PRECISION :: adfC, adfN, adfO, adfNe
         DOUBLE PRECISION :: adfC2plus, adfN2plus, adfO2plus, adfNe2plus
-        DOUBLE PRECISION :: c1, c1_err, c2, c2_err, c3, c3_err, meanextinction, cerror, fl, ratob, tempi, temp, temp2
+        DOUBLE PRECISION :: c1, c1_err, c2, c2_err, c3, c3_err, meanextinction, cerror, fl, ratob, tempi, temp, temp2, A4471, A4686, A6678, A5876
         REAL :: heiabund,heiiabund,Hetotabund
         REAL*8 :: HW
                 
@@ -31,7 +32,7 @@ implicit none
         REAL*8, DIMENSION(3,335) :: O, IR, UV, O_dered
         REAL*8 :: result       
  
-        TYPE(line), DIMENSION(51) :: ILs
+        TYPE(line), DIMENSION(62) :: ILs
         TYPE(line), DIMENSION(4) :: H_BS
         TYPE(line), DIMENSION(4) :: He_lines
 
@@ -50,11 +51,10 @@ implicit none
 
         O = 0
 
+	!runonce = 1 !allows printing of supplementary files
+	runonce = run !suppresses supplementary files and enables monte-carlo error estimation
+	
         !file reading stuff
-        
-        CALL getarg(1,fname1) 
-        CALL getarg(2,fname2)
-        CALL getarg(3,fname3)
 
         !reading in Rogers "important" lines list 
         
@@ -105,10 +105,29 @@ implicit none
 
         !actual dereddening
 
-        CALL deredden(ILs, Iint, meanextinction)
-        CALL deredden(H_BS, 4, meanextinction) 
-        call deredden(He_lines, 4, meanextinction) 
-        CALL deredden_O(O, O_dered, meanextinction)
+        CALL deredden(ILs, Iint, meanextinction, cerror)
+        CALL deredden(H_BS, 4, meanextinction, cerror) 
+        call deredden(He_lines, 4, meanextinction, cerror) 
+        CALL deredden_O(O, O_dered, meanextinction, cerror)
+	
+	500 FORMAT (5(f10.4))
+	if(runonce == 1) OPEN(801, FILE=trim(fname1)//"_dered", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+	!WRITE(801,'(A40)') "sjfnb;ashfb"
+	if(runonce == 1)then
+		do iii=1, Iint
+	
+			if(ILs(iii)%int_dered .ne. 0) write(801,500) ILs(iii)%wavelength, ILs(iii)%intensity, ILs(iii)%int_err, ILs(iii)%int_dered, ILs(iii)%int_dered_err*ILs(iii)%int_dered
+	
+			if(( He_lines(iii)%int_dered .ne. 0) .and. iii < 5 ) write(801,500) He_lines(iii)%wavelength, He_lines(iii)%intensity, He_lines(iii)%int_err, He_lines(iii)%int_dered, He_lines(iii)%int_dered_err*He_lines(iii)%int_dered
+	
+			if(( H_BS(iii)%int_dered .ne. 0) .and. iii < 5) write(801,500) H_BS(iii)%wavelength, H_BS(iii)%intensity, H_BS(iii)%int_err, H_BS(iii)%int_dered, H_BS(iii)%int_dered_err*H_BS(iii)%int_dered
+		end do
+	endif	
+	if(runonce == 1) CLOSE(801)
+
+	if(runonce == 1) call system("sort "//trim(fname1)//"_dered > "//trim(fname1)//"_dered_sort")
+	if(runonce == 1) call system("rm "//trim(fname1)//"_dered")
+		
 
 !diagnostics
         call get_diag("ciii1909   ","ciii1907   ", ILs, ciiiNratio)	! ciii ratio   
@@ -124,29 +143,60 @@ implicit none
         CALL get_Tdiag("neiii3868  ","neiii3967  ","neiii3342  ", ILs, DBLE(1.3013), DBLE(4.319), neiiiTratio)	! Ne III
         CALL get_Tdiag("neiii3868  ","neiii3967  ","neiii15p5um", ILs, DBLE(1.3013), DBLE(4.319), neiiiIRTratio)! Ne III ir
         CALL get_Tdiag("nev3426    ","nev3345    ","nev2975    ", ILs, DBLE(1.3571), DBLE(3.800), nevTratio)	!!ne v
-        CALL get_Tdiag("siii9069   ","siii9531   ","siii6312   ", ILs, DBLE(6.685), DBLE(1.176), siiiTratio)	!s iii
+        CALL get_Tdiag("siii9069   ","siii9531   ","siii6312   ", ILs, DBLE(3.47), DBLE(1.403), siiiTratio)	!s iii
         CALL get_Tdiag("ariii7135  ","ariii7751  ","ariii5192  ",ILs, DBLE(1.24), DBLE(5.174), ariiiTratio)	!ar iii
         CALL get_Tdiag("arv6435    ","arv7005    ","arv4625    ",ILs, DBLE(3.125), DBLE(1.471), arvTratio)	!ar v
+        CALL get_Tdiag("ci9850     ","ci9824     ","ci8727     ",ILs, DBLE(1.337), DBLE(3.965), ciTratio)      !C I
+	CALL get_Tdiag("oi6364     ","oi6300     ","oi5577     ",ILs, DBLE(4.127), DBLE(1.320), oiTratio)      !O I
+
+
 
 ! O II
 
-      ion_no1 = get_ion("oii7319    ",ILs)
-      ion_no2 = get_ion("oii7330    ",ILs)
-      ion_no3 = get_ion("oii3726    ",ILs)
-      ion_no4 = get_ion("oii3729    ",ILs)
 
-      if (ion_no1 .gt. 0 .and. ion_no2 .gt. 0 .and. ion_no3 .gt. 0 .and. ion_no4 .gt. 0) then
-           oiiTratio = (ILs(ion_no1)%int_dered+ILs(ion_no2)%int_dered)/(ILs(ion_no3)%int_dered+ILs(ion_no4)%int_dered) 
+
+	if(ILs(get_ion("oii7319b    ",ILs, Iint))%int_dered > 0) then
+
+		ion_no1 = get_ion("oii7319b    ",ILs, Iint)
+		ion_no2 = get_ion("oii7330b    ",ILs, Iint)
+		ion_no3 = get_ion("oii3726    ",ILs, Iint)
+		ion_no4 = get_ion("oii3729    ",ILs, Iint)
+		
+		
+      
+		if (ion_no1 .gt. 0 .and. ion_no2 .gt. 0 .and. ion_no3 .gt. 0 .and. ion_no4 .gt. 0) then
+			oiiTratio = (ILs(ion_no1)%int_dered+ILs(ion_no2)%int_dered)/(ILs(ion_no3)%int_dered+ILs(ion_no4)%int_dered) 
+		else
+			oiiTratio = 0.0
+		endif
+
+       elseif(ILs(get_ion("oii7319     ",ILs, Iint))%int_dered > 0)then
+       
+		ion_no1 = get_ion("oii7319    ",ILs, Iint)
+		ion_no2 = get_ion("oii7320    ",ILs, Iint)
+		ion_no3 = get_ion("oii7330    ",ILs, Iint)
+		ion_no4 = get_ion("oii7331    ",ILs, Iint)	
+		ion_no5 = get_ion("oii3726    ",ILs, Iint)
+		ion_no6 = get_ion("oii3729    ",ILs, Iint)       
+ 		
+		if (ion_no1 .gt. 0 .and. ion_no2 .gt. 0 .and. ion_no3 .gt. 0 .and. ion_no4 .gt. 0 .and. ion_no5 .gt. 0 .and. ion_no6 .gt. 0) then
+			oiiTratio = ((ILs(ion_no1)%int_dered+ILs(ion_no2)%int_dered)+(ILs(ion_no3)%int_dered+ILs(ion_no4)%int_dered))/(ILs(ion_no5)%int_dered+ILs(ion_no6)%int_dered) 
+		else
+			oiiTratio = 0.0
+		endif      
+		
+		
+		
        else
-           oiiTratio = 0.0
+       		PRINT*, "OII missing"
        endif
-
+       
 ! S II
 
-      ion_no1 = get_ion("sii6716    ",ILs)
-      ion_no2 = get_ion("sii6731    ",ILs)
-      ion_no3 = get_ion("sii4068    ",ILs)
-      ion_no4 = get_ion("sii4076    ",ILs)
+      ion_no1 = get_ion("sii6716    ",ILs, Iint)
+      ion_no2 = get_ion("sii6731    ",ILs, Iint)
+      ion_no3 = get_ion("sii4068    ",ILs, Iint)
+      ion_no4 = get_ion("sii4076    ",ILs, Iint)
 
       if (ion_no1 .gt. 0 .and. ion_no2 .gt. 0 .and. ion_no3 .gt. 0 .and. ion_no4 .gt. 0) then
            siiTratio = (ILs(ion_no1)%int_dered+ILs(ion_no2)%int_dered)/(ILs(ion_no3)%int_dered+ILs(ion_no4)%int_dered) 
@@ -183,32 +233,82 @@ implicit none
          if (oiiTratio .gt. 0 .and. oiiTratio .lt. 1e10) then
            call get_diagnostic("oii       ","2,4,2,5,3,4,3,5/    ","1,2,1,3/            ",oiiTratio,"T",lowdens,oiiTemp)
            count = count + 1
-         else
+         	if(oiitemp == 20000)then
+			count=count-1
+			oiitemp=0.1
+	 	endif 
+	 
+	 else
            oiiTemp = 0.0
          endif
          if (siiTratio .gt. 0 .and. siiTratio .lt. 1e10) then
            call get_diagnostic("sii       ","1,2,1,3/            ","1,4,1,5/            ",siiTratio,"T",lowdens,siiTemp)
            count = count + 1
-         else
+        	 
+		if(siitemp == 20000)then
+			count=count-1
+			siitemp=0.1
+	 	endif 
+	 
+	 else
            siiTemp = 0.0
          endif
          if (niiTratio .gt. 0 .and. niiTratio .lt. 1e10) then
            call get_diagnostic("nii       ","2,4,3,4/            ","4,5/                ",niiTratio,"T",lowdens,niitemp)
            count = count + 5
-         else
+         
+	 	if(niitemp == 20000)then
+			print*, niitemp
+			count=count-1
+			niitemp=0.1
+	 	endif 
+	 
+	 else
            niitemp = 0.0
          endif
-
-         if (count .gt. 0) then 
-           lowtemp = ((5*niitemp) + siitemp + oiitemp) / count
+	
+	 if (ciTratio .gt. 0 .and. ciTratio .lt. 1e10) then
+           call get_diagnostic("ci        ","2,4,3,4/            ","4,5/                ",ciTratio,"T",lowdens,citemp)
+           count = count + 1
+         	 
+		if(citemp == 20000)then
+			count=count-1
+			citemp=0.1
+	 	endif 
+	  
+	  else
+           citemp = 0.0
+         endif
+	 
+ 	 if (oiTratio .gt. 0 .and. oiTratio .lt. 1e10) then
+           call get_diagnostic("oi        ","1,4,2,4/            ","4,5/                ",oiTratio,"T",lowdens,oitemp)
+           count = count + 1
+         
+	 if(oitemp == 20000)then
+	 	count=count-1
+	 	oitemp=0.1
+	 endif
+	 else
+           oitemp = 0.0
+         endif	 
+         
+	 if (count .gt. 0) then 
+           lowtemp = ((5*niitemp) + siitemp + oiitemp + oitemp + citemp) / count
          else
            lowtemp = 10000.0
          endif
 
       enddo
 
+
+      
 ! medium ionisation
 
+	cliiiDens = 0
+	ciiiDens = 0
+	arivDens = 0
+	
+	
       medtemp = 10000.0
 
       do i = 1,2
@@ -216,15 +316,16 @@ implicit none
          count = 0
          if (cliiiNratio .gt. 0 .and. cliiiNratio .lt. 1e10) then
            call get_diagnostic("cliii     ","1,2/                ","1,3/                ",cliiiNratio,"D",medtemp, cliiiDens)
-           count = count + 1
+
+	   count = count + 1
          endif
          if (ciiiNratio .gt. 0 .and. ciiiNratio .lt. 1e10) then
            call get_diagnostic("ciii      ","1,2/                ","1,3/                ",ciiiNratio,"D",medtemp, ciiiDens)
-           count = count + 1
+	   count = count + 1
          endif
          if (arivNratio .gt. 0 .and. arivNratio .lt. 1e10) then
            call get_diagnostic("ariv      ","1,2/                ","1,3/                ",arivNratio,"D",medtemp, arivDens)
-           count = count + 1
+	   count = count + 1
          endif
 
          if (count .eq. 0) then
@@ -238,28 +339,45 @@ implicit none
          if (oiiiTratio .gt. 0 .and. oiiiTratio .lt. 1e10) then
            call get_diagnostic("oiii      ","2,4,3,4/            ","4,5/                ",oiiiTratio,"T",meddens,oiiiTemp)
            count = count + 4
-         else
+         	if(oiiitemp == 20000)then
+	 		count=count-4
+	 		oiiitemp=0.1
+	 	endif
+	 
+	 else
            oiiiTemp = 0.0
          endif
          if (siiiTratio .gt. 0 .and. siiiTratio .lt. 1e10) then
            call get_diagnostic("siii      ","2,4,3,4/            ","4,5/                ",siiiTratio,"T",meddens,siiiTemp)
            count = count + 1
-         else
+                if(siiitemp == 20000)then
+	 		count=count-1
+	 		siiitemp=0.1
+	 	endif
+	 else
            siiiTemp = 0.0
          endif
          if (ariiiTratio .gt. 0 .and. ariiiTratio .lt. 1e10) then
            call get_diagnostic("ariii     ","1,4,2,4/            ","4,5/                ",ariiiTratio,"T",meddens,ariiitemp)
            count = count + 2
-         else
+         	if(ariiitemp == 20000)then
+	 		count=count-2
+	 		ariiitemp=0.1
+	 	endif
+	 else
            ariiitemp = 0.0
          endif
          if (neiiiTratio .gt. 0 .and. neiiiTratio .lt. 1e10) then
            call get_diagnostic("neiii     ","1,4,2,4/            ","4,5/                ",neiiiTratio,"T",meddens,neiiitemp)
            count = count + 2
-         else
+        	if(neiiitemp == 20000)then
+	 		count=count-2
+	 		neiiitemp=0.1
+	 	endif
+	 
+	 else
            neiiitemp = 0.0
          endif
-print *,""
          if (count .gt. 0) then
            medtemp = (4*oiiitemp + siiitemp + 2*ariiitemp + 2*neiiitemp) / count
          else
@@ -268,6 +386,8 @@ print *,""
 
       enddo
 
+           
+      
 ! high ionisation
 
       hightemp = medtemp
@@ -314,36 +434,94 @@ print *,""
 
       print *,"Diagnostic       Zone      Value"
       print *,""
-      print "(A28,F8.0)","[O II] density   Low       ",oiidens
-      print "(A28,F8.0)","[S II] density   Low       ",siidens
-      print "(A28,F8.0)","   adopted       Low       ",lowdens
-      print *,""
+if(oiidens >0)     print "(A28,F8.0)","[O II] density   Low       ",oiidens
+if(siidens >0)     print "(A28,F8.0)","[S II] density   Low       ",siidens
+if(lowdens >0)     print "(A28,F8.0)"," density adopted Low       ",lowdens
+if(lowdens >0)     print *,""
 
-      print "(A28,F8.0)","[N II] temp      Low       ",niitemp
-      print "(A28,F8.0)","[O II] temp      Low       ",oiitemp
-      print "(A28,F8.0)","[S II] temp      Low       ",siitemp
-      print "(A28,F8.0)","   adopted       Low       ",lowtemp
-      print *,""
 
-      print "(A28,F8.0)","[Cl III] density Medium    ",cliiidens
-      print "(A28,F8.0)","[Ar IV] density  Medium    ",arivdens
-      print "(A28,F8.0)","C III] density   Medium    ",ciiidens
-      print "(A28,F8.0)","   adopted       Medium    ",meddens
-      print *,""
 
-      print "(A28,F8.0)","[O III] temp     Medium    ",oiiitemp
-      print "(A28,F8.0)","[Ne III] temp    Medium    ",neiiitemp
-      print "(A28,F8.0)","[Ar III] temp    Medium    ",ariiitemp
-      print "(A28,F8.0)","[S III] temp     Medium    ",siiitemp
-      print "(A28,F8.0)","   adopted       Medium    ",medtemp
-      print *,""
+if(niitemp > 0.2)then
+	           print "(A28,F8.0)","[N II] temp      Low       ",niitemp 
+else if(niitemp == 0.1)then
+	           print "(A28,F8.0)","[N II] temp      Low       ",20000.0
+else
 
-      print "(A28,F8.0)","[Ne IV] density  High      ",neivdens
-      print "(A28,F8.0)","   adopted       High      ",highdens
-      print *,""
-      print "(A28,F8.0)","[Ar V] temp      High      ",arvtemp
-      print "(A28,F8.0)","[Ne V] temp      High      ",nevtemp
-      print "(A28,F8.0)","   adopted       High      ",hightemp
+endif
+
+if(oiitemp >0.2)then
+	           print "(A28,F8.0)","[O II] temp      Low       ",oiitemp 
+else if(oiitemp == 0.1)then
+	           print "(A28,F8.0)","[O II] temp      Low       ",20000.0
+else
+endif 
+
+if(siitemp >0.2 )then
+	           print "(A28,F8.0)","[S II] temp      Low       ",siitemp 
+else if(siitemp == 0.1)then
+	           print "(A28,F8.0)","[S II] temp      Low       ",20000.0
+else
+endif 
+
+if(oitemp >0.2 )then
+	           print "(A28,F8.0)","[O I]  temp      Low       ",oitemp 
+else if(oitemp == 0.1)then
+	           print "(A28,F8.0)","[O I]  temp      Low       ",20000.0
+else
+endif     
+
+if(citemp >0.2 )then
+		   print "(A28,F8.0)","[C I]  temp      Low       ",citemp  
+else if(citemp == 0.1)then
+	           print "(A28,F8.0)","[C I]  temp      Low       ",20000.0
+else
+endif		    
+
+
+if(lowtemp >0)     print "(A28,F8.0)"," temp adopted    Low       ",lowtemp
+if(lowtemp >0)     print *,""
+
+if(cliiidens > 0 )    print "(A28,F8.0)","[Cl III] density Medium    ",cliiidens
+if(arivdens  > 0 )    print "(A28,F8.0)","[Ar IV] density  Medium    ",arivdens
+if(ciiidens  > 0 )    print "(A28,F8.0)","C III] density   Medium    ",ciiidens
+if(meddens   > 0 )    print "(A28,F8.0)"," density adopted Medium    ",meddens
+if(meddens   > 0 )    print *,""
+
+if(oiiitemp >0.2)then
+		   print "(A28,F8.0)","[O III] temp     Medium    ",oiiitemp
+else if(oiiitemp == 0.1)then 
+		   print "(A28,F8.0)","[O III] temp     Medium    ",20000
+else
+endif
+
+if(neiiitemp>0.2)then
+		   print "(A28,F8.0)","[Ne III] temp    Medium    ",neiiitemp
+else if(neiiitemp == 0.1)then
+		   print "(A28,F8.0)","[Ne III] temp    Medium    ",20000
+else
+endif		   
+if(ariiitemp>0.2)then
+		   print "(A28,F8.0)","[Ar III] temp    Medium    ",ariiitemp
+else if(ariiitemp == 0.1)then
+		   print "(A28,F8.0)","[Ar III] temp    Medium    ",20000
+else
+endif		   		   
+if(siiitemp >0.2)then
+		   print "(A28,F8.0)","[S III] temp     Medium    ",siiitemp
+else if(siiitemp == 0.1)then
+		   print "(A28,F8.0)","[S III] temp     Medium    ",20000
+else
+endif		   
+		   
+if(medtemp  >0)    print "(A28,F8.0)"," temp adopted    Medium    ",medtemp
+if(medtemp  >0)    print *,""
+
+if(neivdens >0)    print "(A28,F8.0)","[Ne IV] density  High      ",neivdens
+if(highdens >0)    print "(A28,F8.0)"," density adopted High      ",highdens
+if(highdens >0)    print *,""
+if(arvtemp  >0)    print "(A28,F8.0)","[Ar V] temp      High      ",arvtemp
+if(nevtemp  >0)    print "(A28,F8.0)","[Ne V] temp      High      ",nevtemp
+if(hightemp >0)    print "(A28,F8.0)"," temp adopted    High      ",hightemp
 
 ! later, make this check with user whether to adopt these values
 
@@ -376,10 +554,17 @@ print *,""
         print *,"Helium"
         print *,"------"
 
-        call get_helium(REAL(medtemp),REAL(meddens),REAL(He_lines(1)%int_dered),REAL(He_lines(2)%int_dered),REAL(He_lines(3)%int_dered),REAL(He_lines(4)%int_dered),heiabund,heiiabund,Hetotabund)
-        print "(1X,A10,F5.3)", "He+/H+ =  ",heiabund
-        print "(1X,A10,F5.3)", "He++/H+ = ",heiiabund
-        print "(1X,A10,F5.3)", "He/H =    ",Hetotabund
+	call get_helium(REAL(medtemp),REAL(meddens),REAL(He_lines(1)%int_dered),REAL(He_lines(2)%int_dered),REAL(He_lines(3)%int_dered),REAL(He_lines(4)%int_dered),heiabund,heiiabund,Hetotabund, A4471, A4686, A6678, A5876)
+        
+if(A4471 > 0)   print "(1x,A17,F5.3)", " He+ (4471)/H+ = ", A4471
+if(A5876 > 0)	print "(1x,A17,F5.3)", " He+ (5876)/H+ = ", A5876	
+if(A6678 > 0)	print "(1x,A17,F5.3)", " He+ (6678)/H+ = ", A6678
+if(A4686 > 0)	print "(1x,A17,F5.3)", "He++ (4686)/H+ = ", A4686 
+	print "(1X,A17,F5.3)", "        He+/H+ = ",heiabund
+        print "(1X,A17,F5.3)", "       He++/H+ = ",heiiabund
+        print "(1X,A17,F5.3)", "          He/H = ",Hetotabund
+	
+
 
 ! get abundances for all CELs
 
@@ -404,15 +589,14 @@ print *,""
 
 ! calculate averages
 
-        ciiiCELabund = ILs(1)%abundance
+        ciiiCELabund = ILs( get_ion("ciii1909   ", ILs, Iint)  )%abundance
 
+	
         celabundtemp = 0.
         weight = 0.
-        do i=2,4
+        do i= get_ion("nii5754    ", ILs, Iint), get_ion("nii6584    ", ILs, Iint)
           niiCELabund = niiCELabund + ILs(i)%abundance 
-          if (ILs(i)%abundance .gt. 0) then
-            weight = weight + 1
-          endif
+          if (ILs(i)%abundance .gt. 0) weight = weight + 1
         enddo
         if (weight .gt. 0) then
           niiCELabund = niiCELabund / weight
@@ -420,8 +604,8 @@ print *,""
           niiCELabund = 0.0
         endif
 
-        niiiIRCELabund = ILs(5)%abundance
-        niiiUVCELabund = ILs(6)%abundance
+        niiiIRCELabund = ILs( get_ion("niii57um   ", ILs, Iint)  )%abundance
+        niiiUVCELabund = ILs( get_ion("niii1751   ", ILs, Iint)   )%abundance
 
         if (niiiIRCELabund .gt. 0 .and. niiiUVCELabund .gt. 0) then
           niiiCELabund = (niiiIRCELabund + niiiUVCELabund)/2
@@ -435,25 +619,41 @@ print *,""
 
         celabundtemp = 0.
         weight = 0.
-        do i=7,10
-          oiiCELabund = oiiCELabund + ILs(i)%abundance
-          if (ILs(i)%abundance .gt. 0) then
-            weight = weight + 1
-          endif
-        enddo
-        if (weight .gt. 0) then
-          oiiCELabund = oiiCELabund / weight
-        else
-          oiiCELabund = 0.0
-        endif
-
+        if( ILs(get_ion("oii7330b   ", ILs, Iint))%int_dered > 0.0  )then
+		do i=get_ion("oii3729    ", ILs, Iint), get_ion("oii7330b   ", ILs, Iint)
+        	  oiiCELabund = oiiCELabund + ILs(i)%abundance
+        	  if (ILs(i)%abundance .gt. 0) weight = weight + 1
+        	enddo
+        	if (weight .gt. 0) then
+        	  oiiCELabund = oiiCELabund / weight
+        	else
+        	  oiiCELabund = 0.0
+        	endif
+	elseif( ILs(get_ion("oii7330    ", ILs, Iint))%int_dered >0   ) then
+		do i=get_ion("oii3729    ", ILs, Iint), get_ion("oii3726    ", ILs, Iint)
+        	  oiiCELabund = oiiCELabund + ILs(i)%abundance
+        	  if (ILs(i)%abundance .gt. 0) weight = weight + 1
+		enddo
+        	do i=get_ion("oii7320    ", ILs, Iint), get_ion("oii7330    ", ILs, Iint)
+        	  oiiCELabund = oiiCELabund + ILs(i)%abundance
+        	  if (ILs(i)%abundance .gt. 0) weight = weight + 1
+        	enddo
+		
+		
+		if (weight .gt. 0) then
+        	  oiiCELabund = oiiCELabund / weight
+        	else
+        	  oiiCELabund = 0.0
+        	endif	
+	else 
+		oiiCELabund = 0.0
+	endif
+	
         celabundtemp = 0.
         weight = 0.
-        do i=12,13
+        do i=get_ion("oiii4959   ", ILs, Iint), get_ion("oiii5007   ", ILs, Iint)
           oiiiCELabund = oiiiCELabund + ILs(i)%abundance
-          if (ILs(i)%abundance .gt. 0) then
-            weight = weight + 1
-          endif
+          if (ILs(i)%abundance .gt. 0) weight = weight + 1
         enddo
         if (weight .gt. 0) then
           oiiiCELabund = oiiiCELabund / weight
@@ -463,11 +663,9 @@ print *,""
 
         celabundtemp = 0.
         weight = 0.
-        do i=14,15
+        do i=get_ion("oiii52um   ", ILs, Iint), get_ion("oiii88um   ", ILs, Iint)
           oiiiIRCELabund = oiiiIRCELabund + ILs(i)%abundance
-          if (ILs(i)%abundance .gt. 0) then
-            weight = weight + 1
-          endif
+          if (ILs(i)%abundance .gt. 0) weight = weight + 1
         enddo
         if (weight .gt. 0) then
           oiiiIRCELabund = oiiiIRCELabund / weight
@@ -475,16 +673,14 @@ print *,""
           oiiiIRCELabund = 0.0
         endif
 
-        neiiIRCELabund = ILs(16)%abundance
-        neiiiIRCELabund = ILs(17)%abundance
+        neiiIRCELabund = ILs(  get_ion("neii12p8um ", ILs, Iint)  )%abundance
+        neiiiIRCELabund = ILs(  get_ion("neiii15p5um ", ILs, Iint)  )%abundance
 
         celabundtemp = 0.
         weight = 0.
-        do i=18,19
+        do i=get_ion("neiii3868  ", ILs, Iint), get_ion("neiii3967  ", ILs, Iint)
           neiiiCELabund = neiiiCELabund + ILs(i)%abundance
-          if (ILs(i)%abundance .gt. 0) then
-            weight = weight + 1
-          endif
+          if (ILs(i)%abundance .gt. 0) weight = weight + 1
         enddo
         if (weight .gt. 0) then
           neiiiCELabund = neiiiCELabund / weight
@@ -495,11 +691,9 @@ print *,""
 
         celabundtemp = 0.
         weight = 0.
-        do i=20,23
+        do i=get_ion("neiv4724   ", ILs, Iint), get_ion("neiv4715   ", ILs, Iint)
           neivCELabund = neivCELabund + ILs(i)%abundance
-          if (ILs(i)%abundance .gt. 0) then
-            weight = weight + 1
-          endif
+          if (ILs(i)%abundance .gt. 0) weight = weight + 1
         enddo
         if (weight .gt. 0) then
           neivCELabund = neivCELabund / weight
@@ -509,11 +703,9 @@ print *,""
 
         celabundtemp = 0.
         weight = 0.
-        do i=24,27
+        do i=get_ion("sii4068    ", ILs, Iint), get_ion("sii6731    ", ILs, Iint)
           siiCELabund = siiCELabund + ILs(i)%abundance
-          if (ILs(i)%abundance .gt. 0) then
-            weight = weight + 1
-          endif
+          if (ILs(i)%abundance .gt. 0) weight = weight + 1
         enddo
         if (weight .gt. 0) then
           siiCELabund = siiCELabund / weight
@@ -522,12 +714,30 @@ print *,""
         endif
 
         siiiCELabund = ILs(28)%abundance
-        siiiIRCELabund = ILs(29)%abundance
-        sivIRCELabund = ILs(30)%abundance
+        
+	celabundtemp = 0.
+        weight = 0.
+        do i=get_ion("siii9069   ", ILs, Iint), get_ion("siii9531   ", ILs, Iint)
+          siiiCELabund = siiiCELabund + ILs(i)%abundance
+          if (ILs(i)%abundance .gt. 0) weight = weight + 1
+        enddo
+        !this section was fucked before
+	siiiCELabund = siiiCELabund + ILs( get_ion("siii6312   ", ILs, Iint)  )%abundance
+	if(ILs( get_ion("siii6312   ", ILs, Iint)  )%abundance > 0) weight = weight + 1
+	
+	
+	if (weight .gt. 0) then
+          siiiCELabund = siiiCELabund / weight
+        else
+          siiiCELabund = 0.0
+        endif 
+	
+	siiiIRCELabund = ILs( get_ion("siii18p7um ", ILs, Iint)   )%abundance
+        sivIRCELabund = ILs(  get_ion("siv10p5um  ", ILs, Iint) )%abundance
 
         celabundtemp = 0.
         weight = 0.
-        do i=31,32
+        do i=get_ion("cliii5517  ", ILs, Iint), get_ion("cliii5537  ", ILs, Iint)
           cliiiCELabund = cliiiCELabund + ILs(i)%abundance
           if (ILs(i)%abundance .gt. 0) then
             weight = weight + 1
@@ -541,7 +751,7 @@ print *,""
 
         celabundtemp = 0.
         weight = 0.
-        do i=33,34
+        do i=get_ion("ariii7135  ", ILs, Iint), get_ion("ariii7751  ", ILs, Iint)
           ariiiCELabund = ariiiCELabund + ILs(i)%abundance
           if (ILs(i)%abundance .gt. 0) then
             weight = weight + 1
@@ -555,7 +765,7 @@ print *,""
 
         celabundtemp = 0.
         weight = 0.
-        do i=35,36
+ 	do i=get_ion("ariv4711   ", ILs, Iint), get_ion("ariv4740   ", ILs, Iint)
           arivCELabund = arivCELabund + ILs(i)%abundance
           if (ILs(i)%abundance .gt. 0) then
             weight = weight + 1
@@ -567,11 +777,11 @@ print *,""
           arivCELabund = 0.0
         endif
 
-        ariiiIRCELabund = ILs(37)%abundance
+        ariiiIRCELabund = ILs(get_ion("ariii9um   ", ILs, Iint))%abundance
 
         celabundtemp = 0.
         weight = 0.
-        do i=38,39 
+        do i=get_ion("ciii1907   ", ILs, Iint), get_ion("ciii1909   ", ILs, Iint)
           if (ILs(i)%abundance .gt. 0) then
             ciiiCELabund = ciiiCELabund + ILs(i)%abundance
             weight = weight + 1
@@ -585,7 +795,7 @@ print *,""
 
         celabundtemp = 0.
         weight = 0.
-        do i=40,41
+        do i=get_ion("neiv2423   ", ILs, Iint), get_ion("neiv2425   ", ILs, Iint)
           neivCELabund = neivCELabund + ILs(i)%abundance
           if (ILs(i)%abundance .gt. 0) then
             weight = weight + 1
@@ -599,7 +809,7 @@ print *,""
 
         celabundtemp = 0.
         weight = 0.
-        do i=44,45
+        do i=get_ion("nev3345    ", ILs, Iint), get_ion("nev3426    ", ILs, Iint)
           nevCELabund = nevCELabund + ILs(i)%abundance
           if (ILs(i)%abundance .gt. 0) then
             weight = weight + 1
@@ -613,21 +823,7 @@ print *,""
 
         celabundtemp = 0.
         weight = 0.
-        do i=46,47
-          siiiCELabund = siiiCELabund + ILs(i)%abundance
-          if (ILs(i)%abundance .gt. 0) then
-            weight = weight + 1
-          endif
-        enddo
-        if (weight .gt. 0) then
-          siiiCELabund = siiiCELabund / weight
-        else
-          siiiCELabund = 0.0
-        endif
-
-        celabundtemp = 0.
-        weight = 0.
-        do i=50,51
+        do i=get_ion("arv6435    ", ILs, Iint), get_ion("arv7005    ", ILs, Iint)
           arvCELabund = arvCELabund + ILs(i)%abundance
           if (ILs(i)%abundance .gt. 0) then
             weight = weight + 1
@@ -639,10 +835,42 @@ print *,""
           arvCELabund = 0.0
         endif
 
+	 celabundtemp = 0.
+        weight = 0.
+        do i=get_ion("ci9850     ", ILs, Iint), get_ion("ci8727     ", ILs, Iint)
+          ciCELabund = ciCELabund + ILs(i)%abundance
+          if (ILs(i)%abundance .gt. 0) then
+            weight = weight + 1
+          endif
+        enddo
+        if (weight .gt. 0) then
+          ciCELabund = ciCELabund / weight
+        else
+          ciCELabund = 0.0
+        endif
+	
+	NCabundCEL = ciCELabund
+	
+	 celabundtemp = 0.
+        weight = 0.
+        do i=get_ion("oi6300     ", ILs, Iint), get_ion("oi5577     ", ILs, Iint)
+          oiCELabund = oiCELabund + ILs(i)%abundance
+          if (ILs(i)%abundance .gt. 0) then
+            weight = weight + 1
+          endif
+        enddo
+        if (weight .gt. 0) then
+          oiCELabund = oiCELabund / weight
+        else
+          oiCELabund = 0.0
+        endif	
+	
+	NOabundCEL = oiCELabund
+	
 ! now get abundances for ORLs
 ! o2+
        call oii_rec_lines(oiiiTemp,oiiDens,DBLE(1),oiiRLs)
-
+ 
        do i = 1,329 
          do j = 1,415 
           if (abs(O_dered(1,i)-oiiRLs(j)%Wave) .le. 0.005) then
@@ -1066,32 +1294,39 @@ print *,""
 
 print *,"CELs"
 print *,""
-print *,"Element     ICF     X/H"
-print *,"-------     ---     ---"
-print "(A12,F5.2,4X,ES8.2,2X,F5.2)"," Carbon      ",CELicfC,CabundCEL,12+log10(CabundCEL)
-print "(A12,F5.2,4X,ES8.2,2X,F5.2)"," Nitrogen    ",CELicfN,NabundCEL,12+log10(NabundCEL)
-print "(A12,F5.2,4X,ES8.2,2X,F5.2)"," Oxygen      ",CELicfO,OabundCEL,12+log10(OabundCEL)
-print "(A12,F5.2,4X,ES8.2,2X,F5.2)"," Neon        ",CELicfNe,NeabundCEL,12+log10(NeabundCEL)
-print "(A12,F5.2,4X,ES8.2,2X,F5.2)"," Argon       ",CELicfAr,ArabundCEL,12+log10(ArabundCEL)
-print "(A12,F5.2,4X,ES8.2,2X,F5.2)"," Sulphur     ",CELicfS,SabundCEL,12+log10(SabundCEL)
+print *,"Element           ICF     X/H"
+print *,"-------           ---     ---"
+if(CabundCEL > 0)  print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Carbon         ",CELicfC,CabundCEL,12+log10(CabundCEL)
+if(NCabundCEL > 0) print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Neutral Carbon ",0.0,NCabundCEL,12+log10(NCabundCEL)
+if(NabundCEL > 0)  print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Nitrogen       ",CELicfN,NabundCEL,12+log10(NabundCEL)
+if(OabundCEL > 0)  print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Oxygen         ",CELicfO,OabundCEL,12+log10(OabundCEL)
+if(NOabundCEL > 0) print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Neutral Oxygen ",0.0,NOabundCEL,12+log10(NOabundCEL)
+if(NeabundCEL > 0) print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Neon           ",CELicfNe,NeabundCEL,12+log10(NeabundCEL)
+if(ArabundCEL > 0) print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Argon          ",CELicfAr,ArabundCEL,12+log10(ArabundCEL)
+if(SabundCEL > 0)  print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Sulphur        ",CELicfS,SabundCEL,12+log10(SabundCEL)
+if(OabundCEL > 0 .and. NabundCEL > 0)  print*, " "
+if(OabundCEL > 0 .and. NabundCEL > 0)  print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," N/O            ", log10(NabundCEL/OabundCEL)
+if(NCabundCEL > 0 .and. NOabundCEL > 0) print*, " "
+if(NCabundCEL > 0 .and. NOabundCEL > 0) print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," nC/nO            ", log10(NCabundCEL/NOabundCEL)
+
 
 print *,""
 print *,"ORLs"
 print *,""
 print *,"Element     ICF     X/H"
 print *,"-------     ---     ---"
-print "(A12,F5.2,4X,ES8.2,2X,F5.2)"," Helium      ",1.0,Hetotabund,12+log10(Hetotabund)
-print "(A12,F5.2,4X,ES8.2,2X,F5.2)"," Carbon      ",RLicfC,CabundRL,12+log10(CabundRL)
-print "(A12,F5.2,4X,ES8.2,2X,F5.2)"," Nitrogen    ",RLicfN,NabundRL,12+log10(NabundRL)
-print "(A12,F5.2,4X,ES8.2,2X,F5.2)"," Oxygen      ",RLicfO,OabundRL,12+log10(OabundRL)
-print "(A12,F5.2,4X,ES8.2,2X,F5.2)"," Neon        ",RLicfNe,NeabundRL,12+log10(NeabundRL)
+if(Hetotabund > 0) print "(A12,F5.2,4X,ES8.2,2X,F5.2)"," Helium      ",1.0,Hetotabund,12+log10(Hetotabund)
+if(CabundRL > 0) print "(A12,F5.2,4X,ES8.2,2X,F5.2)"," Carbon      ",RLicfC,CabundRL,12+log10(CabundRL)
+if(NabundRL > 0) print "(A12,F5.2,4X,ES8.2,2X,F5.2)"," Nitrogen    ",RLicfN,NabundRL,12+log10(NabundRL)
+if(OabundRL > 0) print "(A12,F5.2,4X,ES8.2,2X,F5.2)"," Oxygen      ",RLicfO,OabundRL,12+log10(OabundRL)
+if(NeabundRL > 0) print "(A12,F5.2,4X,ES8.2,2X,F5.2)"," Neon        ",RLicfNe,NeabundRL,12+log10(NeabundRL)
 
 !Strong line methods
 
-ion_no1 = get_ion("oiii4959   ",ILs)
-ion_no2 = get_ion("oiii5007   ",ILs)
-ion_no3 = get_ion("oii3726    ",ILs)
-ion_no4 = get_ion("oii3729    ",ILs)
+ion_no1 = get_ion("oiii4959   ",ILs, Iint)
+ion_no2 = get_ion("oiii5007   ",ILs, Iint)
+ion_no3 = get_ion("oii3726    ",ILs, Iint)
+ion_no4 = get_ion("oii3729    ",ILs, Iint)
 
         print *,""
         print *,"O/H (strong line methods)"
@@ -1106,29 +1341,29 @@ if (ion_no1 .gt. 0 .and. ion_no2 .gt. 0) then
   print "(1X,A37,2X,F5.2)","R23 (lower branch)  Pilyugin 2000    ",O_R23lower
 endif
 
-ion_no1 = get_ion("nii6584    ",ILs)
+ion_no1 = get_ion("nii6584    ",ILs, Iint)
 if (ILs(ion_no1)%int_dered .gt. 0 .and. H_BS(1)%int_dered .gt. 0) then
   N2 = ILs(ion_no1)%int_dered / H_BS(1)%int_dered
   O_N2 = 8.90 + (0.57 * N2)
   print "(1X,A37,2X,F5.2)","N2                  Pet. + Pag. 2004 ",O_N2
 endif
 
-ion_no2 = get_ion("oiii5007   ",ILs)
+ion_no2 = get_ion("oiii5007   ",ILs, Iint)
 if (ILS(ion_no1)%int_dered .gt. 0 .and. ILs(ion_no2)%int_dered .gt. 0) then
   O3N2 = log10((ILS(ion_no2)%int_dered*H_BS(1)%int_dered)/(ILS(ion_no1)%int_dered * H_BS(2)%int_dered))
   O_O3N2 = 8.73 - (0.32*O3N2)
   print "(1X,A37,2X,F5.2)","O3N2                Pet. + Pag. 2004 ",O_O3N2
 endif
 
-ion_no1 = get_ion("ariii7135  ",ILs)
-ion_no2 = get_ion("oiii5007   ",ILs)
+ion_no1 = get_ion("ariii7135  ",ILs, Iint)
+ion_no2 = get_ion("oiii5007   ",ILs, Iint)
 if (ILs(ion_no1)%int_dered .gt. 0 .and. ILs(ion_no2)%int_dered .gt. 0) then
   Ar3O3 = ILs(ion_no1)%int_dered / ILs(ion_no2)%int_dered
   O_Ar3O3 = 8.91 + (0.34*Ar3O3) + (0.27*Ar3O3**2) + (0.2*Ar3O3**3)
   print "(1X,A37,2X,F5.2)","Ar3O3               Stasinska 2006   ",O_Ar3O3
 endif
 
-ion_no1 = get_ion("siii9069   ",ILs)
+ion_no1 = get_ion("siii9069   ",ILs, Iint)
 if (ILs(ion_no1)%int_dered .gt. 0 .and. ILs(ion_no2)%int_dered .gt. 0) then
   S3O3 = ILs(ion_no1)%int_dered / ILs(ion_no2)%int_dered
   O_S3O3 = 9.37 + (2.03*S3O3) + (1.26*S3O3**2) + (0.32*S3O3**3)
@@ -1193,17 +1428,58 @@ print *,""
     adfNe = 0.0
   endif
 
-print "(A12,F5.2)","adf (O2+) = ", adfo2plus
-print "(A12,F5.2)","adf (O)   = ", adfO
-print *,""
-print "(A12,F5.2)","adf (N2+) = ", adfn2plus
-print "(A12,F5.2)","adf (N)   = ", adfn
-print *,""
-print "(A12,F5.2)","adf (C2+) = ", adfc2plus
-print "(A12,F5.2)","adf (C)   = ", adfc
-print *,""
-print "(A12,F5.2)","adf (Ne2+)= ", adfne2plus
-print "(A12,F5.2)","adf (Ne)  = ", adfne
+if(adfo2plus >0) print "(A12,F5.2)","adf (O2+) = ", adfo2plus
+if(adfO>0) print "(A12,F5.2)","adf (O)   = ", adfO
+if(adfn2plus>0) print *,""
+if(adfn2plus>0) print "(A12,F5.2)","adf (N2+) = ", adfn2plus
+if(adfn>0) print "(A12,F5.2)","adf (N)   = ", adfn
+if(adfc2plus>0) print *,""
+if(adfc2plus>0) print "(A12,F5.2)","adf (C2+) = ", adfc2plus
+if(adfc>0) print "(A12,F5.2)","adf (C)   = ", adfc
+if(adfne2plus>0) print *,""
+if(adfne2plus>0) print "(A12,F5.2)","adf (Ne2+)= ", adfne2plus
+if(adfne>0) print "(A12,F5.2)","adf (Ne)  = ", adfne
+
+
+	600 FORMAT (5(f10.4))
+	if(runonce == 1) OPEN(802, FILE=trim(fname1)//"_ionic", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+
+	if(A4471 > 0 .and. runonce == 1)  write(802,"(1x,A17,F6.3)") " He+ (4471)/H+ = ", A4471
+	if(A5876 > 0 .and. runonce == 1)  write(802,"(1x,A17,F6.3)") " He+ (5876)/H+ = ", A5876	
+	if(A6678 > 0 .and. runonce == 1)  write(802,"(1x,A17,F6.3)") " He+ (6678)/H+ = ", A6678
+	if(A4686 > 0 .and. runonce == 1)  write(802,"(1x,A17,F6.3)") "He++ (4686)/H+ = ", A4686
+	if(heiabund   > 0 .and. runonce == 1)  write(802,"(1X,A17,F6.3)") "        He+/H+ = ",heiabund
+	if(heiiabund  > 0 .and. runonce == 1)  write(802,"(1X,A17,F6.3)") "       He++/H+ = ",heiiabund
+	if(Hetotabund > 0 .and. runonce == 1)  write(802,"(1X,A17,F6.3)") "          He/H = ",Hetotabund
+	
+	
+	if(oiiiCELabund > 0 .and. runonce == 1) write(802,'(A18,F6.3)') " O++/H+ *(10^4) = ",oiiiCELabund*10**4
+	if(oiiCELabund > 0 .and. runonce == 1)  write(802,'(A18,F6.3)') "  O+/H+ *(10^4) = ",oiiCELabund*10**4
+
+	if(niiCELabund > 0 .and. runonce == 1)  write(802,'(A18,F6.3)') "  N+/H+ *(10^5) = ",niiCELabund*10**5
+	
+	if(siiiCELabund > 0 .and. runonce == 1) write(802,'(A18,F6.3)') " S++/H+ *(10^6) = ",siiiCELabund*10**6
+	if(siiCELabund > 0 .and. runonce == 1)  write(802,'(A18,F6.3)') "  S+/H+ *(10^6) = ",siiCELabund*10**6
+	 
+	if(neiiiCELabund > 0 .and. runonce == 1) write(802,'(A18,F6.3)') "Ne++/H+ *(10^4) = ",neiiiCELabund*10**4
+	
+	if(ariiiCELabund > 0 .and. runonce == 1) write(802,'(A18,F6.3)') "Ar++/H+ *(10^6) = ",ariiiCELabund*10**6
+	if(runonce == 1) CLOSE(801)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 contains
 
@@ -1213,8 +1489,8 @@ contains
                 INTEGER :: ion_no1, ion_no2
                 DOUBLE PRECISION :: diag
                 
-                ion_no1 = get_ion(name1, ILs)
-                ion_no2 = get_ion(name2, ILs)
+                ion_no1 = get_ion(name1, ILs, Iint)
+                ion_no2 = get_ion(name2, ILs, Iint)
 
                 if((ILs(ion_no1)%int_dered .gt. 0) .AND. (ILs(ion_no2)%int_dered .gt. 0))then
                         diag = DBLE(ILs(ion_no1)%int_dered) / DBLE(ILs(ion_no2)%int_dered)
@@ -1228,16 +1504,35 @@ contains
                 TYPE(line), DIMENSION(51), INTENT(IN) :: lines 
                 CHARACTER*11 :: name1, name2, name3
                 INTEGER :: ion_no1, ion_no2, ion_no3
-                DOUBLE PRECISION :: diag, factor1, factor2, ratio
+                DOUBLE PRECISION :: diag, factor1, factor2, ratio, ratio2
                 
                 
-                ion_no1 = get_ion(name1, ILs)
-                ion_no2 = get_ion(name2, ILs)
-                ion_no3 = get_ion(name3, ILs)
+                ion_no1 = get_ion(name1, ILs, Iint)
+                ion_no2 = get_ion(name2, ILs, Iint)
+                ion_no3 = get_ion(name3, ILs, Iint)
                 
                 if(((ILs(ion_no1)%int_dered .gt. 0) .AND. (ILs(ion_no2)%int_dered .gt. 0)) .and. (ILs(ion_no3)%int_dered .gt. 0 ))then
-                        ratio = (ILs(ion_no1)%int_dered + ILs(ion_no2)%int_dered) / ILs(ion_no3)%int_dered
-                elseif(((ILs(ion_no1)%int_dered .gt. 0) .AND. (ILs(ion_no2)%int_dered .eq. 0)) .and. (ILs(ion_no3)%int_dered .gt. 0 ))then
+                        
+			ratio = (ILs(ion_no1)%int_dered + ILs(ion_no2)%int_dered) / ILs(ion_no3)%int_dered
+			
+			if(name1 == "siii9069   ")then
+				ratio2 = (ILs(ion_no1)%int_dered / ILs(ion_no2)%int_dered)	
+		
+				if(ratio2 > (factor2-1)*0.95 .and. ratio2 < (factor2-1)*1.05)then
+					!PRINT*, ratio2, " ", factor2-1, " 1 ", name1
+					ratio = (ILs(ion_no1)%int_dered + ILs(ion_no2)%int_dered) / ILs(ion_no3)%int_dered
+                		else if(ratio2 < (factor2-1)*0.95)then
+					!PRINT*, ratio2, " ", factor2-1, " 2 ", name1
+					ratio = (factor2 * ILs(ion_no2)%int_dered) / ILs(ion_no3)%int_dered
+				else if(ratio2 > (factor2-1)*1.05)then
+					!PRINT*, ratio2, " ", factor2-1, " 3 ", name1
+					ratio = (factor1 * ILs(ion_no1)%int_dered) / ILs(ion_no3)%int_dered
+				else
+					ratio = 0.0	
+				end if	
+			end if
+			
+		elseif(((ILs(ion_no1)%int_dered .gt. 0) .AND. (ILs(ion_no2)%int_dered .eq. 0)) .and. (ILs(ion_no3)%int_dered .gt. 0 ))then
                         ratio = (ILs(ion_no1)%int_dered * factor1) / ILs(ion_no3)%int_dered
                 elseif(((ILs(ion_no1)%int_dered .eq. 0) .AND. (ILs(ion_no2)%int_dered .gt. 0)) .and. (ILs(ion_no3)%int_dered .gt. 0 ))then
                         ratio = (ILs(ion_no2)%int_dered * factor2) / ILs(ion_no3)%int_dered
@@ -1250,4 +1545,4 @@ contains
 
 
 
-end program abundances 
+end subroutine abundances 
