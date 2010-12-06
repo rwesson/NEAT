@@ -2,35 +2,41 @@ program wrapper
 
         CHARACTER*80 :: fname1, fname2, fname3, ofname
 	CHARACTER*10 :: temp
-	INTEGER :: I, runs
-	character*4 :: no
+	INTEGER :: I, runs, doublext
+	character*6 :: no
 	CALL getarg(1,temp)
 	read (temp,*) runs
-	CALL getarg(2,fname1) 
-        CALL getarg(3,fname2)
-        CALL getarg(4,fname3)
+	CALL getarg(2,temp)
+	read (temp,*) doublext	
+	CALL getarg(3,fname1) 
+        CALL getarg(4,fname2)
+        CALL getarg(5,fname3)
 	
 	!print*, runs
 	
 	call init_random_seed()
 	ofname = "r_out"
                 !"ball1                                                                           " !length of 80char
-		
-	DO I=1,runs
-		print*, "-=-=-=-=-=-=-=-"
-		print*, "iteration ", i 
-		print*, "=-=-=-=-=-=-=-="
-		print*, " "
-		write (no, '(I4)') i
-		no = adjustl(no)
-		ofname = "r_out"//no
-		print*, ofname
-
-		call randomizer(fname1, ofname)
-		call abundances(ofname, fname2, fname3, 0)
-		call system("rm "//ofname)
-	END DO
+	if(runs > 1)then	
+		DO I=1,runs
+			print*, "-=-=-=-=-=-=-=-"
+			print*, "iteration ", i 
+			print*, "=-=-=-=-=-=-=-="
+			print*, " "
+			write (no, '(I6)') i
+			no = adjustl(no)
+			ofname = "r_out"//no
+			print*, ofname
 	
+			call randomizer(fname1, ofname)
+			call abundances(ofname, fname2, fname3, 0, doublext)
+			call system("rm "//ofname)
+		END DO
+	else if(runs == 1)then
+		call abundances(fname1, fname2, fname3, 1, doublext)
+	else
+		print*, "I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."	
+	endif		
 	
 	
 contains
@@ -46,7 +52,7 @@ contains
 		CHARACTER*80, INTENT(IN) :: filename, outfilename
 		!character*10 :: Ich, mcnumberch
 		INTEGER :: IO, I, j, nlines!, mcnumber
-		DOUBLE PRECISION :: temp,temp2,temp3
+		DOUBLE PRECISION :: temp,temp2,temp3,temp4
 
 		REAL :: fn_val
 	
@@ -100,8 +106,9 @@ contains
 					IF (v**2 < -4.0*LOG(u)*u**2) EXIT
 				END DO
 				fn_val = v/u
-				!print*, fn_val
-				write (401,"(F7.2,1X,F10.5,1X,F7.2)") linelist(1,j), linelist(2,j)+(fn_val*linelist(3,j)), 0.0
+				temp4=linelist(2,j)+(fn_val*linelist(3,j))
+				if(temp4 < 0) temp4 = 0
+				write (401,"(F7.2,1X,F10.5,1X,F7.2)") linelist(1,j), temp4, linelist(3,j)
 			end do
 			close(unit=401)
 		!end do

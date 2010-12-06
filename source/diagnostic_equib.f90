@@ -144,7 +144,10 @@
            T(I) = LOG10 (T(I)) 
            ROOTT(I) = SQRT(T(I)) 
       ENDDO 
-                             !If IRATS=0, what tabulated are collision s
+                             
+			     
+			     
+			     !If IRATS=0, what tabulated are collision s
       READ(1,*) IRATS 
 !                            !Else Coll. rates = tabulated values * 10 *
       IF(IBIG.EQ.0) THEN 

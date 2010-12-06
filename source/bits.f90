@@ -36,7 +36,7 @@ subroutine read_ilines(ILs, Iint)
         OPEN(201, file="source/Ilines_levs", status='old')
                 DO WHILE (.true.)
                         READ(201,301,end=401) ILs(Iint)%name, ILs(Iint)%ion, ILs(Iint)%wavelength, ILs(Iint)%transition ,ILs(Iint)%zone!end condition breaks loop.  
-                        Iint = Iint + 1
+			Iint = Iint + 1
                 END DO
                 401 PRINT*, "done reading important lines, Iint = ", Iint 
         CLOSE(201)
@@ -94,7 +94,10 @@ function readfile(filename)
         CLOSE(199)
 
         110 PRINT*, "Reached end of file, I = ", I
-                
+        
+	readfile(:,(I+1):335) = 0
+	        
+	
 end function
 
 subroutine w_assign(optical, infrared, ultraviolet, temp, message)
@@ -160,7 +163,7 @@ subroutine element_assign(ILs, O, IR, UV, Iint)
 
         do i = 1, Iint
                 do j = 1, 335 
-                        if(O(1,j) == ILs(i)%wavelength)then 
+			if(O(1,j) == ILs(i)%wavelength)then 
                                 ILs(i)%intensity = O(2,j)
                                 ILs(i)%int_err   = O(3,j) 
                                 cycle
@@ -297,7 +300,7 @@ end subroutine
 double precision function flambda(X,switch)
         DOUBLE PRECISION :: X
         INTEGER :: switch
-        
+        !Howarth 1983
         if(switch == 1) flambda = ((16.07 - (3.20 * X) + (0.2975*X**2))) !far UV
         if(switch == 2) flambda = ((2.19 + (0.848*X) + (1.01/(((X-4.60)**2) + 0.280)))) !mid UV
         if(switch == 3) flambda = ((1.46 + (1.048*X) + (1.01/(((X-4.60)**2) + 0.280)))) !near UV
@@ -370,7 +373,35 @@ subroutine deredden_O(O_red, O_dered, m_ext, cerror)
             endif 
         end do
 
-end subroutine        
+end subroutine  
+
+subroutine deredden_2(lines, number, b_ext, r_ext) !this is specific to Dave's NTT/EFOSC data which is poorly calibrated between red/blue. Remove
+        TYPE(line), DIMENSION(:) :: lines
+        INTEGER :: number
+        DOUBLE PRECISION :: b_ext, r_ext, fl
+        INTEGER :: i
+        
+        do i = 1,number
+
+                lines(i)%freq = DBLE(10000) / DBLE(lines(i)%wavelength)
+
+  
+                if((lines(i)%freq .gt. 1.83) .AND. (lines(i)%freq .lt. 2.75))then ! optical 3636A - 5464
+                        fl = flambda(lines(i)%freq, 4)
+                        lines(i)%int_dered = lines(i)%intensity * 10**(b_ext*fl) 
+			lines(i)%int_dered_err = lines(i)%int_err / lines(i)%intensity
+                elseif(lines(i)%freq .lt. 1.83)then !IR   5464 - end
+                        fl = flambda(lines(i)%freq, 5)
+                        lines(i)%int_dered = lines(i)%intensity * 10**(r_ext*fl) 
+			lines(i)%int_dered_err = lines(i)%int_err / lines(i)%intensity
+                endif
+                
+        end do
+
+end subroutine
+
+
+      
         
 recursive function getTD(temp, dens, dt, dd, ratio1, ratio2, ion_name1, ion_name2, run) result(TD)
         DOUBLE PRECISION, DIMENSION(2) :: TD
