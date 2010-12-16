@@ -1177,82 +1177,103 @@ if(A4686 > 0)	print "(1x,A17,F5.3)", "He++ (4686)/H+ = ", A4686
 ! ICFs (Kingsburgh + Barlow 1994)
 
 ! oxygen, just the simple case at the moment
+	!if (oiiCELabund .gt. 0 .and. oiiiCELabund .gt. 0 .and. oivCELabund .eq. 0 .and. nvCELabund .eq. 0)then !no O3+ or N4+ seen
+     		CELicfO = ((heiabund + heiiabund)/heiabund)**(2./3.) !KB94 A9
+    		OabundCEL = CELicfO * (oiiCELabund + oiiiCELabund) !A10
+	!elseif (oiiCELabund .gt. 0 .and. oiiiCELabund .gt. 0 .and. oivCELabund .gt. 0 .and. nvCELabund .eq. 0) then !no N4+ seen
+		!CELicfO = 1
+		!OabundCEL = oiiCELabund + oiiiCELabund + oivCELabund !sum of visible ionisation stages
+	!endif
 
-     CELicfO = ((heiabund + heiiabund)/heiabund)**(2./3.)
-     OabundCEL = CELicfO * (oiiCELabund + oiiiCELabund)
 
-! nitrogen
 
-     if (niiCELabund .gt. 0 .and. niiiUVCELabund .gt. 0 .and. nivCELabund .gt. 0) then
+ !three other cases to add for oxygen, A6, A8, and sum of observed abundances, commented case causes errors
+
+! nitrogen - complete
+
+     if (niiCELabund .gt. 0 .and. niiiUVCELabund .gt. 0 .and. nivCELabund .gt. 0) then !all ionisation stages seen
        CELicfN = 1.
        NabundCEL = niCELabund + niiCELabund + niiiCELabund
-     elseif (niiCELabund .gt. 0 .and. niiiUVCELabund .eq. 0 .and. nivCELabund .gt. 0) then
+     elseif (niiCELabund .gt. 0 .and. niiiUVCELabund .eq. 0 .and. nivCELabund .gt. 0) then !no N2+ seen
        CELicfN = 1.5
        NabundCEL = 1.5*(niCELabund + niiiUVCELabund)
-     elseif (niiCELabund .gt. 0 .and. niiiUVCELabund .eq. 0 .and. nivCELabund .eq.0) then
+     elseif (niiCELabund .gt. 0 .and. niiiUVCELabund .eq. 0 .and. nivCELabund .eq.0) then !Only N+ seen
        CELicfN = OabundCEL/oiiCELabund
        NabundCEL = niiCELabund * CELicfN 
      endif
 
 ! carbon - couple of cases still to add.
 
-     if (ciiCELabund .gt. 0 .and. ciiiCELabund .gt. 0 .and. civCELabund .gt. 0 .and. heiiabund .eq. 0) then 
+     if (ciiCELabund .gt. 0 .and. ciiiCELabund .gt. 0 .and. civCELabund .gt. 0 .and. heiiabund .eq. 0) then !No C4+ but all other seen
        CELicfC = 1.
        CabundCEL = ciiCELabund + ciiiCELabund + civCELabund
-     elseif (ciiCELabund .eq. 0 .and. ciiiCELabund .gt. 0 .and. civCELabund .gt. 0 .and. heiiabund .eq. 0) then
-       CELicfC = (oiiCELabund + oiiiCELabund) / oiiiCELabund
-       CabundCEL = CELicfC * (ciiCELabund + ciiiCELabund)
-     elseif (ciiCELabund .eq. 0 .and. ciiiCELabund .gt. 0 .and. civCELabund .eq. 0 .and. oiiiCELabund .gt. 0) then
-       CELicfC = OabundCEL/oiiiCELabund
-       CabundCEL = CELicfC * ciiiCELabund
-     elseif (nvCELabund .gt. 0 .and. heiiabund .gt. 0) then
-       CELicfC = 1/(1-(nvCELabund/(niiCELabund + niiiCELabund + nivCELabund + nvCELabund)))
-       if (CELicfC .gt. 5) then
-         CELicfC = (niiCELabund + niiiCELabund + nivCELabund + nvCELabund) / (niiCELabund + niiiCELabund + nivCELabund)
+     elseif (ciiCELabund .eq. 0 .and. ciiiCELabund .gt. 0 .and. civCELabund .gt. 0 .and. heiiabund .eq. 0) then !No C4+, and no CII lines seen
+       CELicfC = (oiiCELabund + oiiiCELabund) / oiiiCELabund !A11
+       CabundCEL = CELicfC * (ciiCELabund + ciiiCELabund) !A12
+     elseif (ciiCELabund .eq. 0 .and. ciiiCELabund .gt. 0 .and. civCELabund .eq. 0 .and. oiiiCELabund .gt. 0) then !Only C2+ seen, but O2+ also seen
+       CELicfC = OabundCEL/oiiiCELabund !A13
+       CabundCEL = CELicfC * ciiiCELabund !A14
+     elseif (nvCELabund .gt. 0 .and. heiiabund .gt. 0) then !N4+ and He2+
+       CELicfC = 1/(1-(nvCELabund/(niiCELabund + niiiCELabund + nivCELabund + nvCELabund)))!A16
+       if (CELicfC .gt. 5) then !High-excitation case
+         CELicfC = (niiCELabund + niiiCELabund + nivCELabund + nvCELabund) / (niiCELabund + niiiCELabund + nivCELabund) !A18
        endif
-       CabundCEL = CELicfC * (ciiCELabund + ciiiCELabund + civCELabund)
-     endif
+       CabundCEL = CELicfC * (ciiCELabund + ciiiCELabund + civCELabund) !A19
+     elseif (ciiCELabund .gt. 0 .and. ciiiCELabund .gt. 0 .and. civCELabund .gt. 0 .and. heiiabund .gt. 0 .and. nvCELabund .eq. 0) then !PN is hot enough for He2+ but not for N4+
+	CELicfC = ((heiiabund + heiabund)*heiabund)**(1./3.) !A20
+	CabundCEL = CELicfC * (ciiCELabund + ciiiCELabund + civCELabund) !A21
+     elseif (ciiCELabund .eq. 0 .and. ciiiCELabund .gt. 0 .and. civCELabund .gt. 0) then !C+ not seen
+	CELicfC = 1/(1 - (niiCELabund/NabundCEL) - 2.7*(nvCELabund/NabundCEL)) !A22
+	if (CELicfC .gt. 5) then !if ICF is greater than 5
+	   CELicfC = (niiCELabund + niiiCELabund + nivCELabund + nvCELabund)/(niiiCELabund + nivCELabund) !A23
+	endif
+	CabundCEL = CELicfC * (ciiiCELabund+ civCELabund) !A24
+     elseif (ciiCELabund .gt. 0 .and. ciiiCELabund .gt. 0 .and. civCELabund .gt. 0 .and. heiiabund .gt. 0 .and. (nivCELabund .eq. 0 .or. nvCELabund .eq. 0)) then !final case i think.
+        CELicfC = ((oiiCELabund + oiiiCELabund)/oiiiCELabund)*((heiiabund + heiabund)*heiabund)**(1./3.) !A25
+	CabundCEL = CELicfC * (ciiCELabund + ciiiCELabund + civCELabund) !A26
+     endif 
 
-! Neon
 
-     if (neiiiCELabund .gt. 0 .and. neivCELabund .gt. 0 .and. nevCELabund .gt. 0) then
+! Neon - complete
+
+     if (neiiiCELabund .gt. 0 .and. neivCELabund .gt. 0 .and. nevCELabund .gt. 0) then !all stages seen
        CELicfNe = 1.
        NeabundCEL = neiiiCELabund + neivCELabund + nevCELabund
-     elseif (neiiiCELabund .gt. 0 .and. neivCELabund .eq. 0 .and. nevCELabund .gt. 0) then
+     elseif (neiiiCELabund .gt. 0 .and. neivCELabund .eq. 0 .and. nevCELabund .gt. 0) then !no Ne IV seen
        CELicfNe = 1.5
-       NeabundCEL = CELicfNe * (neiiiCELabund + nevCELabund)
-     elseif (neiiiCELabund .gt. 0 .and. neivCELabund .eq. 0 .and. nevCELabund .eq. 0) then
-       CELicfNe = OabundCEL / oiiiCELabund
+       NeabundCEL = CELicfNe * (neiiiCELabund + nevCELabund) !KB94 A27
+     elseif (neiiiCELabund .gt. 0 .and. neivCELabund .eq. 0 .and. nevCELabund .eq. 0) then !Only Ne2+ seen
+       CELicfNe = OabundCEL / oiiiCELabund !KB94 A28
        NeabundCEL = CELicfNe * neiiiCELabund
      endif
 
-! Argon
+! Argon - complete
 
-     if (ariiiCELabund .gt. 0 .and. arivCELabund .eq. 0 .and. arvCELabund .eq. 0) then
-       CELicfAr = 1.87
-       ArabundCEL = CELicfAr * ariiiCELabund
-     elseif (ariiiCELabund .eq. 0 .and. arivCELabund .gt. 0 .and. arvCELabund .eq. 0) then
-       CELicfAr = NeabundCEL / neiiiCELabund
-       ArabundCEL = CELicfAr * arivCELabund
-     elseif (ariiiCELabund .gt. 0 .and. arivCELabund .gt. 0) then
-       CELicfAr = 1.0
-       ArabundCEL = ariiiCELabund + arivCELabund + arvCELabund
+     if (ariiiCELabund .gt. 0 .and. arivCELabund .eq. 0 .and. arvCELabund .eq. 0) then !only Ar2+ seen
+       CELicfAr = 1.87 !KB94 A32
+       ArabundCEL = CELicfAr * ariiiCELabund !KB94 A33
+     elseif (ariiiCELabund .eq. 0 .and. arivCELabund .gt. 0 .and. arvCELabund .eq. 0) then !Only Ar3+ seen
+       CELicfAr = NeabundCEL / neiiiCELabund !KB94 A34
+       ArabundCEL = CELicfAr * arivCELabund !KB94 A35
+     elseif (ariiiCELabund .gt. 0 .and. arivCELabund .gt. 0) then !Ar 2+ and 3+ seen
+       CELicfAr = 1.0 !??
+       ArabundCEL = ariiiCELabund + arivCELabund + arvCELabund !KB94 A31
      endif
 
 ! Sulphur
 
-     if (siiCELabund .gt. 0 .and. siiiCELabund .gt. 0 .and. sivIRCELabund .eq. 0) then
-       CELicfS = (1-(1-((oiiCELabund/OabundCEL)**3)))**(-1./3.)
-       SabundCEL = CELicfS * (siiCELabund + siiiCELabund)
-     elseif (siiCELabund .gt. 0 .and. siiiCELabund .gt. 0 .and. sivIRCELabund .gt. 0) then
+     if (siiCELabund .gt. 0 .and. siiiCELabund .gt. 0 .and. sivIRCELabund .eq. 0) then !both S+ and S2+
+       CELicfS = (1-(1-((oiiCELabund/OabundCEL)**3)))**(-1./3.) !KB94 A36
+       SabundCEL = CELicfS * (siiCELabund + siiiCELabund) !KB94 A37
+     elseif (siiCELabund .gt. 0 .and. siiiCELabund .gt. 0 .and. sivIRCELabund .gt. 0) then !all states observed
        CELicfS = 1.
        SabundCEL = siiCELabund + siiiCELabund + sivIRCELabund
-     elseif (siiCELabund .gt. 0 .and. siiiCELabund .eq. 0 .and. sivIRCELabund .eq. 0) then
-       CELicfS = ((oiiiCELabund/oiiCELabund)**0.433 + 4.677) * (1-(1-((oiiCELabund/OabundCEL)**3)))**(-1./3.)
+     elseif (siiCELabund .gt. 0 .and. siiiCELabund .eq. 0 .and. sivIRCELabund .eq. 0) then !Only S+ observed
+       CELicfS = (((oiiiCELabund/oiiCELabund)**0.433) * 4.677) * (1-(1-((oiiCELabund/OabundCEL)**3)))**(-1./3.) ! ?? KB94 A38 in A37?
        SabundCEL = CELicfS * siiCELabund
      endif
 
-!XXXX finish very high excitation case.
+!XXXX finish very high excitation case. i.e A39-A41 for C and O
 
 !ORLs
 !Oxygen
