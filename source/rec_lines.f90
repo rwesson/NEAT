@@ -131,39 +131,39 @@
       
       INTEGER :: i
 
-      TYPE oiiRL
-            CHARACTER*1 :: Hyb
-            CHARACTER*1 :: n_E1
-            CHARACTER*1 :: n_E1GA
-            CHARACTER*1 :: n_E2
-            CHARACTER*1 :: n_E2GA
-            CHARACTER*1 :: n_g1
-            CHARACTER*1 :: n_g2
-            CHARACTER*1 :: Rem1
-            CHARACTER*1 :: Rem2
-            CHARACTER*1 :: Rem3
-            CHARACTER*1 :: Rem4
-            CHARACTER*3 :: q_gf1
-            CHARACTER*3 :: q_gf2
-            CHARACTER*7 :: Mult
-            CHARACTER*9 :: Term1
-            CHARACTER*9 :: Term2
-            INTEGER :: g1
-            INTEGER :: g2
-            INTEGER :: ION
-            DOUBLE PRECISION :: Wave
-            DOUBLE PRECISION :: E1
-            DOUBLE PRECISION :: E2
-            DOUBLE PRECISION :: Em
-            DOUBLE PRECISION :: Int
-            DOUBLE PRECISION :: Br_A
-            DOUBLE PRECISION :: Br_B
-            DOUBLE PRECISION :: Br_C
-            DOUBLE PRECISION :: gf1
-            DOUBLE PRECISION :: gf2
-            DOUBLE PRECISION :: Obs
-            DOUBLE PRECISION :: abundance
-      END TYPE
+  !    TYPE oiiRL
+  !          CHARACTER*1 :: Hyb
+  !          CHARACTER*1 :: n_E1
+  !          CHARACTER*1 :: n_E1GA
+  !          CHARACTER*1 :: n_E2
+  !          CHARACTER*1 :: n_E2GA
+  !          CHARACTER*1 :: n_g1
+  !          CHARACTER*1 :: n_g2
+  !         CHARACTER*1 :: Rem1
+  !          CHARACTER*1 :: Rem2
+  !         CHARACTER*1 :: Rem3
+  !          CHARACTER*1 :: Rem4
+  !          CHARACTER*3 :: q_gf1
+  !          CHARACTER*3 :: q_gf2
+  !          CHARACTER*7 :: Mult
+  !          CHARACTER*9 :: Term1
+  !          CHARACTER*9 :: Term2
+  !          INTEGER :: g1
+  !          INTEGER :: g2
+  !          INTEGER :: ION
+  !          DOUBLE PRECISION :: Wave
+  !          DOUBLE PRECISION :: E1
+  !          DOUBLE PRECISION :: E2
+  !          DOUBLE PRECISION :: Em
+  !          DOUBLE PRECISION :: Int
+  !          DOUBLE PRECISION :: Br_A
+  !          DOUBLE PRECISION :: Br_B
+  !          DOUBLE PRECISION :: Br_C
+  !          DOUBLE PRECISION :: gf1
+  !          DOUBLE PRECISION :: gf2
+  !          DOUBLE PRECISION :: Obs
+  !          DOUBLE PRECISION :: abundance
+  !    END TYPE
 
       TYPE(oiiRL), DIMENSION(415) :: oiiRLs
 
@@ -740,37 +740,37 @@
       
       INTEGER :: ii, i
 
-      TYPE niiRL
-            CHARACTER*1 :: Hyb
-            CHARACTER*1 :: n_E1
-            CHARACTER*1 :: n_E1GA
-            CHARACTER*1 :: n_E2
-            CHARACTER*1 :: n_E2GA
-            CHARACTER*1 :: n_g1
-            CHARACTER*1 :: n_g2
-            CHARACTER*1 :: Rem1
-            CHARACTER*1 :: Rem2
-            CHARACTER*1 :: Rem3
-            CHARACTER*1 :: Rem4
-            CHARACTER*3 :: q_gf1
-            CHARACTER*3 :: q_gf2
-            CHARACTER*7 :: Mult
-            CHARACTER*9 :: Term1
-            CHARACTER*9 :: Term2
-            INTEGER :: g1
-            INTEGER :: g2
-            INTEGER :: ION
-            DOUBLE PRECISION :: Wave
-            DOUBLE PRECISION :: E1
-            DOUBLE PRECISION :: E2
-            DOUBLE PRECISION :: Em
-            DOUBLE PRECISION :: Int
-            DOUBLE PRECISION :: Br_LS 
-            DOUBLE PRECISION :: gf1
-            DOUBLE PRECISION :: gf2
-            DOUBLE PRECISION :: Obs
-            DOUBLE PRECISION :: abundance
-      END TYPE
+      !TYPE niiRL
+      !      CHARACTER*1 :: Hyb
+      !      CHARACTER*1 :: n_E1
+      !      CHARACTER*1 :: n_E1GA
+      !      CHARACTER*1 :: n_E2
+      !      CHARACTER*1 :: n_E2GA
+      !      CHARACTER*1 :: n_g1
+      !      CHARACTER*1 :: n_g2
+      !      CHARACTER*1 :: Rem1
+      !      CHARACTER*1 :: Rem2
+      !      CHARACTER*1 :: Rem3
+      !      CHARACTER*1 :: Rem4
+      !      CHARACTER*3 :: q_gf1
+      !      CHARACTER*3 :: q_gf2
+      !      CHARACTER*7 :: Mult
+      !      CHARACTER*9 :: Term1
+      !      CHARACTER*9 :: Term2
+      !      INTEGER :: g1
+      !      INTEGER :: g2
+      !      INTEGER :: ION
+      !      DOUBLE PRECISION :: Wave
+      !      DOUBLE PRECISION :: E1
+      !      DOUBLE PRECISION :: E2
+      !      DOUBLE PRECISION :: Em
+      !      DOUBLE PRECISION :: Int
+      !      DOUBLE PRECISION :: Br_LS 
+      !      DOUBLE PRECISION :: gf1
+      !      DOUBLE PRECISION :: gf2
+      !      DOUBLE PRECISION :: Obs
+      !      DOUBLE PRECISION :: abundance
+      !END TYPE
 
       TYPE(niiRL), DIMENSION(99) :: niiRLs
 
@@ -1227,18 +1227,18 @@
 
       INTEGER :: ii, i
 
-      TYPE ciiRL 
-            DOUBLE PRECISION :: Wave
-            DOUBLE PRECISION :: a
-            DOUBLE PRECISION :: b
-            DOUBLE PRECISION :: c
-            DOUBLE PRECISION :: d
-            DOUBLE PRECISION :: f 
-            DOUBLE PRECISION :: aeff
-            DOUBLE PRECISION :: Int
-            DOUBLE PRECISION :: Obs
-            DOUBLE PRECISION :: abundance
-      END TYPE
+   !   TYPE ciiRL 
+   !         DOUBLE PRECISION :: Wave
+   !         DOUBLE PRECISION :: a
+   !         DOUBLE PRECISION :: b
+   !         DOUBLE PRECISION :: c
+   !         DOUBLE PRECISION :: d
+   !         DOUBLE PRECISION :: f 
+   !         DOUBLE PRECISION :: aeff
+   !         DOUBLE PRECISION :: Int
+   !         DOUBLE PRECISION :: Obs
+   !         DOUBLE PRECISION :: abundance
+   !   END TYPE
 
       TYPE(ciiRL), DIMENSION(57) :: ciiRLs
 
@@ -1332,19 +1332,19 @@
 
       INTEGER :: ii, i
 
-      TYPE neiiRL 
-            DOUBLE PRECISION :: Wave
-            DOUBLE PRECISION :: a
-            DOUBLE PRECISION :: b
-            DOUBLE PRECISION :: c
-            DOUBLE PRECISION :: d
-            DOUBLE PRECISION :: f 
-            DOUBLE PRECISION :: Br
-            DOUBLE PRECISION :: aeff
-            DOUBLE PRECISION :: Int
-            DOUBLE PRECISION :: Obs
-            DOUBLE PRECISION :: abundance
-      END TYPE
+  !    TYPE neiiRL 
+  !          DOUBLE PRECISION :: Wave
+  !          DOUBLE PRECISION :: a
+  !          DOUBLE PRECISION :: b
+  !          DOUBLE PRECISION :: c
+  !          DOUBLE PRECISION :: d
+  !          DOUBLE PRECISION :: f 
+  !          DOUBLE PRECISION :: Br
+  !          DOUBLE PRECISION :: aeff
+  !          DOUBLE PRECISION :: Int
+  !          DOUBLE PRECISION :: Obs
+  !          DOUBLE PRECISION :: abundance
+  !    END TYPE
 
       TYPE(neiiRL), DIMENSION(38) :: neiiRLs
 
@@ -1439,19 +1439,19 @@
 
       INTEGER :: ii, i
 
-      TYPE xiiiRL 
-            CHARACTER*3      :: Ion
-            DOUBLE PRECISION :: Wave
-            DOUBLE PRECISION :: a
-            DOUBLE PRECISION :: b
-            DOUBLE PRECISION :: c
-            DOUBLE PRECISION :: d 
-            DOUBLE PRECISION :: Br
-            DOUBLE PRECISION :: aeff
-            DOUBLE PRECISION :: Int
-            DOUBLE PRECISION :: Obs
-            DOUBLE PRECISION :: abundance
-      END TYPE
+ !     TYPE xiiiRL 
+  !          CHARACTER*3      :: Ion
+   !         DOUBLE PRECISION :: Wave
+    !        DOUBLE PRECISION :: a
+     !       DOUBLE PRECISION :: b
+      !      DOUBLE PRECISION :: c
+       !     DOUBLE PRECISION :: d 
+        !    DOUBLE PRECISION :: Br
+         !   DOUBLE PRECISION :: aeff
+          !  DOUBLE PRECISION :: Int
+           ! DOUBLE PRECISION :: Obs
+            !DOUBLE PRECISION :: abundance
+      !END TYPE
 
       TYPE(xiiiRL), DIMENSION(6) :: xiiiRLs
 

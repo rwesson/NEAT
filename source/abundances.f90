@@ -12,7 +12,7 @@ implicit none
 
         INTEGER :: count, Iint, fIL, i, j, ion_no1, ion_no2, ion_no3, ion_no4, iii, ion_no5, ion_no6
         INTEGER :: opt, runonce, run
-        CHARACTER*80, INTENT(IN) :: fname1, fname2, fname3
+        CHARACTER*80, INTENT(IN) :: fname1, fname2, fname3 !input filenames
 	CHARACTER*80 :: fnameIL, blank
         CHARACTER*8 :: lion
         DOUBLE PRECISION :: normalise, oiiNratio, oiiDens, oiiiTratio, oiiiTemp, oiiiIRNratio, oiiiIRTratio, niiTratio, niiTemp, arivNratio, arivDens, cliiiNratio, cliiiDens, siiNratio, siiDens, siiTratio, siiTemp, oiiTratio, oiiTemp, neiiiTratio, neiiiIRTratio, neiiiTemp, neiiiIRTemp, abund, meandensity, meantemp, oitemp, citemp
@@ -43,8 +43,8 @@ implicit none
            REAL*8 :: Abundance
         END TYPE
 
-        TYPE (RLabund), DIMENSION(20) :: oiimultiplets
-        TYPE (RLabund), DIMENSION(20) :: niimultiplets
+        TYPE (RLabund), DIMENSION(12) :: oiimultiplets
+        TYPE (RLabund), DIMENSION(7) :: niimultiplets
 
 ! strong line variables
         DOUBLE PRECISION :: X23,O_R23upper, O_R23lower, N2,O_N2, O3N2, O_O3N2, Ar3O3, O_Ar3O3, S3O3, O_S3O3
@@ -978,7 +978,7 @@ if(A4686 > 0)	print "(1x,A17,F5.3)", "He++ (4686)/H+ = ", A4686
       print *,"Abundance from co-added intensity: "
       print "(ES9.2)",rlabundtemp / weight
 
-      niimultiplets%Multiplet = (/"V3     ","V5     ","V8     " ,"V12    ","V20    ","V28    ","3d-4f  ","","","","","","","","","","","","",""/)
+      niimultiplets%Multiplet = (/"V3     ","V5     ","V8     " ,"V12    ","V20    ","V28    ","3d-4f  "/)
 
 ! get multiplet abundances from coadded intensity
 
@@ -1054,7 +1054,7 @@ if(A4686 > 0)	print "(1x,A17,F5.3)", "He++ (4686)/H+ = ", A4686
       print *,"Abundance from co-added intensity: "
       print "(ES9.2)",rlabundtemp/weight
 
-      oiimultiplets%Multiplet = (/" V1    "," V2    "," V5    " ," V10   "," V11   "," V12   "," V19   "," V20   "," V25   "," V28   "," V33   "," 3d-4f ","","","","","","","",""/)
+      oiimultiplets%Multiplet = (/" V1    "," V2    "," V5    " ," V10   "," V11   "," V12   "," V19   "," V20   "," V25   "," V28   "," V33   "," 3d-4f "/)
 
 ! get multiplet abundances from coadded intensity
 
@@ -1187,16 +1187,16 @@ if(A4686 > 0)	print "(1x,A17,F5.3)", "He++ (4686)/H+ = ", A4686
 
 
 
- !three other cases to add for oxygen, A6, A8, and sum of observed abundances, commented case causes errors
+ !three other cases to add for oxygen, A6, A8, and sum of observed abundances, commented case causes errors due to undefined variables
 
 ! nitrogen - complete
 
      if (niiCELabund .gt. 0 .and. niiiUVCELabund .gt. 0 .and. nivCELabund .gt. 0) then !all ionisation stages seen
        CELicfN = 1.
-       NabundCEL = niCELabund + niiCELabund + niiiCELabund
+       NabundCEL = niiCELabund + niiiCELabund + nivCELabund
      elseif (niiCELabund .gt. 0 .and. niiiUVCELabund .eq. 0 .and. nivCELabund .gt. 0) then !no N2+ seen
        CELicfN = 1.5
-       NabundCEL = 1.5*(niCELabund + niiiUVCELabund)
+       NabundCEL = 1.5*(niiCELabund + nivCELabund)
      elseif (niiCELabund .gt. 0 .and. niiiUVCELabund .eq. 0 .and. nivCELabund .eq.0) then !Only N+ seen
        CELicfN = OabundCEL/oiiCELabund
        NabundCEL = niiCELabund * CELicfN 

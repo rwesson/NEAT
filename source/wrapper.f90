@@ -1,10 +1,10 @@
 program wrapper
 
-        CHARACTER*80 :: fname1, fname2, fname3, ofname
+        CHARACTER*80 :: fname1, fname2, fname3, ofname !filenames - ofname = output from randomiser, fname1 2 3 = inputs
 	CHARACTER*10 :: temp
-	INTEGER :: I, runs, doublext
+	INTEGER :: I, runs, doublext !runs = number of runs for randomiser
 	character*6 :: no
-	CALL getarg(1,temp)
+	CALL getarg(1,temp) !get info from input arguments
 	read (temp,*) runs
 	CALL getarg(2,temp)
 	read (temp,*) doublext	
@@ -14,10 +14,10 @@ program wrapper
 	
 	!print*, runs
 	
-	call init_random_seed()
+	call init_random_seed()!sets seed for randomiser
 	ofname = "r_out"
                 !"ball1                                                                           " !length of 80char
-	if(runs > 1)then	
+	if(runs > 1)then 	
 		DO I=1,runs
 			print*, "-=-=-=-=-=-=-=-"
 			print*, "iteration ", i 
@@ -32,7 +32,7 @@ program wrapper
 			call abundances(ofname, fname2, fname3, 0, doublext)
 			call system("rm "//ofname)
 		END DO
-	else if(runs == 1)then
+	else if(runs == 1)then !calculates abundances without uncertainties
 		call abundances(fname1, fname2, fname3, 1, doublext)
 	else
 		print*, "I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."	
@@ -89,7 +89,7 @@ contains
 			!open(unit=101, name='randomized_'//Ich//'.dat',type='unknown')
 			print*, outfilename
 
-			open(unit=401, name=outfilename,action="WRITE")!,type='unknown')
+			open(unit=401, file=outfilename,action="WRITE")!,type='unknown')
 			do j = 1,nlines
 		
 				! from http://www.netlib.org/random/random.f90
