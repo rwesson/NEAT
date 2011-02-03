@@ -29,11 +29,11 @@ program wrapper
 			print*, ofname
 	
 			call randomizer(fname1, ofname)
-			call abundances(ofname, fname2, fname3, 0, doublext)
+			call abundances(ofname, fname2, fname3, 0)!, doublext)
 			call system("rm "//ofname)
 		END DO
 	else if(runs == 1)then !calculates abundances without uncertainties
-		call abundances(fname1, fname2, fname3, 1, doublext)
+		call abundances(fname1, fname2, fname3, 1)!, doublext)
 	else
 		print*, "I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."	
 	endif		

@@ -102,14 +102,14 @@ implicit none
            print *,"Derived extinction <0 ; assuming 0"
            meanextinction = 0.0
         endif
-
+	print *,"line 105"
         !actual dereddening
 
         CALL deredden(ILs, Iint, meanextinction, cerror)
         CALL deredden(H_BS, 4, meanextinction, cerror) 
         call deredden(He_lines, 4, meanextinction, cerror) 
         CALL deredden_O(O, O_dered, meanextinction, cerror)
-	
+	print *,"line 112"	
 	500 FORMAT (5(f10.4))
 	if(runonce == 1) OPEN(801, FILE=trim(fname1)//"_dered", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
 	!WRITE(801,'(A40)') "sjfnb;ashfb"
@@ -124,11 +124,11 @@ implicit none
 		end do
 	endif	
 	if(runonce == 1) CLOSE(801)
-
+	print *,"line 127"
 	if(runonce == 1) call system("sort "//trim(fname1)//"_dered > "//trim(fname1)//"_dered_sort")
 	if(runonce == 1) call system("rm "//trim(fname1)//"_dered")
 		
-
+	print *,"line 131"
 !diagnostics
         call get_diag("ciii1909   ","ciii1907   ", ILs, ciiiNratio)	! ciii ratio   
         call get_diag("oii3729    ","oii3726    ", ILs, oiiNratio )	! oii ratio
@@ -154,7 +154,7 @@ implicit none
 ! O II
 
 
-
+	print *,"line 157"
 	if(ILs(get_ion("oii7319b    ",ILs, Iint))%int_dered > 0) then
 
 		ion_no1 = get_ion("oii7319b    ",ILs, Iint)
@@ -192,7 +192,7 @@ implicit none
        endif
        
 ! S II
-
+	print *,"line 195"
       ion_no1 = get_ion("sii6716    ",ILs, Iint)
       ion_no2 = get_ion("sii6731    ",ILs, Iint)
       ion_no3 = get_ion("sii4068    ",ILs, Iint)
@@ -207,7 +207,7 @@ implicit none
 ! now get diagnostics zone by zone.
 
 ! low ionisation
-
+	print *,"line 210"
       lowtemp = 10000.0
 
       do i = 1,2
@@ -303,7 +303,7 @@ implicit none
 
       
 ! medium ionisation
-
+	print *,"line 306"
 	cliiiDens = 0
 	ciiiDens = 0
 	arivDens = 0
@@ -389,7 +389,7 @@ implicit none
            
       
 ! high ionisation
-
+	print *,"line 392"
       hightemp = medtemp
 
       do i = 1,2
@@ -424,7 +424,7 @@ implicit none
          endif
 
       enddo
-
+	print *,"line 427"
 !done calculating, now write out.
 
       print *,""

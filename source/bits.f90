@@ -24,7 +24,7 @@ implicit none!
 contains
 
 subroutine read_ilines(ILs, Iint)        
-        TYPE(line), DIMENSION(51) :: ILs
+        TYPE(line), DIMENSION(62) :: ILs
         INTEGER :: Iint 
 
         print *, "Initialisation"
@@ -34,7 +34,7 @@ subroutine read_ilines(ILs, Iint)
 
         301 FORMAT(A11, 1X, A6, 1X, F7.2, 1X, A20,1X,A4)
         OPEN(201, file="source/Ilines_levs", status='old')
-                DO WHILE (.true.)
+                DO WHILE (Iint < 62)!(.true.)
                         READ(201,301,end=401) ILs(Iint)%name, ILs(Iint)%ion, ILs(Iint)%wavelength, ILs(Iint)%transition ,ILs(Iint)%zone!end condition breaks loop.  
 			Iint = Iint + 1
                 END DO
@@ -136,7 +136,7 @@ contains
 
 integer function get_ion(ionname, iontable, Iint)
         CHARACTER*11 :: ionname
-        TYPE(line), DIMENSION(51) :: iontable 
+        TYPE(line), DIMENSION(62) :: iontable 
         INTEGER :: i
 	INTEGER, INTENT(IN) :: Iint
         
@@ -156,7 +156,7 @@ end function
         
 
 subroutine element_assign(ILs, O, IR, UV, Iint)
-        TYPE(line), DIMENSION(51), INTENT(OUT) :: ILs
+        TYPE(line), DIMENSION(62), INTENT(OUT) :: ILs
         REAL*8, DIMENSION(3,335), INTENT(IN) :: O, IR, UV
         INTEGER, INTENT(IN) :: Iint
         INTEGER :: i, j
