@@ -645,7 +645,7 @@ if(A4686 > 0)        print "(1x,A17,F6.4)", "He++ (4686)/H+ = ", A4686
            endif
                  if ((ILs(i)%abundance .gt. 0) .and. (ILs(i)%abundance < 1 ) ) then
                        PRINT "(1X, A11, 1X, F7.3, 5X, ES10.4)",ILs(i)%name,ILs(i)%int_dered,ILs(i)%abundance
-                 elseif( (ILs(i)%abundance > 1 ) .or. (ILs(i)%abundance > 1 ) < 1E-10 )then
+                 elseif( (ILs(i)%abundance > 1 ) .or. (ILs(i)%abundance < 1E-10 ) )then
                          ILs(i)%abundance = 0        
                  endif
         enddo
