@@ -17,10 +17,10 @@ implicit none
         DOUBLE PRECISION :: normalise, oiiNratio, oiiDens, oiiiTratio, oiiiTemp, oiiiIRNratio, oiiiIRTratio, niiTratio, niiTemp, arivNratio, arivDens, cliiiNratio, cliiiDens, siiNratio, siiDens, siiTratio, siiTemp, oiiTratio, oiiTemp, neiiiTratio, neiiiIRTratio, neiiiTemp, neiiiIRTemp, abund, meandensity, meantemp, oitemp, citemp
         DOUBLE PRECISION :: ciiiNratio,neivNratio,nevTratio,siiiTratio,ariiiTratio,arvTratio,lowtemp,lowdens,medtemp,ciiidens,meddens,siiitemp,ariiitemp,hightemp,neivdens,highdens,arvtemp,nevtemp,oiTratio,ciTratio
         DOUBLE PRECISION :: oiiRLabund, niiRLabund, ciiRLabund, cii4267rlabund, neiiRLabund, ciiiRLabund, niiiRLabund, RLabundtemp, weight
-        DOUBLE PRECISION :: ciiiCELabund, niiCELabund, niiiIRCELabund, niiiUVCELabund, oiiCELabund, oiiiCELabund, oiiiIRCELabund, neiiIRCELabund, neiiiIRCELabund, neiiiCELabund, neivCELabund, siiCELabund, siiiCELabund, siiiIRCELabund, sivIRCELabund, cliiiCELabund, ariiiCELabund, arivCELabund, ariiiIRCELabund, nivCELabund, niCELabund, niiiCELabund, ciiCELabund, civCELabund, nvCELabund, nevCELabund, arvCELabund, CELabundtemp, ciCELabund, oiCELabund
+        DOUBLE PRECISION :: ciiiCELabund, niiCELabund, niiiIRCELabund, niiiUVCELabund, oiiCELabund, oiiiCELabund, oiiiIRCELabund, neiiIRCELabund, neiiiIRCELabund, neiiiCELabund, neivCELabund, siiCELabund, siiiCELabund, siiiIRCELabund, sivIRCELabund, cliiiCELabund, ariiiCELabund, arivCELabund, ariiiIRCELabund, nivCELabund, niCELabund, niiiCELabund, ciiCELabund, civCELabund, nvCELabund, nevCELabund, arvCELabund, CELabundtemp, ciCELabund, oiCELabund !public?
         DOUBLE PRECISION :: CELicfO, CELicfC, CELicfN, CELicfNe, CELicfAr, CELicfS
         DOUBLE PRECISION :: RLicfO, RLicfC, RLicfN, RLicfNe
-        DOUBLE PRECISION :: CabundRL, CabundCEL, NabundRL, NabundCEL, OabundRL, OabundCEL, NeabundRL, NeabundCEL, SabundCEL, ArabundCEL, NOabundCEL, NCabundCEL
+        DOUBLE PRECISION :: CabundRL, CabundCEL, NabundRL, NabundCEL, OabundRL, OabundCEL, NeabundRL, NeabundCEL, SabundCEL, ArabundCEL, NOabundCEL, NCabundCEL !public?
         DOUBLE PRECISION :: adfC, adfN, adfO, adfNe, w1, w2, w3, w4
         DOUBLE PRECISION :: adfC2plus, adfN2plus, adfO2plus, adfNe2plus
         DOUBLE PRECISION :: c1, c1_err, c2, c2_err, c3, c3_err, meanextinction, cerror, fl, ratob, tempi, temp, temp2, A4471, A4686, A6678, A5876
@@ -113,15 +113,14 @@ implicit none
            print *,"Derived extinction <0 ; assuming 0"
            meanextinction = 0.0
         endif
-        print *,"line 105"
+
         !actual dereddening
 
         CALL deredden(ILs, Iint, meanextinction, cerror)
         CALL deredden(H_BS, 4, meanextinction, cerror) 
         call deredden(He_lines, 4, meanextinction, cerror) 
         
-        CALL deredden_O(O, O_dered, meanextinction, cerror)
-        print *,"line 112"        
+        CALL deredden_O(O, O_dered, meanextinction, cerror)       
         
         
         500 FORMAT (5(f10.4))
@@ -139,11 +138,9 @@ implicit none
                 end do
         endif        
         if(runonce == 1) CLOSE(801)
-        print *,"line 127"
         if(runonce == 1) call system("sort "//trim(fname1)//"_dered > "//trim(fname1)//"_dered_sort")
         if(runonce == 1) call system("rm "//trim(fname1)//"_dered")
                 
-        print *,"line 131"
 !diagnostics
         call get_diag("ciii1909   ","ciii1907   ", ILs, ciiiNratio)        ! ciii ratio   
         call get_diag("oii3729    ","oii3726    ", ILs, oiiNratio )        ! oii ratio
@@ -170,7 +167,6 @@ implicit none
 ! O II
 
 
-        print *,"line 157"
         if(ILs(get_ion("oii7319b    ",ILs, Iint))%int_dered > 0) then
 
                 ion_no1 = get_ion("oii7319b    ",ILs, Iint)
@@ -209,7 +205,6 @@ implicit none
        endif
        
 ! S II
-        print *,"line 195"
       ion_no1 = get_ion("sii6716    ",ILs, Iint)
       ion_no2 = get_ion("sii6731    ",ILs, Iint)
       ion_no3 = get_ion("sii4068    ",ILs, Iint)
@@ -225,7 +220,6 @@ implicit none
 
 ! low ionisation
         ! Edited to stop high limits being included in diagnostic averages. DJS
-        print *,"line 210"
       lowtemp = 10000.0
 
       do i = 1,2
@@ -320,7 +314,6 @@ implicit none
 
       
 ! medium ionisation
-        print *,"line 306"
         cliiiDens = 0
         ciiiDens = 0
         arivDens = 0
@@ -408,7 +401,6 @@ implicit none
            
 
 ! high ionisation
-        print *,"line 392"
       hightemp = medtemp
 
       do i = 1,2
@@ -443,7 +435,6 @@ implicit none
          endif
 
       enddo
-        print *,"line 427"
 !done calculating, now write out.
 
 
@@ -645,7 +636,7 @@ if(A4686 > 0)        print "(1x,A17,F6.4)", "He++ (4686)/H+ = ", A4686
            endif
                  if ((ILs(i)%abundance .gt. 0) .and. (ILs(i)%abundance < 1 ) ) then
                        PRINT "(1X, A11, 1X, F7.3, 5X, ES10.4)",ILs(i)%name,ILs(i)%int_dered,ILs(i)%abundance
-                 elseif( (ILs(i)%abundance > 1 ) .or. (ILs(i)%abundance > 1 ) < 1E-10 )then
+                 elseif((ILs(i)%abundance > 1 ) .or. (ILs(i)%abundance < 1E-10 ))then
                          ILs(i)%abundance = 0        
                  endif
         enddo
@@ -1443,30 +1434,48 @@ print *,"Element           ICF     X/H"
 print *,"-------           ---     ---"
 
 if(NCabundCEL > 0) print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Neutral Carbon ",0.0,NCabundCEL,12+log10(NCabundCEL)
+	if(runonce == 0 .and. NCabundCEL > 0) WRITE(unit=841,FMT=*)NCabundCEL
 if(CabundCEL > 0)  print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Carbon         ",CELicfC,CabundCEL,12+log10(CabundCEL)
-
+	if(runonce == 0 .and. CabundCEL > 0) WRITE(unit = 842,FMT=*)CabundCEL
 
 if(niiCELabund > 0) print "(A24,ES8.2)"                ,"  N+/H+                 ",niiCELabund
+	if(runonce == 0 .and. niiCELabund > 0) WRITE(unit = 843,FMT=*)niiCELabund
 if(NabundCEL > 0)  print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Nitrogen       ",CELicfN,NabundCEL,12+log10(NabundCEL)
+	if(runonce == 0 .and. NabundCEL > 0) WRITE(unit = 844,FMT=*)NabundCEL
 
 if(NOabundCEL > 0) print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Neutral Oxygen ",0.0,NOabundCEL,12+log10(NOabundCEL)
+	if(runonce == 0 .and. NOabundCEL > 0) WRITE(unit = 845,FMT=*)NOabundCEL
 if(oiiCELabund >0) print "(A24,ES8.2)"                , "  O+/H+                 ",oiiCELabund
+	if(runonce == 0 .and. oiiCELabund >0) WRITE(unit = 846,FMT=*)oiiCELabund
 if(oiiiCELabund >0) print "(A24,ES8.2)"               , "  O++/H+                ",oiiiCELabund
+	if(runonce == 0 .and. oiiiCELabund >0) WRITE(unit = 847,FMT=*)oiiiCELabund
 if(OabundCEL > 0)  print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Oxygen         ",CELicfO,OabundCEL,12+log10(OabundCEL)
+	if(runonce == 0 .and. OabundCEL > 0) WRITE(unit = 848,FMT=*)OabundCEL
 
 if(neiiiCELabund >0) print "(A24,ES8.2)"               , "  Ne++/H+               ",neiiiCELabund
+	if(runonce == 0 .and. neiiiCELabund >0) WRITE(unit = 849,FMT=*)neiiiCELabund
 if(neivCELabund >0)  print "(A24,ES8.2)"               , "  Ne+++/H+              ",neivCELabund
+	if(runonce == 0 .and. neivCELabund >0) WRITE(unit = 850,FMT=*)neivCELabund
 if(nevCELabund >0)   print "(A24,ES8.2)"               , "  Ne++++/H+             ",nevCELabund
+	if(runonce == 0 .and. nevCELabund >0) WRITE(unit = 851,FMT=*)nevCELabund
 if(NeabundCEL > 0) print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Neon           ",CELicfNe,NeabundCEL,12+log10(NeabundCEL)
+	if(runonce == 0 .and. NeabundCEL > 0) WRITE(unit = 852,FMT=*)NeabundCEL
 
 if(ariiiCELabund >0) print "(A24,ES8.2)"               , "  Ar++/H+               ",ariiiCELabund
+	if(runonce == 0 .and. ariiiCELabund >0) WRITE(unit = 853,FMT=*)ariiiCELabund
 if(arivCELabund >0)  print "(A24,ES8.2)"               , "  Ar+++/H+              ",arivCELabund
+	if(runonce == 0 .and. arivCELabund >0) WRITE(unit = 854,FMT=*)arivCELabund
 if(arvCELabund >0)   print "(A24,ES8.2)"               , "  Ar++++/H+             ",arvCELabund
+	if(runonce == 0 .and. arvCELabund >0) WRITE(unit = 855,FMT=*)arvCELabund
 if(ArabundCEL > 0) print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Argon          ",CELicfAr,ArabundCEL,12+log10(ArabundCEL)
+	if(runonce == 0 .and. ArabundCEL > 0) WRITE(unit = 856,FMT=*)ArabundCEL
 
 if(siiCELabund >0) print "(A24,ES8.2)"                , "  S+/H+                 ",siiCELabund
+	if(runonce == 0 .AND. siiCELabund >0) WRITE(unit = 857,FMT=*)siiCELabund
 if(siiiCELabund >0) print "(A24,ES8.2)"               , "  S++/H+                ",siiiCELabund
+	if(runonce == 0 .AND. siiiCELabund >0) WRITE(unit = 858,FMT=*)siiiCELabund
 if(SabundCEL > 0)  print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Sulphur        ",CELicfS,SabundCEL,12+log10(SabundCEL)
+	if(runonce == 0 .AND. SabundCEL > 0) WRITE(unit = 859,FMT=*)SabundCEL
 
 if(OabundCEL > 0 .and. NabundCEL > 0)  print*, " "
 if(OabundCEL > 0 .and. NabundCEL > 0)  print*, " "
@@ -1481,10 +1490,16 @@ print *,""
 print *,"Element     ICF     X/H"
 print *,"-------     ---     ---"
 if(Hetotabund > 0) print "(A12,F5.2,4X,ES8.2,2X,F5.2)"," Helium      ",1.0,Hetotabund,12+log10(Hetotabund)
+	if(runonce == 0 .AND. Hetotabund > 0) WRITE(unit = 860,FMT=*)Hetotabund
 if(CabundRL > 0) print "(A12,F5.2,4X,ES8.2,2X,F5.2)"," Carbon      ",RLicfC,CabundRL,12+log10(CabundRL)
+	if(runonce == 0 .AND. CabundRL > 0) WRITE(unit = 861,FMT=*)CabundRL
 if(NabundRL > 0) print "(A12,F5.2,4X,ES8.2,2X,F5.2)"," Nitrogen    ",RLicfN,NabundRL,12+log10(NabundRL)
+	if(runonce == 0 .AND. NabundRL > 0) WRITE(unit = 862,FMT=*)NabundRL
 if(OabundRL > 0) print "(A12,F5.2,4X,ES8.2,2X,F5.2)"," Oxygen      ",RLicfO,OabundRL,12+log10(OabundRL)
+	if(runonce == 0 .AND. OabundRL > 0) WRITE(unit = 863,FMT=*)OabundRL
 if(NeabundRL > 0) print "(A12,F5.2,4X,ES8.2,2X,F5.2)"," Neon        ",RLicfNe,NeabundRL,12+log10(NeabundRL)
+	if(runonce == 0 .AND. NeabundRL > 0) WRITE(unit = 864,FMT=*)NeabundRL
+
 
 !Strong line methods
 

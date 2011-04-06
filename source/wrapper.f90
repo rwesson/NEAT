@@ -17,7 +17,33 @@ program wrapper
 	call init_random_seed()!sets seed for randomiser
 	ofname = "r_out"
                 !"ball1                                                                           " !length of 80char
-	if(runs > 1)then 	
+	if(runs > 1)then 
+
+		!open/create files here for adundances	
+		OPEN(841, FILE=trim(fname1)//"_NC_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+		OPEN(842, FILE=trim(fname1)//"_C_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+		OPEN(843, FILE=trim(fname1)//"_Nii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+		OPEN(844, FILE=trim(fname1)//"_N_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+		OPEN(845, FILE=trim(fname1)//"_NO_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+		OPEN(846, FILE=trim(fname1)//"_Oii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+		OPEN(847, FILE=trim(fname1)//"_Oiii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+		OPEN(848, FILE=trim(fname1)//"_O_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+		OPEN(849, FILE=trim(fname1)//"_Neiii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+		OPEN(850, FILE=trim(fname1)//"_Neiv_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+		OPEN(851, FILE=trim(fname1)//"_Nev_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+		OPEN(852, FILE=trim(fname1)//"_Ne_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+		OPEN(853, FILE=trim(fname1)//"_Ariii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+		OPEN(854, FILE=trim(fname1)//"_Ariv_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+		OPEN(855, FILE=trim(fname1)//"_Arv_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+		OPEN(856, FILE=trim(fname1)//"_Ar_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+		OPEN(857, FILE=trim(fname1)//"_Sii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+		OPEN(858, FILE=trim(fname1)//"_Siii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+		OPEN(859, FILE=trim(fname1)//"_S_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+		OPEN(860, FILE=trim(fname1)//"_He_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+		OPEN(861, FILE=trim(fname1)//"_C_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+		OPEN(862, FILE=trim(fname1)//"_N_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+		OPEN(863, FILE=trim(fname1)//"_O_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+		OPEN(864, FILE=trim(fname1)//"_Ne_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
 		DO I=1,runs
 			print*, "-=-=-=-=-=-=-=-"
 			print*, "iteration ", i 
@@ -31,6 +57,9 @@ program wrapper
 			call randomizer(fname1, ofname)
 			call abundances(ofname, fname2, fname3, 0)!, doublext)
 			call system("rm "//ofname)
+		END DO
+		DO I=841,864
+			CLOSE(unit=I)
 		END DO
 	else if(runs == 1)then !calculates abundances without uncertainties
 		call abundances(fname1, fname2, fname3, 1)!, doublext)

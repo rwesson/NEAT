@@ -300,16 +300,28 @@ end subroutine
 double precision function flambda(X,switch)
         DOUBLE PRECISION :: X
         INTEGER :: switch
-        !Howarth 1983
+        !Howarth 1983 Galactic + Seaton 1979
         if(switch == 1) flambda = ((16.07 - (3.20 * X) + (0.2975*X**2))) !far UV
         if(switch == 2) flambda = ((2.19 + (0.848*X) + (1.01/(((X-4.60)**2) + 0.280)))) !mid UV
         if(switch == 3) flambda = ((1.46 + (1.048*X) + (1.01/(((X-4.60)**2) + 0.280)))) !near UV
-        if(switch == 4) flambda = ((3.1 + (2.56*(X-1.83)) - (0.993*(X-1.83)**2) )) ! optical
-        if(switch == 5) flambda = (( (1.86*X**2) - (0.48*X**3) - (0.1*X))) ! IR
+        if(switch == 4) flambda = ((3.1 + (2.56*(X-1.83)) - (0.993*(X-1.83)**2) )) ! optical (3)
+        if(switch == 5) flambda = (( (1.86*X**2) - (0.48*X**3) - (0.1*X))) ! IR (4)
         
         flambda = (flambda / 3.63) - 1
 
 end function        
+
+!double precision function flambdaLMC(X,switch) !**how to correct for foreground reddening?**
+!	DOUBLE PRECISION :: X
+!	INTEGER :: switch
+	!Howarth 1983 LMC
+!	if(switch == 1) flambdaLMC = ( (3.1 - 0.236 + (0.462*X) + (0.105*(X**2)) + (0.454/((X-4.557)**2 + 0.293))) ) !UV (1)
+!	if(switch == 2) flambdaLMC = ((3.1 + (2.04*(X - 1.83)) + 0.094*(X - 1.83)**2)) !Optical (2)
+!	if(switch == 3) flambdaLMC = (((1.86*(X**2)) - (0.48*(X**3)) - (0.1*X))) !IR (4)
+
+!end function
+
+!Also need flambdaCCM & SMC
 
 subroutine deredden(lines, number, m_ext, cerror)
         TYPE(line), DIMENSION(:) :: lines

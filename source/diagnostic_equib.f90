@@ -425,8 +425,8 @@
           ENDDO 
           FRAT=SUMA/SUMB 
           SUMC = 1./SUMC 
-          TDRAT(1,JJD)=DENS 
-          TDRAT(2,JJD)=FRAT 
+!          TDRAT(1,JJD)=DENS  !are these lines necessary, 
+!          TDRAT(2,JJD)=FRAT  !TDRAT is now never used again?
 !          write(6,*),jd,suma,sumb,sumc,dens,frat                       
 !          WRITE(7,1017) TEMP, DENS, SUMC 
 !          WRITE(8,1017) TEMP, DENS, FRAT, FRAT-inratio
