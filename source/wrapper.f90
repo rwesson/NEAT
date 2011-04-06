@@ -6,11 +6,9 @@ program wrapper
 	character*6 :: no
 	CALL getarg(1,temp) !get info from input arguments
 	read (temp,*) runs
-	CALL getarg(2,temp)
-	read (temp,*) doublext	
-	CALL getarg(3,fname1) 
-        CALL getarg(4,fname2)
-        CALL getarg(5,fname3)
+	CALL getarg(2,fname1) 
+        CALL getarg(3,fname2)
+        CALL getarg(4,fname3)
 	
 	!print*, runs
 	

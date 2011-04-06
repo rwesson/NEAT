@@ -130,11 +130,11 @@ implicit none
                 do iii=1, Iint
         
                         if(ILs(iii)%int_dered .ne. 0) write(801,500) ILs(iii)%wavelength, ILs(iii)%intensity, ILs(iii)%int_err, ILs(iii)%int_dered, ILs(iii)%int_dered_err*ILs(iii)%int_dered
-
-                        
-                        if(( He_lines(iii)%int_dered .ne. 0) .and. iii < 5 ) write(801,500) He_lines(iii)%wavelength, He_lines(iii)%intensity, He_lines(iii)%int_err, He_lines(iii)%int_dered, He_lines(iii)%int_dered_err*He_lines(iii)%int_dered
+                end do
+                do iii=1,4
+                        if( He_lines(iii)%int_dered .ne. 0 ) write(801,500) He_lines(iii)%wavelength, He_lines(iii)%intensity, He_lines(iii)%int_err, He_lines(iii)%int_dered, He_lines(iii)%int_dered_err*He_lines(iii)%int_dered
         
-                        if(( H_BS(iii)%int_dered .ne. 0) .and. iii < 5) write(801,500) H_BS(iii)%wavelength, H_BS(iii)%intensity, H_BS(iii)%int_err, H_BS(iii)%int_dered, H_BS(iii)%int_dered_err*H_BS(iii)%int_dered
+                        if( H_BS(iii)%int_dered .ne. 0 ) write(801,500) H_BS(iii)%wavelength, H_BS(iii)%intensity, H_BS(iii)%int_err, H_BS(iii)%int_dered, H_BS(iii)%int_dered_err*H_BS(iii)%int_dered
                 end do
         endif        
         if(runonce == 1) CLOSE(801)
@@ -201,7 +201,7 @@ implicit none
                 
        else
                        oiiTratio=0.0
-                PRINT*, "OII missing, Wi nøt trei a høliday in Sweden this yer? "
+                PRINT*, "OII missing, Wi nï¿½t trei a hï¿½liday in Sweden this yer? "
        endif
        
 ! S II
@@ -636,7 +636,7 @@ if(A4686 > 0)        print "(1x,A17,F6.4)", "He++ (4686)/H+ = ", A4686
            endif
                  if ((ILs(i)%abundance .gt. 0) .and. (ILs(i)%abundance < 1 ) ) then
                        PRINT "(1X, A11, 1X, F7.3, 5X, ES10.4)",ILs(i)%name,ILs(i)%int_dered,ILs(i)%abundance
-                 elseif((ILs(i)%abundance > 1 ) .or. (ILs(i)%abundance < 1E-10 ))then
+                 elseif( (ILs(i)%abundance > 1 ) .or. (ILs(i)%abundance < 1E-10 ) )then
                          ILs(i)%abundance = 0        
                  endif
         enddo
