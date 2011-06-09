@@ -449,93 +449,125 @@ implicit none
       print *,"Diagnostic       Zone      Value    Diagnostic ratio"
       print *,""
 if(oiidens >0)     print "(A28,F8.0,A1,F8.3)","[O II] density   Low       ",oiidens, " ", oiiNratio
+	if(runonce == 0 .and. oiidens > 0) WRITE(unit=865,FMT=*)oiidens
 if(siidens >0)     print "(A28,F8.0,A1,F8.3)","[S II] density   Low       ",siidens, " ", REAL(1/siiNratio)
+	if(runonce == 0 .and. siidens > 0) WRITE(unit=866,FMT=*)siidens
 if(lowdens >0)     print "(A28,F8.0)"," density adopted Low       ",lowdens
+	if(runonce == 0 .and. lowdens > 0) WRITE(unit=867,FMT=*)lowdens
 if(lowdens >0)     print *,""
 
 
 
 if(niitemp > 0.2)then
                    print "(A28,F8.0,A1,F8.3)","[N II] temp      Low       ",niitemp, " ", niitratio 
+	if(runonce == 0)WRITE(UNIT=868,FMT=*)niitemp
 else if(INT(niitemp) == -1)then
                    print "(A28,F8.0,A1,F8.3)","[N II] temp      Low       ",20000.0, " ", niitratio 
+	if(runonce == 0)WRITE(UNIT=868,FMT=*)"20000"
 else
 
 endif
 
 if(oiitemp >0.2)then
                    print "(A28,F8.0,A1,F8.3)","[O II] temp      Low       ",oiitemp, " ", REAL(1/oiitratio) 
+	if(runonce == 0)WRITE(UNIT=869,FMT=*)oiitemp
 else if(INT(oiitemp) == -1)then
                    print "(A28,F8.0,A1,F8.3)","[O II] temp      Low       ",20000.0, " ", REAL(1/oiitratio) 
+	if(runonce == 0)WRITE(UNIT=869,FMT=*)"20000"
 else
 endif 
 
 if(siitemp >0.2 )then
                    print "(A28,F8.0,A1,F8.3)","[S II] temp      Low       ",siitemp, " ", siitratio 
+	if(runonce == 0)WRITE(UNIT=870,FMT=*)siitemp
 else if(INT(siitemp) == -1)then
                    print "(A28,F8.0,A1,F8.3)","[S II] temp      Low       ",20000.0, " ", siitratio 
+	if(runonce == 0)WRITE(UNIT=870,FMT=*)"20000"
 else
 endif 
 
 if(oitemp >0.2 )then
                    print "(A28,F8.0,A1,F8.3)","[O I]  temp      Low       ",oitemp, " ", oitratio  
+	if(runonce == 0)WRITE(UNIT=871,FMT=*)oitemp
 else if(INT(oitemp) == -1)then
                    print "(A28,F8.0,A1,F8.3)","[O I]  temp      Low       ",20000.0, " ", oitratio 
+	if(runonce == 0)WRITE(UNIT=871,FMT=*)"20000"
 else
 endif     
 
 if(citemp >0.2 )then
                    print "(A28,F8.0,A1,F8.3)","[C I]  temp      Low       ",citemp, " ", citratio  
+	if(runonce == 0)WRITE(UNIT=872,FMT=*)citemp
 else if(INT(citemp) == -1)then
                    print "(A28,F8.0,A1,F8.3)","[C I]  temp      Low       ",20000.0, " ", citratio 
+	if(runonce == 0)WRITE(UNIT=872,FMT=*)"20000"
 else
 endif                    
 
 
 if(lowtemp >0)     print "(A28,F8.0)"," temp adopted    Low       ",lowtemp
+	if(runonce == 0 .and. lowtemp > 0)WRITE(UNIT=873,FMT=*)lowtemp
 if(lowtemp >0)     print *,""
 
 if(cliiidens > 0 )    print "(A28,F8.0,A1,F8.3)","[Cl III] density Medium    ",cliiidens," ", cliiinratio
+	if(runonce == 0 .and. cliiidens > 0 )WRITE(UNIT=874,FMT=*)cliiidens
 if(arivdens  > 0 )    print "(A28,F8.0,A1,F8.3)","[Ar IV] density  Medium    ",arivdens," ", arivnratio
+	if(runonce == 0 .and. arivdens > 0 )WRITE(UNIT=875,FMT=*)arivdens
 if(ciiidens  > 0 )    print "(A28,F8.0,A1,F8.3)","C III] density   Medium    ",ciiidens," ", ciiinratio
+	if(runonce == 0 .and. ciiidens > 0 )WRITE(UNIT=876,FMT=*)ciiidens
 if(meddens   > 0 )    print "(A28,F8.0)"," density adopted Medium    ",meddens
+	if(runonce == 0 .and. meddens > 0 )WRITE(UNIT=877,FMT=*)meddens
 if(meddens   > 0 )    print *,""
 
 if(oiiitemp >0.2)then
                    print "(A28,F8.0,A1,F8.3)","[O III] temp     Medium    ",oiiitemp, " ",oiiitratio
+	if(runonce == 0)WRITE(UNIT=878,FMT=*)oiiitemp
 else if(INT(oiiitemp) == -1)then 
                    print "(A28,F8.0,A1,F8.3)","[O III] temp     Medium    ",20000.0, " ",oiiitratio
+	if(runonce == 0)WRITE(UNIT=878,FMT=*)"20000"
 else
 endif
 
 if(neiiitemp>0.2)then
                    print "(A28,F8.0,A1,F8.3)","[Ne III] temp    Medium    ",neiiitemp, " ",neiiitratio
+	if(runonce == 0)WRITE(UNIT=879,FMT=*)neiiitemp
 else if(INT(neiiitemp) == -1)then
                    print "(A28,F8.0,A1,F8.3)","[Ne III] temp    Medium    ",20000.0, " ",neiiitratio
+	if(runonce == 0)WRITE(UNIT=879,FMT=*)"20000"
 else
 endif                   
 if(ariiitemp>0.2)then
                    print "(A28,F8.0,A1,F8.3)","[Ar III] temp    Medium    ",ariiitemp, " ",ariiitratio
+	if(runonce == 0)WRITE(UNIT=880,FMT=*)ariiitemp
 else if(INT(ariiitemp) == -1)then
                    print "(A28,F8.0,A1,F8.3)","[Ar III] temp    Medium    ",20000.0, " ",ariiitratio
+	if(runonce == 0)WRITE(UNIT=880,FMT=*)"20000"
 else
 endif
 if(siiitemp > 0.2)then
                    print "(A28,F8.0,A1,F8.3)","[S III] temp     Medium    ",siiitemp, " ",siiitratio
+	if(runonce == 0)WRITE(UNIT=881,FMT=*)siiitemp
 else if(int(siiitemp) == -1)then
                    print "(A28,F8.0,A1,F8.3)","[S III] temp     Medium    ",20000.0, " ",siiitratio
+	if(runonce == 0)WRITE(UNIT=881,FMT=*)"20000"
 else
 endif                   
 
 if(medtemp  >0)    print "(A28,F8.0)"," temp adopted    Medium    ",medtemp
+	if(runonce == 0 .and. medtemp > 0)WRITE(UNIT=882,FMT=*)medtemp
 if(medtemp  >0)    print *,""
 
 if(neivdens >0)    print "(A28,F8.0,A1,F8.3)","[Ne IV] density  High      ",neivdens, " ",neivnratio
+	if(runonce == 0 .and. neivdens > 0)WRITE(UNIT=883,FMT=*)neivdens
 if(highdens >0)    print "(A28,F8.0)"," density adopted High      ",highdens
+	if(runonce == 0 .and. highdens > 0)WRITE(UNIT=884,FMT=*)highdens
 if(highdens >0)    print *,""
 if(arvtemp  >0)    print "(A28,F8.0,A1,F8.3)","[Ar V] temp      High      ",arvtemp, " ",arvtratio
+	if(runonce == 0 .and. arvtemp > 0)WRITE(UNIT=885,FMT=*)arvtemp
 if(nevtemp  >0)    print "(A28,F8.0,A1,F8.3)","[Ne V] temp      High      ",nevtemp, " ",nevtratio
+	if(runonce == 0 .and. nevtemp > 0)WRITE(UNIT=886,FMT=*)nevtemp
 if(hightemp >0)    print "(A28,F8.0)"," temp adopted    High      ",hightemp
+	if(runonce == 0 .and. hightemp > 0)WRITE(UNIT=882,FMT=*)hightemp
 
 ! later, make this check with user whether to adopt these values
 
