@@ -44,7 +44,7 @@
                                                    !Maximum no. of Ne increments
       PARAMETER (MAXND=100) 
       INTEGER GX, G(NDIM2), ID(2), JD(2),                               &
-     &  ITRANA(2,NDIM2),ITRANB(2,NDIM2),ITRANC(2,NDIM2)                 
+     &  ITRANA(2,NDIM2),ITRANB(2,NDIM2),ITRANC(2,NDIM2),LOOP                 
       REAL*8 N2(NDIM2),N(NDIM2) 
       REAL*8 TDRAT(2,MAXND), TNIJ(NDIM2,NDIM2), FINTIJ(NDIM2,NDIM2),    &
      & WAVA(NDIM2), WAVB(NDIM2), WAVC(NDIM2), CS(NDIM2,NDIM2),          &
@@ -214,10 +214,17 @@
       !WRITE(6,1005) 
                                                !ratio is to be calculated
       !READ(5,*) TEMPI,TINC,INT 
+      !*****LOOP STARTS HERE*************************
+      DO LOOP = 1, 3
       if (diagtype .eq. "t" .or. diagtype .eq. "T") then
-        TEMPI=5000
-        TINC=50
-        INT=301
+	if (LOOP .eq. 1) then
+        	TEMPI=5000
+		INT=16	
+	else
+        	INT=11
+		TEMPI= valtest(1)
+	endif
+        TINC=(10000)/(10**(LOOP))
         densi=fixedq
         dinc=0
         ind=1
@@ -226,9 +233,19 @@
         TempI=fixedq
         TINC=0
         INT=1
+	if (LOOP .eq. 1) then
         densi=0
-        dinc=0.02
-        ind=301
+        dinc=1
+        ind=6
+	elseif (LOOP .eq. 2) then
+	densi=valtest(2)
+        dinc=0.1
+        ind=11
+	else
+        densi=valtest(2)
+        dinc=0.2
+        ind=6
+	endif
         allocate(results(3,IND))
       endif      
       !WRITE(6,1006) 
@@ -473,20 +490,60 @@
 !      CLOSE(UNIT=8) 
 
 ! here, find the value in RESULTS which is closest to zero
+! sort values in results to find two lowest values
 
      ! valtest(:) = RESULTS(:,1)
 
-      valtest= (/0, 0, 100000/)     
+     ! valtest= (/0, 0, 100000/)     
 
       if (diagtype .eq. "D" .or. diagtype .eq. "d") then
         INT = ind 
       endif
       
-      DO I=1,INT 
-        if (results(3,I) .lt. valtest(3)) then
-           valtest(:) = results(:,I) 
-        endif
-      end do
+!      DO I=1,INT 
+!        if (results(3,I) .lt. valtest(3)) then
+!           valtest(:) = results(:,I) 
+!        endif
+!      end do
+
+	! sort to find lowest values
+	DO I=1,INT
+		DO J=1, INT-I
+			if (results(3,J) .gt. results(3, J+1)) then
+				valtest(:) = results(:,J)
+				results(:,J) = results(:,J+1)
+				results(:,J+1) = valtest(:)
+				!J = J+1
+			else
+				!J = J+1
+			endif
+		end do
+		!I = I+1
+	end do
+	!pull out lowest value
+	if (LOOP .eq. 3) then
+	!pull out lowest value for result
+		valtest(:) = results(:,1)
+	else !check which of two lowest values is lower temp/dens to feed back to start of loop
+		if (diagtype .eq. "D" .or. diagtype .eq. "d") then 
+			if (results(2,1) .gt. results(2,2)) then
+				valtest(:) = results(:,2)
+			else
+				valtest(:) = results(:,1)
+			endif
+		else
+			if (results(1,1) .gt. results(1,2)) then
+				valtest(:) = results(:,2)
+			else
+				valtest(:) = results(:,1)
+			endif
+		endif
+	endif
+	!LOOP = LOOP + 1
+        DEALLOCATE(RESULTS) !thanks Bruce!
+      END DO
+      !********LOOP WOULD END HERE**********************
+
 
 !      if (diagtype .eq. "D" .or. diagtype .eq. "d") then
 !        print *,"  Temperature (K) - assumed   Density (cm-3)"
@@ -501,8 +558,7 @@
       endif
 !      print 1000,valtest(1:2)
 
-        DEALLOCATE(RESULTS) !thanks Bruce!
-      
+
       RETURN
 
  1000 FORMAT(1X,T4,F5.0,T32,F5.0)
