@@ -1,3 +1,4 @@
+!NO NEED TO EDIT THIS FILE!  It was Dave's "fork" of the main program and it's just here in case anything in it was useful.
 
 subroutine abundances(fname1, fname2, fname3, run, doubleext)
 use mod_abundmaths
@@ -126,7 +127,7 @@ implicit none
         PRINT "(1X,A13,F4.2,A4,F4.2)", "Mean c(Hb) = ",meanextinction," +- ",cerror
 
         if (meanextinction .lt. 0.0) then
-           print *,"Derived extinction <0 ; assuming 0:    A Møøse once bit my sister ..."
+           print *,"Derived extinction <0 ; assuming 0:    A Mï¿½ï¿½se once bit my sister ..."
            meanextinction = 0.0
         endif
 
@@ -242,7 +243,7 @@ implicit none
 		
        else
        		oiiTratio=0.0
-		PRINT*, "OII missing, Wi nøt trei a høliday in Sweden this yer? "    
+		PRINT*, "OII missing, Wi nï¿½t trei a hï¿½liday in Sweden this yer? "    
        endif
        
 ! S II
