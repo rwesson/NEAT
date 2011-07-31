@@ -2,8 +2,9 @@ program wrapper
 
         CHARACTER*80 :: fname1, fname2, fname3, ofname !filenames - ofname = output from randomiser, fname1 2 3 = inputs
 	CHARACTER*10 :: temp
-	INTEGER :: I, runs, doublext !runs = number of runs for randomiser
+	INTEGER :: I, runs, doublext, Narg !runs = number of runs for randomiser
 	character*6 :: no
+	Narg = IARGC() !count input arguments
 	CALL getarg(1,temp) !get info from input arguments
 	read (temp,*) runs
 	CALL getarg(2,fname1) 
@@ -65,6 +66,7 @@ program wrapper
 		OPEN(885, FILE=trim(fname1)//"_[ArV]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
 		OPEN(886, FILE=trim(fname1)//"_[NeV]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
 		OPEN(887, FILE=trim(fname1)//"_high_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+		OPEN(888, FILE=trim(fname1)//"_mean_cHb", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
 		DO I=1,runs
 			print*, "-=-=-=-=-=-=-=-"
 			print*, "iteration ", i 

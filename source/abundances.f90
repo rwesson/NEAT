@@ -6,6 +6,7 @@ use mod_getabunds
 use mod_abundIO
 use mod_helium
 use mod_recombination_lines
+use mod_extinction
 
 implicit none
 
@@ -17,10 +18,10 @@ implicit none
         DOUBLE PRECISION :: normalise, oiiNratio, oiiDens, oiiiTratio, oiiiTemp, oiiiIRNratio, oiiiIRTratio, niiTratio, niiTemp, arivNratio, arivDens, cliiiNratio, cliiiDens, siiNratio, siiDens, siiTratio, siiTemp, oiiTratio, oiiTemp, neiiiTratio, neiiiIRTratio, neiiiTemp, neiiiIRTemp, abund, meandensity, meantemp, oitemp, citemp
         DOUBLE PRECISION :: ciiiNratio,neivNratio,nevTratio,siiiTratio,ariiiTratio,arvTratio,lowtemp,lowdens,medtemp,ciiidens,meddens,siiitemp,ariiitemp,hightemp,neivdens,highdens,arvtemp,nevtemp,oiTratio,ciTratio
         DOUBLE PRECISION :: oiiRLabund, niiRLabund, ciiRLabund, cii4267rlabund, neiiRLabund, ciiiRLabund, niiiRLabund, RLabundtemp, weight
-        DOUBLE PRECISION :: ciiiCELabund, niiCELabund, niiiIRCELabund, niiiUVCELabund, oiiCELabund, oiiiCELabund, oiiiIRCELabund, neiiIRCELabund, neiiiIRCELabund, neiiiCELabund, neivCELabund, siiCELabund, siiiCELabund, siiiIRCELabund, sivIRCELabund, cliiiCELabund, ariiiCELabund, arivCELabund, ariiiIRCELabund, nivCELabund, niCELabund, niiiCELabund, ciiCELabund, civCELabund, nvCELabund, nevCELabund, arvCELabund, CELabundtemp, ciCELabund, oiCELabund !public?
+        DOUBLE PRECISION :: ciiiCELabund, niiCELabund, niiiIRCELabund, niiiUVCELabund, oiiCELabund, oiiiCELabund, oiiiIRCELabund, neiiIRCELabund, neiiiIRCELabund, neiiiCELabund, neivCELabund, siiCELabund, siiiCELabund, siiiIRCELabund, sivIRCELabund, cliiiCELabund, ariiiCELabund, arivCELabund, ariiiIRCELabund, nivCELabund, niCELabund, niiiCELabund, ciiCELabund, civCELabund, nvCELabund, nevCELabund, arvCELabund, CELabundtemp, ciCELabund, oiCELabund 
         DOUBLE PRECISION :: CELicfO, CELicfC, CELicfN, CELicfNe, CELicfAr, CELicfS
         DOUBLE PRECISION :: RLicfO, RLicfC, RLicfN, RLicfNe
-        DOUBLE PRECISION :: CabundRL, CabundCEL, NabundRL, NabundCEL, OabundRL, OabundCEL, NeabundRL, NeabundCEL, SabundCEL, ArabundCEL, NOabundCEL, NCabundCEL !public?
+        DOUBLE PRECISION :: CabundRL, CabundCEL, NabundRL, NabundCEL, OabundRL, OabundCEL, NeabundRL, NeabundCEL, SabundCEL, ArabundCEL, NOabundCEL, NCabundCEL 
         DOUBLE PRECISION :: adfC, adfN, adfO, adfNe, w1, w2, w3, w4
         DOUBLE PRECISION :: adfC2plus, adfN2plus, adfO2plus, adfNe2plus
         DOUBLE PRECISION :: c1, c1_err, c2, c2_err, c3, c3_err, meanextinction, cerror, fl, ratob, tempi, temp, temp2, A4471, A4686, A6678, A5876
@@ -54,6 +55,9 @@ implicit none
         He_lines%intensity = 0
         !runonce = 1 !allows printing of supplementary files
         runonce = run !suppresses supplementary files and enables monte-carlo error estimation
+	nivCELabund = 0.0
+	nvCELabund = 0.0
+	civCELabund = 0.0
         
         !file reading stuff
 
@@ -108,6 +112,7 @@ implicit none
         print "(1X,A17,F4.2,A4,F4.2)","Hd/Hb => c(Hb) = ",c3," +- ",c3_err
    
         PRINT "(1X,A13,F4.2,A4,F4.2)", "Mean c(Hb) = ",meanextinction," +- ",cerror
+	if (runonce == 0 .and. meanextinction > 0) write(UNIT=888, FMT=*)meanextinction
 
         if (meanextinction .lt. 0.0) then
            print *,"Derived extinction <0 ; assuming 0"
@@ -1152,8 +1157,12 @@ if(A4686 > 0)        print "(1x,A17,F6.4)", "He++ (4686)/H+ = ", A4686
            weight = weight + niiRLs(i)%Int
         endif
       enddo
-
+      
+      if (isnan((rlabundtemp/weight))) then
+      niimultiplets(7)%abundance = 0
+      else
       niimultiplets(7)%abundance = rlabundtemp/weight
+      endif
 
       print "(1X,A7,F6.3,7X,ES9.3)",niimultiplets(7)%Multiplet,rlabundtemp, niimultiplets(7)%abundance
 !      print "(F6.3,16X,ES9.3)",rlabundtemp, rlabundtemp/weight
@@ -1233,7 +1242,11 @@ if(A4686 > 0)        print "(1x,A17,F6.4)", "He++ (4686)/H+ = ", A4686
         endif
       enddo
 
+      if ( isnan( (rlabundtemp/weight) ) ) then
+      oiimultiplets(12)%abundance = 0
+      else
       oiimultiplets(12)%abundance = rlabundtemp/weight
+      endif
 
       print "(1X,A7,F6.3,7X,ES9.3)",oiimultiplets(j)%Multiplet,rlabundtemp, rlabundtemp/weight
 !      print *,"3d-4f :"

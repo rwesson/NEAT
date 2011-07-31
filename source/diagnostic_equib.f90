@@ -217,14 +217,14 @@
       !*****LOOP STARTS HERE*************************
       DO LOOP = 1, 3
       if (diagtype .eq. "t" .or. diagtype .eq. "T") then
+        TINC=(10000)/(10**(LOOP))
 	if (LOOP .eq. 1) then
         	TEMPI=5000
 		INT=16	
 	else
-        	INT=11
-		TEMPI= valtest(1)
+        	INT=21
+		TEMPI= valtest(1) - TINC*10
 	endif
-        TINC=(10000)/(10**(LOOP))
         densi=fixedq
         dinc=0
         ind=1
@@ -236,15 +236,15 @@
 	if (LOOP .eq. 1) then
         densi=0
         dinc=1
-        ind=6
+        ind=7
 	elseif (LOOP .eq. 2) then
-	densi=valtest(2)
+	densi= LOG10(valtest(2)) - 1
         dinc=0.1
-        ind=11
+        ind=31
 	else
-        densi=valtest(2)
-        dinc=0.2
-        ind=6
+        densi= LOG10(valtest(2)) - 0.1
+        dinc=0.02
+        ind=16
 	endif
         allocate(results(3,IND))
       endif      
@@ -520,6 +520,15 @@
 		end do
 		!I = I+1
 	end do
+	
+!	if (diagtype .eq. "D" .or. diagtype .eq. "d") then	
+!	print *, "sorted results"
+!	DO I=1,INT
+!	print *, results(:,I)
+!	enddo
+!	print *, ""
+!	endif
+	
 	!pull out lowest value
 	if (LOOP .eq. 3) then
 	!pull out lowest value for result
