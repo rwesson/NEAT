@@ -63,7 +63,7 @@
       REAL*8 TEMPI, TINC, DENSI, DINC, DENS, DLOGD, TEMP, TLOGT,        &
      & TEMP2, DD, DELTEK, EXPE, VALUE, SUMN, TTT, TTP, AHB, EJI, WAV,   &
      & RLINT, FINT, SUMA, SUMB, SUMC, QX, AX, EX, FRAT, DEE             
-      
+
       DOUBLE PRECISION :: fixedq                                                                  
       REAL*8 inratio,result
       CHARACTER*20 levu,levl
@@ -106,10 +106,10 @@
       itrana=0
       itranb=0
       itranc=0
-      
+
       READ(levu,*) ((ITRANA(LL,KK),LL=1,2),KK=1,150)
       READ(levl,*) ((ITRANB(LL,KK),LL=1,2),KK=1,150)
-                                                                        
+
                                                        !Write out ions available
 !      WRITE(6,1000) 
 !      ION = '                    ' 
@@ -144,9 +144,9 @@
            T(I) = LOG10 (T(I)) 
            ROOTT(I) = SQRT(T(I)) 
       ENDDO 
-                             
-                             
-                             
+
+
+
                              !If IRATS=0, what tabulated are collision strengths
       READ(1,*) IRATS 
 !                            !Else Coll. rates = tabulated values * 10 ** IRATS
@@ -205,9 +205,9 @@
 !      WRITE(6,1012) 
 !      READ(5,*) ((ITRANC(LL,KK),LL=1,2),KK=1,150) 
       ITRANC = 0
-                                                                        
+
 !newbit                                                                 
-                                                                        
+
 
 ! set up T and D loops depending on input.
                                                !Read in Te and Ne where the line
@@ -218,13 +218,13 @@
       DO LOOP = 1, 3
       if (diagtype .eq. "t" .or. diagtype .eq. "T") then
         TINC=(10000)/(10**(LOOP))
-	if (LOOP .eq. 1) then
-        	TEMPI=5000
-		INT=16	
-	else
-        	INT=21
-		TEMPI= valtest(1) - TINC*10
-	endif
+        if (LOOP .eq. 1) then
+                TEMPI=5000
+                INT=16        
+        else
+                INT=21
+                TEMPI= valtest(1) - TINC*10
+        endif
         densi=fixedq
         dinc=0
         ind=1
@@ -233,19 +233,19 @@
         TempI=fixedq
         TINC=0
         INT=1
-	if (LOOP .eq. 1) then
+        if (LOOP .eq. 1) then
         densi=0
         dinc=1
         ind=7
-	elseif (LOOP .eq. 2) then
-	densi= LOG10(valtest(2)) - 1
+        elseif (LOOP .eq. 2) then
+        densi= LOG10(valtest(2)) - 1
         dinc=0.1
         ind=31
-	else
+        else
         densi= LOG10(valtest(2)) - 0.1
         dinc=0.02
         ind=16
-	endif
+        endif
         allocate(results(3,IND))
       endif      
       !WRITE(6,1006) 
@@ -289,13 +289,13 @@
          !   ENDDO 
          !   Y(I) = 0.D0 
          ! ENDDO 
-          
+
           X=0.0
           CS=0.0
           QEFF=0.0
           TNIJ=0.0
           Y=0.0
-          
+
           IOPT=0 
           IF (NTEMP.EQ.1) THEN 
             WRITE (6,*) 
@@ -432,7 +432,7 @@
              IBPR=IBPR+1 
              SUMB=SUMB+TNIJ(IB1,IB2) 
             ENDIf 
-                                                                        
+
             IC1=ITRANC(1,IKT) 
             IC2=ITRANC(2,IKT) 
             IF(IC1.NE.0.AND.IC2.NE.0) THEN 
@@ -499,56 +499,56 @@
       if (diagtype .eq. "D" .or. diagtype .eq. "d") then
         INT = ind 
       endif
-      
+
 !      DO I=1,INT 
 !        if (results(3,I) .lt. valtest(3)) then
 !           valtest(:) = results(:,I) 
 !        endif
 !      end do
 
-	! sort to find lowest values
-	DO I=1,INT
-		DO J=1, INT-I
-			if (results(3,J) .gt. results(3, J+1)) then
-				valtest(:) = results(:,J)
-				results(:,J) = results(:,J+1)
-				results(:,J+1) = valtest(:)
-				!J = J+1
-			else
-				!J = J+1
-			endif
-		end do
-		!I = I+1
-	end do
-	
-!	if (diagtype .eq. "D" .or. diagtype .eq. "d") then	
-!	print *, "sorted results"
-!	DO I=1,INT
-!	print *, results(:,I)
-!	enddo
-!	print *, ""
-!	endif
-	
-	!pull out lowest value
-	if (LOOP .eq. 3) then
-	!pull out lowest value for result
-		valtest(:) = results(:,1)
-	else !check which of two lowest values is lower temp/dens to feed back to start of loop
-		if (diagtype .eq. "D" .or. diagtype .eq. "d") then 
-			if (results(2,1) .gt. results(2,2)) then
-				valtest(:) = results(:,2)
-			else
-				valtest(:) = results(:,1)
-			endif
-		else
-			if (results(1,1) .gt. results(1,2)) then
-				valtest(:) = results(:,2)
-			else
-				valtest(:) = results(:,1)
-			endif
-		endif
-	endif
-	!LOOP = LOOP + 1
+        ! sort to find lowest values
+        DO I=1,INT
+                DO J=1, INT-I
+                        if (results(3,J) .gt. results(3, J+1)) then
+                                valtest(:) = results(:,J)
+                                results(:,J) = results(:,J+1)
+                                results(:,J+1) = valtest(:)
+                                !J = J+1
+                        else
+                                !J = J+1
+                        endif
+                end do
+                !I = I+1
+        end do
+
+!        if (diagtype .eq. "D" .or. diagtype .eq. "d") then        
+!        print *, "sorted results"
+!        DO I=1,INT
+!        print *, results(:,I)
+!        enddo
+!        print *, ""
+!        endif
+
+        !pull out lowest value
+        if (LOOP .eq. 3) then
+        !pull out lowest value for result
+                valtest(:) = results(:,1)
+        else !check which of two lowest values is lower temp/dens to feed back to start of loop
+                if (diagtype .eq. "D" .or. diagtype .eq. "d") then 
+                        if (results(2,1) .gt. results(2,2)) then
+                                valtest(:) = results(:,2)
+                        else
+                                valtest(:) = results(:,1)
+                        endif
+                else
+                        if (results(1,1) .gt. results(1,2)) then
+                                valtest(:) = results(:,2)
+                        else
+                                valtest(:) = results(:,1)
+                        endif
+                endif
+        endif
+        !LOOP = LOOP + 1
         DEALLOCATE(RESULTS) !thanks Bruce!
       END DO
       !********LOOP WOULD END HERE**********************
@@ -621,8 +621,8 @@
  6100 FORMAT (' PROCESSING COMPLETED'/                                  &
      & ' GOODBYE!!'///)                                                 
  7000 FORMAT (4(2I4,2X,1PE10.3)) 
-      
-      
+
+
       END subroutine get_diagnostic                 
 !                                                                       
 !---- PROC LUSLV                                                        

@@ -36,51 +36,15 @@ subroutine read_ilines(ILs, Iint)
         OPEN(201, file="source/Ilines_levs", status='old')
                 DO WHILE (Iint < 62)!(.true.)
                         READ(201,301,end=401) ILs(Iint)%name, ILs(Iint)%ion, ILs(Iint)%wavelength, ILs(Iint)%transition ,ILs(Iint)%zone!end condition breaks loop.  
-			Iint = Iint + 1
+                        Iint = Iint + 1
                 END DO
                 401 PRINT*, "done reading important lines, Iint = ", Iint 
         CLOSE(201)
 end subroutine        
 
-subroutine fileread(optical, infrared, ultraviolet, filename1, filename2, filename3)
-        REAL*8, DIMENSION(3,335), intent(OUT) :: optical, infrared, ultraviolet
-        REAL*8, DIMENSION(3,335) ::  temp1, temp2, temp3
-        CHARACTER*80 :: filename1, filename2, filename3
-        CHARACTER*20 :: message
-        INTEGER :: I
-                
-        if(filename1 .ne. "          ")then
-		temp1 = readfile(filename1)
-                call w_assign(optical, infrared, ultraviolet, temp1, message)
-                PRINT*, message, filename1
-        endif
-                
-        if(filename2 .ne. "          ")then
-                temp2 = readfile(filename2)
-                call w_assign(optical, infrared, ultraviolet, temp2, message)
-                PRINT*, message, filename2
-        endif
-                
-        if(filename3 .ne. "          ")then
-                temp3 = readfile(filename3)
-                call w_assign(optical, infrared, ultraviolet, temp3, message)
-                PRINT*, message, filename3
-        endif
-        
-        if(optical(1,1) == 0)then
-                PRINT*, "Cheese shop error: no inputs"
-                STOP
-        endif
-        
-        !do I = 1, 329
-        !PRINT*, optical(:,I), temp1(:,I)
-        !END DO
-        
-end subroutine
-
-function readfile(filename)
-        REAL*8, DIMENSION(3,335) :: readfile
-        CHARACTER*80 :: filename
+subroutine fileread(linelist, filename)
+        REAL*8, DIMENSION(3,335), intent(OUT) :: linelist 
+        CHARACTER*80 :: filename 
         INTEGER :: IO, I
         DOUBLE PRECISION :: temp,temp2,temp3
 
@@ -88,43 +52,23 @@ function readfile(filename)
         OPEN(199, file=filename, iostat=IO, status='old')
                 DO WHILE (IO >= 0)
                         READ(199,*,end=110) temp, temp2, temp3
-                        readfile(:,I) =  (/ temp, temp2, temp3 /) 
+                        linelist(:,I) =  (/ temp, temp2, temp3 /)
                         I = I + 1
                 END DO
         CLOSE(199)
 
         110 PRINT*, "Reached end of file, I = ", I
-        
-	readfile(:,(I+1):335) = 0
-	        
-	
-end function
 
-subroutine w_assign(optical, infrared, ultraviolet, temp, message)
-        REAL*8, DIMENSION(3,335) :: optical, infrared, ultraviolet, temp
-        CHARACTER*20 :: message 
-                
-        if(temp(1,1) < 100)then
-                infrared = temp
-                infrared(1,:) = infrared(1,:) * 10000 !converting microns to angstroms
-                message = "file = infrared"
-        
-        elseif(temp(1,1) > 3000)then
-                
-                optical = temp
-                message = "file = optical"
-        
-        else
-                
-                ultraviolet = temp
-                message = "file = ultraviolet"
-        
-        endif        
+        if(linelist(1,1) == 0)then
+                PRINT*, "Cheese shop error: no inputs"
+                STOP
+        endif
+
+        linelist(:,(I+1):335) = 0
 
 end subroutine
 
 end module
-
 
 module mod_abundmaths
 use mod_abundtypes
@@ -138,12 +82,12 @@ integer function get_ion(ionname, iontable, Iint)
         CHARACTER*11 :: ionname
         TYPE(line), DIMENSION(62) :: iontable 
         INTEGER :: i
-	INTEGER, INTENT(IN) :: Iint
-        
+        INTEGER, INTENT(IN) :: Iint
+
         do i = 1, Iint
-                
+
                 !PRINT*, trim(iontable(i)%name), trim(ionname)
-                
+
                 if(trim(iontable(i)%name) == trim(ionname))then
                         get_ion = i
                         return
@@ -151,42 +95,26 @@ integer function get_ion(ionname, iontable, Iint)
         end do
 
         PRINT*, "Nudge Nudge, wink, wink error. Ion not found, say no more.", ionname
-        
-end function        
-        
 
-subroutine element_assign(ILs, O, IR, UV, Iint)
+end function        
+
+
+subroutine element_assign(ILs, linelist, Iint)
         TYPE(line), DIMENSION(62), INTENT(OUT) :: ILs
-        REAL*8, DIMENSION(3,335), INTENT(IN) :: O, IR, UV
+        REAL*8, DIMENSION(3,335), INTENT(IN) :: linelist
         INTEGER, INTENT(IN) :: Iint
         INTEGER :: i, j
 
         do i = 1, Iint
                 do j = 1, 335 
-			if(O(1,j) == ILs(i)%wavelength)then 
-                                ILs(i)%intensity = O(2,j)
-                                ILs(i)%int_err   = O(3,j) 
+                        if(linelist(1,j) == ILs(i)%wavelength)then 
+                                ILs(i)%intensity = linelist(2,j)
+                                ILs(i)%int_err   = linelist(3,j) 
                                 cycle
                         endif        
-                end do
-                
-                do j = 1, 335
-                        if(IR(1,j) == ILs(i)%wavelength)then
-                                ILs(i)%intensity = IR(2,j)
-                                ILs(i)%int_err   = UV(3,j)
-                                cycle
-                        endif        
-                end do
-                
-                do j = 1, 335
-                        if(UV(1,j) > ILs(i)%wavelength-101 .AND.UV(1,j) < ILs(i)%wavelength+101 )then
-                                ILs(i)%intensity = UV(2,j)
-                                ILs(i)%int_err   = UV(3,j)
-                                cycle
-                        endif        
-                end do
+                end do 
         end do
-        
+
 end subroutine
 
 subroutine get_H(H_BS, O)
@@ -223,7 +151,7 @@ subroutine get_H(H_BS, O)
                         endif
                 end do
         end do
-        
+
 end subroutine
 
 subroutine get_He(He_lines, O)
@@ -264,28 +192,5 @@ subroutine get_He(He_lines, O)
 end subroutine
 
 !extinction laws now in mod_extinction
-        
-recursive function getTD(temp, dens, dt, dd, ratio1, ratio2, ion_name1, ion_name2, run) result(TD)
-        DOUBLE PRECISION, DIMENSION(2) :: TD
-        DOUBLE PRECISION, INTENT(IN) :: temp, dens, dt, dd, ratio1, ratio2
-        DOUBLE PRECISION :: T, D
-        CHARACTER*6 :: ion_name1, ion_name2
-        INTEGER :: run
-        
-        T = temp
-        D = dens
-        
-        run = run * -1
-        
-        !if(run > 0)call ratioT(ratio1, dens, ion_name1, T) ! roger must create these
-        !if(run < 0)call ratioD(ratio2, temp, ion_name2, D)
-        
-        if( ((T - temp) < dt) .AND. (D-dens < dd))then
-                TD = (/T, D/)
-        else                
-                TD = getTD(TD(1), TD(2), dt, dd, ratio1, ratio2, ion_name1, ion_name2, run)
-        endif
-        
-end function
 
 end module mod_abundmaths 

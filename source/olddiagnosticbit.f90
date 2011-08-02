@@ -21,13 +21,13 @@
         endif
 
         ![oiii] temperature, using either oii density or user input
-                
+
         ion_no1 = get_ion("oiii5007   ", ILs)
         ion_no2 = get_ion("oiii4959   ", ILs)
         ion_no3 = get_ion("oiii4363   ", ILs)
 
         if(((ILs(ion_no1)%int_dered .gt. 0) .AND. (ILs(ion_no2)%int_dered .gt. 0)) .and. (ILs(ion_no3)%int_dered .gt. 0 ))then
-                
+
                 oiiiTratio = (ILs(ion_no1)%int_dered + ILs(ion_no2)%int_dered) / ILs(ion_no3)%int_dered
         elseif(((ILs(ion_no1)%int_dered .gt. 0) .AND. (ILs(ion_no2)%int_dered .eq. 0)) .and. (ILs(ion_no3)%int_dered .gt. 0 ))then
                 ILs(ion_no2)%int_dered = ILs(ion_no1)%int_dered * 1.3356
@@ -41,7 +41,7 @@
         endif
 
 ! quick iteration to get oii density and oiii temperature
-        
+
         call get_diagnostic("oiii      ","2,4,3,4/            ","4,5/                ",oiiiTratio,"T",oiiDens,oiiiTemp)
 
 !        print *, "[O III] temperature (1st iteration) = ", oiiiTemp
@@ -61,7 +61,7 @@
 
         ion_no1 = get_ion("oiii52um   ", ILs)
         ion_no2 = get_ion("oiii88um   ", ILs)
-        
+
         if (((ILs(ion_no1)%int_dered .gt. 0) .AND. (ILs(ion_no2)%int_dered .gt. 0)))then
                 oiiiIRNratio = (ILs(ion_no1)%int_dered) / (ILs(ion_no2)%int_dered)
                 call get_diagnostic("oiii       ","2,3/                ","1,2/                ",oiiiIRNratio,"D",oiiiTemp,result)

@@ -128,7 +128,7 @@
      & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund, logte, logne,  &
      & logem
       DOUBLE PRECISION :: a, b, c, d, an(4)
-      
+
       INTEGER :: i
 
   !    TYPE oiiRL
@@ -737,7 +737,7 @@
      & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund, logte, logne,  &
      & logem, Br_term, z, J2_u
       DOUBLE PRECISION :: a, b, c, d, an(4)
-      
+
       INTEGER :: ii, i
 
       !TYPE niiRL
