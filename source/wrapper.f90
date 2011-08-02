@@ -8,8 +8,6 @@ program wrapper
         CALL getarg(1,temp) !get info from input arguments
         read (temp,*) runs
         CALL getarg(2,fname1) 
-        CALL getarg(3,fname2)
-        CALL getarg(4,fname3)
 
         !print*, runs
 
