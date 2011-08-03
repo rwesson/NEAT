@@ -103,31 +103,6 @@ subroutine deredden_O(O_red, O_dered, m_ext)
 
 end subroutine  
 
-subroutine deredden_2(lines, number, b_ext, r_ext) !this is specific to Dave's NTT/EFOSC data which is poorly calibrated between red/blue. Remove
-        TYPE(line), DIMENSION(:) :: lines
-        INTEGER :: number
-        DOUBLE PRECISION :: b_ext, r_ext, fl
-        INTEGER :: i
-
-        do i = 1,number
-
-                lines(i)%freq = DBLE(10000) / DBLE(lines(i)%wavelength)
-
-
-                if((lines(i)%freq .gt. 1.83) .AND. (lines(i)%freq .lt. 2.75))then ! optical 3636A - 5464
-                        fl = flambda(lines(i)%freq, 4)
-                        lines(i)%int_dered = lines(i)%intensity * 10**(b_ext*fl) 
-                        lines(i)%int_dered_err = lines(i)%int_err / lines(i)%intensity
-                elseif(lines(i)%freq .lt. 1.83)then !IR   5464 - end
-                        fl = flambda(lines(i)%freq, 5)
-                        lines(i)%int_dered = lines(i)%intensity * 10**(r_ext*fl) 
-                        lines(i)%int_dered_err = lines(i)%int_err / lines(i)%intensity
-                endif
-
-        end do
-
-end subroutine
-
 !-------HOWARTH LMC LAW-----------------------------------!
 
 double precision function flambdaLMC(X,switch)
