@@ -1,4 +1,4 @@
-subroutine abundances(fname1, fname2, fname3, run)
+subroutine abundances(fname1, run)
 use mod_abundmaths
 use mod_abundtypes
 use mod_diagnostics
@@ -12,7 +12,7 @@ implicit none
 
         INTEGER :: count, Iint, fIL, i, j, ion_no1, ion_no2, ion_no3, ion_no4, iii, ion_no5, ion_no6
         INTEGER :: opt, runonce, run
-        CHARACTER*80, INTENT(IN) :: fname1, fname2, fname3 !input filenames
+        CHARACTER*80, INTENT(IN) :: fname1 !input filenames
         CHARACTER*80 :: fnameIL, blank
         CHARACTER*8 :: lion
         DOUBLE PRECISION :: normalise, oiiNratio, oiiDens, oiiiTratio, oiiiTemp, oiiiIRNratio, oiiiIRTratio, niiTratio, niiTemp, arivNratio, arivDens, cliiiNratio, cliiiDens, siiNratio, siiDens, siiTratio, siiTemp, oiiTratio, oiiTemp, neiiiTratio, neiiiIRTratio, neiiiTemp, neiiiIRTemp, abund, meandensity, meantemp, oitemp, citemp
@@ -24,12 +24,13 @@ implicit none
         DOUBLE PRECISION :: CabundRL, CabundCEL, NabundRL, NabundCEL, OabundRL, OabundCEL, NeabundRL, NeabundCEL, SabundCEL, ArabundCEL, NOabundCEL, NCabundCEL 
         DOUBLE PRECISION :: adfC, adfN, adfO, adfNe, w1, w2, w3, w4
         DOUBLE PRECISION :: adfC2plus, adfN2plus, adfO2plus, adfNe2plus
-        DOUBLE PRECISION :: c1, c1_err, c2, c2_err, c3, c3_err, meanextinction, cerror, fl, ratob, tempi, temp, temp2, A4471, A4686, A6678, A5876
+        DOUBLE PRECISION :: c1, c2, c3, meanextinction, fl, ratob, tempi, temp, temp2, A4471, A4686, A6678, A5876
         REAL :: heiabund,heiiabund,Hetotabund
         REAL*8 :: HW
 
         DOUBLE PRECISION, DIMENSION(2) :: conditions 
-        REAL*8, DIMENSION(3,335) :: linelist, linelist_dered
+        REAL*8, DIMENSION(3,335) :: linelist
+        REAL*8, DIMENSION(2,335) :: linelist_dered
         REAL*8 :: result       
 
         TYPE(line), DIMENSION(62) :: ILs
@@ -102,16 +103,16 @@ implicit none
         print *, "Extinction"
         print *, "=========="
 
-        CALL calc_extinction_coeffs(H_BS, c1, c2, c3, c1_err, c2_err, c3_err, cerror, meanextinction)
+        CALL calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction)
 
         !need to write output/ input stuff so user can insert own c(Hb)
         !assume we go on with calculated extinctions
 
-        print "(1X,A17,F4.2,A4,F4.2)","Ha/Hb => c(Hb) = ",c1," +- ",c1_err
-        print "(1X,A17,F4.2,A4,F4.2)","Hg/Hb => c(Hb) = ",c2," +- ",c2_err
-        print "(1X,A17,F4.2,A4,F4.2)","Hd/Hb => c(Hb) = ",c3," +- ",c3_err
+        print "(1X,A17,F4.2,A4,F4.2)","Ha/Hb => c(Hb) = ",c1
+        print "(1X,A17,F4.2,A4,F4.2)","Hg/Hb => c(Hb) = ",c2
+        print "(1X,A17,F4.2,A4,F4.2)","Hd/Hb => c(Hb) = ",c3
 
-        PRINT "(1X,A13,F4.2,A4,F4.2)", "Mean c(Hb) = ",meanextinction," +- ",cerror
+        PRINT "(1X,A13,F4.2,A4,F4.2)", "Mean c(Hb) = ",meanextinction
         if (runonce == 0 .and. meanextinction > 0) write(UNIT=888, FMT=*)meanextinction
 
         if (meanextinction .lt. 0.0) then
@@ -121,12 +122,11 @@ implicit none
 
         !actual dereddening
 
-        CALL deredden(ILs, Iint, meanextinction, cerror)
-        CALL deredden(H_BS, 4, meanextinction, cerror) 
-        call deredden(He_lines, 4, meanextinction, cerror) 
+        CALL deredden(ILs, Iint, meanextinction)
+        CALL deredden(H_BS, 4, meanextinction)
+        call deredden(He_lines, 4, meanextinction) 
 
-        CALL deredden_O(linelist, linelist_dered, meanextinction, cerror)       
-
+        CALL deredden_O(linelist, linelist_dered, meanextinction)       
 
         500 FORMAT (5(f10.4))
         if(runonce == 1) OPEN(801, FILE=trim(fname1)//"_dered", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
@@ -1056,10 +1056,10 @@ if(A4686 > 0)        print "(1x,A17,F6.4)", "He++ (4686)/H+ = ", A4686
 !Ne2+
        call neii_rec_lines(oiiiTemp,oiiDens,DBLE(1),neiiRLs)
 
-       do i = 1,329
+       do i = 1,329 
          do j = 1,38
           if (abs(linelist_dered(1,i)-neiiRLs(j)%Wave) .le. 0.005) then
-            neiiRLs(j)%Obs = linelist_dered(2,i)
+           neiiRLs(j)%Obs = linelist_dered(2,i)
             neiiRLs(j)%abundance = neiiRLs(j)%obs/neiiRLs(j)%Int
           endif
          enddo

@@ -1,6 +1,6 @@
 program wrapper
 
-        CHARACTER*80 :: fname1, fname2, fname3, ofname !filenames - ofname = output from randomiser, fname1 2 3 = inputs
+        CHARACTER*80 :: fname1, ofname !filenames - ofname = output from randomiser, fname1 = input line list
         CHARACTER*10 :: temp
         INTEGER :: I, runs, doublext, Narg !runs = number of runs for randomiser
         character*6 :: no
@@ -76,14 +76,14 @@ program wrapper
                         print*, ofname
 
                         call randomizer(fname1, ofname)
-                        call abundances(ofname, fname2, fname3, 0)!, doublext)
+                        call abundances(ofname, 0)!, doublext)
                         call system("rm "//ofname)
                 END DO
                 DO I=841,864
                         CLOSE(unit=I)
                 END DO
         else if(runs == 1)then !calculates abundances without uncertainties
-                call abundances(fname1, fname2, fname3, 1)!, doublext)
+                call abundances(fname1, 1)!, doublext)
         else
                 print*, "I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."        
         endif                
