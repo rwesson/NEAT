@@ -8,6 +8,7 @@ program wrapper
         CALL getarg(1,temp) !get info from input arguments
         read (temp,*) runs
         CALL getarg(2,fname1) 
+        !if(Narg > 2) then !check additional input arguments for switches
 
         !print*, runs
 
