@@ -2,13 +2,25 @@ program wrapper
 
         CHARACTER*80 :: fname1, ofname !filenames - ofname = output from randomiser, fname1 = input line list
         CHARACTER*10 :: temp
+        CHARACTER :: switch_ext !switch for extinction laws
         INTEGER :: I, runs, doublext, Narg !runs = number of runs for randomiser
         character*6 :: no
         Narg = IARGC() !count input arguments
         CALL getarg(1,temp) !get info from input arguments
         read (temp,*) runs
         CALL getarg(2,fname1) 
-        !if(Narg > 2) then !check additional input arguments for switches
+        if(Narg > 2) then !check additional input arguments for switches (currently extinction laws only)
+               CALL getarg (3, temp) !get argument for extinction laws, allowed values -How for Howarth LMC, -CCM for CCM galactic, -Pre for Prevot SMC, default is Seaton/Howarth galactic.
+               if (temp == "-How") then
+                       switch_ext = "H"
+               elseif (temp == "-CCM") then
+                       switch_ext = "C"
+               elseif (temp == "-Pre") then
+                       switch_ext = "P"
+               else
+                       switch_ext = "S"
+               endif
+        endif
 
         !print*, runs
 
@@ -77,7 +89,7 @@ program wrapper
                         print*, ofname
 
                         call randomizer(fname1, ofname)
-                        call abundances(ofname, 0)!, doublext)
+                        call abundances(ofname, 0, switch_ext)!, doublext)
                         call system("rm "//ofname)
                 END DO
                 DO I=841,864

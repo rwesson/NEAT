@@ -1,4 +1,4 @@
-subroutine abundances(fname1, run)
+subroutine abundances(fname1, run, switch_ext)
 use mod_abundmaths
 use mod_abundtypes
 use mod_diagnostics
@@ -15,6 +15,7 @@ implicit none
         CHARACTER*80, INTENT(IN) :: fname1 !input filenames
         CHARACTER*80 :: fnameIL, blank
         CHARACTER*8 :: lion
+        CHARACTER :: switch_ext !switch for extinction laws
         DOUBLE PRECISION :: normalise, oiiNratio, oiiDens, oiiiTratio, oiiiTemp, oiiiIRNratio, oiiiIRTratio, niiTratio, niiTemp, arivNratio, arivDens, cliiiNratio, cliiiDens, siiNratio, siiDens, siiTratio, siiTemp, oiiTratio, oiiTemp, neiiiTratio, neiiiIRTratio, neiiiTemp, neiiiIRTemp, abund, meandensity, meantemp, oitemp, citemp
         DOUBLE PRECISION :: ciiiNratio,neivNratio,nevTratio,siiiTratio,ariiiTratio,arvTratio,lowtemp,lowdens,medtemp,ciiidens,meddens,siiitemp,ariiitemp,hightemp,neivdens,highdens,arvtemp,nevtemp,oiTratio,ciTratio
         DOUBLE PRECISION :: oiiRLabund, niiRLabund, ciiRLabund, cii4267rlabund, neiiRLabund, ciiiRLabund, niiiRLabund, RLabundtemp, weight
@@ -121,12 +122,27 @@ implicit none
         endif
 
         !actual dereddening
-
-        CALL deredden(ILs, Iint, meanextinction)
-        CALL deredden(H_BS, 4, meanextinction)
-        call deredden(He_lines, 4, meanextinction) 
-
-        CALL deredden_O(linelist, linelist_dered, meanextinction)       
+        if (switch_ext == "S") then
+                CALL deredden(ILs, Iint, meanextinction)
+                CALL deredden(H_BS, 4, meanextinction)
+                call deredden(He_lines, 4, meanextinction) 
+                CALL deredden_O(linelist, linelist_dered, meanextinction)
+        elseif (switch_ext == "H") then
+                CALL deredden_LMC(ILs, Iint, meanextinction)
+                CALL deredden_LMC(H_BS, 4, meanextinction)
+                call deredden_LMC(He_lines, 4, meanextinction) 
+                CALL deredden_O_LMC(linelist, linelist_dered, meanextinction)
+        elseif (switch_ext == "C") then
+                CALL deredden_CCM(ILs, Iint, meanextinction)
+                CALL deredden_CCM(H_BS, 4, meanextinction)
+                call deredden_CCM(He_lines, 4, meanextinction) 
+                CALL deredden_O_CCM(linelist, linelist_dered, meanextinction)
+        elseif (switch_ext == "P") then
+                CALL deredden_SMC(ILs, Iint, meanextinction)
+                CALL deredden_SMC(H_BS, 4, meanextinction)
+                call deredden_SMC(He_lines, 4, meanextinction) 
+                CALL deredden_O_SMC(linelist, linelist_dered, meanextinction)
+        endif
 
         500 FORMAT (5(f10.4))
         if(runonce == 1) OPEN(801, FILE=trim(fname1)//"_dered", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
