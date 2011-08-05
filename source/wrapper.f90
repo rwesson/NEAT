@@ -23,7 +23,6 @@ program wrapper
         else
                switch_ext = "S"
         endif
->>>>>>> eb921fb307bc137f37d17adbfa3cd9c227555127
 
         !print*, runs
 

@@ -121,7 +121,6 @@ implicit none
         endif
 
         !actual dereddening
-<<<<<<< HEAD
 
         if (switch_ext == "S") then
                 CALL deredden(ILs, Iint, meanextinction)
@@ -144,7 +143,6 @@ implicit none
                 call deredden_SMC(He_lines, 4, meanextinction) 
                 CALL deredden_SMC(linelist, listlength, meanextinction)
         endif
->>>>>>> eb921fb307bc137f37d17adbfa3cd9c227555127
 
         500 FORMAT (5(f10.4))
         if(runonce == 1) OPEN(801, FILE=trim(fname1)//"_dered", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
