@@ -1206,13 +1206,6 @@
 !      print *,""
 !      print *,"Wavelength Multiplet I(Hb=100)"
 
-      do ii = 1,99
-!      if (niiRLs(ii)%Int .ge. 0.001) then 
-!            print "(F7.2,4X,A7,3X,F7.3)",niiRLs(ii)%Wave,&
-!            &niiRLs(ii)%Mult,niiRLs(ii)%Int
-!      endif
-      enddo
-
       te = te * 10000
 
       end subroutine nii_rec_lines

@@ -4,37 +4,27 @@ implicit none
 
 contains
 
-subroutine calc_extinction_coeffs(H_BS, c1, c2, c3, c1_err, c2_err, c3_err, cerror, meanextinction)
+subroutine calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction)
         TYPE(line), DIMENSION(4) :: H_BS
-        DOUBLE PRECISION :: c1, c2, c3, meanextinction, cerror
-        DOUBLE PRECISION :: c1_err, c2_err, c3_err
+        DOUBLE PRECISION :: c1, c2, c3, meanextinction
 
 if (H_BS(1)%intensity .gt. 0 .and. H_BS(2)%intensity .gt. 0) then
         c1 = log10( ( DBLE(H_BS(1)%intensity) / DBLE(H_BS(2)%intensity) )/2.850 )/0.32
-        c1_err = 0.434 * ((H_BS(1)%int_err/H_BS(1)%intensity)**2 + (H_BS(2)%int_err/H_BS(2)%intensity)**2)**0.5
 else
         c1 = 0.0
-        c1_err = 0.0
 endif
 if (H_BS(3)%intensity .gt. 0 .and. H_BS(2)%intensity .gt. 0) then
         c2 = log10( ( DBLE(H_BS(3)%intensity) / DBLE(H_BS(2)%intensity) )/0.469 )/(-0.127)
-        c2_err = 0.434 * ((H_BS(3)%int_err/H_BS(3)%intensity)**2 + (H_BS(2)%int_err/H_BS(2)%intensity)**2)**0.5
 else
         c2=0.0
-        c2_err = 0.0
 endif
 if (H_BS(4)%intensity .gt. 0 .and. H_BS(2)%intensity .gt. 0) then
         c3 = log10( ( DBLE(H_BS(4)%intensity) / DBLE(H_BS(2)%intensity) )/0.259 )/(-0.180)
-        c3_err = 0.434 * ((H_BS(4)%int_err/H_BS(4)%intensity)**2 + (H_BS(2)%int_err/H_BS(2)%intensity)**2)**0.5
 else
         c3 = 0.0
-        c3_err = 0.0
 endif
 
         meanextinction = (c1*H_BS(1)%intensity + c2*H_BS(3)%intensity + c3*H_BS(4)%intensity) / (H_BS(1)%intensity + H_BS(3)%intensity + H_BS(4)%intensity)   
-
-        cerror = (H_BS(1)%intensity*(c1_err/c1)**2 + H_BS(3)%intensity*(c2_err/c2)**2 + H_BS(4)%intensity*(c3_err/c3)**2)**0.5 / (H_BS(1)%intensity + H_BS(3)%intensity + H_BS(4)%intensity)
-!        cerror = (( (meanextinction-c1)**2 + (meanextinction-c2)**2 + (meanextinction-c3)**2 )/3) ** 0.5
 
 end subroutine
 
@@ -54,10 +44,10 @@ double precision function flambda(X,switch)
 
 end function        
 
-subroutine deredden(lines, number, m_ext, cerror)
+subroutine deredden(lines, number, m_ext)
         TYPE(line), DIMENSION(:) :: lines
         INTEGER :: number
-        DOUBLE PRECISION :: m_ext, fl, cerror
+        DOUBLE PRECISION :: m_ext, fl
         INTEGER :: i
 
         do i = 1,number
@@ -67,28 +57,22 @@ subroutine deredden(lines, number, m_ext, cerror)
                 if( (lines(i)%freq .gt. 7.14) .AND. (lines(i)%freq .lt. 10.0))then !far UV
                         fl = flambda(lines(i)%freq, 1)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
-                        lines(i)%int_dered_err = ((lines(i)%int_err / lines(i)%intensity)**2 + (log(10.0)*cerror*fl)**2)**0.5
 
                 elseif((lines(i)%freq .gt. 3.65) .AND. (lines(i)%freq .lt. 7.14))then ! mid UV
                         fl = flambda(lines(i)%freq, 2)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
-                        lines(i)%int_dered_err = ((lines(i)%int_err / lines(i)%intensity)**2 + (log(10.0)*cerror*fl)**2)**0.5
 
                 elseif((lines(i)%freq .gt. 2.75) .AND. (lines(i)%freq .lt. 3.65))then ! near UV
                         fl = flambda(lines(i)%freq, 3)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
-                        lines(i)%int_dered_err = ((lines(i)%int_err / lines(i)%intensity)**2 + (log(10.0)*cerror*fl)**2)**0.5
 
                 elseif((lines(i)%freq .gt. 1.83) .AND. (lines(i)%freq .lt. 2.75))then ! optical
-                        fl = flambda(lines(i)%freq, 4)
-
+                        fl = flambda(lines(i)%freq, 4) 
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
-                        lines(i)%int_dered_err = ((lines(i)%int_err / lines(i)%intensity)**2 + (log(10.0)*cerror*fl)**2)**0.5
 
                 elseif(lines(i)%freq .lt. 1.83)then !IR
                         fl = flambda(lines(i)%freq, 5)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
-                        lines(i)%int_dered_err = ((lines(i)%int_err / lines(i)%intensity)**2 + (log(10.0)*cerror*fl)**2)**0.5
 
                 endif
 
@@ -96,9 +80,10 @@ subroutine deredden(lines, number, m_ext, cerror)
 
 end subroutine
 
-subroutine deredden_O(O_red, O_dered, m_ext, cerror)
-        REAL*8, DIMENSION(3,335) :: O_red, O_dered
-        DOUBLE PRECISION :: m_ext, fl, cerror
+subroutine deredden_O(O_red, O_dered, m_ext)
+        REAL*8, DIMENSION(3,335) :: O_red
+        REAL*8, DIMENSION(2,335) :: O_dered
+        DOUBLE PRECISION :: m_ext, fl
         INTEGER :: I
         REAL*8 :: X
 
@@ -106,42 +91,17 @@ subroutine deredden_O(O_red, O_dered, m_ext, cerror)
             X =  DBLE(DBLE(10000)/DBLE(O_red(1,I)))
             if (X .lt. 1.83) then 
                 fl = flambda(X, 5) 
-                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)), ((O_red(3,I)/O_red(2,I))**2 + (log(10.0)**(cerror*fl) )**2)**0.5 /)
+                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)) /)
             elseif (X .gt. 1.83 .and. X .lt. 2.75) then
                 fl = flambda(X, 4)
-                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)), O_red(3,I)*(10**(m_ext*fl) ) /)
+                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)) /)
             elseif (X .gt. 2.75 .and. X .lt. 3.63) then
                 fl = flambda(X, 3)
-                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)), O_red(3,I)*(10**(m_ext*fl) ) /)
+                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)) /)
             endif 
         end do
 
 end subroutine  
-
-subroutine deredden_2(lines, number, b_ext, r_ext) !this is specific to Dave's NTT/EFOSC data which is poorly calibrated between red/blue. Remove
-        TYPE(line), DIMENSION(:) :: lines
-        INTEGER :: number
-        DOUBLE PRECISION :: b_ext, r_ext, fl
-        INTEGER :: i
-
-        do i = 1,number
-
-                lines(i)%freq = DBLE(10000) / DBLE(lines(i)%wavelength)
-
-
-                if((lines(i)%freq .gt. 1.83) .AND. (lines(i)%freq .lt. 2.75))then ! optical 3636A - 5464
-                        fl = flambda(lines(i)%freq, 4)
-                        lines(i)%int_dered = lines(i)%intensity * 10**(b_ext*fl) 
-                        lines(i)%int_dered_err = lines(i)%int_err / lines(i)%intensity
-                elseif(lines(i)%freq .lt. 1.83)then !IR   5464 - end
-                        fl = flambda(lines(i)%freq, 5)
-                        lines(i)%int_dered = lines(i)%intensity * 10**(r_ext*fl) 
-                        lines(i)%int_dered_err = lines(i)%int_err / lines(i)%intensity
-                endif
-
-        end do
-
-end subroutine
 
 !-------HOWARTH LMC LAW-----------------------------------!
 
@@ -157,10 +117,10 @@ double precision function flambdaLMC(X,switch)
 
 end function
 
-subroutine deredden_LMC(lines, number, m_ext, cerror)
+subroutine deredden_LMC(lines, number, m_ext)
         TYPE(line), DIMENSION(:) :: lines
         INTEGER :: number
-        DOUBLE PRECISION :: m_ext, fl, cerror
+        DOUBLE PRECISION :: m_ext, fl
         INTEGER :: i
 
         do i = 1,number
@@ -170,17 +130,14 @@ subroutine deredden_LMC(lines, number, m_ext, cerror)
                 if(lines(i)%freq .gt. 2.75)then ! UV
                         fl = flambdaLMC(lines(i)%freq, 1)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
-                        lines(i)%int_dered_err = ((lines(i)%int_err / lines(i)%intensity)**2 + (log(10.0)*cerror*fl)**2)**0.5
 
                 elseif((lines(i)%freq .gt. 1.83) .AND. (lines(i)%freq .lt. 2.75))then ! optical
                         fl = flambdaLMC(lines(i)%freq, 2)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
-                        lines(i)%int_dered_err = ((lines(i)%int_err / lines(i)%intensity)**2 + (log(10.0)*cerror*fl)**2)**0.5
 
                 elseif(lines(i)%freq .lt. 1.83)then !IR
                         fl = flambdaLMC(lines(i)%freq, 3)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
-                        lines(i)%int_dered_err = ((lines(i)%int_err / lines(i)%intensity)**2 + (log(10.0)*cerror*fl)**2)**0.5
 
                 endif
 
@@ -188,9 +145,10 @@ subroutine deredden_LMC(lines, number, m_ext, cerror)
 
 end subroutine
 
-subroutine deredden_O_LMC(O_red, O_dered, m_ext, cerror)
-        REAL*8, DIMENSION(3,335) :: O_red, O_dered
-        DOUBLE PRECISION :: m_ext, fl, cerror
+subroutine deredden_O_LMC(O_red, O_dered, m_ext)
+        REAL*8, DIMENSION(3,335) :: O_red
+        REAL*8, DIMENSION(2,335) :: O_dered
+        DOUBLE PRECISION :: m_ext, fl
         INTEGER :: I
         REAL*8 :: X
 
@@ -198,13 +156,13 @@ subroutine deredden_O_LMC(O_red, O_dered, m_ext, cerror)
             X =  DBLE(DBLE(10000)/DBLE(O_red(1,I)))
             if (X .lt. 1.83) then 
                 fl = flambdaLMC(X, 3) 
-                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)), ((O_red(3,I)/O_red(2,I))**2 + (log(10.0)**(cerror*fl) )**2)**0.5 /)
+                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)) /)
             elseif (X .gt. 1.83 .and. X .lt. 2.75) then
                 fl = flambdaLMC(X, 2)
-                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)), O_red(3,I)*(10**(m_ext*fl) ) /)
+                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)) /)
             elseif (X .gt. 2.75) then
                 fl = flambdaLMC(X, 1)
-                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)), O_red(3,I)*(10**(m_ext*fl) ) /)
+                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)) /)
             endif 
         end do
 
@@ -242,10 +200,10 @@ double precision function flambdaCCM(X,switch)
 
 end function
 
-subroutine deredden_CCM(lines, number, m_ext, cerror)
+subroutine deredden_CCM(lines, number, m_ext)
         TYPE(line), DIMENSION(:) :: lines
         INTEGER :: number
-        DOUBLE PRECISION :: m_ext, fl, cerror
+        DOUBLE PRECISION :: m_ext, fl
         INTEGER :: i
 
         do i = 1,number
@@ -255,22 +213,18 @@ subroutine deredden_CCM(lines, number, m_ext, cerror)
                 if(lines(i)%freq .gt. 8)then ! Far UV
                         fl = flambdaCCM(lines(i)%freq, 1)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
-                        lines(i)%int_dered_err = ((lines(i)%int_err / lines(i)%intensity)**2 + (log(10.0)*cerror*fl)**2)**0.5
 
                 elseif((lines(i)%freq .gt. 3.3) .AND. (lines(i)%freq .lt. 8))then ! UV
                         fl = flambdaCCM(lines(i)%freq, 2)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
-                        lines(i)%int_dered_err = ((lines(i)%int_err / lines(i)%intensity)**2 + (log(10.0)*cerror*fl)**2)**0.5
 
                 elseif((lines(i)%freq .gt. 1.1) .AND. (lines(i)%freq .lt. 3.3))then !optical & NIR
                         fl = flambdaCCM(lines(i)%freq, 3)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
-                        lines(i)%int_dered_err = ((lines(i)%int_err / lines(i)%intensity)**2 + (log(10.0)*cerror*fl)**2)**0.5
 
                 elseif(lines(i)%freq .lt. 1.1)then !IR
                         fl = flambdaCCM(lines(i)%freq, 4)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
-                        lines(i)%int_dered_err = ((lines(i)%int_err / lines(i)%intensity)**2 + (log(10.0)*cerror*fl)**2)**0.5
 
                 endif
 
@@ -278,9 +232,10 @@ subroutine deredden_CCM(lines, number, m_ext, cerror)
 
 end subroutine
 
-subroutine deredden_O_CCM(O_red, O_dered, m_ext, cerror)
-        REAL*8, DIMENSION(3,335) :: O_red, O_dered
-        DOUBLE PRECISION :: m_ext, fl, cerror
+subroutine deredden_O_CCM(O_red, O_dered, m_ext)
+        REAL*8, DIMENSION(3,335) :: O_red
+        REAL*8, DIMENSION(2,335) :: O_dered
+        DOUBLE PRECISION :: m_ext, fl
         INTEGER :: I
         REAL*8 :: X
 
@@ -288,13 +243,13 @@ subroutine deredden_O_CCM(O_red, O_dered, m_ext, cerror)
             X =  DBLE(DBLE(10000)/DBLE(O_red(1,I)))
             if (X .lt. 1.1) then 
                 fl = flambdaCCM(X, 4) 
-                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)), ((O_red(3,I)/O_red(2,I))**2 + (log(10.0)**(cerror*fl) )**2)**0.5 /)
+                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)) /)
             elseif (X .gt. 1.1 .and. X .lt. 3.3) then
                 fl = flambda(X, 3)
-                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)), O_red(3,I)*(10**(m_ext*fl) ) /)
+                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)) /)
             elseif (X .gt. 3.3 .and. X .lt. 8) then
                 fl = flambda(X, 2)
-                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)), O_red(3,I)*(10**(m_ext*fl) ) /)
+                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)) /)
             endif 
         end do
 
@@ -314,10 +269,10 @@ double precision function flambdaSMC(X,switch)
 
 end function
 
-subroutine deredden_SMC(lines, number, m_ext, cerror)
+subroutine deredden_SMC(lines, number, m_ext)
         TYPE(line), DIMENSION(:) :: lines
         INTEGER :: number
-        DOUBLE PRECISION :: m_ext, fl, cerror
+        DOUBLE PRECISION :: m_ext, fl
         INTEGER :: i
 
         do i = 1,number
@@ -327,17 +282,14 @@ subroutine deredden_SMC(lines, number, m_ext, cerror)
                 if(lines(i)%freq .gt. 6.72)then ! Far UV
                         fl = flambdaSMC(lines(i)%freq, 1)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
-                        lines(i)%int_dered_err = ((lines(i)%int_err / lines(i)%intensity)**2 + (log(10.0)*cerror*fl)**2)**0.5
 
                 elseif((lines(i)%freq .gt. 1.83) .AND. (lines(i)%freq .lt. 6.72))then ! optical/UV
                         fl = flambdaSMC(lines(i)%freq, 2)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
-                        lines(i)%int_dered_err = ((lines(i)%int_err / lines(i)%intensity)**2 + (log(10.0)*cerror*fl)**2)**0.5
 
                 elseif(lines(i)%freq .lt. 1.83)then !IR
                         fl = flambdaSMC(lines(i)%freq, 3)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
-                        lines(i)%int_dered_err = ((lines(i)%int_err / lines(i)%intensity)**2 + (log(10.0)*cerror*fl)**2)**0.5
 
                 endif
 
@@ -345,9 +297,10 @@ subroutine deredden_SMC(lines, number, m_ext, cerror)
 
 end subroutine
 
-subroutine deredden_O_SMC(O_red, O_dered, m_ext, cerror)
-        REAL*8, DIMENSION(3,335) :: O_red, O_dered
-        DOUBLE PRECISION :: m_ext, fl, cerror
+subroutine deredden_O_SMC(O_red, O_dered, m_ext)
+        REAL*8, DIMENSION(3,335) :: O_red
+        REAL*8, DIMENSION(2,335) :: O_dered
+        DOUBLE PRECISION :: m_ext, fl
         INTEGER :: I
         REAL*8 :: X
 
@@ -355,13 +308,13 @@ subroutine deredden_O_SMC(O_red, O_dered, m_ext, cerror)
             X =  DBLE(DBLE(10000)/DBLE(O_red(1,I)))
             if (X .lt. 1.83) then 
                 fl = flambdaSMC(X, 3) 
-                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)), ((O_red(3,I)/O_red(2,I))**2 + (log(10.0)**(cerror*fl) )**2)**0.5 /)
+                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)) /)
             elseif (X .gt. 1.83 .and. X .lt. 6.72) then
                 fl = flambdaSMC(X, 2)
-                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)), O_red(3,I)*(10**(m_ext*fl) ) /)
+                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)) /)
             elseif (X .gt. 6.72) then
                 fl = flambdaSMC(X, 1)
-                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)), O_red(3,I)*(10**(m_ext*fl) ) /)
+                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)) /)
             endif 
         end do
 
