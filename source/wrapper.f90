@@ -20,6 +20,8 @@ program wrapper
                else
                        switch_ext = "S"
                endif
+        else
+               switch_ext = "S"
         endif
 
         !print*, runs
@@ -96,7 +98,7 @@ program wrapper
                         CLOSE(unit=I)
                 END DO
         else if(runs == 1)then !calculates abundances without uncertainties
-                call abundances(fname1, 1)!, doublext)
+                call abundances(fname1, 1, switch_ext)!, doublext)
         else
                 print*, "I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."        
         endif                
