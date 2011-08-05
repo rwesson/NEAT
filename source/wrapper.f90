@@ -7,16 +7,16 @@ program wrapper
         Narg = IARGC() !count input arguments
         CALL getarg(1,temp) !get info from input arguments
         read (temp,*) runs
-        CALL getarg(2,fname1) 
+        CALL getarg(2,fname1)
 
         !print*, runs
 
         call init_random_seed()!sets seed for randomiser
         ofname = "r_out"
                 !"ball1                                                                           " !length of 80char
-        if(runs > 1)then 
+        if(runs > 1)then
 
-                !open/create files here for adundances        
+                !open/create files here for adundances
                 OPEN(841, FILE=trim(fname1)//"_NC_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
                 OPEN(842, FILE=trim(fname1)//"_C_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
                 OPEN(843, FILE=trim(fname1)//"_Nii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
@@ -67,7 +67,7 @@ program wrapper
                 OPEN(888, FILE=trim(fname1)//"_mean_cHb", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
                 DO I=1,runs
                         print*, "-=-=-=-=-=-=-=-"
-                        print*, "iteration ", i 
+                        print*, "iteration ", i
                         print*, "=-=-=-=-=-=-=-="
                         print*, " "
                         write (no, '(I6)') i
@@ -85,8 +85,8 @@ program wrapper
         else if(runs == 1)then !calculates abundances without uncertainties
                 call abundances(fname1, 1)!, doublext)
         else
-                print*, "I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."        
-        endif                
+                print*, "I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."
+        endif
 
 
 contains
@@ -94,14 +94,26 @@ contains
         subroutine randomizer(filename, outfilename)
 
                 TYPE line
+                        CHARACTER*11 :: name
+                        CHARACTER*20 :: ion
                         DOUBLE PRECISION :: wavelength
-                        DOUBLE PRECISION :: flux
-                        DOUBLE PRECISION :: uncertainty
-                end TYPE
-                double precision, dimension(3,335) :: linelist
+                        DOUBLE PRECISION :: intensity
+                        DOUBLE PRECISION :: int_err
+                        DOUBLE PRECISION :: freq
+                        DOUBLE PRECISION :: int_dered
+                        DOUBLE PRECISION :: int_dered_err
+                        CHARACTER*20 :: transition
+                        DOUBLE PRECISION :: abundance
+                        DOUBLE PRECISION :: abund_err
+                        CHARACTER*4 :: zone
+                END TYPE
+
+
+                TYPE(line), dimension(:), allocatable :: linelist
                 CHARACTER*80, INTENT(IN) :: filename, outfilename
+                character*1 :: null
                 !character*10 :: Ich, mcnumberch
-                INTEGER :: IO, I, j, nlines!, mcnumber
+                INTEGER :: IO, I, j, listlength!, mcnumber
                 DOUBLE PRECISION :: temp,temp2,temp3,temp4
 
                 REAL :: fn_val
@@ -109,7 +121,7 @@ contains
                 !     Local variables
                 REAL     :: s = 0.449871, t = -0.386595, a = 0.19600, b = 0.25472,           &
                             r1 = 0.27597, r2 = 0.27846, u, v, x, y, q
-                REAL :: half            
+                REAL :: half
                 !call init_random_seed()
                 !read in the file
 
@@ -119,18 +131,36 @@ contains
                 IO=0
                 !PRINT*, filename
 
-                REWIND 902
-                OPEN(902, file=filename, iostat=IO, action="READ")
-                DO WHILE (IO>=0)
-                        READ(902,*,end=101) temp, temp2, temp3
-                        linelist(:,I) = (/ temp, temp2, temp3 /)
-                        I = I + 1
+        ! first get the number of lines
+
+                I = 1
+                OPEN(199, file=filename, iostat=IO, status='old')
+                        DO WHILE (IO >= 0)
+                                READ(199,*,end=111) null
+                                I = I + 1
+                        END DO
+                111 print *,"File contains ",I," lines"
+                listlength=I
+
+        !then allocate and read
+                allocate (linelist(listlength))
+
+                REWIND (199)
+                DO I=1,listlength
+                        READ(199,*,end=110) temp, temp2, temp3
+                        linelist(i)%wavelength = temp
+                        linelist(i)%intensity = temp2
+                        linelist(i)%int_err = temp3
                 END DO
-                CLOSE(902)
+                CLOSE(199)
 
-                101 PRINT*, "done reading lines, no. = ", I
+                110 PRINT*, "Successfully read ", I," lines"
 
-                nlines = I-1
+                if(linelist(1)%wavelength == 0)then
+                        PRINT*, "Cheese shop error: no inputs"
+                        STOP
+                endif
+
 
                 !create [mcnumber] of files, each with a randomly varied flux
 
@@ -140,7 +170,7 @@ contains
                         print*, outfilename
 
                         open(unit=401, file=outfilename,action="WRITE")!,type='unknown')
-                        do j = 1,nlines
+                        do j = 1,listlength
 
                                 ! from http://www.netlib.org/random/random.f90
 
@@ -150,15 +180,15 @@ contains
                                         v = 1.7156 * (v - half)
                                         x = u - s
                                         y = ABS(v) - t
-                                        q = x**2 + y*(a*y - b*x) 
-                                        IF (q < r1) EXIT 
-                                        IF (q > r2) CYCLE 
+                                        q = x**2 + y*(a*y - b*x)
+                                        IF (q < r1) EXIT
+                                        IF (q > r2) CYCLE
                                         IF (v**2 < -4.0*LOG(u)*u**2) EXIT
                                 END DO
                                 fn_val = v/u
-                                temp4=linelist(2,j)+(fn_val*linelist(3,j))
+                                temp4=linelist(j)%intensity+(fn_val*linelist(j)%int_err)
                                 if(temp4 < 0) temp4 = 0
-                                write (401,"(F7.2,1X,F10.5,1X,F7.2)") linelist(1,j), temp4, linelist(3,j)
+                                write (401,"(F7.2,1X,F10.5,1X,F7.2)") linelist(j)%wavelength, temp4, linelist(j)%int_err
                         end do
                         close(unit=401)
                 !end do
