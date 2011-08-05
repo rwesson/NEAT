@@ -42,29 +42,42 @@ subroutine read_ilines(ILs, Iint)
         CLOSE(201)
 end subroutine        
 
-subroutine fileread(linelist, filename)
-        REAL*8, DIMENSION(3,335), intent(OUT) :: linelist 
+subroutine fileread(linelist, filename, listlength)
+        TYPE(LINE),DIMENSION(:), allocatable, intent(OUT) :: linelist 
         CHARACTER*80 :: filename 
-        INTEGER :: IO, I
+        CHARACTER*1 :: null
+        INTEGER :: IO, I, listlength
         DOUBLE PRECISION :: temp,temp2,temp3
+
+! first get the number of lines
 
         I = 1
         OPEN(199, file=filename, iostat=IO, status='old')
                 DO WHILE (IO >= 0)
-                        READ(199,*,end=110) temp, temp2, temp3
-                        linelist(:,I) =  (/ temp, temp2, temp3 /)
+                        READ(199,*,end=111) null 
                         I = I + 1
-                END DO
+                END DO 
+        111 print *,"File contains ",I," lines"
+        listlength=I
+
+!then allocate and read
+        allocate (linelist(listlength))
+
+        REWIND (199)
+        DO I=1,listlength
+                READ(199,*,end=110) temp, temp2, temp3
+                linelist(i)%wavelength = temp
+                linelist(i)%intensity = temp2
+                linelist(i)%int_err = temp3 
+        END DO
         CLOSE(199)
 
-        110 PRINT*, "Reached end of file, I = ", I
+        110 PRINT*, "Successfully read ", I," lines"
 
-        if(linelist(1,1) == 0)then
+        if(linelist(1)%wavelength == 0)then
                 PRINT*, "Cheese shop error: no inputs"
                 STOP
         endif
-
-        linelist(:,(I+1):335) = 0
 
 end subroutine
 
@@ -99,17 +112,17 @@ integer function get_ion(ionname, iontable, Iint)
 end function        
 
 
-subroutine element_assign(ILs, linelist, Iint)
+subroutine element_assign(ILs, linelist, Iint, listlength)
         TYPE(line), DIMENSION(62), INTENT(OUT) :: ILs
-        REAL*8, DIMENSION(3,335), INTENT(IN) :: linelist
-        INTEGER, INTENT(IN) :: Iint
+        TYPE(line), DIMENSION(:) :: linelist 
+        INTEGER, INTENT(IN) :: Iint, listlength
         INTEGER :: i, j
 
         do i = 1, Iint
-                do j = 1, 335 
-                        if(linelist(1,j) == ILs(i)%wavelength)then 
-                                ILs(i)%intensity = linelist(2,j)
-                                ILs(i)%int_err   = linelist(3,j) 
+                do j = 1, listlength
+                        if(linelist(j)%wavelength == ILs(i)%wavelength)then 
+                                ILs(i)%intensity = linelist(j)%intensity
+                                ILs(i)%int_err   = linelist(j)%int_err
                                 cycle
                         endif        
                 end do 
@@ -117,10 +130,10 @@ subroutine element_assign(ILs, linelist, Iint)
 
 end subroutine
 
-subroutine get_H(H_BS, O)
+subroutine get_H(H_BS, linelist, listlength)
         TYPE(line), DIMENSION(4), INTENT(OUT) :: H_BS
-        REAL*8, DIMENSION(3,335), INTENT(IN) :: O
-        INTEGER :: i, j
+        TYPE(line), DIMENSION(:) :: linelist 
+        INTEGER :: i, j, listlength
         REAL*8 :: HW = 0.00000000
         CHARACTER*10 :: blank 
         !another ugly kludge, but it works.
@@ -142,22 +155,22 @@ subroutine get_H(H_BS, O)
                         PRINT*, "This is an EX-PARROT!!"
                 endif        
 
-                do j = 1, 335 
-                         if (int(O(1,j)-HW)==0) then
+                do j = 1, listlength
+                         if (linelist(j)%wavelength-HW==0) then
                                 H_BS(i)%name = blank
-                                H_BS(i)%wavelength = O(1,j)
-                                H_BS(i)%intensity = O(2,j)
-                                H_BS(i)%int_err = O(3,j) 
+                                H_BS(i)%wavelength = linelist(j)%wavelength
+                                H_BS(i)%intensity = linelist(j)%intensity
+                                H_BS(i)%int_err = linelist(j)%int_err
                         endif
                 end do
         end do
 
 end subroutine
 
-subroutine get_He(He_lines, O)
+subroutine get_He(He_lines, linelist,listlength)
         TYPE(line), DIMENSION(4), INTENT(OUT) :: He_lines
-        REAL*8, DIMENSION(3,335), INTENT(IN) :: O
-        INTEGER :: i, j
+        TYPE(line), DIMENSION(:), INTENT(IN) :: linelist
+        INTEGER :: i, j, listlength
         REAL*8 :: HW
         CHARACTER*10 :: blank
         !another ugly kludge, but it works.  
@@ -181,10 +194,10 @@ subroutine get_He(He_lines, O)
                 He_lines(i)%wavelength = HW
                 He_lines(i)%intensity = 0.0
                 He_lines(i)%int_err = 0.0
-                do j = 1, 335
-                        if(O(1,j) == HW)then 
-                                He_lines(i)%intensity = O(2,j)
-                                He_lines(i)%int_err = O(3,j)
+                do j = 1, listlength
+                        if(linelist(j)%wavelength == HW) then 
+                                He_lines(i)%intensity = linelist(j)%intensity
+                                He_lines(i)%int_err = linelist(j)%int_err
                         endif
                 end do
         end do
