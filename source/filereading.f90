@@ -1,22 +1,3 @@
-module mod_abundtypes
-
-TYPE line
-        CHARACTER*11 :: name
-        CHARACTER*20 :: ion
-        DOUBLE PRECISION :: wavelength
-        DOUBLE PRECISION :: intensity
-        DOUBLE PRECISION :: int_err
-        DOUBLE PRECISION :: freq
-        DOUBLE PRECISION :: int_dered
-        DOUBLE PRECISION :: int_dered_err
-        CHARACTER*20 :: transition
-        DOUBLE PRECISION :: abundance
-        DOUBLE PRECISION :: abund_err
-        CHARACTER*4 :: zone
-END TYPE
-
-end module mod_abundtypes
-
 module mod_abundIO
 use mod_abundtypes
 implicit none!
@@ -26,9 +7,6 @@ contains
 subroutine read_ilines(ILs, Iint)        
         TYPE(line), DIMENSION(62) :: ILs
         INTEGER :: Iint 
-
-        print *, "Initialisation"
-        print *, "=============="
 
         Iint = 1
 
@@ -41,45 +19,6 @@ subroutine read_ilines(ILs, Iint)
                 401 PRINT*, "done reading important lines, Iint = ", Iint 
         CLOSE(201)
 end subroutine        
-
-subroutine fileread(linelist, filename, listlength)
-        TYPE(LINE),DIMENSION(:), allocatable, intent(OUT) :: linelist 
-        CHARACTER*80 :: filename 
-        CHARACTER*1 :: null
-        INTEGER :: IO, I, listlength
-        DOUBLE PRECISION :: temp,temp2,temp3
-
-! first get the number of lines
-
-        I = 1
-        OPEN(199, file=filename, iostat=IO, status='old')
-                DO WHILE (IO >= 0)
-                        READ(199,*,end=111) null 
-                        I = I + 1
-                END DO 
-        111 print *,"File contains ",I," lines"
-        listlength=I
-
-!then allocate and read
-        allocate (linelist(listlength))
-
-        REWIND (199)
-        DO I=1,listlength
-                READ(199,*,end=110) temp, temp2, temp3
-                linelist(i)%wavelength = temp
-                linelist(i)%intensity = temp2
-                linelist(i)%int_err = temp3 
-        END DO
-        CLOSE(199)
-
-        110 PRINT*, "Successfully read ", I," lines"
-
-        if(linelist(1)%wavelength == 0)then
-                PRINT*, "Cheese shop error: no inputs"
-                STOP
-        endif
-
-end subroutine
 
 end module
 

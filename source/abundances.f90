@@ -1,4 +1,4 @@
-subroutine abundances(fname1, run, switch_ext)
+subroutine abundances(linelist, run, switch_ext,listlength, filename)
 use mod_abundmaths
 use mod_abundtypes
 use mod_diagnostics
@@ -11,11 +11,13 @@ use mod_extinction
 implicit none
 
         INTEGER :: count, Iint, fIL, i, j, ion_no1, ion_no2, ion_no3, ion_no4, iii, ion_no5, ion_no6
-        INTEGER :: opt, runonce, run, listlength
-        CHARACTER*80, INTENT(IN) :: fname1 !input filenames
-        CHARACTER*80 :: fnameIL, blank
+        INTEGER :: opt, runonce, run
+        integer, intent(in) :: listlength
+        TYPE(line), dimension(listlength) :: linelist 
         CHARACTER*8 :: lion
         CHARACTER :: switch_ext !switch for extinction laws
+        CHARACTER*80 :: filename
+
         DOUBLE PRECISION :: normalise, oiiNratio, oiiDens, oiiiTratio, oiiiTemp, oiiiIRNratio, oiiiIRTratio, niiTratio, niiTemp, arivNratio, arivDens, cliiiNratio, cliiiDens, siiNratio, siiDens, siiTratio, siiTemp, oiiTratio, oiiTemp, neiiiTratio, neiiiIRTratio, neiiiTemp, neiiiIRTemp, abund, meandensity, meantemp, oitemp, citemp
         DOUBLE PRECISION :: ciiiNratio,neivNratio,nevTratio,siiiTratio,ariiiTratio,arvTratio,lowtemp,lowdens,medtemp,ciiidens,meddens,siiitemp,ariiitemp,hightemp,neivdens,highdens,arvtemp,nevtemp,oiTratio,ciTratio
         DOUBLE PRECISION :: oiiRLabund, niiRLabund, ciiRLabund, cii4267rlabund, neiiRLabund, ciiiRLabund, niiiRLabund, RLabundtemp, weight
@@ -29,8 +31,7 @@ implicit none
         REAL :: heiabund,heiiabund,Hetotabund
         REAL*8 :: HW
 
-        DOUBLE PRECISION, DIMENSION(2) :: conditions
-        TYPE(line), DIMENSION(:), allocatable :: linelist 
+        DOUBLE PRECISION, DIMENSION(2) :: conditions 
         REAL*8 :: result
 
         TYPE(line), DIMENSION(62) :: ILs
@@ -65,20 +66,18 @@ implicit none
         !reading in Rogers "important" lines list
 
         CALL read_ilines(ILs, Iint) 
-        CALL fileread(linelist, fname1, listlength) ! see above
+!redundant now
+!        CALL fileread(linelist, fname1, listlength) ! see above
         CALL element_assign(ILs, linelist, Iint, listlength)
 
         !dereddening
 
         ILs%abundance = 0
-        ILs%int_dered = 0
-        ILs%int_dered_err = 0
+        ILs%int_dered = 0 
         H_BS%abundance = 0
-        H_BS%int_dered = 0
-        H_BS%int_dered_err = 0
+        H_BS%int_dered = 0 
         He_lines%abundance = 0
         He_lines%int_dered = 0
-        He_lines%int_dered_err = 0
 
         !first lets find some hydrogen lines
         CALL get_H(H_BS, linelist, listlength)
@@ -145,21 +144,21 @@ implicit none
         endif
 
         500 FORMAT (5(f10.4))
-        if(runonce == 1) OPEN(801, FILE=trim(fname1)//"_dered", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+        if(runonce == 1) OPEN(801, FILE=trim(filename)//"_dered", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
 
         if(runonce == 1)then
                 do iii=1, Iint
-                        if(ILs(iii)%int_dered .ne. 0) write(801,500) ILs(iii)%wavelength, ILs(iii)%intensity, ILs(iii)%int_err, ILs(iii)%int_dered, ILs(iii)%int_dered_err*ILs(iii)%int_dered
+                        if(ILs(iii)%int_dered .ne. 0) write(801,500) ILs(iii)%wavelength, ILs(iii)%intensity, ILs(iii)%int_err, ILs(iii)%int_dered
                 end do
                 do iii=1,4
-                        if( He_lines(iii)%int_dered .ne. 0 ) write(801,500) He_lines(iii)%wavelength, He_lines(iii)%intensity, He_lines(iii)%int_err, He_lines(iii)%int_dered, He_lines(iii)%int_dered_err*He_lines(iii)%int_dered
+                        if( He_lines(iii)%int_dered .ne. 0 ) write(801,500) He_lines(iii)%wavelength, He_lines(iii)%intensity, He_lines(iii)%int_err, He_lines(iii)%int_dered
 
-                        if( H_BS(iii)%int_dered .ne. 0 ) write(801,500) H_BS(iii)%wavelength, H_BS(iii)%intensity, H_BS(iii)%int_err, H_BS(iii)%int_dered, H_BS(iii)%int_dered_err*H_BS(iii)%int_dered
+                        if( H_BS(iii)%int_dered .ne. 0 ) write(801,500) H_BS(iii)%wavelength, H_BS(iii)%intensity, H_BS(iii)%int_err, H_BS(iii)%int_dered
                 end do
         endif
         if(runonce == 1) CLOSE(801)
-        if(runonce == 1) call system("sort "//trim(fname1)//"_dered > "//trim(fname1)//"_dered_sort")
-        if(runonce == 1) call system("rm "//trim(fname1)//"_dered")
+        if(runonce == 1) call system("sort "//trim(filename)//"_dered > "//trim(filename)//"_dered_sort")
+        if(runonce == 1) call system("rm "//trim(filename)//"_dered")
 
 !diagnostics
         call get_diag("ciii1909   ","ciii1907   ", ILs, ciiiNratio)        ! ciii ratio

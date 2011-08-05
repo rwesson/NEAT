@@ -1,14 +1,44 @@
+module mod_abundtypes
+
+TYPE line
+        CHARACTER*11 :: name
+        CHARACTER*20 :: ion
+        DOUBLE PRECISION :: wavelength
+        DOUBLE PRECISION :: intensity
+        DOUBLE PRECISION :: int_err
+        DOUBLE PRECISION :: freq
+        DOUBLE PRECISION :: int_dered
+        CHARACTER*20 :: transition
+        DOUBLE PRECISION :: abundance
+        CHARACTER*4 :: zone
+END TYPE
+
+end module mod_abundtypes
+
 program wrapper
 
-        CHARACTER*80 :: fname1, ofname !filenames - ofname = output from randomiser, fname1 = input line list
+        use mod_abundtypes
+
         CHARACTER*10 :: temp
         CHARACTER :: switch_ext !switch for extinction laws
         INTEGER :: I, runs, doublext, Narg !runs = number of runs for randomiser
         character*6 :: no
+
+        !file reading variables
+
+        TYPE(LINE),DIMENSION(:), allocatable :: linelist 
+        TYPE(LINE),DIMENSION(:), allocatable :: linelist_original
+        CHARACTER*80 :: filename 
+        CHARACTER*1 :: null
+        INTEGER :: IO, listlength
+        DOUBLE PRECISION :: temp1,temp2,temp3
+
+        !read command line arguments
+
         Narg = IARGC() !count input arguments
         CALL getarg(1,temp) !get info from input arguments
         read (temp,*) runs 
-        CALL getarg(2,fname1) 
+        CALL getarg(2,filename) 
         if(Narg > 2) then !check additional input arguments for switches (currently extinction laws only)
                CALL getarg (3, temp) !get argument for extinction laws, allowed values -How for Howarth LMC, -CCM for CCM galactic, -Pre for Prevot SMC, default is Seaton/Howarth galactic.
                if (temp == "-How") then
@@ -24,81 +54,115 @@ program wrapper
                switch_ext = "S"
         endif
 
-        !print*, runs
+        !first, read in the line list 
 
-        call init_random_seed()!sets seed for randomiser
-        ofname = "r_out"
-                !"ball1                                                                           " !length of 80char
-        if(runs > 1)then
+        print *,"Initialising"
+        print *,"------------"
+
+        I = 1
+        OPEN(199, file=filename, iostat=IO, status='old')
+                DO WHILE (IO >= 0)
+                        READ(199,*,end=111) null 
+                        I = I + 1
+                END DO 
+        111 print *,"File contains ",I," lines"
+        listlength=I
+
+!then allocate and read
+        allocate (linelist(listlength))
+        allocate (linelist_original(listlength))
+
+        REWIND (199)
+        DO I=1,listlength
+                READ(199,*,end=110) temp1, temp2, temp3
+                linelist(i)%wavelength = temp1
+                linelist(i)%intensity = temp2
+                linelist(i)%int_err = temp3 
+        END DO
+        CLOSE(199)
+
+        110 PRINT*, "Successfully read ", I," lines"
+
+        if(linelist(1)%wavelength == 0)then
+                PRINT*, "Cheese shop error: no inputs"
+                STOP
+        endif
+
+        linelist_original = linelist
+
+        !now check number of iterations.  If 1, line list is fine as is.  If more than one, randomize the fluxes
+
+        if(runs == 1)then !calculates abundances without uncertainties
+                call abundances(linelist, 1, switch_ext, listlength, filename)
+
+        else if(runs > 1)then
+
+                call init_random_seed()!sets seed for randomiser 
 
                 !open/create files here for adundances
-                OPEN(841, FILE=trim(fname1)//"_NC_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(842, FILE=trim(fname1)//"_C_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(843, FILE=trim(fname1)//"_Nii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(844, FILE=trim(fname1)//"_N_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(845, FILE=trim(fname1)//"_NO_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(846, FILE=trim(fname1)//"_Oii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(847, FILE=trim(fname1)//"_Oiii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(848, FILE=trim(fname1)//"_O_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(849, FILE=trim(fname1)//"_Neiii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(850, FILE=trim(fname1)//"_Neiv_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(851, FILE=trim(fname1)//"_Nev_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(852, FILE=trim(fname1)//"_Ne_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(853, FILE=trim(fname1)//"_Ariii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(854, FILE=trim(fname1)//"_Ariv_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(855, FILE=trim(fname1)//"_Arv_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(856, FILE=trim(fname1)//"_Ar_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(857, FILE=trim(fname1)//"_Sii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(858, FILE=trim(fname1)//"_Siii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(859, FILE=trim(fname1)//"_S_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(860, FILE=trim(fname1)//"_He_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(861, FILE=trim(fname1)//"_C_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(862, FILE=trim(fname1)//"_N_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(863, FILE=trim(fname1)//"_O_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(864, FILE=trim(fname1)//"_Ne_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(865, FILE=trim(fname1)//"_[OII]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(866, FILE=trim(fname1)//"_[SII]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(867, FILE=trim(fname1)//"_low_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(868, FILE=trim(fname1)//"_[OII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(869, FILE=trim(fname1)//"_[NII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(870, FILE=trim(fname1)//"_[SII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(871, FILE=trim(fname1)//"_[OI]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(872, FILE=trim(fname1)//"_[CI]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(873, FILE=trim(fname1)//"_low_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(874, FILE=trim(fname1)//"_[ClIII]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(875, FILE=trim(fname1)//"_[ArIV]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(876, FILE=trim(fname1)//"_CIII]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(877, FILE=trim(fname1)//"_med_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(878, FILE=trim(fname1)//"_[OIII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(879, FILE=trim(fname1)//"_[NeIII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(880, FILE=trim(fname1)//"_[ArIII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(881, FILE=trim(fname1)//"_[SIII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(882, FILE=trim(fname1)//"_med_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(883, FILE=trim(fname1)//"_[NeIV]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(884, FILE=trim(fname1)//"_high_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(885, FILE=trim(fname1)//"_[ArV]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(886, FILE=trim(fname1)//"_[NeV]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(887, FILE=trim(fname1)//"_high_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(888, FILE=trim(fname1)//"_mean_cHb", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(841, FILE=trim(filename)//"_NC_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(842, FILE=trim(filename)//"_C_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(843, FILE=trim(filename)//"_Nii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(844, FILE=trim(filename)//"_N_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(845, FILE=trim(filename)//"_NO_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(846, FILE=trim(filename)//"_Oii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(847, FILE=trim(filename)//"_Oiii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(848, FILE=trim(filename)//"_O_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(849, FILE=trim(filename)//"_Neiii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(850, FILE=trim(filename)//"_Neiv_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(851, FILE=trim(filename)//"_Nev_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(852, FILE=trim(filename)//"_Ne_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(853, FILE=trim(filename)//"_Ariii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(854, FILE=trim(filename)//"_Ariv_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(855, FILE=trim(filename)//"_Arv_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(856, FILE=trim(filename)//"_Ar_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(857, FILE=trim(filename)//"_Sii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(858, FILE=trim(filename)//"_Siii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(859, FILE=trim(filename)//"_S_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(860, FILE=trim(filename)//"_He_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(861, FILE=trim(filename)//"_C_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(862, FILE=trim(filename)//"_N_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(863, FILE=trim(filename)//"_O_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(864, FILE=trim(filename)//"_Ne_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(865, FILE=trim(filename)//"_[OII]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(866, FILE=trim(filename)//"_[SII]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(867, FILE=trim(filename)//"_low_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(868, FILE=trim(filename)//"_[OII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(869, FILE=trim(filename)//"_[NII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(870, FILE=trim(filename)//"_[SII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(871, FILE=trim(filename)//"_[OI]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(872, FILE=trim(filename)//"_[CI]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(873, FILE=trim(filename)//"_low_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(874, FILE=trim(filename)//"_[ClIII]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(875, FILE=trim(filename)//"_[ArIV]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(876, FILE=trim(filename)//"_CIII]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(877, FILE=trim(filename)//"_med_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(878, FILE=trim(filename)//"_[OIII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(879, FILE=trim(filename)//"_[NeIII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(880, FILE=trim(filename)//"_[ArIII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(881, FILE=trim(filename)//"_[SIII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(882, FILE=trim(filename)//"_med_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(883, FILE=trim(filename)//"_[NeIV]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(884, FILE=trim(filename)//"_high_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(885, FILE=trim(filename)//"_[ArV]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(886, FILE=trim(filename)//"_[NeV]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(887, FILE=trim(filename)//"_high_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(888, FILE=trim(filename)//"_mean_cHb", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
                 DO I=1,runs
                         print*, "-=-=-=-=-=-=-=-"
                         print*, "iteration ", i
                         print*, "=-=-=-=-=-=-=-="
                         print*, " "
                         write (no, '(I6)') i
-                        no = adjustl(no)
-                        ofname = "r_out"//no
-                        print*, ofname
 
-                        call randomizer(fname1, ofname)
-                        call abundances(ofname, 0, switch_ext)!, doublext)
-                        call system("rm "//ofname)
+                        call randomizer(linelist, listlength)
+                        call abundances(linelist, 0, switch_ext, listlength, filename)
+                        linelist = linelist_original
+
                 END DO
                 DO I=841,864
                         CLOSE(unit=I)
-                END DO
-        else if(runs == 1)then !calculates abundances without uncertainties
-                call abundances(fname1, 1, switch_ext)!, doublext)
+                END DO 
         else
                 print*, "I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."
         endif
@@ -106,30 +170,11 @@ program wrapper
 
 contains
 
-        subroutine randomizer(filename, outfilename)
+        subroutine randomizer(linelist, listlength)
 
-                TYPE line
-                        CHARACTER*11 :: name
-                        CHARACTER*20 :: ion
-                        DOUBLE PRECISION :: wavelength
-                        DOUBLE PRECISION :: intensity
-                        DOUBLE PRECISION :: int_err
-                        DOUBLE PRECISION :: freq
-                        DOUBLE PRECISION :: int_dered
-                        DOUBLE PRECISION :: int_dered_err
-                        CHARACTER*20 :: transition
-                        DOUBLE PRECISION :: abundance
-                        DOUBLE PRECISION :: abund_err
-                        CHARACTER*4 :: zone
-                END TYPE
-
-
-                TYPE(line), dimension(:), allocatable :: linelist
-                CHARACTER*80, INTENT(IN) :: filename, outfilename
-                character*1 :: null
-                !character*10 :: Ich, mcnumberch
+                TYPE(line), dimension(listlength) :: linelist 
                 INTEGER :: IO, I, j, listlength!, mcnumber
-                DOUBLE PRECISION :: temp,temp2,temp3,temp4
+                DOUBLE PRECISION :: temp1,temp2,temp3,temp4
 
                 REAL :: fn_val
 
@@ -144,47 +189,7 @@ contains
 
                 I = 1
                 IO=0
-                !PRINT*, filename
 
-        ! first get the number of lines
-
-                I = 1
-                OPEN(199, file=filename, iostat=IO, status='old')
-                        DO WHILE (IO >= 0)
-                                READ(199,*,end=111) null
-                                I = I + 1
-                        END DO
-                111 print *,"File contains ",I," lines"
-                listlength=I
-
-        !then allocate and read
-                allocate (linelist(listlength))
-
-                REWIND (199)
-                DO I=1,listlength
-                        READ(199,*,end=110) temp, temp2, temp3
-                        linelist(i)%wavelength = temp
-                        linelist(i)%intensity = temp2
-                        linelist(i)%int_err = temp3
-                END DO
-                CLOSE(199)
-
-                110 PRINT*, "Successfully read ", I," lines"
-
-                if(linelist(1)%wavelength == 0)then
-                        PRINT*, "Cheese shop error: no inputs"
-                        STOP
-                endif
-
-
-                !create [mcnumber] of files, each with a randomly varied flux
-
-                !do i = 1,mcnumber
-                        !write (ich,'(I3)') i
-                        !open(unit=101, name='randomized_'//Ich//'.dat',type='unknown')
-                        print*, outfilename
-
-                        open(unit=401, file=outfilename,action="WRITE")!,type='unknown')
                         do j = 1,listlength
 
                                 ! from http://www.netlib.org/random/random.f90
@@ -203,9 +208,8 @@ contains
                                 fn_val = v/u
                                 temp4=linelist(j)%intensity+(fn_val*linelist(j)%int_err)
                                 if(temp4 < 0) temp4 = 0
-                                write (401,"(F7.2,1X,F10.5,1X,F7.2)") linelist(j)%wavelength, temp4, linelist(j)%int_err
-                        end do
-                        close(unit=401)
+                                linelist(j)%intensity = temp4 
+                        end do 
                 !end do
                 PRINT*, "Randomizing complete"
         end subroutine
@@ -226,10 +230,5 @@ contains
 
             DEALLOCATE(seed)
           END SUBROUTINE
-
-
-
-
-
 
 end program
