@@ -35,11 +35,11 @@
       subroutine get_abundance(ion,levels,tempi,densi,iobs,abund)
       IMPLICIT NONE
       INTEGER NDIM1, NDIM2, NDIM1T3, MAXND
-                                                      !Maximum no of Te
+                                                      !Maximum no of Te & levels
       PARAMETER (NDIM1=35, NDIM2=150)
-                                             !NDIM1T3 should be at least
+                                             !NDIM1T3 should be at least 3*NDIM1
       PARAMETER (NDIM1T3 = 105)
-                                                   !Maximum no. of Ne in
+                                                   !Maximum no. of Ne increments
       PARAMETER (MAXND=100)
       INTEGER GX, G(NDIM2), ID(2), JD(2),                               &
      &  ITRANA(2,NDIM2),ITRANB(2,NDIM2),ITRANC(2,NDIM2)
@@ -96,43 +96,43 @@
       int=1
       ind=1
 
-                                                       !Write out ions a
+                                                       !Write out ions available
 !      WRITE(6,1000)
 !      ION = '                    '
 !      WRITE(6,1001)
-                                                        !Interrogate for
+                                                        !Interrogate for input
 !      READ(5,1002) ION
       IONL = INDEX(ION,' ') - 1
       OPEN(UNIT=1,STATUS='OLD',                                         &
      & FILE='atomic_data06/'//ION(1:IONL)//'.dat')
 !     + NAME='atomic_data/'//ION(1:IONL)//'.dat')
-                                                      !Read in no. comme
+                                                      !Read in no. comment lines
       READ(1,*) NLINES
       DO I = 1, NLINES
-                                                                       !
+                                                                       !comments
         READ(1,1003) LTEXT
 !       WRITE(6,1003) LTEXT
       ENDDO
-                                          !Read no. of levels (max=NDIM2
+                                          !Read no. of levels (max=NDIM2) NLEV,
       READ (1,*) NLEV, NTEMP
-                                          !no. of Te (max=NDIM1) NTEMP a
+                                          !no. of Te (max=NDIM1) NTEMP and the
       DO I = 1, NLEV
                                           !input format (cf Readme)
          READ (1,1002) LABEL(I)
       ENDDO
 !     be
       ibig=0
-!     WRITE(6,1004) (I,LABEL(I),I=1,NLEV)   !Tell user what levels are a
-                                            !Read in Te's where coll. st
+!     WRITE(6,1004) (I,LABEL(I),I=1,NLEV)   !Tell user what levels are available
+                                            !Read in Te's where coll. strengths
       DO I = 1, NTEMP
                                             !are tabulated
            READ (1,*) T(I)
            T(I) = LOG10 (T(I))
            ROOTT(I) = SQRT(T(I))
       ENDDO
-                             !If IRATS=0, what tabulated are collision s
+                             !If IRATS=0, what tabulated are collision strengths
       READ(1,*) IRATS
-!                            !Else Coll. rates = tabulated values * 10 *
+!                            !Else Coll. rates = tabulated values * 10 ** IRATS
       IF(IBIG.EQ.0) THEN
    10   READ (1,*) ID(2), JD(2), QX
         IF (QX.EQ.0.D0) GOTO 20
@@ -159,7 +159,7 @@
           READ(1,*) I,J,(QOM(ITEMP,I,J),ITEMP=1,NTEMP)
         ENDDO
       ENDIF
-                                                  !Read transition proba
+                                                  !Read transition probabilities
       NLEV1 = NLEV - 1
       IF (IBIG.EQ.1) THEN
        READ(1,7000) ((I,J,A(J,I),L=K+1,NLEV),K=1,NLEV1)
@@ -172,7 +172,7 @@
           ENDDO
       ENDDO
       ENDIF
-                                 !Read statistical weights, energy level
+                                 !Read statistical weights, energy levels (cm-1)
       DO J = 1, NLEV
         READ (1,*) I, GX, EX
         G(I) = GX
@@ -181,15 +181,15 @@
       CLOSE (UNIT=1)
                                 !Get levels for ratio
 !      WRITE(6,1010)
-                                                           !150 large en
+                                                           !150 large enough
 !      READ(5,*) ((ITRANA(LL,KK),LL=1,2),KK=1,150)
 !      WRITE(6,1011)
 !      READ(5,*) ((ITRANB(LL,KK),LL=1,2),KK=1,150)
 !      WRITE(6,1012)
 !      READ(5,*) ((ITRANC(LL,KK),LL=1,2),KK=1,150)
-                                               !Read in Te and Ne where
+                                               !Read in Te and Ne where the line
 !      WRITE(6,1005)
-                                               !ratio is to be calculate
+                                               !ratio is to be calculated
 !      READ(5,*) TEMPI,TINC,INT
 !      INT=INT+1
 !      WRITE(6,1006)
@@ -203,13 +203,13 @@
 !      OPEN(UNIT=4,NAME=ION(1:IONL)//'rat.dat',STATUS='UNKNOWN')
 !      OPEN(UNIT=7,NAME=ION(1:IONL)//'pop.lis',STATUS='UNKNOWN')
 !      OPEN(UNIT=8,NAME=ION(1:IONL)//'rat.lis',STATUS='UNKNOWN')
-                                                               !Start of
+                                                               !Start of Te loop
       DO JT = 1, INT
         TEMP=TEMPI+(JT-1)*TINC
 !       IF(TEMPI.LT.30.D0) THEN
 !         TEMP=10.D0**TEMP
 !       ENDIF
-                                                               !Start of
+                                                               !Start of Ne loop
         DO JJD = 1, IND
           DENS=DENSI+(JJD-1)*DINC
           IF(DENSI.LT.30.D0) THEN
@@ -222,7 +222,7 @@
           DLOGD = LOG10 (DENS)
           TLOGT = LOG10 (TEMP)
           TEMP2= SQRT (TEMP)
-                                                                  !Form
+                                                                  !Form matrices
           DO I = 1, NDIM2
             DO J = 1, NDIM2
               X(I,J) = 0.D0
@@ -254,9 +254,9 @@
                 IF (IRATS.EQ.0.D+00) THEN
                   QQ(IT) = QOM(IT,I-1,J)
                 ELSE
-                                                      !Take out the exp.
+                                                      !Take out the exp. depend.
                   QQ(IT) = QOM(IT,I-1,J) / EXPE
-                                                      !before interpolat
+                                                      !before interpolation
                 ENDIF
               ENDDO
               IF (NTEMP.EQ.1) THEN
@@ -277,9 +277,9 @@
                 QEFF(J,I-1) = 8.63D-06 * CS(I-1,J) / (G(J)*TEMP2)
               ELSE
                 QEFF(I-1,J) = CS(I-1,J) * 10. ** IRATS
-                                                                     !Be
+                                                                     !Be careful
                 QEFF(J,I-1) = G(I-1) * QEFF(I-1,J) / (EXPE * G(J))
-                                                                     !G
+                                                                     !G integer!
               ENDIF
             ENDDO
           ENDDO
@@ -310,7 +310,7 @@
               XKEEP(IM1,JM1) = VALUE
             ENDDO
           ENDDO
-                                              !Solve matrices for popula
+                                              !Solve matrices for populations
           CALL LUSLV(X,Y,NLEV1,NDIM2)
           DO I = NLEV, 2, -1
             N(I) = Y(I-1)
@@ -323,7 +323,7 @@
             N(I) = N(I) / SUMN
           ENDDO
           N(1) = 1.D0 / SUMN
-                                                                  !Outpu
+                                                                  !Output data
 !          WRITE (3,3000) ION,TEMP,TLOGT,DENS,DLOGD
 !          DO I = 1, NLEV
 !            WRITE (3,3100) I, LABEL(I), N(I)
@@ -348,7 +348,7 @@
                ENDIF
             ENDDO
           ENDDO
-                     !Search ITRANA, ITRANB & ITRANC for transitions & s
+                     !Search ITRANA, ITRANB & ITRANC for transitions & sum up
           SUMA=0.D0
           SUMB=0.D0
           SUMC=0.D0
@@ -384,7 +384,7 @@
 !          WRITE(7,1017) TEMP, DENS, SUMC
           abund = sumc*iobs/100
 !          WRITE(8,1017) TEMP, DENS, FRAT
-                                                       !End of the Ne lo
+                                                       !End of the Ne loop
         ENDDO
         DO IA = 1, IAPR
           I1=ITRANA(1,IA)
@@ -409,7 +409,7 @@
 !          WRITE(4,1013) (TDRAT(1,KK),KK=1,IND)
 !        ENDIF
 !        WRITE(4,1014) TEMP,(TDRAT(2,KK),KK=1,IND)
-                                                         !End of the Te
+                                                         !End of the Te loop
       ENDDO
 !      WRITE(6,1015) (WAVC(IC),IC=1,ICPR)
 !      CLOSE(UNIT=3)
@@ -480,7 +480,7 @@
       END subroutine get_abundance
 !
 !---- PROC LUSLV
-                                                       !Solving linear e
+                                                       !Solving linear equations
       SUBROUTINE LUSLV(A,B,N,M)
       IMPLICIT NONE
       INTEGER M, N
@@ -510,7 +510,7 @@
       END subroutine lured
 !
 !---- PROC RESLV
-                                                               !Resolve
+                                                               !Resolve A with B
       SUBROUTINE RESLV(A,B,N,NR)
       IMPLICIT NONE
       INTEGER N, NR, NM1, I, J, K, L, IP1
@@ -595,9 +595,9 @@
      & INDX
       REAL*8 XX(NDIM), GH(NDIMT3), Y(NDIM), HMH(NDIM,NDIM),             &
      & XY(5),D(5),C(2,5), A0, AN1, H1, H2
-                                   !Case of derivative boundary conditio
+                                   !Case of derivative boundary condition, with
       IF(IOPT.EQ.2) THEN
-                                   !derivatives from NIP-point Lagrange
+                                   !derivatives from NIP-point Lagrange at
         NDIM3=5
                                    !internal points
         NIP=3
@@ -613,7 +613,7 @@
           ENDDO
         ENDDO
       ENDIF
-                                             !Set up matrix equation G*Y
+                                             !Set up matrix equation G*YPP=HMH*Y
       A0=XX(2)-XX(1)
       AN1=XX(NPT)-XX(NPT-1)
       NPM=NPT-2
@@ -627,9 +627,9 @@
           IF(J.EQ.I+1) HMH(I,J)=-H1-H2
         ENDDO
       ENDDO
-                                                 !Correct matrix for cas
+                                                 !Correct matrix for case of
       IF(IOPT.EQ.1.OR.IOPT.EQ.2) THEN
-                                                 !derivative boundary co
+                                                 !derivative boundary conditions
         HMH(1,1)=HMH(1,1)+3/A0
         HMH(1,2)=HMH(1,2)-3/A0
         HMH(NPM,NPT-1)=HMH(NPM,NPT-1)-3/AN1
@@ -644,9 +644,9 @@
       ENDIF
       DO I=1,NPM
       ENDDO
-                                 !Solve matrix equation with results in
+                                 !Solve matrix equation with results in the form
       DO I=1,NPT
-                                 !YPP=HMH*Y. matrix g has been LU decomp
+                                 !YPP=HMH*Y. matrix g has been LU decomposed
         Y(1)=HMH(1,I)
         INDX=0
         DO J=2,NPM
@@ -663,12 +663,12 @@
         DO J=1,NPM
         HMH(J+1,I)=Y(J)
         ENDDO
-                                    !Insert values for second derivative
+                                    !Insert values for second derivative at end
         HMH(1,I)=0.
-                                    !points: first and last rows of the
+                                    !points: first and last rows of the matrix
         HMH(NPT,I)=0.
       ENDDO
-                                         !Case of derivative boundary co
+                                         !Case of derivative boundary conditions
       IF(IOPT.GT.0) THEN
         DO J=1,NPT
           HMH(1,J)=-0.5*HMH(2,J)
