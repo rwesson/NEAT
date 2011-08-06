@@ -586,7 +586,7 @@ if(arvtemp  >0)    print "(A28,F8.0,A1,F8.3)","[Ar V] temp      High      ",arvt
 if(nevtemp  >0)    print "(A28,F8.0,A1,F8.3)","[Ne V] temp      High      ",nevtemp, " ",nevtratio
         if(runonce == 0 .and. nevtemp > 0)WRITE(UNIT=886,FMT=*)nevtemp
 if(hightemp >0)    print "(A28,F8.0)"," temp adopted    High      ",hightemp
-        if(runonce == 0 .and. hightemp > 0)WRITE(UNIT=882,FMT=*)hightemp
+        if(runonce == 0 .and. hightemp > 0)WRITE(UNIT=887,FMT=*)hightemp
 
 ! later, make this check with user whether to adopt these values
 
