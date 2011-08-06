@@ -64,14 +64,19 @@
       CHARACTER*20 levels
       real*8 iobs, abund
 !
-      do i = 1,ndim2
-          g(i)=0
-          do j = 1, 2
-             itrana(j,i)=0
-             itranb(j,i)=0
-             itranc(j,i)=0
-          enddo
-      enddo
+      g=0
+      itrana=0
+      itranb=0
+      itranc=0
+
+!      do i = 1,ndim2
+!          g(i)=0
+!          do j = 1, 2
+!             itrana(j,i)=0
+!             itranb(j,i)=0
+!             itranc(j,i)=0
+!          enddo
+!      enddo
 
 !     if (command_argument_count () .ne. 5) then
 !       print *,"inputs: ion, levels, temperature, density, I(obs)"
@@ -223,15 +228,21 @@
           TLOGT = LOG10 (TEMP)
           TEMP2= SQRT (TEMP)
                                                                   !Form matrices
-          DO I = 1, NDIM2
-            DO J = 1, NDIM2
-              X(I,J) = 0.D0
-              CS(I,J)=0.D0
-              QEFF(I,J)=0.D0
-              TNIJ(I,J)=0.D0
-            ENDDO
-            Y(I) = 0.D0
-          ENDDO
+          X = 0.D0
+          CS=0.D0
+          QEFF=0.D0
+          TNIJ = 0.D0
+          Y=0.D0
+
+!          DO I = 1, NDIM2
+!            DO J = 1, NDIM2
+!              X(I,J) = 0.D0
+!              CS(I,J)=0.D0
+!              QEFF(I,J)=0.D0
+!              TNIJ(I,J)=0.D0
+!            ENDDO
+!            Y(I) = 0.D0
+!          ENDDO
           IOPT=0
           IF (NTEMP.EQ.1) THEN
             WRITE (6,*)
