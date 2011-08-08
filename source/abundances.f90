@@ -249,10 +249,13 @@ implicit none
          if (oiiNratio .gt. 0 .and. oiiNratio .lt. 1e10) then
            call get_diagnostic("oii       ","1,2/                ","1,3/                ",oiiNratio,"D",lowtemp, oiiDens)
            count = count + 1
+
          endif
+
          if (siiNratio .gt. 0 .and. siiNratio .lt. 1e10) then
            call get_diagnostic("sii       ","1,2/                ","1,3/                ",siiNratio,"D",lowtemp, siiDens)
            count = count + 1
+
          endif
 
          if (count .eq. 0) then
@@ -266,6 +269,7 @@ implicit none
          if (oiiTratio .gt. 0 .and. oiiTratio .lt. 1e10) then
            call get_diagnostic("oii       ","2,4,2,5,3,4,3,5/    ","1,2,1,3/            ",oiiTratio,"T",lowdens,oiiTemp)
            count = count + 1
+
                  if(oiitemp == 20000)then
                         count=count-1
                         oiitemp=-1
@@ -274,6 +278,7 @@ implicit none
          else
            oiiTemp = 0.0
          endif
+
          if (siiTratio .gt. 0 .and. siiTratio .lt. 1e10) then
            call get_diagnostic("sii       ","1,2,1,3/            ","1,4,1,5/            ",siiTratio,"T",lowdens,siiTemp)
            count = count + 1
@@ -286,12 +291,13 @@ implicit none
          else
            siiTemp = 0.0
          endif
+
          if (niiTratio .gt. 0 .and. niiTratio .lt. 1e10) then
            call get_diagnostic("nii       ","2,4,3,4/            ","4,5/                ",niiTratio,"T",lowdens,niitemp)
            count = count + 5
 
                  if(niitemp == 20000)then
-                        count=count-1
+                        count=count-5
                         niitemp=-1
                  endif
 
@@ -312,7 +318,7 @@ implicit none
            citemp = 0.0
          endif
 
-          if (oiTratio .gt. 0 .and. oiTratio .lt. 1e10) then
+         if (oiTratio .gt. 0 .and. oiTratio .lt. 1e10) then
            call get_diagnostic("oi        ","1,4,2,4/            ","4,5/                ",oiTratio,"T",lowdens,oitemp)
            count = count + 1
 

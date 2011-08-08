@@ -274,6 +274,7 @@
           ENDIF 
           IF (TEMP.LE.0.D0.OR.DENS.LE.0.D0) THEN 
             WRITE (6,6100) 
+		print *,"Temp = ", TEMP, ", Dens = ", DENS
             STOP 
           ENDIF 
           DLOGD = LOG10 (DENS) 
