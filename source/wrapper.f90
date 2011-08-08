@@ -15,9 +15,65 @@ END TYPE
 
 end module mod_abundtypes
 
+module mod_resultarrays
+
+TYPE resultarray
+        double precision :: NC_abund_CEL
+        double precision :: C_abund_CEL
+        double precision :: Nii_abund_CEL
+        double precision :: N_abund_CEL
+        double precision :: NO_abund_CEL
+        double precision :: Oii_abund_CEL
+        double precision :: Oiii_abund_CEL
+        double precision :: O_abund_CEL
+        double precision :: Neiii_abund_CEL
+        double precision :: Neiv_abund_CEL
+        double precision :: Nev_abund_CEL
+        double precision :: Ne_abund_CEL
+        double precision :: Ariii_abund_CEL
+        double precision :: Ariv_abund_CEL
+        double precision :: Arv_abund_CEL
+        double precision :: Ar_abund_CEL
+        double precision :: Sii_abund_CEL
+        double precision :: Siii_abund_CEL
+        double precision :: S_abund_CEL
+        double precision :: He_abund_ORL
+        double precision :: C_abund_ORL
+        double precision :: N_abund_ORL
+        double precision :: O_abund_ORL
+        double precision :: Ne_abund_ORL
+        double precision :: OII_density
+        double precision :: SII_density
+        double precision :: low_density
+        double precision :: OII_temp
+        double precision :: NII_temp
+        double precision :: SII_temp
+        double precision :: OI_temp
+        double precision :: CI_temp
+        double precision :: low_temp
+        double precision :: ClIII_density
+        double precision :: ArIV_density
+        double precision :: CIII_density
+        double precision :: med_density
+        double precision :: OIII_temp
+        double precision :: NeIII_temp
+        double precision :: ArIII_temp
+        double precision :: SIII_temp
+        double precision :: med_temp
+        double precision :: NeIV_density
+        double precision :: high_density
+        double precision :: ArV_temp
+        double precision :: NeV_temp
+        double precision :: high_temp
+        double precision :: mean_cHb
+end type
+
+end module mod_resultarrays
+
 program wrapper
 
         use mod_abundtypes
+        use mod_resultarrays
 
         CHARACTER*10 :: temp
         CHARACTER :: switch_ext !switch for extinction laws
@@ -32,6 +88,8 @@ program wrapper
         CHARACTER*1 :: null
         INTEGER :: IO, listlength
         DOUBLE PRECISION :: temp1,temp2,temp3
+        type(resultarray), dimension(:), allocatable :: all_results
+        type(resultarray), dimension(1) :: iteration_result
 
         !read command line arguments
 
@@ -93,13 +151,28 @@ program wrapper
         !now check number of iterations.  If 1, line list is fine as is.  If more than one, randomize the fluxes
 
         if(runs == 1)then !calculates abundances without uncertainties
-                call abundances(linelist, 1, switch_ext, listlength, filename)
+                call abundances(linelist, 1, switch_ext, listlength, filename, iteration_result)
 
         else if(runs > 1)then
 
                 call init_random_seed()!sets seed for randomiser 
+                allocate(all_results(runs))
 
                 !open/create files here for adundances
+
+                DO I=1,runs
+                        print*, "-=-=-=-=-=-=-=-"
+                        print*, "iteration ", i
+                        print*, "=-=-=-=-=-=-=-="
+                        print*, " "
+                        write (no, '(I6)') i
+
+                        call randomizer(linelist, listlength)
+                        call abundances(linelist, 0, switch_ext, listlength, filename, iteration_result)
+                        linelist = linelist_original
+                        all_results(i)=iteration_result(1)
+                END DO
+
                 OPEN(841, FILE=trim(filename)//"_NC_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
                 OPEN(842, FILE=trim(filename)//"_C_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
                 OPEN(843, FILE=trim(filename)//"_Nii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
@@ -148,21 +221,63 @@ program wrapper
                 OPEN(886, FILE=trim(filename)//"_[NeV]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
                 OPEN(887, FILE=trim(filename)//"_high_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
                 OPEN(888, FILE=trim(filename)//"_mean_cHb", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                DO I=1,runs
-                        print*, "-=-=-=-=-=-=-=-"
-                        print*, "iteration ", i
-                        print*, "=-=-=-=-=-=-=-="
-                        print*, " "
-                        write (no, '(I6)') i
 
-                        call randomizer(linelist, listlength)
-                        call abundances(linelist, 0, switch_ext, listlength, filename)
-                        linelist = linelist_original
+                do i=1,runs 
+                        write(unit = 841,FMT=*) all_results(i)%NC_abund_CEL
+                        write(unit = 842,FMT=*) all_results(i)%C_abund_CEL
+                        write(unit = 843,FMT=*) all_results(i)%nii_abund_CEL
+                        write(unit = 844,FMT=*) all_results(i)%N_abund_CEL
+                        write(unit = 845,FMT=*) all_results(i)%NO_abund_CEL
+                        write(unit = 846,FMT=*) all_results(i)%oii_abund_CEL
+                        write(unit = 847,FMT=*) all_results(i)%oiii_abund_CEL
+                        write(unit = 848,FMT=*) all_results(i)%O_abund_CEL
+                        write(unit = 849,FMT=*) all_results(i)%neiii_abund_CEL
+                        write(unit = 850,FMT=*) all_results(i)%neiv_abund_CEL
+                        write(unit = 851,FMT=*) all_results(i)%nev_abund_CEL
+                        write(unit = 852,FMT=*) all_results(i)%Ne_abund_CEL
+                        write(unit = 853,FMT=*) all_results(i)%ariii_abund_CEL
+                        write(unit = 854,FMT=*) all_results(i)%ariv_abund_CEL
+                        write(unit = 855,FMT=*) all_results(i)%arv_abund_CEL
+                        write(unit = 856,FMT=*) all_results(i)%Ar_abund_CEL
+                        write(unit = 857,FMT=*) all_results(i)%sii_abund_CEL
+                        write(unit = 858,FMT=*) all_results(i)%siii_abund_CEL
+                        write(unit = 859,FMT=*) all_results(i)%S_abund_CEL
+                        write(unit = 860,FMT=*) all_results(i)%He_abund_ORL
+                        write(unit = 861,FMT=*) all_results(i)%C_abund_ORL
+                        write(unit = 862,FMT=*) all_results(i)%N_abund_ORL
+                        write(unit = 863,FMT=*) all_results(i)%O_abund_ORL
+                        write(unit = 864,FMT=*) all_results(i)%Ne_abund_ORL
+                        write(unit = 865,FMT=*) all_results(i)%oii_density
+                        write(unit = 866,FMT=*) all_results(i)%sii_density
+                        write(unit = 867,FMT=*) all_results(i)%low_density
+                        write(unit = 868,FMT=*) all_results(i)%nii_temp
+                        write(unit = 869,FMT=*) all_results(i)%oii_temp
+                        write(unit = 870,FMT=*) all_results(i)%sii_temp
+                        write(unit = 871,FMT=*) all_results(i)%oi_temp
+                        write(unit = 872,FMT=*) all_results(i)%ci_temp
+                        write(unit = 873,FMT=*) all_results(i)%low_temp
+                        write(unit = 874,FMT=*) all_results(i)%cliii_density
+                        write(unit = 875,FMT=*) all_results(i)%ariv_density
+                        write(unit = 876,FMT=*) all_results(i)%ciii_density
+                        write(unit = 877,FMT=*) all_results(i)%med_density
+                        write(unit = 878,FMT=*) all_results(i)%oiii_temp
+                        write(unit = 879,FMT=*) all_results(i)%neiii_temp
+                        write(unit = 880,FMT=*) all_results(i)%ariii_temp
+                        write(unit = 881,FMT=*) all_results(i)%siii_temp
+                        write(unit = 882,FMT=*) all_results(i)%med_temp
+                        write(unit = 883,FMT=*) all_results(i)%neiv_density
+                        write(unit = 884,FMT=*) all_results(i)%high_density
+                        write(unit = 885,FMT=*) all_results(i)%arv_temp
+                        write(unit = 886,FMT=*) all_results(i)%nev_temp
+                        write(unit = 887,FMT=*) all_results(i)%high_temp
+                        write(unit = 888,FMT=*) all_results(i)%mean_cHb 
+                end do
 
-                END DO
-                DO I=841,864
+                DO I=841,888
                         CLOSE(unit=I)
                 END DO 
+
+
         else
                 print*, "I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."
         endif
@@ -173,7 +288,7 @@ contains
         subroutine randomizer(linelist, listlength)
 
                 TYPE(line), dimension(listlength) :: linelist 
-                INTEGER :: IO, I, j, listlength!, mcnumber
+                INTEGER :: IO, I, j, listlength
                 DOUBLE PRECISION :: temp1,temp2,temp3,temp4
 
                 REAL :: fn_val
@@ -182,8 +297,6 @@ contains
                 REAL     :: s = 0.449871, t = -0.386595, a = 0.19600, b = 0.25472,           &
                             r1 = 0.27597, r2 = 0.27846, u, v, x, y, q
                 REAL :: half
-                !call init_random_seed()
-                !read in the file
 
                 half = 0.5
 

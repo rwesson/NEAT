@@ -1,4 +1,4 @@
-subroutine abundances(linelist, run, switch_ext,listlength, filename)
+subroutine abundances(linelist, run, switch_ext,listlength, filename, iteration_result)
 use mod_abundmaths
 use mod_abundtypes
 use mod_diagnostics
@@ -7,6 +7,7 @@ use mod_abundIO
 use mod_helium
 use mod_recombination_lines
 use mod_extinction
+use mod_resultarrays
 
 implicit none
 
@@ -17,6 +18,7 @@ implicit none
         CHARACTER*8 :: lion
         CHARACTER :: switch_ext !switch for extinction laws
         CHARACTER*80 :: filename
+        type(resultarray), dimension(1) :: iteration_result
 
         DOUBLE PRECISION :: normalise, oiiNratio, oiiDens, oiiiTratio, oiiiTemp, oiiiIRNratio, oiiiIRTratio, niiTratio, niiTemp, arivNratio, arivDens, cliiiNratio, cliiiDens, siiNratio, siiDens, siiTratio, siiTemp, oiiTratio, oiiTemp, neiiiTratio, neiiiIRTratio, neiiiTemp, neiiiIRTemp, abund, meandensity, meantemp, oitemp, citemp
         DOUBLE PRECISION :: ciiiNratio,neivNratio,nevTratio,siiiTratio,ariiiTratio,arvTratio,lowtemp,lowdens,medtemp,ciiidens,meddens,siiitemp,ariiitemp,hightemp,neivdens,highdens,arvtemp,nevtemp,oiTratio,ciTratio
@@ -112,7 +114,7 @@ implicit none
         print "(1X,A17,F4.2,A4,F4.2)","Hd/Hb => c(Hb) = ",c3
 
         PRINT "(1X,A13,F4.2,A4,F4.2)", "Mean c(Hb) = ",meanextinction
-        if (runonce == 0 .and. meanextinction > 0) write(UNIT=888, FMT=*)meanextinction
+        if (runonce == 0 .and. meanextinction > 0) iteration_result(1)%mean_cHb = meanextinction
 
         if (meanextinction .lt. 0.0) then
            print *,"Derived extinction <0 ; assuming 0"
@@ -468,125 +470,125 @@ implicit none
       print *,"Diagnostic       Zone      Value    Diagnostic ratio"
       print *,""
 if(oiidens >0)     print "(A28,F8.0,A1,F8.3)","[O II] density   Low       ",oiidens, " ", oiiNratio
-        if(runonce == 0 .and. oiidens > 0) WRITE(unit=865,FMT=*)oiidens
+        if(runonce == 0 .and. oiidens > 0) iteration_result(1)%OII_density = oiidens
 if(siidens >0)     print "(A28,F8.0,A1,F8.3)","[S II] density   Low       ",siidens, " ", REAL(1/siiNratio)
-        if(runonce == 0 .and. siidens > 0) WRITE(unit=866,FMT=*)siidens
+        if(runonce == 0 .and. siidens > 0) iteration_result(1)%SII_density = siidens
 if(lowdens >0)     print "(A28,F8.0)"," density adopted Low       ",lowdens
-        if(runonce == 0 .and. lowdens > 0) WRITE(unit=867,FMT=*)lowdens
+        if(runonce == 0 .and. lowdens > 0) iteration_result(1)%low_density = lowdens
 if(lowdens >0)     print *,""
 
 
 
 if(niitemp > 0.2)then
                    print "(A28,F8.0,A1,F8.3)","[N II] temp      Low       ",niitemp, " ", niitratio
-        if(runonce == 0)WRITE(UNIT=868,FMT=*)niitemp
+        if(runonce == 0) iteration_result(1)%OII_temp = niitemp
 else if(INT(niitemp) == -1)then
                    print "(A28,F8.0,A1,F8.3)","[N II] temp      Low       ",20000.0, " ", niitratio
-        if(runonce == 0)WRITE(UNIT=868,FMT=*)"20000"
+        if(runonce == 0) iteration_result(1)%OII_temp = 20000
 else
 
 endif
 
 if(oiitemp >0.2)then
                    print "(A28,F8.0,A1,F8.3)","[O II] temp      Low       ",oiitemp, " ", REAL(1/oiitratio)
-        if(runonce == 0)WRITE(UNIT=869,FMT=*)oiitemp
+        if(runonce == 0) iteration_result(1)%NII_temp = oiitemp
 else if(INT(oiitemp) == -1)then
                    print "(A28,F8.0,A1,F8.3)","[O II] temp      Low       ",20000.0, " ", REAL(1/oiitratio)
-        if(runonce == 0)WRITE(UNIT=869,FMT=*)"20000"
+        if(runonce == 0) iteration_result(1)%NII_temp = 20000
 else
 endif
 
 if(siitemp >0.2 )then
                    print "(A28,F8.0,A1,F8.3)","[S II] temp      Low       ",siitemp, " ", siitratio
-        if(runonce == 0)WRITE(UNIT=870,FMT=*)siitemp
+        if(runonce == 0) iteration_result(1)%SII_temp = siitemp
 else if(INT(siitemp) == -1)then
                    print "(A28,F8.0,A1,F8.3)","[S II] temp      Low       ",20000.0, " ", siitratio
-        if(runonce == 0)WRITE(UNIT=870,FMT=*)"20000"
+        if(runonce == 0) iteration_result(1)%SII_temp = 20000
 else
 endif
 
 if(oitemp >0.2 )then
                    print "(A28,F8.0,A1,F8.3)","[O I]  temp      Low       ",oitemp, " ", oitratio
-        if(runonce == 0)WRITE(UNIT=871,FMT=*)oitemp
+        if(runonce == 0) iteration_result(1)%OI_temp = oitemp
 else if(INT(oitemp) == -1)then
                    print "(A28,F8.0,A1,F8.3)","[O I]  temp      Low       ",20000.0, " ", oitratio
-        if(runonce == 0)WRITE(UNIT=871,FMT=*)"20000"
+        if(runonce == 0) iteration_result(1)%OI_temp = 20000
 else
 endif
 
 if(citemp >0.2 )then
                    print "(A28,F8.0,A1,F8.3)","[C I]  temp      Low       ",citemp, " ", citratio
-        if(runonce == 0)WRITE(UNIT=872,FMT=*)citemp
+        if(runonce == 0) iteration_result(1)%CI_temp = citemp
 else if(INT(citemp) == -1)then
                    print "(A28,F8.0,A1,F8.3)","[C I]  temp      Low       ",20000.0, " ", citratio
-        if(runonce == 0)WRITE(UNIT=872,FMT=*)"20000"
+        if(runonce == 0) iteration_result(1)%CI_temp = 20000
 else
 endif
 
 
 if(lowtemp >0)     print "(A28,F8.0)"," temp adopted    Low       ",lowtemp
-        if(runonce == 0 .and. lowtemp > 0)WRITE(UNIT=873,FMT=*)lowtemp
+        if(runonce == 0 .and. lowtemp > 0) iteration_result(1)%low_temp = lowtemp
 if(lowtemp >0)     print *,""
 
 if(cliiidens > 0 )    print "(A28,F8.0,A1,F8.3)","[Cl III] density Medium    ",cliiidens," ", cliiinratio
-        if(runonce == 0 .and. cliiidens > 0 )WRITE(UNIT=874,FMT=*)cliiidens
+        if(runonce == 0 .and. cliiidens > 0 ) iteration_result(1)%ClIII_density = cliiidens
 if(arivdens  > 0 )    print "(A28,F8.0,A1,F8.3)","[Ar IV] density  Medium    ",arivdens," ", arivnratio
-        if(runonce == 0 .and. arivdens > 0 )WRITE(UNIT=875,FMT=*)arivdens
+        if(runonce == 0 .and. arivdens > 0 ) iteration_result(1)%ArIV_density = arivdens
 if(ciiidens  > 0 )    print "(A28,F8.0,A1,F8.3)","C III] density   Medium    ",ciiidens," ", ciiinratio
-        if(runonce == 0 .and. ciiidens > 0 )WRITE(UNIT=876,FMT=*)ciiidens
+        if(runonce == 0 .and. ciiidens > 0 ) iteration_result(1)%CIII_density = ciiidens
 if(meddens   > 0 )    print "(A28,F8.0)"," density adopted Medium    ",meddens
-        if(runonce == 0 .and. meddens > 0 )WRITE(UNIT=877,FMT=*)meddens
+        if(runonce == 0 .and. meddens > 0 ) iteration_result(1)%med_density = meddens
 if(meddens   > 0 )    print *,""
 
 if(oiiitemp >0.2)then
                    print "(A28,F8.0,A1,F8.3)","[O III] temp     Medium    ",oiiitemp, " ",oiiitratio
-        if(runonce == 0)WRITE(UNIT=878,FMT=*)oiiitemp
+        if(runonce == 0) iteration_result(1)%OIII_temp = oiiitemp
 else if(INT(oiiitemp) == -1)then
                    print "(A28,F8.0,A1,F8.3)","[O III] temp     Medium    ",20000.0, " ",oiiitratio
-        if(runonce == 0)WRITE(UNIT=878,FMT=*)"20000"
+        if(runonce == 0) iteration_result(1)%OIII_temp = 20000
 else
 endif
 
 if(neiiitemp>0.2)then
                    print "(A28,F8.0,A1,F8.3)","[Ne III] temp    Medium    ",neiiitemp, " ",neiiitratio
-        if(runonce == 0)WRITE(UNIT=879,FMT=*)neiiitemp
+        if(runonce == 0) iteration_result(1)%NeIII_temp = neiiitemp
 else if(INT(neiiitemp) == -1)then
                    print "(A28,F8.0,A1,F8.3)","[Ne III] temp    Medium    ",20000.0, " ",neiiitratio
-        if(runonce == 0)WRITE(UNIT=879,FMT=*)"20000"
+        if(runonce == 0) iteration_result(1)%NeIII_temp = 20000
 else
 endif
 if(ariiitemp>0.2)then
                    print "(A28,F8.0,A1,F8.3)","[Ar III] temp    Medium    ",ariiitemp, " ",ariiitratio
-        if(runonce == 0)WRITE(UNIT=880,FMT=*)ariiitemp
+        if(runonce == 0) iteration_result(1)%ArIII_temp = ariiitemp
 else if(INT(ariiitemp) == -1)then
                    print "(A28,F8.0,A1,F8.3)","[Ar III] temp    Medium    ",20000.0, " ",ariiitratio
-        if(runonce == 0)WRITE(UNIT=880,FMT=*)"20000"
+        if(runonce == 0) iteration_result(1)%ArIII_temp = 20000
 else
 endif
 if(siiitemp > 0.2)then
                    print "(A28,F8.0,A1,F8.3)","[S III] temp     Medium    ",siiitemp, " ",siiitratio
-        if(runonce == 0)WRITE(UNIT=881,FMT=*)siiitemp
+        if(runonce == 0) iteration_result(1)%SIII_temp = siiitemp
 else if(int(siiitemp) == -1)then
                    print "(A28,F8.0,A1,F8.3)","[S III] temp     Medium    ",20000.0, " ",siiitratio
-        if(runonce == 0)WRITE(UNIT=881,FMT=*)"20000"
+        if(runonce == 0) iteration_result(1)%SIII_temp = 20000
 else
 endif
 
 if(medtemp  >0)    print "(A28,F8.0)"," temp adopted    Medium    ",medtemp
-        if(runonce == 0 .and. medtemp > 0)WRITE(UNIT=882,FMT=*)medtemp
+        if(runonce == 0 .and. medtemp > 0) iteration_result(1)%med_temp = medtemp
 if(medtemp  >0)    print *,""
 
 if(neivdens >0)    print "(A28,F8.0,A1,F8.3)","[Ne IV] density  High      ",neivdens, " ",neivnratio
-        if(runonce == 0 .and. neivdens > 0)WRITE(UNIT=883,FMT=*)neivdens
+        if(runonce == 0 .and. neivdens > 0) iteration_result(1)%NeIV_density = neivdens
 if(highdens >0)    print "(A28,F8.0)"," density adopted High      ",highdens
-        if(runonce == 0 .and. highdens > 0)WRITE(UNIT=884,FMT=*)highdens
+        if(runonce == 0 .and. highdens > 0) iteration_result(1)%high_density = highdens
 if(highdens >0)    print *,""
 if(arvtemp  >0)    print "(A28,F8.0,A1,F8.3)","[Ar V] temp      High      ",arvtemp, " ",arvtratio
-        if(runonce == 0 .and. arvtemp > 0)WRITE(UNIT=885,FMT=*)arvtemp
+        if(runonce == 0 .and. arvtemp > 0) iteration_result(1)%ArV_temp = arvtemp
 if(nevtemp  >0)    print "(A28,F8.0,A1,F8.3)","[Ne V] temp      High      ",nevtemp, " ",nevtratio
-        if(runonce == 0 .and. nevtemp > 0)WRITE(UNIT=886,FMT=*)nevtemp
+        if(runonce == 0 .and. nevtemp > 0) iteration_result(1)%NeV_temp = nevtemp
 if(hightemp >0)    print "(A28,F8.0)"," temp adopted    High      ",hightemp
-        if(runonce == 0 .and. hightemp > 0)WRITE(UNIT=887,FMT=*)hightemp
+        if(runonce == 0 .and. hightemp > 0) iteration_result(1)%high_temp = hightemp
 
 ! later, make this check with user whether to adopt these values
 
@@ -1493,48 +1495,48 @@ print *,"Element           ICF     X/H"
 print *,"-------           ---     ---"
 
 if(NCabundCEL > 0) print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Neutral Carbon ",0.0,NCabundCEL,12+log10(NCabundCEL)
-        if(runonce == 0 .and. NCabundCEL > 0) WRITE(unit=841,FMT=*)NCabundCEL
+        if(runonce == 0 .and. NCabundCEL > 0) iteration_result(1)%NC_abund_CEL = NCabundCEL
 if(CabundCEL > 0)  print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Carbon         ",CELicfC,CabundCEL,12+log10(CabundCEL)
-        if(runonce == 0 .and. CabundCEL > 0) WRITE(unit = 842,FMT=*)CabundCEL
+        if(runonce == 0 .and. CabundCEL > 0) iteration_result(1)%C_abund_CEL = CabundCEL
 
 if(niiCELabund > 0) print "(A24,ES8.2)"                ,"  N+/H+                 ",niiCELabund
-        if(runonce == 0 .and. niiCELabund > 0) WRITE(unit = 843,FMT=*)niiCELabund
+        if(runonce == 0 .and. niiCELabund > 0) iteration_result(1)%Nii_abund_CEL = niiCELabund
 if(NabundCEL > 0)  print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Nitrogen       ",CELicfN,NabundCEL,12+log10(NabundCEL)
-        if(runonce == 0 .and. NabundCEL > 0) WRITE(unit = 844,FMT=*)NabundCEL
+        if(runonce == 0 .and. NabundCEL > 0) iteration_result(1)%N_abund_CEL = NabundCEL
 
 if(NOabundCEL > 0) print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Neutral Oxygen ",0.0,NOabundCEL,12+log10(NOabundCEL)
-        if(runonce == 0 .and. NOabundCEL > 0) WRITE(unit = 845,FMT=*)NOabundCEL
+        if(runonce == 0 .and. NOabundCEL > 0) iteration_result(1)%NO_abund_CEL = NOabundCEL
 if(oiiCELabund >0) print "(A24,ES8.2)"                , "  O+/H+                 ",oiiCELabund
-        if(runonce == 0 .and. oiiCELabund >0) WRITE(unit = 846,FMT=*)oiiCELabund
+        if(runonce == 0 .and. oiiCELabund >0) iteration_result(1)%Oii_abund_CEL = oiiCELabund
 if(oiiiCELabund >0) print "(A24,ES8.2)"               , "  O++/H+                ",oiiiCELabund
-        if(runonce == 0 .and. oiiiCELabund >0) WRITE(unit = 847,FMT=*)oiiiCELabund
+        if(runonce == 0 .and. oiiiCELabund >0) iteration_result(1)%Oiii_abund_CEL = oiiiCELabund
 if(OabundCEL > 0)  print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Oxygen         ",CELicfO,OabundCEL,12+log10(OabundCEL)
-        if(runonce == 0 .and. OabundCEL > 0) WRITE(unit = 848,FMT=*)OabundCEL
+        if(runonce == 0 .and. OabundCEL > 0) iteration_result(1)%O_abund_CEL = OabundCEL
 
 if(neiiiCELabund >0) print "(A24,ES8.2)"               , "  Ne++/H+               ",neiiiCELabund
-        if(runonce == 0 .and. neiiiCELabund >0) WRITE(unit = 849,FMT=*)neiiiCELabund
+        if(runonce == 0 .and. neiiiCELabund >0) iteration_result(1)%Neiii_abund_CEL = neiiiCELabund
 if(neivCELabund >0)  print "(A24,ES8.2)"               , "  Ne+++/H+              ",neivCELabund
-        if(runonce == 0 .and. neivCELabund >0) WRITE(unit = 850,FMT=*)neivCELabund
+        if(runonce == 0 .and. neivCELabund >0) iteration_result(1)%Neiv_abund_CEL = neivCELabund
 if(nevCELabund >0)   print "(A24,ES8.2)"               , "  Ne++++/H+             ",nevCELabund
-        if(runonce == 0 .and. nevCELabund >0) WRITE(unit = 851,FMT=*)nevCELabund
+        if(runonce == 0 .and. nevCELabund >0) iteration_result(1)%Nev_abund_CEL = nevCELabund
 if(NeabundCEL > 0) print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Neon           ",CELicfNe,NeabundCEL,12+log10(NeabundCEL)
-        if(runonce == 0 .and. NeabundCEL > 0) WRITE(unit = 852,FMT=*)NeabundCEL
+        if(runonce == 0 .and. NeabundCEL > 0) iteration_result(1)%Ne_abund_CEL = NeabundCEL
 
 if(ariiiCELabund >0) print "(A24,ES8.2)"               , "  Ar++/H+               ",ariiiCELabund
-        if(runonce == 0 .and. ariiiCELabund >0) WRITE(unit = 853,FMT=*)ariiiCELabund
+        if(runonce == 0 .and. ariiiCELabund >0) iteration_result(1)%Ariii_abund_CEL = ariiiCELabund
 if(arivCELabund >0)  print "(A24,ES8.2)"               , "  Ar+++/H+              ",arivCELabund
-        if(runonce == 0 .and. arivCELabund >0) WRITE(unit = 854,FMT=*)arivCELabund
+        if(runonce == 0 .and. arivCELabund >0) iteration_result(1)%Ariv_abund_CEL = arivCELabund
 if(arvCELabund >0)   print "(A24,ES8.2)"               , "  Ar++++/H+             ",arvCELabund
-        if(runonce == 0 .and. arvCELabund >0) WRITE(unit = 855,FMT=*)arvCELabund
+        if(runonce == 0 .and. arvCELabund >0) iteration_result(1)%Arv_abund_CEL = arvCELabund
 if(ArabundCEL > 0) print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Argon          ",CELicfAr,ArabundCEL,12+log10(ArabundCEL)
-        if(runonce == 0 .and. ArabundCEL > 0) WRITE(unit = 856,FMT=*)ArabundCEL
+        if(runonce == 0 .and. ArabundCEL > 0) iteration_result(1)%Ar_abund_CEL = ArabundCEL
 
 if(siiCELabund >0) print "(A24,ES8.2)"                , "  S+/H+                 ",siiCELabund
-        if(runonce == 0 .AND. siiCELabund >0) WRITE(unit = 857,FMT=*)siiCELabund
+        if(runonce == 0 .AND. siiCELabund >0) iteration_result(1)%Sii_abund_CEL = siiCELabund
 if(siiiCELabund >0) print "(A24,ES8.2)"               , "  S++/H+                ",siiiCELabund
-        if(runonce == 0 .AND. siiiCELabund >0) WRITE(unit = 858,FMT=*)siiiCELabund
+        if(runonce == 0 .AND. siiiCELabund >0) iteration_result(1)%Siii_abund_CEL = siiiCELabund
 if(SabundCEL > 0)  print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Sulphur        ",CELicfS,SabundCEL,12+log10(SabundCEL)
-        if(runonce == 0 .AND. SabundCEL > 0) WRITE(unit = 859,FMT=*)SabundCEL
+        if(runonce == 0 .AND. SabundCEL > 0) iteration_result(1)%S_abund_CEL = SabundCEL
 
 if(OabundCEL > 0 .and. NabundCEL > 0)  print*, " "
 if(OabundCEL > 0 .and. NabundCEL > 0)  print*, " "
@@ -1549,15 +1551,15 @@ print *,""
 print *,"Element     ICF     X/H"
 print *,"-------     ---     ---"
 if(Hetotabund > 0) print "(A12,F5.2,4X,ES8.2,2X,F5.2)"," Helium      ",1.0,Hetotabund,12+log10(Hetotabund)
-        if(runonce == 0 .AND. Hetotabund > 0) WRITE(unit = 860,FMT=*)Hetotabund
+        if(runonce == 0 .AND. Hetotabund > 0) iteration_result(1)%He_abund_ORL = Hetotabund
 if(CabundRL > 0) print "(A12,F5.2,4X,ES8.2,2X,F5.2)"," Carbon      ",RLicfC,CabundRL,12+log10(CabundRL)
-        if(runonce == 0 .AND. CabundRL > 0) WRITE(unit = 861,FMT=*)CabundRL
+        if(runonce == 0 .AND. CabundRL > 0) iteration_result(1)%C_abund_ORL = CabundRL
 if(NabundRL > 0) print "(A12,F5.2,4X,ES8.2,2X,F5.2)"," Nitrogen    ",RLicfN,NabundRL,12+log10(NabundRL)
-        if(runonce == 0 .AND. NabundRL > 0) WRITE(unit = 862,FMT=*)NabundRL
+        if(runonce == 0 .AND. NabundRL > 0) iteration_result(1)%N_abund_ORL = NabundRL
 if(OabundRL > 0) print "(A12,F5.2,4X,ES8.2,2X,F5.2)"," Oxygen      ",RLicfO,OabundRL,12+log10(OabundRL)
-        if(runonce == 0 .AND. OabundRL > 0) WRITE(unit = 863,FMT=*)OabundRL
+        if(runonce == 0 .AND. OabundRL > 0) iteration_result(1)%O_abund_ORL = OabundRL
 if(NeabundRL > 0) print "(A12,F5.2,4X,ES8.2,2X,F5.2)"," Neon        ",RLicfNe,NeabundRL,12+log10(NeabundRL)
-        if(runonce == 0 .AND. NeabundRL > 0) WRITE(unit = 864,FMT=*)NeabundRL
+        if(runonce == 0 .AND. NeabundRL > 0) iteration_result(1)%Ne_abund_ORL = NeabundRL
 
 
 !Strong line methods
