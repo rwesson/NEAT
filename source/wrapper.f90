@@ -94,6 +94,14 @@ program wrapper
         !read command line arguments
 
         Narg = IARGC() !count input arguments
+
+        if(Narg < 2) then
+                PRINT*, "Incorrect arguments"
+                PRINT*, "syntax: ./abundances.exe #iterations linelist_file"
+                PRINT*, " "
+                STOP
+        endif
+
         CALL getarg(1,temp) !get info from input arguments
         read (temp,*) runs 
         CALL getarg(2,filename) 
