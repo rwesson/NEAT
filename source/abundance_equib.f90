@@ -820,4 +820,4 @@
      &2X,'THE HIGHEST TEMP-COLLISION STRENGTH IS BEING USED,',/,        &
      &2X,'FOR T=',F8.4)
       END subroutine cfd
-      end module mod_getabunds  
+      end module mod_getabunds
