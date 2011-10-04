@@ -1,1 +1,0 @@
-ifort -O3 -autodouble -cm  source/wrapper.f90 source/filereading.f90 source/rec_lines.f90 source/He29Smits.f90 source/abundance_equib.f90 source/diagnostic_equib.f90 source/abundances2.f90 -o abundances.exe 
