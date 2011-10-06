@@ -1,0 +1,114 @@
+%\documentstyle[epsfig,referee]{mn_mod}
+\documentclass[]{../MNtemplate/mn2e}
+%\epsfverbosetrue
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{amssymb}
+\usepackage{amsmath} 
+\title[Short title]
+{Long title}
+\author[R. Wesson et al.]
+{R. Wesson$^1$,  \\
+$^1$Department of Physics and Astronomy, University College London, Gower Street, London WC1E 6BT, UK\\
+}
+\date{Received:}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+
+\end{abstract}
+ 
+\begin{keywords}
+
+\end{keywords}
+%\nokeywords
+
+\section{Introduction}
+
+Importance of photoionised nebulae as tools for understanding stellar and galactic evolution.
+
+Development of precision abundance determinations.  Limits to that precision.  Quantifiable and unquantifiable uncertainties.  Sources of uncertainties, and ways to estimate the uncertainties.
+
+\section{NEAT: Nebular empirical abundance tool}
+
+\subsection{Input}
+
+NEAT requires as input a plain text list of rest wavelengths, line fluxes, and uncertainties.  If line flux measurement uncertainties are not given, the code assumes an uncertainty of 10\% on all line flux measurements.
+
+The user can select the number of iterations of the code to run.  If the number of iterations is one, the code performs a standard empirical analysis on the line list, as described below, and does not calculate any uncertainties.  If the number of iterations is more than one, then the code first randomises the line list.  For each line, the code takes a random number from a Gaussian distribtion with mean zero and standard deviation unity, multiplies this number by the line flux uncertainty, and adds it to the measured flux.  The standard analysis is then carried out on the randomised line list.
+
+% eventually, do this:
+Rola and Pelat (1994) observed that measurements of weak lines (SNR$<$3) are strongly biased upwards.  For lines with F/$\sigma$<3, we account for this effect by taking the random number from a log-normal distribution with parameters determined... skewedness, mode...
+%end
+
+By carrying out this process many times, it is possible to build up an accurate picture of the true distribution of statistical uncertainties on chemical abundances resulting from the line flux uncertainties.  The code collates all of the results from each iteration, and generates histograms showing visually the uncertainty distributions on the output parameters.
+
+\subsection{Interstellar extinction}
+
+The first step of any abundance analysis is a correction for interstellar extinction.  The amount of extinction is determined by NEAT from the ratios of Hydrogen Balmer lines, and the user can select the particular extinction law to be used.
+
+\subsection{Temperatures and densities}
+
+Temperatures and densities are calculated using traditional collisionally excited line diagnostics.  For the purposes of subsequent abundance calculations, the nebula is divided into three "zones", of low, medium and high excitation.  In each zone, temperatures and densities are calculated iteratively.
+
+\subsection{Ionic abundances}
+
+Ionic abundances are calculated for ions using the temperature and density appropriate to their ionisation potential.  The code calculates abundances both from collisionally excited lines and recombination lines.
+
+\subsection{Total elemental abundances}
+
+Total elemental abundances are estimated using Ionisation Correction Factors.  The code includes ICF schemes from Kingsburgh and Barlow (1994) and XXXX.
+
+\section{Statistical uncertainties}
+
+To demonstrate how traditional methods of uncertainty propagation underestimate the true uncertainties on the derived chemical abundances, we present here a reanalysis using NEAT of three objects.  We chose objects having very deep, moderately deep and shallow spectra.  Fang et al. (2011) presented a spectrum of NGC 7009 containing approximately 1300 identified emission lines.  NGC\,6543 (Wesson et al. 2004) has a spectrum with about 200 emission lines measured, and WR18 (Stock, Wesson and Barlow 2011) has 36 lines detected.
+
+Discussions of Gaussian v. non-Gaussian distributions.  Bi-modal.  ICF complications.
+
+\section{Systematic uncertainties}
+
+Systematic uncertainties in nebular analysis can be extremely difficult to quantify and the magnitude of some systematic effects may be completely unknown.  In this section, we use the code to analyse NGC 6543, while varying the systematic approach.  By comparing the uncertainty distributions obtained in each case, we can assess the relative importance of the various systematic choices that the user may make in analysing an emission line nebula.
+
+\subsection{Atomic data}
+
+Accurate atomic data is crucial to any determination of chemical abundances.  New calculations of atomic data are frequently made, and deciding which atomic data set is the best is a very important choice facing the users of the data.  Here we use several different sets of atomic data to investigate the effect of this choice on the abundances determined.
+
+Assorted
+Chianti 5.2
+Chianti 6
+Anything else?
+
+\subsection{Reddening functions}
+
+The correction for interstellar extinction can be large for some objects, and the typical assumption that a mean extinction law is appropriate for all lines of sight may be erroneous.  Here we investigate the effect of the extinction correction on abundance determinations.
+
+CCM, Howarth, LMC, SMC, using inappropriate law?, A30, effect of uncertainty in R - include 10\% uncertainty in MC.
+
+\subsection{Zones}
+
+In the standard setup of NEAT, the nebula is divided into three zones of low, medium and high excitation.  Depending on the exact diagnostics available, the code will fall back to two zones or even a single zone for the abundance analysis.  Ercolano, Wesson and Bastian (2009) found that empirical analyses were subject to significant biases when only one zone was used, but that two zones reduced the biases to less than 0.15dex.  Here we compare analysis of NGC 6543 using one, rwo and three zones.
+
+\subsection{ICFs}
+
+Different ICFs based on different models.  ICFs are calculated from relations between ionic fractions, but the exact ICF also depends on central star luminosity and temperature, and the morphology of the nebula (Goncalves et al. 2012).  In this section we investigate the effect of different ICFs on the resulting abundances.
+
+\section{Discussion}
+
+We have presented a new code for calculating chemical abundances in photoionised nebulae, which also robustly calculates the statistical uncertainties on the abundances determined.  We have used the code to investigate the relative importance of various systematic uncertainties affecting nebular abundance determinations.  We find:
+
+Which effects are most important
+Are any negligible?
+What can be done to minimise all uncertainties?
+Compare to pynebular?
+
+\section{Acknowledgments}
+
+We thank Professor Ian Howarth for useful discussions, Mahesh Mohan for testing an early version of the code, and the organisers of the workshop "Uncertainties in atomic data and how they propagage in chemical abundances" for providing an extremely fruitful forum for interaction between atomic data providers and users.
+
+\begin{thebibliography}{}
+\bibitem{} 
+
+\end{thebibliography}
+\end{document}
