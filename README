@@ -1,3 +1,3 @@
 Not much here yet, but one vital thing is that the code won't work without the atomic data, available separately in the Atomic-data repository.
 
-git clone git@github.com:worldtraveller/Atomic-data.git
+http://github.com/rwesson/Atomic-data
