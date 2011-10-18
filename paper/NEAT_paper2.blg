@@ -1,0 +1,45 @@
+This is BibTeX, Version 0.99c (TeX Live 2009/Debian)
+The top-level auxiliary file: NEAT_paper2.aux
+The style file: mn2e.bst
+Database file #1: NEAT_paper.bib
+You've used 20 entries,
+            2601 wiz_defined-function locations,
+            674 strings with 7088 characters,
+and the built_in function-call counts, 7622 in all, are:
+= -- 791
+> -- 428
+< -- 17
++ -- 140
+- -- 139
+* -- 695
+:= -- 1400
+add.period$ -- 0
+call.type$ -- 20
+change.case$ -- 127
+chr.to.int$ -- 19
+cite$ -- 20
+duplicate$ -- 231
+empty$ -- 343
+format.name$ -- 181
+if$ -- 1411
+int.to.chr$ -- 2
+int.to.str$ -- 0
+missing$ -- 20
+newline$ -- 64
+num.names$ -- 82
+pop$ -- 79
+preamble$ -- 1
+purify$ -- 146
+quote$ -- 0
+skip$ -- 273
+stack$ -- 0
+substring$ -- 453
+swap$ -- 30
+text.length$ -- 2
+text.prefix$ -- 46
+top$ -- 0
+type$ -- 180
+warning$ -- 0
+while$ -- 80
+width$ -- 0
+write$ -- 202
