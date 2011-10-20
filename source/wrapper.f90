@@ -113,6 +113,8 @@ program wrapper
                        switch_ext = "C"
                elseif (temp == "-Pre") then
                        switch_ext = "P"
+               elseif (temp == "-Fit") then
+                       switch_ext = "F"
                else
                        switch_ext = "S"
                endif
