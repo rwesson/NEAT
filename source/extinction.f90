@@ -63,7 +63,7 @@ double precision function flambda(X,switch)
         if(switch == 4) flambda = ((3.1 + (2.56*(X-1.83)) - (0.993*(X-1.83)**2) )) ! optical (3)
         if(switch == 5) flambda = (( (1.86*X**2) - (0.48*X**3) - (0.1*X))) ! IR (4)
 
-        flambda = (flambda / 3.63) - 1
+        flambda = (flambda / 3.63) - 1 ! R+0.53
 
 end function        
 
@@ -136,7 +136,7 @@ double precision function flambdaLMC(X,switch)
         if(switch == 2) flambdaLMC = ((3.1 + (2.04*(X - 1.83)) + 0.094*(X - 1.83)**2)) !Optical (2)
         if(switch == 3) flambdaLMC = (((1.86*(X**2)) - (0.48*(X**3)) - (0.1*X))) !IR (4)
 
-       flambdaLMC = (flambdaLMC / 3.57) - 1
+       flambdaLMC = (flambdaLMC / 3.57) - 1 ! R+0.47
 
 end function
 
@@ -288,7 +288,7 @@ double precision function flambdaSMC(X,switch)
         if(switch == 2) flambdaSMC = 3.1 + ((2.067*X) - 4.110) !Optical/UV
         if(switch == 3) flambdaSMC = (((1.86*(X**2)) - (0.48*(X**3)) - (0.1*X))) !IR
 
-       flambdaSMC = (flambdaSMC / 3.242) - 1
+       flambdaSMC = (flambdaSMC / 3.242) - 1 ! R+0.142
 
 end function
 
@@ -341,6 +341,69 @@ subroutine deredden_O_SMC(O_red, O_dered, m_ext)
             endif 
         end do
 
+end subroutine  
+
+
+!-------Fitzpatrick Galactic law--------------------------!
+
+
+double precision function flambdaFitz(X,switch) !based on FM90 with values taken from Fitxpatrick 1992
+        DOUBLE PRECISION :: X, x_0, c1, c2, c3, c4, gamma, D, F
+        INTEGER :: switch
+       c1 = -0.38
+       c2 =  0.74
+       c3 =  3.96
+       c4 = 0
+       x_0 = 4.596
+       gamma = 1.051
+       F = 0
+       D = (X**2)/((((X**2) + (x_0**2))**2) +((X**2)*(gamma**2)))
+
+        if(switch == 1) flambdaFitz = (( (1.86*X**2) - (0.48*X**3) - (0.1*X))) ! IR (4)
+        if(switch == 2) flambdaFitz = ((3.1 + (2.56*(X-1.83)) - (0.993*(X-1.83)**2) )) ! optical (3)
+        if(switch == 3) flambdaFitz = ((1.46 + (1.048*X) + (1.01/(((X-4.60)**2) + 0.280)))) !near UV
+        if(switch == 4) flambdaFitz = ((2.19 + (0.848*X) + (1.01/(((X-4.60)**2) + 0.280)))) !mid UV
+	if(switch == 5) then
+			flambdaFitz = 3.1 + c1 + c2*X + c3*D
+	elseif(switch == 6) then
+		c4 = 0.26
+                F=(0.539*((X-5.9)**2.0)) + (0.0564*((X-5.9)**3.0))
+                flambdaFitz = 3.1 + c1 + c2*X + c3*D + c4*F
+	endif
+
+        flambdaFitz = (flambdaFitz / 4.3) - 1 ! R+1.20
+
+end function
+
+subroutine deredden_Fitz(lines, number, m_ext) !Uses Seaton/Howarth for IR, optical and near UV, as fit for Fitzpatrick law is poor at wavelengths longer than 2700 Angstroms
+        TYPE(line), DIMENSION(:) :: lines
+        INTEGER :: number
+        DOUBLE PRECISION :: m_ext, fl
+        INTEGER :: i
+
+        do I = 1, 335
+                lines(i)%freq = DBLE(10000) / DBLE(lines(i)%wavelength)
+            if (lines(i)%freq .lt. 1.83) then 
+                        fl = flambdaFitz(lines(i)%freq, 1)
+                        lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
+                elseif((lines(i)%freq .gt. 1.83) .AND. (lines(i)%freq .lt. 2.75))then ! optical
+                        fl = flambdaFitz(lines(i)%freq, 2) 
+                        lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
+                elseif((lines(i)%freq .gt. 2.75) .AND. (lines(i)%freq .lt. 3.65))then ! near UV
+                        fl = flambdaFitz(lines(i)%freq, 3)
+                        lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
+                elseif((lines(i)%freq .gt. 3.65) .AND. (lines(i)%freq .lt. 3.70))then ! mid UV
+                        fl = flambdaFitz(lines(i)%freq, 4)
+                        lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
+                elseif((lines(i)%freq .gt. 3.70) .AND. (lines(i)%freq .lt. 5.90))then ! mid UV
+                        fl = flambdaFitz(lines(i)%freq, 5)
+                        lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
+                elseif(lines(i)%freq .gt. 5.90)then ! far UV
+                        fl = flambdaFitz(lines(i)%freq, 6)
+                        lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
+                endif
+
+        end do
 end subroutine  
 
 end module mod_extinction
