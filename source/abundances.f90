@@ -104,7 +104,7 @@ implicit none
         print *, "Extinction"
         print *, "=========="
 
-        CALL calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction)
+        CALL calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction, switch_ext)
 
         !need to write output/ input stuff so user can insert own c(Hb)
         !assume we go on with calculated extinctions

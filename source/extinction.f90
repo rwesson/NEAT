@@ -4,22 +4,45 @@ implicit none
 
 contains
 
-subroutine calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction)
+subroutine calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction, switch_ext)
         TYPE(line), DIMENSION(4) :: H_BS
         DOUBLE PRECISION :: c1, c2, c3, meanextinction
+        double precision :: fl_ha, fl_hg, fl_hd
+        character :: switch_ext
+
+!determine f(lambda) for the balmer lines, depending on the law used
+!galactic, howarth
+
+if (switch_ext=="S") then ! howarth galactic
+        fl_ha = flambda(dble(10000./6562.77),5)
+        fl_hg = flambda(dble(10000./4340.47),4)
+        fl_hd = flambda(dble(10000./4101.74),4)
+elseif (switch_ext=="H") then ! howarth lmc
+        fl_ha = flambdaLMC(dble(10000./6562.77),3)
+        fl_hg = flambdaLMC(dble(10000./4340.47),2)
+        fl_hd = flambdaLMC(dble(10000./4101.74),2)
+elseif (switch_ext=="C") then ! CCM galactic
+        fl_ha = flambdaCCM(dble(10000./6562.77),3)
+        fl_hg = flambdaCCM(dble(10000./4340.47),3)
+        fl_hd = flambdaCCM(dble(10000./4101.74),3)
+elseif (switch_ext=="P") then ! Prevot SMC
+        fl_ha = flambdaSMC(dble(10000./6562.77),3)
+        fl_hg = flambdaSMC(dble(10000./4340.47),2)
+        fl_hd = flambdaSMC(dble(10000./4101.74),2)
+endif
 
 if (H_BS(1)%intensity .gt. 0 .and. H_BS(2)%intensity .gt. 0) then
-        c1 = log10( ( DBLE(H_BS(1)%intensity) / DBLE(H_BS(2)%intensity) )/2.850 )/0.32
+        c1 = log10( ( DBLE(H_BS(1)%intensity) / DBLE(H_BS(2)%intensity) )/2.850 )/(-fl_ha)
 else
         c1 = 0.0
 endif
 if (H_BS(3)%intensity .gt. 0 .and. H_BS(2)%intensity .gt. 0) then
-        c2 = log10( ( DBLE(H_BS(3)%intensity) / DBLE(H_BS(2)%intensity) )/0.469 )/(-0.127)
+        c2 = log10( ( DBLE(H_BS(3)%intensity) / DBLE(H_BS(2)%intensity) )/0.469 )/(-fl_hg)
 else
         c2=0.0
 endif
 if (H_BS(4)%intensity .gt. 0 .and. H_BS(2)%intensity .gt. 0) then
-        c3 = log10( ( DBLE(H_BS(4)%intensity) / DBLE(H_BS(2)%intensity) )/0.259 )/(-0.180)
+        c3 = log10( ( DBLE(H_BS(4)%intensity) / DBLE(H_BS(2)%intensity) )/0.259 )/(-fl_hd)
 else
         c3 = 0.0
 endif
@@ -113,7 +136,7 @@ double precision function flambdaLMC(X,switch)
         if(switch == 2) flambdaLMC = ((3.1 + (2.04*(X - 1.83)) + 0.094*(X - 1.83)**2)) !Optical (2)
         if(switch == 3) flambdaLMC = (((1.86*(X**2)) - (0.48*(X**3)) - (0.1*X))) !IR (4)
 
-       flambdaLMC = (flambdaLMC / 3.63) - 1
+       flambdaLMC = (flambdaLMC / 3.57) - 1
 
 end function
 
@@ -196,7 +219,7 @@ double precision function flambdaCCM(X,switch)
         endif
 
         flambdaCCM = 3.1*a + b
-        flambdaCCM = (flambdaCCM / 3.63) - 1
+        flambdaCCM = (flambdaCCM / 3.61) - 1 ! 1.015452R + 0.461000
 
 end function
 
@@ -265,7 +288,7 @@ double precision function flambdaSMC(X,switch)
         if(switch == 2) flambdaSMC = 3.1 + ((2.067*X) - 4.110) !Optical/UV
         if(switch == 3) flambdaSMC = (((1.86*(X**2)) - (0.48*(X**3)) - (0.1*X))) !IR
 
-       flambdaSMC = (flambdaSMC / 3.63) - 1
+       flambdaSMC = (flambdaSMC / 3.242) - 1
 
 end function
 
