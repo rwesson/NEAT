@@ -103,6 +103,19 @@ implicit none
         print *, ""
         print *, "Extinction"
         print *, "=========="
+        print *, ""
+
+        if (switch_ext == "S") then
+                print *,"Using Howarth (1983) galactic law"
+        elseif (switch_ext == "H") then
+                print *,"Using Howarth (1983) LMC law"
+        elseif (switch_ext == "C") then
+                print *,"Using CCM (1989) galactic law"
+        elseif (switch_ext == "P") then
+                print *,"Using Prevot et al. (1984) SMC law"
+        elseif (switch_ext == "F") then
+                print *,"Using Fitzpatrick (1990) galactic law" 
+        endif
 
         CALL calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction, switch_ext)
 
@@ -143,6 +156,11 @@ implicit none
                 CALL deredden_SMC(H_BS, 4, meanextinction)
                 call deredden_SMC(He_lines, 4, meanextinction) 
                 CALL deredden_SMC(linelist, listlength, meanextinction)
+        elseif (switch_ext == "F") then
+                CALL deredden_Fitz(ILs, Iint, meanextinction)
+                CALL deredden_Fitz(H_BS, 4, meanextinction)
+                call deredden_Fitz(He_lines, 4, meanextinction)
+                CALL deredden_Fitz(linelist, listlength, meanextinction)
         endif
 
         500 FORMAT (5(f10.4))

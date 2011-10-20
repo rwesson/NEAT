@@ -29,6 +29,10 @@ elseif (switch_ext=="P") then ! Prevot SMC
         fl_ha = flambdaSMC(dble(10000./6562.77),3)
         fl_hg = flambdaSMC(dble(10000./4340.47),2)
         fl_hd = flambdaSMC(dble(10000./4101.74),2)
+elseif (switch_ext=="F") then ! Fitzpatrick galactic
+        fl_ha = flambdaFitz(dble(10000./6562.77),1)
+        fl_hg = flambdaFitz(dble(10000./4340.47),2)
+        fl_hd = flambdaFitz(dble(10000./4101.74),2)
 endif
 
 if (H_BS(1)%intensity .gt. 0 .and. H_BS(2)%intensity .gt. 0) then
@@ -363,15 +367,15 @@ double precision function flambdaFitz(X,switch) !based on FM90 with values taken
         if(switch == 2) flambdaFitz = ((3.1 + (2.56*(X-1.83)) - (0.993*(X-1.83)**2) )) ! optical (3)
         if(switch == 3) flambdaFitz = ((1.46 + (1.048*X) + (1.01/(((X-4.60)**2) + 0.280)))) !near UV
         if(switch == 4) flambdaFitz = ((2.19 + (0.848*X) + (1.01/(((X-4.60)**2) + 0.280)))) !mid UV
-	if(switch == 5) then
-			flambdaFitz = 3.1 + c1 + c2*X + c3*D
-	elseif(switch == 6) then
-		c4 = 0.26
+        if(switch == 5) then
+                        flambdaFitz = 3.1 + c1 + c2*X + c3*D
+        elseif(switch == 6) then
+                c4 = 0.26
                 F=(0.539*((X-5.9)**2.0)) + (0.0564*((X-5.9)**3.0))
                 flambdaFitz = 3.1 + c1 + c2*X + c3*D + c4*F
-	endif
+        endif
 
-        flambdaFitz = (flambdaFitz / 4.3) - 1 ! R+1.20
+        flambdaFitz = (flambdaFitz / 3.63) - 1 ! should be R+1.20, why is it same as Howarth galactic? RW
 
 end function
 
@@ -381,7 +385,7 @@ subroutine deredden_Fitz(lines, number, m_ext) !Uses Seaton/Howarth for IR, opti
         DOUBLE PRECISION :: m_ext, fl
         INTEGER :: i
 
-        do I = 1, 335
+        do I = 1, number
                 lines(i)%freq = DBLE(10000) / DBLE(lines(i)%wavelength)
             if (lines(i)%freq .lt. 1.83) then 
                         fl = flambdaFitz(lines(i)%freq, 1)
