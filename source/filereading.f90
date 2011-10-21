@@ -5,17 +5,20 @@ implicit none!
 contains
 
 subroutine read_ilines(ILs, Iint)        
-        TYPE(line), DIMENSION(62) :: ILs
-        INTEGER :: Iint 
+        TYPE(line), DIMENSION(:), allocatable :: ILs
+        INTEGER :: Iint, Iread
 
         Iint = 1
 
         301 FORMAT(A11, 1X, A6, 1X, F7.2, 1X, A20,1X,A4)
         OPEN(201, file="source/Ilines_levs", status='old')
-                DO WHILE (Iint < 62)!(.true.)
+                READ (201,*) Iread
+                ALLOCATE (ILs(Iread))
+                DO WHILE (Iint .le. Iread)!(.true.)
                         READ(201,301,end=401) ILs(Iint)%name, ILs(Iint)%ion, ILs(Iint)%wavelength, ILs(Iint)%transition ,ILs(Iint)%zone!end condition breaks loop.  
                         Iint = Iint + 1
                 END DO
+                Iint = Iint - 1 !count ends up one too high
                 401 PRINT*, "done reading important lines, Iint = ", Iint 
         CLOSE(201)
 end subroutine        
@@ -32,7 +35,7 @@ contains
 
 integer function get_ion(ionname, iontable, Iint)
         CHARACTER*11 :: ionname
-        TYPE(line), DIMENSION(62) :: iontable 
+        TYPE(line), DIMENSION(:) :: iontable 
         INTEGER :: i
         INTEGER, INTENT(IN) :: Iint
 
@@ -52,7 +55,7 @@ end function
 
 
 subroutine element_assign(ILs, linelist, Iint, listlength)
-        TYPE(line), DIMENSION(62), INTENT(OUT) :: ILs
+        TYPE(line), DIMENSION(:), INTENT(OUT) :: ILs
         TYPE(line), DIMENSION(:) :: linelist 
         INTEGER, INTENT(IN) :: Iint, listlength
         INTEGER :: i, j

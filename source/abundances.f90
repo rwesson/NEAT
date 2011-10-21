@@ -36,7 +36,7 @@ implicit none
         DOUBLE PRECISION, DIMENSION(2) :: conditions 
         REAL*8 :: result
 
-        TYPE(line), DIMENSION(62) :: ILs
+        TYPE(line), DIMENSION(:), allocatable :: ILs
         TYPE(line), DIMENSION(4) :: H_BS
         TYPE(line), DIMENSION(4) :: He_lines
 
@@ -54,7 +54,7 @@ implicit none
         DOUBLE PRECISION :: X23,O_R23upper, O_R23lower, N2,O_N2, O3N2, O_O3N2, Ar3O3, O_Ar3O3, S3O3, O_S3O3
 
 !        linelist = 0
-        ILs%intensity = 0
+!        ILs%intensity = 0 !not allocated yet
         H_BS%intensity = 0
         He_lines%intensity = 0
         !runonce = 1 !allows printing of supplementary files
@@ -240,7 +240,7 @@ implicit none
 
        else
                        oiiTratio=0.0
-                PRINT*, "OII missing, Wi n�t trei a h�liday in Sweden this yer? "
+                PRINT*, "OII temperature diagnostic missing, Wi n�t trei a h�liday in Sweden this yer? "
        endif
 
 ! S II
@@ -682,7 +682,7 @@ if(A4686 > 0)        print "(1x,A17,F6.4)", "He++ (4686)/H+ = ", A4686
         print *,""
         print *,"CELs"
         print *,"----"
-        print *,"Ion         I(lambda)   Abundance"
+        print *,"Ion         I(lambda)    Abundance"
 
 
         !This routine is too simple. I have been changing the temperatures /densities which are input to each zone to disable the zone schtick.
@@ -712,7 +712,7 @@ if(A4686 > 0)        print "(1x,A17,F6.4)", "He++ (4686)/H+ = ", A4686
                  call get_abundance(ILs(i)%ion, ILs(i)%transition, hightemp, highdens,ILs(i)%int_dered, ILs(i)%abundance)
            endif
                  if ((ILs(i)%abundance .gt. 0) .and. (ILs(i)%abundance < 1 ) ) then
-                       PRINT "(1X, A11, 1X, F7.3, 5X, ES10.4)",ILs(i)%name,ILs(i)%int_dered,ILs(i)%abundance
+                       PRINT "(1X, A11, 1X, F8.3, 5X, ES10.4)",ILs(i)%name,ILs(i)%int_dered,ILs(i)%abundance
                  elseif( (ILs(i)%abundance > 1 ) .or. (ILs(i)%abundance < 1E-10 ) )then
                          ILs(i)%abundance = 0
                  endif
