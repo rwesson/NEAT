@@ -354,7 +354,7 @@ implicit none
            lowtemp = 10000.0
          endif
 
-      enddo
+     enddo
 
 
 
@@ -440,6 +440,43 @@ implicit none
          else
            medtemp = 10000.0
          endif
+
+
+
+	!update extinction. DS 22/10/11
+	 CALL calc_extinction_coeffs_loop(H_BS, c1, c2, c3, meanextinction, switch_ext, medtemp, lowdens)
+	print*, meanextinction
+
+        if (switch_ext == "S") then
+                CALL deredden(ILs, Iint, meanextinction)
+                CALL deredden(H_BS, 4, meanextinction)
+                call deredden(He_lines, 4, meanextinction) 
+                CALL deredden(linelist, listlength, meanextinction)
+        elseif (switch_ext == "H") then
+                CALL deredden_LMC(ILs, Iint, meanextinction)
+                CALL deredden_LMC(H_BS, 4, meanextinction)
+                call deredden_LMC(He_lines, 4, meanextinction) 
+                CALL deredden_LMC(linelist, listlength, meanextinction)
+        elseif (switch_ext == "C") then
+                CALL deredden_CCM(ILs, Iint, meanextinction)
+                CALL deredden_CCM(H_BS, 4, meanextinction)
+                call deredden_CCM(He_lines, 4, meanextinction) 
+                CALL deredden_CCM(linelist, listlength, meanextinction)
+        elseif (switch_ext == "P") then
+                CALL deredden_SMC(ILs, Iint, meanextinction)
+                CALL deredden_SMC(H_BS, 4, meanextinction)
+                call deredden_SMC(He_lines, 4, meanextinction) 
+                CALL deredden_SMC(linelist, listlength, meanextinction)
+        elseif (switch_ext == "F") then
+                CALL deredden_Fitz(ILs, Iint, meanextinction)
+                CALL deredden_Fitz(H_BS, 4, meanextinction)
+                call deredden_Fitz(He_lines, 4, meanextinction)
+                CALL deredden_Fitz(linelist, listlength, meanextinction)
+        endif
+
+
+
+
 
       enddo
 
