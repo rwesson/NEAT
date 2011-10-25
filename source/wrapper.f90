@@ -54,9 +54,15 @@ TYPE resultarray
         double precision :: ClIII_density
         double precision :: ArIV_density
         double precision :: CIII_density
+        double precision :: OIII_IR_density
+        double precision :: SIII_IR_density
+        double precision :: ArIII_IR_density
+        double precision :: NeIII_IR_density
         double precision :: med_density
         double precision :: OIII_temp
+        double precision :: OIII_IR_temp
         double precision :: NeIII_temp
+        double precision :: NeIII_IR_temp
         double precision :: ArIII_temp
         double precision :: SIII_temp
         double precision :: med_temp

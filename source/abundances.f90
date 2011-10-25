@@ -20,7 +20,7 @@ implicit none
         CHARACTER*80 :: filename
         type(resultarray), dimension(1) :: iteration_result
 
-        DOUBLE PRECISION :: normalise, oiiNratio, oiiDens, oiiiTratio, oiiiTemp, oiiiIRNratio, oiiiIRTratio, niiTratio, niiTemp, arivNratio, arivDens, cliiiNratio, cliiiDens, siiNratio, siiDens, siiTratio, siiTemp, oiiTratio, oiiTemp, neiiiTratio, neiiiIRTratio, neiiiTemp, neiiiIRTemp, abund, meandensity, meantemp, oitemp, citemp
+        DOUBLE PRECISION :: normalise, oiiNratio, oiiDens, oiiiTratio, oiiiTemp, oiiiIRNratio, oiiiIRTratio, oiiiIRtemp, oiiiIRdens, niiTratio, niiTemp, ariiiIRNratio, ariiiIRdens, arivNratio, arivDens, cliiiNratio, cliiiDens, siiNratio, siiDens, siiTratio, siiTemp, siiiIRNratio, siiiIRdens, oiiTratio, oiiTemp, neiiiTratio, neiiiIRTratio, neiiiIRNratio, neiiiIRdens, neiiiTemp, neiiiIRTemp, abund, meandensity, meantemp, oitemp, citemp
         DOUBLE PRECISION :: ciiiNratio,neivNratio,nevTratio,siiiTratio,ariiiTratio,arvTratio,lowtemp,lowdens,medtemp,ciiidens,meddens,siiitemp,ariiitemp,hightemp,neivdens,highdens,arvtemp,nevtemp,oiTratio,ciTratio
         DOUBLE PRECISION :: oiiRLabund, niiRLabund, ciiRLabund, cii4267rlabund, neiiRLabund, ciiiRLabund, niiiRLabund, RLabundtemp, weight
         DOUBLE PRECISION :: ciiiCELabund, niiCELabund, niiiIRCELabund, niiiUVCELabund, oiiCELabund, oiiiCELabund, oiiiIRCELabund, neiiIRCELabund, neiiiIRCELabund, neiiiCELabund, neivCELabund, siiCELabund, siiiCELabund, siiiIRCELabund, sivIRCELabund, cliiiCELabund, ariiiCELabund, arivCELabund, ariiiIRCELabund, nivCELabund, niCELabund, niiiCELabund, ciiCELabund, civCELabund, nvCELabund, nevCELabund, arvCELabund, CELabundtemp, ciCELabund, oiCELabund
@@ -183,25 +183,29 @@ implicit none
 !diagnostics
         call get_diag("ciii1909   ","ciii1907   ", ILs, ciiiNratio)        ! ciii ratio
         call get_diag("oii3729    ","oii3726    ", ILs, oiiNratio )        ! oii ratio
-        call get_diag("neiv2425   ","neiv2423   ", ILs, neivNratio )        ! neiv ratio
+        call get_diag("neiv2425   ","neiv2423   ", ILs, neivNratio )       ! neiv ratio
         call get_diag("sii6731    ","sii6716    ", ILs, siiNratio )        ! s ii ratio
-        call get_diag("cliii5537  ","cliii5517  ", ILs, cliiiNratio )        ! Cl iii ratio
-        call get_diag("ariv4740   ","ariv4711   ", ILs, arivNratio )        ! Ar iv ratio
+        call get_diag("cliii5537  ","cliii5517  ", ILs, cliiiNratio )      ! Cl iii ratio
+        call get_diag("ariv4740   ","ariv4711   ", ILs, arivNratio )       ! Ar iv ratio
+        call get_diag("oiii88um   ","oiii52um   ", ILs, oiiiIRNratio )     ! oiii ir ratio
+        call get_diag("siii33p5um ","siii18p7um ", ILs, siiiIRNratio )       ! siii ir ratio
+        call get_diag("neiii15p5um","neiii36p0um", ILs, neiiiIRNratio )       ! neiii ir ratio
+        call get_diag("ariii9um   ","ariii21p8um", ILs, ariiiIRNratio )       ! ariii ir ratio
 
 ! temperature ratios:
-        !Try to calculate from atomic data at start
+        !TODO: try to calculate from atomic data at start
         CALL get_Tdiag("nii6548    ","nii6584    ","nii5754    ", ILs, DBLE(4.054), DBLE(1.3274), niiTratio)        ! N II
         CALL get_Tdiag("oiii5007   ","oiii4959   ","oiii4363   ", ILs, DBLE(1.3356), DBLE(3.98), oiiiTratio)        ! O III
         CALL get_Tdiag("neiii3868  ","neiii3967  ","neiii3342  ", ILs, DBLE(1.3013), DBLE(4.319), neiiiTratio)        ! Ne III
-        CALL get_Tdiag("neiii3868  ","neiii3967  ","neiii15p5um", ILs, DBLE(1.3013), DBLE(4.319), neiiiIRTratio)! Ne III ir
+        CALL get_Tdiag("neiii3868  ","neiii3967  ","neiii15p5um", ILs, DBLE(1.3013), DBLE(4.319), neiiiIRTratio)! Ne III ir 
         CALL get_Tdiag("nev3426    ","nev3345    ","nev2975    ", ILs, DBLE(1.3571), DBLE(3.800), nevTratio)        !!ne v
         CALL get_Tdiag("siii9069   ","siii9531   ","siii6312   ", ILs, DBLE(3.47), DBLE(1.403), siiiTratio)        !s iii
         CALL get_Tdiag("ariii7135  ","ariii7751  ","ariii5192  ",ILs, DBLE(1.24), DBLE(5.174), ariiiTratio)        !ar iii
         CALL get_Tdiag("arv6435    ","arv7005    ","arv4625    ",ILs, DBLE(3.125), DBLE(1.471), arvTratio)        !ar v
         CALL get_Tdiag("ci9850     ","ci9824     ","ci8727     ",ILs, DBLE(1.337), DBLE(3.965), ciTratio)      !C I
-        CALL get_Tdiag("oi6364     ","oi6300     ","oi5577     ",ILs, DBLE(4.127), DBLE(1.320), oiTratio)      !O I
+        CALL get_Tdiag("oi6364     ","oi6300     ","oi5577     ",ILs, DBLE(4.127), DBLE(1.320), oiTratio)      !O I 
+        CALL get_Tdiag("oiii4959   ","oiii5007   ","oiii52um   ", ILS, DBLE(1.3356), DBLE(3.98), oiiiIRTratio) ! OIII ir
         !Fixed, DJS
-
 
 ! O II
 
@@ -383,6 +387,25 @@ implicit none
            count = count + 1
          endif
 
+! IR densities, not included in average
+!Ar, S, Ne, O
+
+         if (oiiiIRNratio .gt. 0 .and. oiiiIRNratio .lt. 1e10) then
+           call get_diagnostic("oiii      ","1,2/                ","2,3/                ",oiiiIRNratio,"D",medtemp, oiiiIRDens)
+         endif
+
+         if (ariiiIRNratio .gt. 0 .and. ariiiIRNratio .lt. 1e10) then
+           call get_diagnostic("ariii     ","1,2/                ","2,3/                ",ariiiIRNratio,"D",medtemp, ariiiIRDens)
+         endif
+
+         if (siiiIRNratio .gt. 0 .and. siiiIRNratio .lt. 1e10) then
+           call get_diagnostic("siii      ","1,2/                ","2,3/                ",siiiIRNratio,"D",medtemp, siiiIRDens)
+         endif
+
+         if (neiiiIRNratio .gt. 0 .and. neiiiIRNratio .lt. 1e10) then
+           call get_diagnostic("neiii     ","1,2/                ","2,3/                ",neiiiIRNratio,"D",medtemp, neiiiIRDens)
+         endif
+
          if (count .eq. 0) then
            meddens = 1000.0
          else
@@ -398,10 +421,10 @@ implicit none
                          count=count-4
                          oiiitemp=-1
                  endif
-
          else
            oiiiTemp = 0.0
          endif
+
          if (siiiTratio .gt. 0 .and. siiiTratio .lt. 1e10) then
            call get_diagnostic("siii      ","2,4,3,4/            ","4,5/                ",siiiTratio,"T",meddens,siiiTemp)
            count = count + 1
@@ -414,6 +437,7 @@ implicit none
          else
            siiiTemp = 0.0
          endif
+
          if (ariiiTratio .gt. 0 .and. ariiiTratio .lt. 1e10) then
            call get_diagnostic("ariii     ","1,4,2,4/            ","4,5/                ",ariiiTratio,"T",meddens,ariiitemp)
            count = count + 2
@@ -424,6 +448,7 @@ implicit none
          else
            ariiitemp = 0.0
          endif
+
          if (neiiiTratio .gt. 0 .and. neiiiTratio .lt. 1e10) then
            call get_diagnostic("neiii     ","1,4,2,4/            ","4,5/                ",neiiiTratio,"T",meddens,neiiitemp)
            count = count + 2
@@ -435,6 +460,24 @@ implicit none
          else
            neiiitemp = 0.0
          endif
+
+!extra IR temperatures, not included in the average at the moment but could be if we decide that would be good
+
+         if (neiiiIRTratio .gt. 0 .and. neiiiIRTratio .lt. 1.e10) then
+           call get_diagnostic("neiii     ","1,4,2,4/            ","1,2/                ",neiiiIRTratio,"T",meddens,neiiiIRtemp)
+         else
+           neiiiIRtemp = 0.0
+         endif
+
+         if (oiiiIRTratio .gt. 0 .and. oiiiIRTratio .lt. 1.e10) then
+           call get_diagnostic("oiii      ","2,4,3,4/            ","2,3/                ",oiiiIRTratio,"T",oiiiIRdens,oiiiIRtemp)
+         else
+           oiiiIRtemp = 0.0
+         endif
+
+
+!averaging
+
          if (count .gt. 0) then
            medtemp = (4*oiiitemp + siiitemp + 2*ariiitemp + 2*neiiitemp) / count
          else
@@ -455,7 +498,7 @@ implicit none
            highdens = neivdens
          else
            neivDens = 0.0
-           highdens = 1000.0
+           highdens = meddens
          endif
 
          count = 0
@@ -466,6 +509,7 @@ implicit none
          else
            arvTemp = 0.0
          endif
+
          if (nevTratio .gt. 0 .and. nevTratio .lt. 1e10) then
            call get_diagnostic("nev       ","2,4,3,4/            ","4,5/                ",nevTratio,"T",highdens,nevtemp)
            count = count + 1
@@ -560,6 +604,15 @@ if(arivdens  > 0 )    print "(A28,F8.0,A1,F8.3)","[Ar IV] density  Medium    ",a
         if(runonce == 0 .and. arivdens > 0 ) iteration_result(1)%ArIV_density = arivdens
 if(ciiidens  > 0 )    print "(A28,F8.0,A1,F8.3)","C III] density   Medium    ",ciiidens," ", ciiinratio
         if(runonce == 0 .and. ciiidens > 0 ) iteration_result(1)%CIII_density = ciiidens
+if(oiiiIRdens  > 0 )    print "(A28,F8.0,A1,F8.3)","[O III] IR dens Medium     ",oiiiIRdens," ", oiiiIRnratio
+        if(runonce == 0 .and. oiiiIRdens > 0 ) iteration_result(1)%OIII_IR_density = oiiiIRdens
+if(ariiiIRdens  > 0 )    print "(A28,F8.0,A1,F8.3)","[Ar III] IR dens Medium    ",ariiiIRdens," ", ariiiIRnratio
+        if(runonce == 0 .and. ariiiIRdens > 0 ) iteration_result(1)%ArIII_IR_density = ariiiIRdens
+if(siiiIRdens  > 0 )    print "(A28,F8.0,A1,F8.3)","[S III] IR dens Medium     ",siiiIRdens," ", siiiIRnratio
+        if(runonce == 0 .and. siiiIRdens > 0 ) iteration_result(1)%SIII_IR_density = siiiIRdens
+if(neiiiIRdens  > 0 )    print "(A28,F8.0,A1,F8.3)","[Ne III] IR dens Medium    ",neiiiIRdens," ", neiiiIRnratio
+        if(runonce == 0 .and. neiiiIRdens > 0 ) iteration_result(1)%NeIII_IR_density = neiiiIRdens
+
 if(meddens   > 0 )    print "(A28,F8.0)"," density adopted Medium    ",meddens
         if(runonce == 0 .and. meddens > 0 ) iteration_result(1)%med_density = meddens
 if(meddens   > 0 )    print *,""
@@ -595,7 +648,22 @@ if(siiitemp > 0.2)then
 else if(int(siiitemp) == -1)then
                    print "(A28,F8.0,A1,F8.3)","[S III] temp     Medium    ",20000.0, " ",siiitratio
         if(runonce == 0) iteration_result(1)%SIII_temp = 20000
-else
+endif
+
+if(oiiiIRtemp > 0.2)then
+        print "(A28,F8.0,A1,F8.3)","[O III] IR temp  Medium    ",oiiiIRtemp, " ",oiiiIRtratio
+        if(runonce == 0) iteration_result(1)%OIII_IR_temp = oiiiIRtemp
+else if(int(oiiiIRtemp) == -1)then
+        print "(A28,F8.0,A1,F8.3)","[O III] IR temp  Medium    ",20000.0, " ",oiiiIRtratio
+        if(runonce == 0) iteration_result(1)%OIII_IR_temp = 20000
+endif
+
+if(neiiiIRtemp > 0.2)then
+        print "(A28,F8.0,A1,F8.3)","[Ne III] IR temp Medium    ",neiiiIRtemp, " ",neiiiIRtratio
+        if(runonce == 0) iteration_result(1)%NeIII_IR_temp = neiiiIRtemp
+else if(int(neiiiIRtemp) == -1)then
+        print "(A28,F8.0,A1,F8.3)","[Ne III] IR temp Medium    ",20000.0, " ",neiiiIRtratio
+        if(runonce == 0) iteration_result(1)%NeIII_IR_temp = 20000
 endif
 
 if(medtemp  >0)    print "(A28,F8.0)"," temp adopted    Medium    ",medtemp
@@ -697,7 +765,7 @@ if(A4686 > 0)        print "(1x,A17,F6.4)", "He++ (4686)/H+ = ", A4686
         !if(int(siiitemp) == -1) siiitemp = oiiitemp
 
 
-        do i = 1,Iint-1 !XXXX why does Int end up 1 too high?
+        do i = 1,Iint !This used to be Iint-1 but I think that's corrected in the file reading routine now (RW 25/10/2011)
 !                 print *,ILs(i)%ion,ILs(i)%transition,ILs(i)%int_dered
            if (ILs(i)%zone .eq. "low ") then
                 !PRINT*, siiitemp, lowdens
@@ -1711,7 +1779,7 @@ if(adfne>0) print "(A12,F5.2)","adf (Ne)  = ", adfne
 contains
 
         SUBROUTINE get_diag(name1, name2, lines, diag)
-                TYPE(line), DIMENSION(51), INTENT(IN) :: lines
+                TYPE(line), DIMENSION(:), INTENT(IN) :: lines
                 CHARACTER*11 :: name1, name2
                 INTEGER :: ion_no1, ion_no2
                 DOUBLE PRECISION :: diag
@@ -1729,7 +1797,7 @@ contains
 
         SUBROUTINE get_Tdiag(name1, name2, name3, lines, factor1, factor2, ratio)
                                                         !3.47,   1.403   SIII
-                TYPE(line), DIMENSION(51), INTENT(IN) :: lines
+                TYPE(line), DIMENSION(:), INTENT(IN) :: lines
                 CHARACTER*11 :: name1, name2, name3
                 INTEGER :: ion_no1, ion_no2, ion_no3
                 DOUBLE PRECISION :: diag, factor1, factor2, ratio, ratio2
