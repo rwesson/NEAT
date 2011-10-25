@@ -60,7 +60,7 @@ subroutine calc_extinction_coeffs_loop(H_BS, c1, c2, c3, meanextinction, switch_
         DOUBLE PRECISION :: c1, c2, c3, meanextinction
         double precision :: fl_ha, fl_hg, fl_hd
         character :: switch_ext
-	double precision :: temp, dens
+	double precision :: temp, dens, a,b,c
 	
 !determine f(lambda) for the balmer lines, depending on the law used
 !galactic, howarth
@@ -91,13 +91,13 @@ endif
 !interpolating over 6 Te points, 5,7.5,10,12.5,15,20kK and 3 Ne points 10^2, 10^3 10^4 cm^(-3)
 
 if (H_BS(1)%intensity .gt. 0 .and. H_BS(2)%intensity .gt. 0) then
-        c1 = log10( ( DBLE(H_BS(1)%intensity) / DBLE(H_BS(2)%intensity) )/ calc_balmer_ratios(temp, dens, 1) )/(-fl_ha)
+	c1 = log10( ( DBLE(H_BS(1)%intensity) / DBLE(H_BS(2)%intensity) )/ calc_balmer_ratios(temp, dens, 1)    )/(-fl_ha)
 else
         c1 = 0.0
 endif
 
 if (H_BS(3)%intensity .gt. 0 .and. H_BS(2)%intensity .gt. 0) then
-        c2 = log10( ( DBLE(H_BS(3)%intensity) / DBLE(H_BS(2)%intensity) )/ calc_balmer_ratios(temp, dens, 2) )/(-fl_hg)
+	c2 = log10( ( DBLE(H_BS(3)%intensity) / DBLE(H_BS(2)%intensity) )/ calc_balmer_ratios(temp, dens, 2) )/(-fl_hg)
 else
         c2=0.0
 endif
@@ -113,7 +113,7 @@ endif
 end subroutine calc_extinction_coeffs_loop
 
 double precision function calc_balmer_ratios(temp, dens, line)
-	integer :: i, j, line
+	integer :: i, j, line, jj
 	double precision :: d1, d2, temp, dens
 	double precision, dimension(6,3,4) :: HS	
 
@@ -140,7 +140,7 @@ double precision function calc_balmer_ratios(temp, dens, line)
 	HS(6,3,:) = (/20000., 0.264, 0.264, 0.264/)
 
 	
-	do i = 1,6
+	do i = 1,5
 		if(temp .ge. HS(i,line,1) .and. temp .lt. HS(i+1,line, 1) )then
 			exit
 		endif
@@ -152,15 +152,16 @@ double precision function calc_balmer_ratios(temp, dens, line)
 		endif
 	end do
 
+
 	if(temp .lt. HS(1,line,1))then
 		if(dens .lt. 10**2)then
 			calc_balmer_ratios = HS(1,line,2)
 			return
-		elseif(dens .gt. 10**4)then
+		elseif(dens .ge. 10**4)then
 			calc_balmer_ratios = HS(1,line,4)
 			return
 		endif		
-
+		!print*, j
 		calc_balmer_ratios=( (HS(1,line,j+1)-HS(1,line,j)) / (10**(j+1)-10**j) )*(dens-(10**j))+HS(1,line,j)
 		return
 	elseif(temp .ge. HS(6,line,1))then
@@ -183,13 +184,14 @@ double precision function calc_balmer_ratios(temp, dens, line)
 		return
 	endif
 
-
+	!	print*, j
 	!PRINT*, i, j
 
 	d1=((HS(i+1,line,j)-HS(i,line,j))/(HS(i+1,line,1)-HS(i,line,1)))*(temp-HS(i,line,1))+HS(i,line,j)
 	d2=((HS(i+1,line,j+1)-HS(i,line,j+1))/(HS(i+1,line,1)-HS(i,line,1)))*(temp-HS(i,line,1))+HS(i,line,j+1)
 
 	!print*, d1, d2
+
 	calc_balmer_ratios =  ( (d2-d1) /(10**(j+1) - 10**j))*(dens - (10**j) ) + d1  !(d1+d2)/2
 
 end function 

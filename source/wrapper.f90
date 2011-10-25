@@ -1,81 +1,12 @@
-module mod_abundtypes
 
-TYPE line
-        CHARACTER*11 :: name
-        CHARACTER*20 :: ion
-        DOUBLE PRECISION :: wavelength
-        DOUBLE PRECISION :: intensity
-        DOUBLE PRECISION :: int_err
-        DOUBLE PRECISION :: freq
-        DOUBLE PRECISION :: int_dered
-        CHARACTER*20 :: transition
-        DOUBLE PRECISION :: abundance
-        CHARACTER*4 :: zone
-END TYPE
-
-end module mod_abundtypes
-
-module mod_resultarrays
-
-TYPE resultarray
-        double precision :: NC_abund_CEL
-        double precision :: C_abund_CEL
-        double precision :: Nii_abund_CEL
-        double precision :: N_abund_CEL
-        double precision :: NO_abund_CEL
-        double precision :: Oii_abund_CEL
-        double precision :: Oiii_abund_CEL
-        double precision :: O_abund_CEL
-        double precision :: Neiii_abund_CEL
-        double precision :: Neiv_abund_CEL
-        double precision :: Nev_abund_CEL
-        double precision :: Ne_abund_CEL
-        double precision :: Ariii_abund_CEL
-        double precision :: Ariv_abund_CEL
-        double precision :: Arv_abund_CEL
-        double precision :: Ar_abund_CEL
-        double precision :: Sii_abund_CEL
-        double precision :: Siii_abund_CEL
-        double precision :: S_abund_CEL
-        double precision :: He_abund_ORL
-        double precision :: C_abund_ORL
-        double precision :: N_abund_ORL
-        double precision :: O_abund_ORL
-        double precision :: Ne_abund_ORL
-        double precision :: OII_density
-        double precision :: SII_density
-        double precision :: low_density
-        double precision :: OII_temp
-        double precision :: NII_temp
-        double precision :: SII_temp
-        double precision :: OI_temp
-        double precision :: CI_temp
-        double precision :: low_temp
-        double precision :: ClIII_density
-        double precision :: ArIV_density
-        double precision :: CIII_density
-        double precision :: med_density
-        double precision :: OIII_temp
-        double precision :: NeIII_temp
-        double precision :: ArIII_temp
-        double precision :: SIII_temp
-        double precision :: med_temp
-        double precision :: NeIV_density
-        double precision :: high_density
-        double precision :: ArV_temp
-        double precision :: NeV_temp
-        double precision :: high_temp
-        double precision :: mean_cHb
-end type
-
-end module mod_resultarrays
 
 program wrapper
 
         use mod_abundtypes
         use mod_resultarrays
+	use mod_extinction
 
-        CHARACTER*10 :: temp
+        CHARACTER*10 :: temp, tempa
         CHARACTER :: switch_ext !switch for extinction laws
         INTEGER :: I, runs, doublext, Narg !runs = number of runs for randomiser
         character*6 :: no
@@ -87,9 +18,11 @@ program wrapper
         CHARACTER*80 :: filename 
         CHARACTER*1 :: null
         INTEGER :: IO, listlength
-        DOUBLE PRECISION :: temp1,temp2,temp3
+        DOUBLE PRECISION :: temp1,temp2,temp3, mean_ext
         type(resultarray), dimension(:), allocatable :: all_results
         type(resultarray), dimension(1) :: iteration_result
+
+        make_dered_ll=0
 
         !read command line arguments
 
@@ -105,22 +38,44 @@ program wrapper
         CALL getarg(1,temp) !get info from input arguments
         read (temp,*) runs 
         CALL getarg(2,filename) 
-        if(Narg > 2) then !check additional input arguments for switches (currently extinction laws only)
+	if(Narg == 3) then !check additional input arguments for switches (currently extinction laws only)
                CALL getarg (3, temp) !get argument for extinction laws, allowed values -How for Howarth LMC, -CCM for CCM galactic, -Pre for Prevot SMC, default is Seaton/Howarth galactic.
-               if (temp == "-How") then
-                       switch_ext = "H"
-               elseif (temp == "-CCM") then
-                       switch_ext = "C"
-               elseif (temp == "-Pre") then
-                       switch_ext = "P"
-               elseif (temp == "-Fit") then
-                       switch_ext = "F"
+	       if (temp == "-How")then
+                 switch_ext = "H"
+               elseif (temp == "-CCM")then
+                 switch_ext = "C"
+               elseif (temp == "-Pre")then
+                 switch_ext = "P"
+               elseif (temp == "-Fit")then
+                 switch_ext = "F"
+               elseif (temp == "-dll") then
+                 make_dered_ll = 1
+                 switch_ext = "F"
                else
-                       switch_ext = "S"
+                 switch_ext = "S"
                endif
-        else
+	elseif(Narg == 4)then
+	       CALL getarg (3, temp) !get argument for extinction laws, allowed values -How for Howarth LMC, -CCM for CCM galactic, -Pre for Prevot SMC, default is Seaton/Howarth galactic.
+	       call getarg (4, tempa)	      
+	       if (temp == "-How" .or. tempa == "-How")then
+                 switch_ext = "H"
+               elseif (temp == "-CCM" .or. tempa == "-CCM")then
+                 switch_ext = "C"
+               elseif (temp == "-Pre" .or. tempa == "-Pre")then
+                 switch_ext = "P"
+               elseif (temp == "-Fit" .or. tempa == "-Fit")then
+                 switch_ext = "F"
+               elseif (temp == "-dll" .or. tempa == "-dll") then
+                 switch_ext = "S"
+                 make_dered_ll = 1
+               else
+                 switch_ext = "S"
+               endif		
+	else
                switch_ext = "S"
-        endif
+	endif
+
+
 
         !first, read in the line list 
 
@@ -162,6 +117,12 @@ program wrapper
 
         if(runs == 1)then !calculates abundances without uncertainties
                 call abundances(linelist, 1, switch_ext, listlength, filename, iteration_result)
+
+		if(make_dered_ll ==  1)then
+			mean_ext=DBLE(0)
+			CALL deredden_ll(switch_ext, linelist, listlength, mean_ext )
+		endif
+
 
         else if(runs > 1)then
 
@@ -287,6 +248,11 @@ program wrapper
                         CLOSE(unit=I)
                 END DO 
 
+		if(make_dered_ll ==  1)then
+			mean_ext=DBLE(0)! fix this.
+			CALL deredden_ll(switch_ext, linelist, listlength, mean_ext )
+		endif
+
 
         else
                 print*, "I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."
@@ -353,5 +319,40 @@ contains
 
             DEALLOCATE(seed)
           END SUBROUTINE
+
+SUBROUTINE deredden_ll(switch_ext, linelist, listlength, meanextinction )
+	INTEGER :: iii, listlength
+	CHARACTER :: switch_ext !switch for extinction laws
+        TYPE(LINE),DIMENSION(:), allocatable :: linelist 
+	double precision :: meanextinction	
+
+	if (switch_ext == "S") then
+                CALL deredden(linelist, listlength, meanextinction)
+        elseif (switch_ext == "H") then
+                CALL deredden_LMC(linelist, listlength, meanextinction)
+        elseif (switch_ext == "C") then
+                CALL deredden_CCM(linelist, listlength, meanextinction)
+        elseif (switch_ext == "P") then
+                CALL deredden_SMC(linelist, listlength, meanextinction)
+        elseif (switch_ext == "F") then
+                CALL deredden_Fitz(linelist, listlength, meanextinction)
+        endif
+
+
+	500 FORMAT (5(f10.4))
+  	
+	OPEN(801, FILE=trim(filename)//"_dered", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+        do iii=1, listlength
+		if(linelist(iii)%int_dered .ne. 0)then
+			write(801,500) linelist(iii)%wavelength, linelist(iii)%intensity, linelist(iii)%int_err, linelist(iii)%int_dered
+		endif        	
+	end do
+       	CLOSE(801)
+       	call system("sort "//trim(filename)//"_dered > "//trim(filename)//"_dered_sort")
+       	call system("rm "//trim(filename)//"_dered")	
+	
+
+END SUBROUTINE
+
 
 end program
