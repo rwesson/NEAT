@@ -79,7 +79,11 @@ subroutine deredden(lines, number, m_ext)
 
         do i = 1,number
 
-                lines(i)%freq = DBLE(10000) / DBLE(lines(i)%wavelength)
+                if (lines(i)%wavelength<500) then ! allows line list to contain IR lines with wavelengths in microns.
+                        lines(i)%freq = DBLE(1) / DBLE(lines(i)%wavelength)
+                else
+                        lines(i)%freq = DBLE(10000) / DBLE(lines(i)%wavelength)
+                endif
 
                 if( (lines(i)%freq .gt. 7.14) .AND. (lines(i)%freq .lt. 10.0))then !far UV
                         fl = flambda(lines(i)%freq, 1)
@@ -152,7 +156,11 @@ subroutine deredden_LMC(lines, number, m_ext)
 
         do i = 1,number
 
-                lines(i)%freq = DBLE(10000) / DBLE(lines(i)%wavelength)
+                if (lines(i)%wavelength<500) then ! allows line list to contain IR lines with wavelengths in microns.
+                        lines(i)%freq = DBLE(1) / DBLE(lines(i)%wavelength)
+                else
+                        lines(i)%freq = DBLE(10000) / DBLE(lines(i)%wavelength)
+                endif
 
                 if(lines(i)%freq .gt. 2.75)then ! UV
                         fl = flambdaLMC(lines(i)%freq, 1)
@@ -235,7 +243,11 @@ subroutine deredden_CCM(lines, number, m_ext)
 
         do i = 1,number
 
-                lines(i)%freq = DBLE(10000) / DBLE(lines(i)%wavelength)
+                if (lines(i)%wavelength<500) then ! allows line list to contain IR lines with wavelengths in microns.
+                        lines(i)%freq = DBLE(1) / DBLE(lines(i)%wavelength)
+                else
+                        lines(i)%freq = DBLE(10000) / DBLE(lines(i)%wavelength)
+                endif
 
                 if(lines(i)%freq .gt. 8)then ! Far UV
                         fl = flambdaCCM(lines(i)%freq, 1)
@@ -304,7 +316,11 @@ subroutine deredden_SMC(lines, number, m_ext)
 
         do i = 1,number
 
-                lines(i)%freq = DBLE(10000) / DBLE(lines(i)%wavelength)
+                if (lines(i)%wavelength<500) then ! allows line list to contain IR lines with wavelengths in microns.
+                        lines(i)%freq = DBLE(1) / DBLE(lines(i)%wavelength)
+                else
+                        lines(i)%freq = DBLE(10000) / DBLE(lines(i)%wavelength)
+                endif
 
                 if(lines(i)%freq .gt. 6.72)then ! Far UV
                         fl = flambdaSMC(lines(i)%freq, 1)
@@ -386,8 +402,14 @@ subroutine deredden_Fitz(lines, number, m_ext) !Uses Seaton/Howarth for IR, opti
         INTEGER :: i
 
         do I = 1, number
-                lines(i)%freq = DBLE(10000) / DBLE(lines(i)%wavelength)
-            if (lines(i)%freq .lt. 1.83) then 
+
+                if (lines(i)%wavelength<500) then ! allows line list to contain IR lines with wavelengths in microns.
+                        lines(i)%freq = DBLE(1) / DBLE(lines(i)%wavelength)
+                else
+                        lines(i)%freq = DBLE(10000) / DBLE(lines(i)%wavelength)
+                endif
+
+                if (lines(i)%freq .lt. 1.83) then 
                         fl = flambdaFitz(lines(i)%freq, 1)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
                 elseif((lines(i)%freq .gt. 1.83) .AND. (lines(i)%freq .lt. 2.75))then ! optical
