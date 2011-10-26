@@ -23,7 +23,8 @@ implicit none
         DOUBLE PRECISION :: normalise, oiiNratio, oiiDens, oiiiTratio, oiiiTemp, oiiiIRNratio, oiiiIRTratio, oiiiIRtemp, oiiiIRdens, niiTratio, niiTemp, ariiiIRNratio, ariiiIRdens, arivNratio, arivDens, cliiiNratio, cliiiDens, siiNratio, siiDens, siiTratio, siiTemp, siiiIRNratio, siiiIRdens, oiiTratio, oiiTemp, neiiiTratio, neiiiIRTratio, neiiiIRNratio, neiiiIRdens, neiiiTemp, neiiiIRTemp, abund, meandensity, meantemp, oitemp, citemp
         DOUBLE PRECISION :: ciiiNratio,neivNratio,nevTratio,siiiTratio,ariiiTratio,arvTratio,lowtemp,lowdens,medtemp,ciiidens,meddens,siiitemp,ariiitemp,hightemp,neivdens,highdens,arvtemp,nevtemp,oiTratio,ciTratio
         DOUBLE PRECISION :: oiiRLabund, niiRLabund, ciiRLabund, cii4267rlabund, neiiRLabund, ciiiRLabund, niiiRLabund, RLabundtemp, weight
-        DOUBLE PRECISION :: ciiiCELabund, niiCELabund, niiiIRCELabund, niiiUVCELabund, oiiCELabund, oiiiCELabund, oiiiIRCELabund, neiiIRCELabund, neiiiIRCELabund, neiiiCELabund, neivCELabund, siiCELabund, siiiCELabund, siiiIRCELabund, sivIRCELabund, cliiiCELabund, ariiiCELabund, arivCELabund, ariiiIRCELabund, nivCELabund, niCELabund, niiiCELabund, ciiCELabund, civCELabund, nvCELabund, nevCELabund, arvCELabund, CELabundtemp, ciCELabund, oiCELabund
+        DOUBLE PRECISION :: ciiiCELabund, niiCELabund, niiiIRCELabund, niiiUVCELabund, oiiCELabund, oiiiCELabund, oiiiIRCELabund, oivCELabund, neiiIRCELabund, neiiiIRCELabund, neiiiCELabund, neivCELabund, siiCELabund, siiiCELabund, siiiIRCELabund, sivIRCELabund, cliiiCELabund, ariiiCELabund, arivCELabund, ariiiIRCELabund, nivCELabund, niCELabund, niiiCELabund, ciiCELabund, civCELabund, nvCELabund, nevCELabund, arvCELabund, CELabundtemp, ciCELabund, oiCELabund
+        DOUBLE PRECISION :: fn4
         DOUBLE PRECISION :: CELicfO, CELicfC, CELicfN, CELicfNe, CELicfAr, CELicfS
         DOUBLE PRECISION :: RLicfO, RLicfC, RLicfN, RLicfNe
         DOUBLE PRECISION :: CabundRL, CabundCEL, NabundRL, NabundCEL, OabundRL, OabundCEL, NeabundRL, NeabundCEL, SabundCEL, ArabundCEL, NOabundCEL, NCabundCEL
@@ -59,9 +60,9 @@ implicit none
         He_lines%intensity = 0
         !runonce = 1 !allows printing of supplementary files
         runonce = run !suppresses supplementary files and enables monte-carlo error estimation
-        nivCELabund = 0.0
-        nvCELabund = 0.0
-        civCELabund = 0.0
+!        nivCELabund = 0.0  \
+!        nvCELabund = 0.0    |- used to be not calculated, they are now so don't need to be set to zero.
+!        civCELabund = 0.0  /
 
         !file reading stuff
 
@@ -122,9 +123,9 @@ implicit none
         !need to write output/ input stuff so user can insert own c(Hb)
         !assume we go on with calculated extinctions
 
-        print "(1X,A17,F4.2,A4,F4.2)","Ha/Hb => c(Hb) = ",c1
-        print "(1X,A17,F4.2,A4,F4.2)","Hg/Hb => c(Hb) = ",c2
-        print "(1X,A17,F4.2,A4,F4.2)","Hd/Hb => c(Hb) = ",c3
+        print "(1X,A17,F5.2)","Ha/Hb => c(Hb) = ",c1
+        print "(1X,A17,F5.2)","Hg/Hb => c(Hb) = ",c2
+        print "(1X,A17,F5.2)","Hd/Hb => c(Hb) = ",c3
 
         PRINT "(1X,A13,F4.2,A4,F4.2)", "Mean c(Hb) = ",meanextinction
         if (runonce == 0 .and. meanextinction > 0) iteration_result(1)%mean_cHb = meanextinction
@@ -779,17 +780,14 @@ if(A4686 > 0)        print "(1x,A17,F6.4)", "He++ (4686)/H+ = ", A4686
            elseif (ILs(i)%zone .eq. "high") then
                  call get_abundance(ILs(i)%ion, ILs(i)%transition, hightemp, highdens,ILs(i)%int_dered, ILs(i)%abundance)
            endif
-                 if ((ILs(i)%abundance .gt. 0) .and. (ILs(i)%abundance < 1 ) ) then
+                 if ((ILs(i)%abundance .gt. 0) .and. (ILs(i)%abundance < 10 ) ) then
                        PRINT "(1X, A11, 1X, F8.3, 5X, ES10.4)",ILs(i)%name,ILs(i)%int_dered,ILs(i)%abundance
-                 elseif( (ILs(i)%abundance > 1 ) .or. (ILs(i)%abundance < 1E-10 ) )then
+                 elseif( (ILs(i)%abundance > 10 ) .or. (ILs(i)%abundance < 1E-10 ) )then
                          ILs(i)%abundance = 0
                  endif
         enddo
 
 ! calculate averages
-
-        ciiiCELabund = ILs( get_ion("ciii1909   ", ILs, Iint)  )%abundance
-
 
         celabundtemp = 0.
         weight = 0.
@@ -816,6 +814,17 @@ if(A4686 > 0)        print "(1x,A17,F6.4)", "He++ (4686)/H+ = ", A4686
           niiiCELabund = 0
         endif
 
+        do i= get_ion("niv1483    ", ILs, Iint), get_ion("niv1485b   ", ILs, Iint) ! would screw up if blend and non blends were both given
+          if (ILs(i)%abundance .gt. 0) nivCELabund = nivCELabund + ILs(i)%abundance/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .gt. 0) weight = weight + 1/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+        enddo
+        if (weight .gt. 0) then
+          nivCELabund = nivCELabund / weight
+        else
+          nivCELabund = 0.0
+        endif
+
+        nvCELabund = ILs(get_ion("nv1240     ",ILs,Iint))%abundance
 
         !OII CEL routine fixed. DJS 23/11/10
 
@@ -912,6 +921,8 @@ if(A4686 > 0)        print "(1x,A17,F6.4)", "He++ (4686)/H+ = ", A4686
           oiiiIRCELabund = 0.0
         endif
 
+        oivCELabund = ILS( get_ion("oiv25p9um  ", ILS, Iint))%abundance
+
         neiiIRCELabund = ILs(  get_ion("neii12p8um ", ILs, Iint)  )%abundance
         neiiiIRCELabund = ILs(  get_ion("neiii15p5um ", ILs, Iint)  )%abundance
 
@@ -930,7 +941,7 @@ if(A4686 > 0)        print "(1x,A17,F6.4)", "He++ (4686)/H+ = ", A4686
 
         celabundtemp = 0.
         weight = 0.
-        do i=get_ion("neiv4724   ", ILs, Iint), get_ion("neiv4715   ", ILs, Iint)
+        do i=get_ion("neiv2423   ", ILs, Iint), get_ion("neiv4725b  ", ILs, Iint) ! would screw up if blends and non blends were given
           if (ILs(i)%abundance .gt. 0) neivCELabund = neivCELabund + ILs(i)%abundance/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
           if (ILs(i)%abundance .gt. 0) weight = weight + 1/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
         enddo
@@ -1021,8 +1032,8 @@ if(A4686 > 0)        print "(1x,A17,F6.4)", "He++ (4686)/H+ = ", A4686
 
         celabundtemp = 0.
         weight = 0.
-         do i=get_ion("ariv4711   ", ILs, Iint), get_ion("ariv4740   ", ILs, Iint)
-          arivCELabund = arivCELabund + ILs(i)%abundance/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+        do i=get_ion("ariv4711   ", ILs, Iint), get_ion("ariv4740   ", ILs, Iint)
+        arivCELabund = arivCELabund + ILs(i)%abundance/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
           if (ILs(i)%abundance .gt. 0) then
             weight = weight + 1/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
           endif
@@ -1035,9 +1046,12 @@ if(A4686 > 0)        print "(1x,A17,F6.4)", "He++ (4686)/H+ = ", A4686
 
         ariiiIRCELabund = ILs(get_ion("ariii9um   ", ILs, Iint))%abundance
 
+        ciiCELabund = ILs(get_ion("cii2325    ", ILs, Iint))%abundance
+        civCELabund = ILs(get_ion("civ1548    ", ILs, Iint))%abundance
+
         celabundtemp = 0.
         weight = 0.
-        do i=get_ion("ciii1907   ", ILs, Iint), get_ion("ciii1909   ", ILs, Iint)
+        do i=get_ion("ciii1907   ", ILs, Iint), get_ion("ciii1909b  ", ILs, Iint) ! would screw up if blend and non-blend were given.
           if (ILs(i)%abundance .gt. 0) then
             ciiiCELabund = ciiiCELabund + ILs(i)%abundance/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
             weight = weight + 1/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
@@ -1213,6 +1227,7 @@ if(A4686 > 0)        print "(1x,A17,F6.4)", "He++ (4686)/H+ = ", A4686
         print "(A34,ES9.3)","Abundance (all lines co-added): ",ciirlabund
         print "(A34,ES9.3)","Abundance (4267 line only):     ",cii4267rlabund
       else
+        ciirlabund = 0.
         print *,"No CII recombination lines"
       endif
 
@@ -1440,18 +1455,22 @@ if(A4686 > 0)        print "(1x,A17,F6.4)", "He++ (4686)/H+ = ", A4686
 
 ! ICFs (Kingsburgh + Barlow 1994)
 
-! oxygen, just the simple case at the moment
-        !if (oiiCELabund .gt. 0 .and. oiiiCELabund .gt. 0 .and. oivCELabund .eq. 0 .and. nvCELabund .eq. 0)then !no O3+ or N4+ seen
-                     CELicfO = ((heiabund + heiiabund)/heiabund)**(2./3.) !KB94 A9
-                    OabundCEL = CELicfO * (oiiCELabund + oiiiCELabund) !A10
-        !elseif (oiiCELabund .gt. 0 .and. oiiiCELabund .gt. 0 .and. oivCELabund .gt. 0 .and. nvCELabund .eq. 0) then !no N4+ seen
-                !CELicfO = 1
-                !OabundCEL = oiiCELabund + oiiiCELabund + oivCELabund !sum of visible ionisation stages
-        !endif
+! oxygen - complete
 
-
-
- !three other cases to add for oxygen, A6, A8, and sum of observed abundances, commented case causes errors due to undefined variables
+        if (oiiCELabund .gt. 0 .and. oiiiCELabund .gt. 0 .and. oivCELabund .gt. 0 .and. nvCELabund .gt. 0)then ! O3+ and N4+
+                fn4 = (nvCELabund)/(niiCELabund + niiiCELabund + nivCELabund + nvCELabund) !A4
+                CELicfO = 1./(1.-0.95*fn4)                                                 !A5
+                OabundCEL = CELicfO * (oiiCELabund + oiiiCELabund + oivCELabund)           !A6
+        elseif (oiiCELabund .gt. 0 .and. oiiiCELabund .gt. 0 .and. oivCELabund .gt. 0 .and. nvCELabund .eq. 0) then ! O3+ but no N4+
+                CELicfO = 1
+                OabundCEL = oiiCELabund + oiiiCELabund + oivCELabund !sum of visible ionisation stages
+        elseif (oiiCELabund .gt. 0 .and. oiiiCELabund .gt. 0 .and. oivCELabund .eq. 0 .and. nvCELabund .gt. 0) then !no O3+ but N4+
+                CELicfO = (niiCELabund + niiiCELabund + nivCELabund + nvCELabund) / (niiCELabund + niiiCELabund) ! A7
+                OabundCEL = CELicfO * (oiiCELabund + oiiiCELabund)                                              ! A8
+        elseif (oiiCELabund .gt. 0 .and. oiiiCELabund .gt. 0 .and. oivCELabund .eq. 0 .and. nvCELabund .eq. 0)then !no O3+ or N4+ seen
+                CELicfO = ((heiabund + heiiabund)/heiabund)**(2./3.) !KB94 A9
+                OabundCEL = CELicfO * (oiiCELabund + oiiiCELabund) !A10 
+        endif
 
 ! nitrogen - complete
 
@@ -1466,7 +1485,7 @@ if(A4686 > 0)        print "(1x,A17,F6.4)", "He++ (4686)/H+ = ", A4686
        NabundCEL = niiCELabund * CELicfN
      endif
 
-! carbon - couple of cases still to add.
+! carbon - complete
 
      if (ciiCELabund .gt. 0 .and. ciiiCELabund .gt. 0 .and. civCELabund .gt. 0 .and. heiiabund .eq. 0) then !No C4+ but all other seen
        CELicfC = 1.
@@ -1478,8 +1497,10 @@ if(A4686 > 0)        print "(1x,A17,F6.4)", "He++ (4686)/H+ = ", A4686
        CELicfC = OabundCEL/oiiiCELabund !A13
        CabundCEL = CELicfC * ciiiCELabund !A14
      elseif (nvCELabund .gt. 0 .and. heiiabund .gt. 0) then !N4+ and He2+
-       CELicfC = 1/(1-(nvCELabund/(niiCELabund + niiiCELabund + nivCELabund + nvCELabund)))!A16
-       if (CELicfC .gt. 5) then !High-excitation case
+       fn4 = (nvCELabund)/(niiCELabund + niiiCELabund + nivCELabund + nvCELabund) !A4, A15 
+       if (fn4 .lt. 0.29629) then !condition in KB94 is if icf(C)>5, but eqn A16 can go negative at high fn4 so this is a better check for the high-excitation case
+         CELicfC = 1/(1-(2.7*fn4))!A16
+       else
          CELicfC = (niiCELabund + niiiCELabund + nivCELabund + nvCELabund) / (niiCELabund + niiiCELabund + nivCELabund) !A18
        endif
        CabundCEL = CELicfC * (ciiCELabund + ciiiCELabund + civCELabund) !A19
@@ -1496,7 +1517,6 @@ if(A4686 > 0)        print "(1x,A17,F6.4)", "He++ (4686)/H+ = ", A4686
         CELicfC = ((oiiCELabund + oiiiCELabund)/oiiiCELabund)*((heiiabund + heiabund)*heiabund)**(1./3.) !A25
         CabundCEL = CELicfC * (ciiCELabund + ciiiCELabund + civCELabund) !A26
      endif
-
 
 ! Neon - complete
 
@@ -1527,8 +1547,7 @@ if(A4686 > 0)        print "(1x,A17,F6.4)", "He++ (4686)/H+ = ", A4686
 ! Sulphur
 
      if (siiCELabund .gt. 0 .and. siiiCELabund .gt. 0 .and. sivIRCELabund .eq. 0) then !both S+ and S2+
-       CELicfS = (1 - (  (1-(oiiCELabund/OabundCEL))**3.0  )   )**(-1.0/3.0) !KB94 A36
-
+       CELicfS = (1 - (  (1-(oiiCELabund/OabundCEL))**3.0  )   )**(-1.0/3.0) !KB94 A36 
        SabundCEL = CELicfS * (siiCELabund + siiiCELabund) !KB94 A37
      elseif (siiCELabund .gt. 0 .and. siiiCELabund .gt. 0 .and. sivIRCELabund .gt. 0) then !all states observed
        CELicfS = 1.
@@ -1538,7 +1557,14 @@ if(A4686 > 0)        print "(1x,A17,F6.4)", "He++ (4686)/H+ = ", A4686
        SabundCEL = CELicfS * siiCELabund
      endif
 
-!XXXX finish very high excitation case. i.e A39-A41 for C and O
+!very high excitation cases, all He is doubly ionised
+
+     if (heiabund .eq. 0 .and. heiiabund .gt. 0) then
+       CELicfO = NeabundCEL / neiiiCELabund                              !A39
+       CELicfC = CELicfO                                                 !A39
+       OabundCEL = CELicfO * (oiiCELabund + oiiiCELabund + oivCELabund)  !A40
+       CabundCEL = CELicfC * (ciiiCELabund + civCELabund)                !A41
+     endif
 
 !ORLs
 !Oxygen
@@ -1571,8 +1597,7 @@ if(A4686 > 0)        print "(1x,A17,F6.4)", "He++ (4686)/H+ = ", A4686
        NeabundRL = 0.0
      endif
 
-!finish these XXXX
-
+!finish these TODO
 
 !Printout edited to include weighted averages of Ionic species as these are neccessary for paper tables. DJS
 
@@ -1585,26 +1610,42 @@ print *,"CELs"
 print *,""
 print *,"Element           ICF     X/H"
 print *,"-------           ---     ---"
-
+!carbon
 if(NCabundCEL > 0) print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Neutral Carbon ",0.0,NCabundCEL,12+log10(NCabundCEL)
         if(runonce == 0 .and. NCabundCEL > 0) iteration_result(1)%NC_abund_CEL = NCabundCEL
+if(ciiCELabund > 0) print "(A24,ES8.2)"                ,"  C+/H+                 ",ciiCELabund
+        if(runonce == 0 .and. ciiCELabund> 0) iteration_result(1)%cii_abund_CEL = ciiCELabund
+if(ciiiCELabund > 0) print "(A24,ES8.2)"               ,"  C++/H+                ",ciiiCELabund
+        if(runonce == 0 .and. ciiiCELabund> 0) iteration_result(1)%ciii_abund_CEL = ciiiCELabund
+if(civCELabund > 0) print "(A24,ES8.2)"                ,"  C+++/H+               ",civCELabund
+        if(runonce == 0 .and. civCELabund> 0) iteration_result(1)%civ_abund_CEL = civCELabund
 if(CabundCEL > 0)  print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Carbon         ",CELicfC,CabundCEL,12+log10(CabundCEL)
         if(runonce == 0 .and. CabundCEL > 0) iteration_result(1)%C_abund_CEL = CabundCEL
-
+!nitrogen
 if(niiCELabund > 0) print "(A24,ES8.2)"                ,"  N+/H+                 ",niiCELabund
         if(runonce == 0 .and. niiCELabund > 0) iteration_result(1)%Nii_abund_CEL = niiCELabund
+if(niiiCELabund > 0) print "(A24,ES8.2)"               ,"  N++/H+                ",niiiCELabund
+        if(runonce == 0 .and. niiiCELabund > 0) iteration_result(1)%Niii_abund_CEL = niiiCELabund
+if(nivCELabund > 0) print "(A24,ES8.2)"                ,"  N+++/H+               ",nivCELabund
+        if(runonce == 0 .and. nivCELabund > 0) iteration_result(1)%Niv_abund_CEL = nivCELabund
+if(nvCELabund > 0) print "(A24,ES8.2)"                ,"  N++++/H+              ",nvCELabund
+        if(runonce == 0 .and. nvCELabund > 0) iteration_result(1)%Nv_abund_CEL = nvCELabund
 if(NabundCEL > 0)  print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Nitrogen       ",CELicfN,NabundCEL,12+log10(NabundCEL)
         if(runonce == 0 .and. NabundCEL > 0) iteration_result(1)%N_abund_CEL = NabundCEL
-
+!oxygen
 if(NOabundCEL > 0) print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Neutral Oxygen ",0.0,NOabundCEL,12+log10(NOabundCEL)
         if(runonce == 0 .and. NOabundCEL > 0) iteration_result(1)%NO_abund_CEL = NOabundCEL
 if(oiiCELabund >0) print "(A24,ES8.2)"                , "  O+/H+                 ",oiiCELabund
         if(runonce == 0 .and. oiiCELabund >0) iteration_result(1)%Oii_abund_CEL = oiiCELabund
 if(oiiiCELabund >0) print "(A24,ES8.2)"               , "  O++/H+                ",oiiiCELabund
         if(runonce == 0 .and. oiiiCELabund >0) iteration_result(1)%Oiii_abund_CEL = oiiiCELabund
+if(oivCELabund > 0) print "(A24,ES8.2)"                ,"  O+++/H+               ",oivCELabund
+        if(runonce == 0 .and. oivCELabund > 0) iteration_result(1)%Oiv_abund_CEL = oivCELabund
 if(OabundCEL > 0)  print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Oxygen         ",CELicfO,OabundCEL,12+log10(OabundCEL)
         if(runonce == 0 .and. OabundCEL > 0) iteration_result(1)%O_abund_CEL = OabundCEL
-
+!neon
+if(neiiIRCELabund > 0) print "(A24,ES8.2)"                ,"  Ne+/H+                ",neiiIRCELabund
+        if(runonce == 0 .and. neiiIRCELabund > 0) iteration_result(1)%Neii_abund_CEL = neiiIRCELabund
 if(neiiiCELabund >0) print "(A24,ES8.2)"               , "  Ne++/H+               ",neiiiCELabund
         if(runonce == 0 .and. neiiiCELabund >0) iteration_result(1)%Neiii_abund_CEL = neiiiCELabund
 if(neivCELabund >0)  print "(A24,ES8.2)"               , "  Ne+++/H+              ",neivCELabund
@@ -1613,7 +1654,7 @@ if(nevCELabund >0)   print "(A24,ES8.2)"               , "  Ne++++/H+           
         if(runonce == 0 .and. nevCELabund >0) iteration_result(1)%Nev_abund_CEL = nevCELabund
 if(NeabundCEL > 0) print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Neon           ",CELicfNe,NeabundCEL,12+log10(NeabundCEL)
         if(runonce == 0 .and. NeabundCEL > 0) iteration_result(1)%Ne_abund_CEL = NeabundCEL
-
+!argon
 if(ariiiCELabund >0) print "(A24,ES8.2)"               , "  Ar++/H+               ",ariiiCELabund
         if(runonce == 0 .and. ariiiCELabund >0) iteration_result(1)%Ariii_abund_CEL = ariiiCELabund
 if(arivCELabund >0)  print "(A24,ES8.2)"               , "  Ar+++/H+              ",arivCELabund
@@ -1622,7 +1663,7 @@ if(arvCELabund >0)   print "(A24,ES8.2)"               , "  Ar++++/H+           
         if(runonce == 0 .and. arvCELabund >0) iteration_result(1)%Arv_abund_CEL = arvCELabund
 if(ArabundCEL > 0) print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Argon          ",CELicfAr,ArabundCEL,12+log10(ArabundCEL)
         if(runonce == 0 .and. ArabundCEL > 0) iteration_result(1)%Ar_abund_CEL = ArabundCEL
-
+!sulphur
 if(siiCELabund >0) print "(A24,ES8.2)"                , "  S+/H+                 ",siiCELabund
         if(runonce == 0 .AND. siiCELabund >0) iteration_result(1)%Sii_abund_CEL = siiCELabund
 if(siiiCELabund >0) print "(A24,ES8.2)"               , "  S++/H+                ",siiiCELabund

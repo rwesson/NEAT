@@ -19,13 +19,21 @@ module mod_resultarrays
 
 TYPE resultarray
         double precision :: NC_abund_CEL
+        double precision :: cii_abund_CEL
+        double precision :: ciii_abund_CEL
+        double precision :: civ_abund_CEL
         double precision :: C_abund_CEL
         double precision :: Nii_abund_CEL
+        double precision :: Niii_abund_CEL
+        double precision :: Niv_abund_CEL
+        double precision :: Nv_abund_CEL
         double precision :: N_abund_CEL
         double precision :: NO_abund_CEL
         double precision :: Oii_abund_CEL
         double precision :: Oiii_abund_CEL
+        double precision :: Oiv_abund_CEL
         double precision :: O_abund_CEL
+        double precision :: Neii_abund_CEL
         double precision :: Neiii_abund_CEL
         double precision :: Neiv_abund_CEL
         double precision :: Nev_abund_CEL

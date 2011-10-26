@@ -8,6 +8,7 @@ subroutine calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction, switch_ext)
         TYPE(line), DIMENSION(4) :: H_BS
         DOUBLE PRECISION :: c1, c2, c3, meanextinction
         double precision :: fl_ha, fl_hg, fl_hd
+        double precision :: w1, w2, w3
         character :: switch_ext
 
 !determine f(lambda) for the balmer lines, depending on the law used
@@ -37,21 +38,43 @@ endif
 
 if (H_BS(1)%intensity .gt. 0 .and. H_BS(2)%intensity .gt. 0) then
         c1 = log10( ( DBLE(H_BS(1)%intensity) / DBLE(H_BS(2)%intensity) )/2.850 )/(-fl_ha)
+        w1 = H_BS(1)%intensity
 else
         c1 = 0.0
+        w1 = 0.0
 endif
 if (H_BS(3)%intensity .gt. 0 .and. H_BS(2)%intensity .gt. 0) then
         c2 = log10( ( DBLE(H_BS(3)%intensity) / DBLE(H_BS(2)%intensity) )/0.469 )/(-fl_hg)
+        w2 = H_BS(3)%intensity
 else
         c2=0.0
+        w2=0
 endif
 if (H_BS(4)%intensity .gt. 0 .and. H_BS(2)%intensity .gt. 0) then
         c3 = log10( ( DBLE(H_BS(4)%intensity) / DBLE(H_BS(2)%intensity) )/0.259 )/(-fl_hd)
+        w3 = H_BS(4)%intensity
 else
         c3 = 0.0
+        w3 = 0
 endif
 
-        meanextinction = (c1*H_BS(1)%intensity + c2*H_BS(3)%intensity + c3*H_BS(4)%intensity) / (H_BS(1)%intensity + H_BS(3)%intensity + H_BS(4)%intensity)   
+if (c1<0) then
+        print *,"Warning: c(Ha) less than zero"
+        c1=0
+        w1=0
+endif
+if (c2<0) then
+        print *,"Warning: c(Hg) less than zero"
+        c2=0
+        w2=0
+endif
+if (c3<0) then
+        print *,"Warning: c(Hd) less than zero"
+        c3=0
+        w3=0
+endif
+
+        meanextinction = (c1*w1 + c2*w2 + c3*w3) / (w1 + w2 + w3)   
 
 end subroutine
 
