@@ -14,6 +14,7 @@ subroutine read_ilines(ILs, Iint)
         OPEN(201, file="source/Ilines_levs", status='old')
                 READ (201,*) Iread
                 ALLOCATE (ILs(Iread))
+                ILs%intensity=0.D0 !otherwise it seems you can get random very small numbers in the array.
                 DO WHILE (Iint .le. Iread)!(.true.)
                         READ(201,301,end=401) ILs(Iint)%name, ILs(Iint)%ion, ILs(Iint)%wavelength, ILs(Iint)%transition ,ILs(Iint)%zone!end condition breaks loop.  
                         Iint = Iint + 1
