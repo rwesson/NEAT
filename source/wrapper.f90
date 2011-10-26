@@ -162,14 +162,14 @@ program wrapper
                 STOP
         endif
 
-        linelist_original = linelist
-
         !now check number of iterations.  If 1, line list is fine as is.  If more than one, randomize the fluxes
 
         if(runs == 1)then !calculates abundances without uncertainties
                 call abundances(linelist, 1, switch_ext, listlength, filename, iteration_result)
 
         else if(runs > 1)then
+
+                linelist_original = linelist
 
                 call init_random_seed()!sets seed for randomiser 
                 allocate(all_results(runs))
