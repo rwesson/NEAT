@@ -1,7 +1,7 @@
 set xlabel "Flux (arbitrary units)"
 set ylabel "Frequency"
 
-set terminal png enhanced size 1280,960
+set terminal png enhanced size 960,720
 set output "gaussian_test.png"
 
 e=2.718281828
