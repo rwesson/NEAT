@@ -52,7 +52,7 @@ implicit none
         TYPE (RLabund), DIMENSION(7) :: niimultiplets
 
 ! strong line variables
-        DOUBLE PRECISION :: X23,O_R23upper, O_R23lower, N2,O_N2, O3N2, O_O3N2, Ar3O3, O_Ar3O3, S3O3, O_S3O3
+        DOUBLE PRECISION :: X23,O_R23upper, O_R23lower, N2,O_N2, O3N2, O_O3N2, Ar3O3, O_Ar3O3, S3O3, O_S3O3, x23temp1, x23temp2, x23temp3, x23temp4
 
 !        linelist = 0
 !        ILs%intensity = 0 !not allocated yet
@@ -1700,18 +1700,25 @@ if(NeabundRL > 0) print "(A12,F5.2,4X,ES8.2,2X,F5.2)"," Neon        ",RLicfNe,Ne
 
 !Strong line methods
 
-ion_no1 = get_ion("oiii4959   ",ILs, Iint)
-ion_no2 = get_ion("oiii5007   ",ILs, Iint)
-ion_no3 = get_ion("oii3726    ",ILs, Iint)
-ion_no4 = get_ion("oii3729    ",ILs, Iint)
-
         print *,""
         print *,"O/H (strong line methods)"
         print *,"-------------------"
         print *,"Calibration         Reference          O/H"
 
-if (ion_no1 .gt. 0 .and. ion_no2 .gt. 0) then
-  X23 = log10((ILs(ion_no3)%int_dered + ILs(ion_no4)%int_dered)/(ILs(ion_no1)%int_dered + ILs(ion_no2)%int_dered))
+x23temp1 = ILs(get_ion("oii3726    ",ILs, Iint))%int_dered
+x23temp2 = ILs(get_ion("oii3729    ",ILs, Iint))%int_dered
+x23temp3 = ILs(get_ion("oiii4959   ",ILs, Iint))%int_dered
+x23temp4 = ILs(get_ion("oiii5007   ",ILs, Iint))%int_dered
+
+if (ILs(get_ion("oii3728b   ",ILs, Iint))%int_dered .gt. 0 .and. x23temp3 .gt. 0 .and. x23temp4 .gt. 0) then ! OII blended
+        X23 = log10(ILs(get_ion("oii3728b   ",ILs, Iint))%int_dered/(x23temp3 + x23temp4))
+elseif (x23temp1 .gt. 0 .and. x23temp2 .gt. 0 .and. x23temp3 .gt. 0 .and. x23temp4 .gt. 0) then
+        X23 = log10((x23temp1+x23temp2)/(x23temp3+x23temp4))
+else
+        X23 = 0.
+endif
+
+if (X23 .gt. 0) then
   O_R23upper = 9.50 - (1.4 * X23)
   O_R23lower = 6.53 + (1.45 * X23)
   print "(1X,A37,2X,F5.2)","R23 (upper branch)  Pilyugin 2000    ",O_R23upper
