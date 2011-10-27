@@ -977,27 +977,30 @@ if(A4686 > 0)        print "(1x,A17,F6.4)", "He++ (4686)/H+ = ", A4686
         !endif
 
         ! SIII abundance section previously buggered. SIII 9069 and 9531 doublet special due to absorption lines. See Liu, Barlow etc 1995 (Far Red IR Lines in a PN), one of 9069/9531 is ALWAYS absorbed however the other is then always fine.  We can tell which is is by looking at the ratio 9069/9531.
-        siiiCELabund = ILs(get_ion("siii9069   ", ILs, Iint))%int_dered / ILs(get_ion("siii9531   ", ILs, Iint))%int_dered
+        if (ILs(get_ion("siii9069   ", ILs, Iint))%abundance .eq. 0 .and. ILs(get_ion("siii9531   ", ILs, Iint))%abundance .eq. 0) then
+                siiiCELabund = ILs(get_ion("siii6312   ", ILs, Iint))%abundance
+        else !only calculate all the IR SIII telluric absorption if the lines are present.
+                siiiCELabund = ILs(get_ion("siii9069   ", ILs, Iint))%int_dered / ILs(get_ion("siii9531   ", ILs, Iint))%int_dered
         !I am using siiiCELabund as a switch for the following if statement, replace this with another variable if you like but I don't think it matters.. (DJS)
 
-        if(siiiCELabund < (1.05 * 0.403) .and. siiiCELabund > (0.90 * 0.403))then !this case should never occur
+                if(siiiCELabund < (1.05 * 0.403) .and. siiiCELabund > (0.90 * 0.403))then !this case should never occur
 
-                if(ILs(get_ion("siii9069   ", ILs, Iint))%intensity > 0) w1 = 1/(ILs(get_ion("siii9069   ", ILs, Iint))%int_err / ILs(get_ion("siii9069   ", ILs, Iint))%intensity)**2
-                if(ILs(get_ion("siii9531   ", ILs, Iint))%intensity > 0) w2 = 1/(ILs(get_ion("siii9531   ", ILs, Iint))%int_err / ILs(get_ion("siii9531   ", ILs, Iint))%intensity)**2
+                        if(ILs(get_ion("siii9069   ", ILs, Iint))%intensity > 0) w1 = 1/(ILs(get_ion("siii9069   ", ILs, Iint))%int_err / ILs(get_ion("siii9069   ", ILs, Iint))%intensity)**2
+                        if(ILs(get_ion("siii9531   ", ILs, Iint))%intensity > 0) w2 = 1/(ILs(get_ion("siii9531   ", ILs, Iint))%int_err / ILs(get_ion("siii9531   ", ILs, Iint))%intensity)**2
 
-                siiiCELabund= ( w1*ILs(get_ion("siii9069   ", ILs, Iint))%abundance + w2*ILs(get_ion("siii9531   ", ILs, Iint))%abundance )/(w1+w2)
+                        siiiCELabund= ( w1*ILs(get_ion("siii9069   ", ILs, Iint))%abundance + w2*ILs(get_ion("siii9531   ", ILs, Iint))%abundance )/(w1+w2)
 
-        elseif(siiiCELabund > (1.1 * 0.403) )then
-                !9531 absorbed
-                siiiCELabund = ILs( get_ion("siii9069   ", ILs, Iint) )%abundance
+                elseif(siiiCELabund > (1.1 * 0.403) )then
+                        !9531 absorbed
+                        siiiCELabund = ILs( get_ion("siii9069   ", ILs, Iint) )%abundance
 
-        elseif(siiiCELabund < (0.9 * 0.403) )then
-                !9069 absorbed
-                siiiCELabund = ILs( get_ion("siii9531   ", ILs, Iint) )%abundance
-        else
-                siiiCELabund=0.0
+                elseif(siiiCELabund < (0.9 * 0.403) )then
+                        !9069 absorbed
+                        siiiCELabund = ILs( get_ion("siii9531   ", ILs, Iint) )%abundance
+                else
+                        siiiCELabund=0.0
+                endif
         endif
-
 
         siiiIRCELabund = ILs( get_ion("siii18p7um ", ILs, Iint)   )%abundance
         sivIRCELabund = ILs(  get_ion("siv10p5um  ", ILs, Iint) )%abundance
@@ -1540,7 +1543,7 @@ if(A4686 > 0)        print "(1x,A17,F6.4)", "He++ (4686)/H+ = ", A4686
        CELicfAr = NeabundCEL / neiiiCELabund !KB94 A34
        ArabundCEL = CELicfAr * arivCELabund !KB94 A35
      elseif (ariiiCELabund .gt. 0 .and. arivCELabund .gt. 0) then !Ar 2+ and 3+ seen
-       CELicfAr = 1.0 !??
+       CELicfAr = 1./(1.-(niiCELabund/NabundCEL))
        ArabundCEL = ariiiCELabund + arivCELabund + arvCELabund !KB94 A31
      endif
 
