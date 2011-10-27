@@ -80,22 +80,48 @@ Development of precision abundance determinations.  Limits to that precision.  Q
 
 NEAT requires as input a plain text list of rest wavelengths, line fluxes, and uncertainties.  If line flux measurement uncertainties are not given, the code assumes an uncertainty of 10\% on all line flux measurements.
 
-The user can select the number of iterations of the code to run.  If the number of iterations is one, the code performs a standard empirical analysis on the line list, as described below, and does not calculate any uncertainties.  If the number of iterations is more than one, then the code first randomises the line list.  For each line, the code takes a random number from a Gaussian distribtion with mean zero and standard deviation unity, multiplies this number by the line flux uncertainty, and adds it to the measured flux.  The standard analysis is then carried out on the randomised line list.
+The user can select the number of iterations of the code to run.  If the number of iterations is one, the code performs a standard empirical analysis on the line list, as described below, and does not calculate any uncertainties.  If the number of iterations is more than one, then the code first randomises the line list.  For each line, the code takes a random number from a Gaussian distribution with mean zero and standard deviation unity, multiplies this number by the line flux uncertainty, and adds it to the measured flux.  The standard analysis is then carried out on the randomised line list.
 
 By carrying out this process many times, it is possible to build up an accurate picture of the true distribution of statistical uncertainties associated with the chemical abundances and empirical diagnostics resulting from the line flux uncertainties. The code collates all of the results from each iteration, and generates histograms showing visually the uncertainty distributions on the output parameters.
+
+We tested our random number generator by running the code 1\,000\,000 times, and plotting the distribution of fluxes obtained for an arbitrarily selected line.  We then fitted a gaussian function to this distribution.  We found that the recovered mean was within 0.008\% of the specified value, while the recovered standard deviation was within 0.13\% of the specified value.  Figure~\ref{gaussiantest} shows the histogram of generated values with the required gaussian distribution overplotted.
+
+\begin{figure}
+\includegraphics[width=0.47\textwidth]{figures/gaussian_test.png}
+\caption{A distribution of values produced by 1\,000\,000 runs of the random number generator, with the target gaussian distribution overplotted.}
+\label{gaussiantest}
+\end{figure}
 
 % eventually, do this:
 \citet{1994A&A...287..676R} observed that measurements of weak lines (SNR$<$3) are strongly biased upwards.  For lines with F/$\sigma > $3, we account for this effect by taking the random number from a log-normal distribution with parameters determined... skewedness, mode...
 %end
 
-
 \subsection{Interstellar extinction}
 
-The first step of any abundance analysis is a correction for interstellar extinction.  The amount of extinction is determined by NEAT from the ratios of Hydrogen Balmer lines, and the user can select the particular extinction law to be used.
+The first step of any abundance analysis is a correction for interstellar extinction.  The amount of extinction is determined by NEAT from the ratios of hydrogen Balmer lines, and the user can select the particular extinction law to be used.  Five extinction laws are currently available: the Galactic extinction curves of \citet{1983MNRAS.203..301H}, \citet{1990ApJS...72..163F} and \citet{1989ApJ...345..245C}, the Large Magellanic Cloud law of \citet{1983MNRAS.203..301H}, and the Small Magellanic Cloud law of \citet{1984A&A...132..389P}.  In section~\ref{extinction} we investigate the magnitude of the systematic uncertainty introduced by the choice of extinction law.
 
 \subsection{Temperatures and densities}
 
-Temperatures and densities are calculated using traditional collisionally excited line diagnostics.  For the purposes of subsequent abundance calculations, the nebula is divided into three "zones", of low, medium and high excitation.  In each zone, temperatures and densities are calculated iteratively.
+Temperatures and densities are calculated using traditional collisionally excited line diagnostics.  For the purposes of subsequent abundance calculations, the nebula is divided into three "zones", of low, medium and high excitation.  In each zone, temperatures and densities are calculated iteratively and weighted according to the reliability of each diagnostic.  Table~\ref{zonestable} shows the diagnostics used and the weighting given in each zone.
+
+\begin{table}
+\begin{tabular}{ccc}
+\hline
+\multicolumn{3}{c}{Low ionisation zone}\\
+\hline
+Diagnostic & Lines & Weight \\
+\hline
+\multicolumn{3}{c}{Medium ionisation zone}\\
+\hline
+Diagnostic & Lines & Weight \\
+\hline
+\multicolumn{3}{c}{High ionisation zone}\\
+\hline
+Diagnostic & Lines & Weight \\
+\end{tabular}
+\label{zonestable}
+\caption{Diagnostics used in the calculation of physical conditions.}
+\end{table}
 
 \subsection{Ionic abundances}
 
@@ -103,7 +129,7 @@ Ionic abundances are calculated for ions using the temperature and density appro
 
 \subsection{Total elemental abundances}
 
-Total elemental abundances are estimated using Ionisation Correction Factors.  The code includes ICF schemes from \citet{1994MNRAS.271..257K} and XXXX.
+Total elemental abundances are estimated using Ionisation Correction Factors.  The code includes the ICF scheme of \citet{1994MNRAS.271..257K}.
 
 \section{Statistical uncertainties}
 
