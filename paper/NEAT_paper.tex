@@ -125,7 +125,9 @@ Diagnostic & Lines & Weight \\
 
 \subsection{Ionic abundances}
 
-Ionic abundances are calculated for ions using the temperature and density appropriate to their ionisation potential.  The code calculates abundances both from collisionally excited lines and recombination lines.
+Ionic abundances are calculated from collisionally excited lines using the temperature and density appropriate to their ionisation potential.  Where several lines from a given ion are present, the ionic abundance adopted is found by averaging the abundances from each ion, weighting according to the observed intensity of the line.
+
+Recombination lines are also used to derive ionic abundances.  In deep spectra, many more recombination lines may be available than collisionally excited lines.  The code first assigns IDs to each line based on their rest wavelengths, and then calculates the ionic abundance from the line intensity using the atomic data listed in Table~\ref{AD_reftable}.  Then, to determine the ionic abundance to adopt, it first derives an ionic abundance for each individual multiplet from the multiplet's co-added intensity, and then averages the abundances derived for each multiplet to obtain the ionic abundance used in subsequent calculations.
 
 \subsection{Total elemental abundances}
 
