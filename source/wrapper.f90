@@ -163,7 +163,13 @@ program wrapper
         END DO
         CLOSE(199)
 
-        110 PRINT*, "Successfully read ", I," lines"
+        110 PRINT*, "Read ", I," lines"
+
+        if (I .ne. listlength) then
+                print *,"Line list reading failed"
+                print *,"This can happen if it doesn't have three columns"
+                stop
+        endif
 
         if(linelist(1)%wavelength == 0)then
                 PRINT*, "Cheese shop error: no inputs"
