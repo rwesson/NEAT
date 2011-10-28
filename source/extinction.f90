@@ -134,29 +134,6 @@ subroutine deredden(lines, number, m_ext)
 
 end subroutine
 
-subroutine deredden_O(O_red, O_dered, m_ext)
-        REAL*8, DIMENSION(3,335) :: O_red
-        REAL*8, DIMENSION(2,335) :: O_dered
-        DOUBLE PRECISION :: m_ext, fl
-        INTEGER :: I
-        REAL*8 :: X
-
-        do I = 1, 335
-            X =  DBLE(DBLE(10000)/DBLE(O_red(1,I)))
-            if (X .lt. 1.83) then 
-                fl = flambda(X, 5) 
-                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)) /)
-            elseif (X .gt. 1.83 .and. X .lt. 2.75) then
-                fl = flambda(X, 4)
-                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)) /)
-            elseif (X .gt. 2.75 .and. X .lt. 3.63) then
-                fl = flambda(X, 3)
-                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)) /)
-            endif 
-        end do
-
-end subroutine  
-
 !-------HOWARTH LMC LAW-----------------------------------!
 
 double precision function flambdaLMC(X,switch)
@@ -202,29 +179,6 @@ subroutine deredden_LMC(lines, number, m_ext)
         end do
 
 end subroutine
-
-subroutine deredden_O_LMC(O_red, O_dered, m_ext)
-        REAL*8, DIMENSION(3,335) :: O_red
-        REAL*8, DIMENSION(2,335) :: O_dered
-        DOUBLE PRECISION :: m_ext, fl
-        INTEGER :: I
-        REAL*8 :: X
-
-        do I = 1, 335
-            X =  DBLE(DBLE(10000)/DBLE(O_red(1,I)))
-            if (X .lt. 1.83) then 
-                fl = flambdaLMC(X, 3) 
-                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)) /)
-            elseif (X .gt. 1.83 .and. X .lt. 2.75) then
-                fl = flambdaLMC(X, 2)
-                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)) /)
-            elseif (X .gt. 2.75) then
-                fl = flambdaLMC(X, 1)
-                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)) /)
-            endif 
-        end do
-
-end subroutine  
 
 !-------CCM GALACTIC LAW----------------------------------!
 
@@ -294,29 +248,6 @@ subroutine deredden_CCM(lines, number, m_ext)
 
 end subroutine
 
-subroutine deredden_O_CCM(O_red, O_dered, m_ext)
-        REAL*8, DIMENSION(3,335) :: O_red
-        REAL*8, DIMENSION(2,335) :: O_dered
-        DOUBLE PRECISION :: m_ext, fl
-        INTEGER :: I
-        REAL*8 :: X
-
-        do I = 1, 335
-            X =  DBLE(DBLE(10000)/DBLE(O_red(1,I)))
-            if (X .lt. 1.1) then 
-                fl = flambdaCCM(X, 4) 
-                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)) /)
-            elseif (X .gt. 1.1 .and. X .lt. 3.3) then
-                fl = flambda(X, 3)
-                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)) /)
-            elseif (X .gt. 3.3 .and. X .lt. 8) then
-                fl = flambda(X, 2)
-                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)) /)
-            endif 
-        end do
-
-end subroutine  
-
 !-------PREVOT SMC LAW------------------------------------!
 
 double precision function flambdaSMC(X,switch)
@@ -362,30 +293,6 @@ subroutine deredden_SMC(lines, number, m_ext)
         end do
 
 end subroutine
-
-subroutine deredden_O_SMC(O_red, O_dered, m_ext)
-        REAL*8, DIMENSION(3,335) :: O_red
-        REAL*8, DIMENSION(2,335) :: O_dered
-        DOUBLE PRECISION :: m_ext, fl
-        INTEGER :: I
-        REAL*8 :: X
-
-        do I = 1, 335
-            X =  DBLE(DBLE(10000)/DBLE(O_red(1,I)))
-            if (X .lt. 1.83) then 
-                fl = flambdaSMC(X, 3) 
-                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)) /)
-            elseif (X .gt. 1.83 .and. X .lt. 6.72) then
-                fl = flambdaSMC(X, 2)
-                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)) /)
-            elseif (X .gt. 6.72) then
-                fl = flambdaSMC(X, 1)
-                O_dered(:,I) = (/ O_red(1,I), O_red(2,I)*(10**(m_ext*fl)) /)
-            endif 
-        end do
-
-end subroutine  
-
 
 !-------Fitzpatrick Galactic law--------------------------!
 

@@ -1184,7 +1184,7 @@ if(A4686 > 0)        print "(1x,A17,F6.4)", "He++ (4686)/H+ = ", A4686
        do i = 1,listlength
          do j = 1,38
           if (abs(linelist(i)%wavelength-neiiRLs(j)%Wave) .le. 0.005) then
-           neiiRLs(j)%Obs = linelist(i)%int_dered
+            neiiRLs(j)%Obs = linelist(i)%int_dered
             neiiRLs(j)%abundance = neiiRLs(j)%obs/neiiRLs(j)%Int
           endif
          enddo
