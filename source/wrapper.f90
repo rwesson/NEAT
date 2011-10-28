@@ -120,12 +120,12 @@ program wrapper
         read (temp,*) runs 
         CALL getarg(2,filename) 
         if(Narg > 2) then !check additional input arguments for switches (currently extinction laws only)
-               CALL getarg (3, temp) !get argument for extinction laws, allowed values -How for Howarth LMC, -CCM for CCM galactic, -Pre for Prevot SMC, default is Seaton/Howarth galactic.
-               if (temp == "-How") then
+               CALL getarg (3, temp) !get argument for extinction laws, allowed values -LMC for Howarth LMC, -CCM for CCM galactic, -SMC for Prevot SMC, -Fit for Fitzpatrick and Massa galactic.  default is Seaton/Howarth galactic.
+               if (temp == "-LMC") then
                        switch_ext = "H"
                elseif (temp == "-CCM") then
                        switch_ext = "C"
-               elseif (temp == "-Pre") then
+               elseif (temp == "-SMC") then
                        switch_ext = "P"
                elseif (temp == "-Fit") then
                        switch_ext = "F"
