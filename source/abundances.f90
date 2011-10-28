@@ -1213,7 +1213,7 @@ if(A4686 > 0)        print "(1x,A17,F6.4)", "He++ (4686)/H+ = ", A4686
 
       do i = 1,57
         if (ciiRLs(i)%abundance .gt. 0) then
-          print "(1X,F7.2,1X,F6.3,1X,ES9.3)",ciiRLs(i)%wave,ciiRLs(i)%obs,ciiRLs(i)%abundance
+!          print "(1X,F7.2,1X,F6.3,1X,ES9.3)",ciiRLs(i)%wave,ciiRLs(i)%obs,ciiRLs(i)%abundance
           rlabundtemp = rlabundtemp + ciiRLs(i)%obs
           weight = weight + ciiRLs(i)%Int
         endif
