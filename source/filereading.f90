@@ -20,7 +20,7 @@ subroutine read_ilines(ILs, Iint)
                         Iint = Iint + 1
                 END DO
                 Iint = Iint - 1 !count ends up one too high
-                401 PRINT*, "done reading important lines, Iint = ", Iint 
+                401 PRINT "(A19,I3,A5)", " Read in CEL list, ",Iint," lines"
         CLOSE(201)
 end subroutine        
 

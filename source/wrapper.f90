@@ -147,7 +147,7 @@ program wrapper
                         READ(199,*,end=111) null 
                         I = I + 1
                 END DO 
-        111 print *,"File contains ",I," lines"
+        111 print *
         listlength=I
 
 !then allocate and read
@@ -163,7 +163,7 @@ program wrapper
         END DO
         CLOSE(199)
 
-        110 PRINT*, "Read ", I," lines"
+        110 PRINT "(A9,I4,A15,I4,A9)", "Read in ", I," lines (out of ",listlength," in file)"
 
         if (I .ne. listlength) then
                 print *,"Line list reading failed"
