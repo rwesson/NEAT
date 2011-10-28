@@ -44,6 +44,8 @@ TYPE resultarray
         double precision :: Ar_abund_CEL
         double precision :: Sii_abund_CEL
         double precision :: Siii_abund_CEL
+        double precision :: Cliii_abund_CEL
+        double precision :: Cl_abund_CEL
         double precision :: S_abund_CEL
         double precision :: He_abund_ORL
         double precision :: C_abund_ORL
