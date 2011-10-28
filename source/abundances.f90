@@ -1812,17 +1812,17 @@ print *,""
     adfNe = 0.0
   endif
 
-if(adfo2plus >0) print "(A12,F5.2)","adf (O2+) = ", adfo2plus
-if(adfO>0) print "(A12,F5.2)","adf (O)   = ", adfO
+if(adfo2plus >0) print "(A12,F7.2)","adf (O2+) = ", adfo2plus
+if(adfO>0) print "(A12,F7.2)","adf (O)   = ", adfO
 if(adfn2plus>0) print *,""
-if(adfn2plus>0) print "(A12,F5.2)","adf (N2+) = ", adfn2plus
-if(adfn>0) print "(A12,F5.2)","adf (N)   = ", adfn
+if(adfn2plus>0) print "(A12,F7.2)","adf (N2+) = ", adfn2plus
+if(adfn>0) print "(A12,F7.2)","adf (N)   = ", adfn
 if(adfc2plus>0) print *,""
-if(adfc2plus>0) print "(A12,F5.2)","adf (C2+) = ", adfc2plus
-if(adfc>0) print "(A12,F5.2)","adf (C)   = ", adfc
+if(adfc2plus>0) print "(A12,F7.2)","adf (C2+) = ", adfc2plus
+if(adfc>0) print "(A12,F7.2)","adf (C)   = ", adfc
 if(adfne2plus>0) print *,""
-if(adfne2plus>0) print "(A12,F5.2)","adf (Ne2+)= ", adfne2plus
-if(adfne>0) print "(A12,F5.2)","adf (Ne)  = ", adfne
+if(adfne2plus>0) print "(A12,F7.2)","adf (Ne2+)= ", adfne2plus
+if(adfne>0) print "(A12,F7.2)","adf (Ne)  = ", adfne
 
 
 
