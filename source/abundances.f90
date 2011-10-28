@@ -25,9 +25,9 @@ implicit none
         DOUBLE PRECISION :: oiiRLabund, niiRLabund, ciiRLabund, cii4267rlabund, neiiRLabund, ciiiRLabund, niiiRLabund, RLabundtemp, weight
         DOUBLE PRECISION :: ciiiCELabund, niiCELabund, niiiIRCELabund, niiiUVCELabund, oiiCELabund, oiiiCELabund, oiiiIRCELabund, oivCELabund, neiiIRCELabund, neiiiIRCELabund, neiiiCELabund, neivCELabund, siiCELabund, siiiCELabund, siiiIRCELabund, sivIRCELabund, cliiiCELabund, ariiiCELabund, arivCELabund, ariiiIRCELabund, nivCELabund, niCELabund, niiiCELabund, ciiCELabund, civCELabund, nvCELabund, nevCELabund, arvCELabund, CELabundtemp, ciCELabund, oiCELabund
         DOUBLE PRECISION :: fn4
-        DOUBLE PRECISION :: CELicfO, CELicfC, CELicfN, CELicfNe, CELicfAr, CELicfS
+        DOUBLE PRECISION :: CELicfO, CELicfC, CELicfN, CELicfNe, CELicfAr, CELicfS, CELicfCl
         DOUBLE PRECISION :: RLicfO, RLicfC, RLicfN, RLicfNe
-        DOUBLE PRECISION :: CabundRL, CabundCEL, NabundRL, NabundCEL, OabundRL, OabundCEL, NeabundRL, NeabundCEL, SabundCEL, ArabundCEL, NOabundCEL, NCabundCEL
+        DOUBLE PRECISION :: CabundRL, CabundCEL, NabundRL, NabundCEL, OabundRL, OabundCEL, NeabundRL, NeabundCEL, SabundCEL, ArabundCEL, NOabundCEL, NCabundCEL, ClabundCEL
         DOUBLE PRECISION :: adfC, adfN, adfO, adfNe, w1, w2, w3, w4
         DOUBLE PRECISION :: adfC2plus, adfN2plus, adfO2plus, adfNe2plus
         DOUBLE PRECISION :: c1, c2, c3, meanextinction, fl, ratob, tempi, temp, temp2, A4471, A4686, A6678, A5876
@@ -1564,6 +1564,13 @@ if(A4686 > 0)        print "(1x,A17,F6.4)", "He++ (4686)/H+ = ", A4686
        CabundCEL = CELicfC * (ciiiCELabund + civCELabund)                !A41
      endif
 
+!Chlorine - not included in KB94, this prescription is from Liu et al. (2000)
+
+    if (cliiiCELabund .gt. 0 .and. siiiCELabund .gt. 0) then
+       CELicfCl = SabundCEL/siiiCELabund
+       ClabundCEL = CELicfCl * cliiiCELabund
+    endif
+
 !ORLs
 !Oxygen
 
@@ -1668,6 +1675,12 @@ if(siiiCELabund >0) print "(A24,ES8.2)"               , "  S++/H+               
         if(runonce == 0 .AND. siiiCELabund >0) iteration_result(1)%Siii_abund_CEL = siiiCELabund
 if(SabundCEL > 0)  print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Sulphur        ",CELicfS,SabundCEL,12+log10(SabundCEL)
         if(runonce == 0 .AND. SabundCEL > 0) iteration_result(1)%S_abund_CEL = SabundCEL
+!chlorine
+if(cliiiCELabund >0) print "(A24,ES8.2)"               , "  Cl++/H+               ",cliiiCELabund
+        if(runonce == 0 .AND. cliiiCELabund >0) iteration_result(1)%Cliii_abund_CEL = cliiiCELabund
+if(ClabundCEL > 0)  print "(A15,F5.2,4X,ES8.2,2X,F5.2)"," Chlorine       ",CELicfCl,ClabundCEL,12+log10(ClabundCEL)
+        if(runonce == 0 .AND. ClabundCEL > 0) iteration_result(1)%Cl_abund_CEL = ClabundCEL
+
 
 if(OabundCEL > 0 .and. NabundCEL > 0)  print*, " "
 if(OabundCEL > 0 .and. NabundCEL > 0)  print*, " "
