@@ -168,14 +168,9 @@ implicit none
         if(runonce == 1) OPEN(801, FILE=trim(filename)//"_dered", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
 
         if(runonce == 1)then
-                do iii=1, Iint
-                        if(ILs(iii)%int_dered .ne. 0) write(801,500) ILs(iii)%wavelength, ILs(iii)%intensity, ILs(iii)%int_err, ILs(iii)%int_dered
-                end do
-                do iii=1,4
-                        if( He_lines(iii)%int_dered .ne. 0 ) write(801,500) He_lines(iii)%wavelength, He_lines(iii)%intensity, He_lines(iii)%int_err, He_lines(iii)%int_dered
-
-                        if( H_BS(iii)%int_dered .ne. 0 ) write(801,500) H_BS(iii)%wavelength, H_BS(iii)%intensity, H_BS(iii)%int_err, H_BS(iii)%int_dered
-                end do
+                do iii=1, listlength
+                        if(linelist(iii)%int_dered .ne. 0) write(801,500) linelist(iii)%wavelength, linelist(iii)%intensity, linelist(iii)%int_err, linelist(iii)%int_dered
+                end do 
         endif
         if(runonce == 1) CLOSE(801)
         if(runonce == 1) call system("sort "//trim(filename)//"_dered > "//trim(filename)//"_dered_sort")
