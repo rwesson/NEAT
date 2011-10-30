@@ -341,7 +341,7 @@ implicit none
 
      enddo
 
-
+ 		PRINT*, ILs(get_ion("oii3726    ",ILs, Iint))%int_dered
 
 ! medium ionisation
         cliiiDens = 0
@@ -432,32 +432,15 @@ implicit none
          endif
 
         !dereddening again 
-	ILs = ILs_orig
-        CALL element_assign(ILs, linelist_orig, Iint, listlength)
-        ILs%abundance = 0
-        ILs%int_dered = 0 
-        H_BS%abundance = 0
-        H_BS%int_dered = 0 
-        He_lines%abundance = 0
-        He_lines%int_dered = 0
 
-        CALL get_H(H_BS, linelist_orig, listlength)
-        call get_He(He_lines, linelist_orig, listlength)
+
+
+        ILs%int_dered = 0 
+        H_BS%int_dered = 0 
+        He_lines%int_dered = 0
 
         !aside: normalisation check, correction
 
-        if(H_BS(2)%intensity .ne. 100)then
-                normalise =  DBLE(100) / DBLE(H_BS(2)%intensity)
-                do j = 1, Iint !normalising important ions
-                        ILs(j)%intensity = ILs(j)%intensity * normalise
-                end do
-                do j = 1, 4 !normalising balmer series
-                        H_BS(j)%intensity = H_BS(j)%intensity*normalise
-                end do
-                do j = 1,4 !normalise helium
-                        He_lines(j)%intensity = He_lines(j)%intensity * normalise
-                end do
-        endif
 	!update extinction. DS 22/10/11
 	!print*, lowdens
 !	meanextinction=0	
@@ -497,7 +480,7 @@ implicit none
                 call deredden_Fitz(He_lines, 4, meanextinction)
                 CALL deredden_Fitz(linelist, listlength, meanextinction)
         endif
-                
+              		PRINT*, ILs(get_ion("oii3726    ",ILs, Iint))%int_dered   
 
       enddo
 
