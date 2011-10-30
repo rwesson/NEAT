@@ -1,3 +1,4 @@
+
 subroutine abundances(linelist, run, switch_ext,listlength, filename, iteration_result)
 use mod_abundmaths
 use mod_abundtypes
@@ -14,7 +15,7 @@ implicit none
         INTEGER :: count, Iint, fIL, i, j, ion_no1, ion_no2, ion_no3, ion_no4, iii, ion_no5, ion_no6
         INTEGER :: opt, runonce, run
         integer, intent(in) :: listlength
-        TYPE(line), dimension(listlength) :: linelist 
+        TYPE(line), dimension(listlength) :: linelist, linelist_orig
         CHARACTER*8 :: lion
         CHARACTER :: switch_ext !switch for extinction laws
         CHARACTER*80 :: filename
@@ -37,7 +38,7 @@ implicit none
         DOUBLE PRECISION, DIMENSION(2) :: conditions 
         REAL*8 :: result
 
-        TYPE(line), DIMENSION(:), allocatable :: ILs
+        TYPE(line), DIMENSION(:), allocatable :: ILs, ILs_orig
         TYPE(line), DIMENSION(4) :: H_BS
         TYPE(line), DIMENSION(4) :: He_lines
 
@@ -54,6 +55,7 @@ implicit none
 ! strong line variables
         DOUBLE PRECISION :: X23,O_R23upper, O_R23lower, N2,O_N2, O3N2, O_O3N2, Ar3O3, O_Ar3O3, S3O3, O_S3O3, x23temp1, x23temp2, x23temp3, x23temp4
 
+	linelist_orig = linelist
 !        linelist = 0
 !        ILs%intensity = 0 !not allocated yet
         H_BS%intensity = 0
@@ -68,7 +70,8 @@ implicit none
 
         !reading in Rogers "important" lines list
 
-        CALL read_ilines(ILs, Iint) 
+        CALL read_ilines(ILs, Iint)
+	ILs_orig = ILs 
 !redundant now
 !        CALL fileread(linelist, fname1, listlength) ! see above
         CALL element_assign(ILs, linelist, Iint, listlength)
@@ -164,17 +167,6 @@ implicit none
                 CALL deredden_Fitz(linelist, listlength, meanextinction)
         endif
 
-        500 FORMAT (5(f10.4))
-        if(runonce == 1) OPEN(801, FILE=trim(filename)//"_dered", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-
-        if(runonce == 1)then
-                do iii=1, listlength
-                        if(linelist(iii)%int_dered .ne. 0) write(801,500) linelist(iii)%wavelength, linelist(iii)%intensity, linelist(iii)%int_err, linelist(iii)%int_dered
-                end do 
-        endif
-        if(runonce == 1) CLOSE(801)
-        if(runonce == 1) call system("sort "//trim(filename)//"_dered > "//trim(filename)//"_dered_sort")
-        if(runonce == 1) call system("rm "//trim(filename)//"_dered")
 
 !diagnostics
         call get_diag("ciii1909   ","ciii1907   ", ILs, ciiiNratio)        ! ciii ratio
@@ -262,24 +254,23 @@ implicit none
       lowtemp = 10000.0
 
       do i = 1,2
-
+	oiiDens=0
+	siiDens=0
          count = 0
          if (oiiNratio .gt. 0 .and. oiiNratio .lt. 1e10) then
            call get_diagnostic("oii       ","1,2/                ","1,3/                ",oiiNratio,"D",lowtemp, oiiDens)
            count = count + 1
-
          endif
 
          if (siiNratio .gt. 0 .and. siiNratio .lt. 1e10) then
            call get_diagnostic("sii       ","1,2/                ","1,3/                ",siiNratio,"D",lowtemp, siiDens)
            count = count + 1
-
          endif
 
          if (count .eq. 0) then
            lowdens = 1000.0
          else
-           lowdens = (oiiDens + siiDens) / count
+		lowdens = (oiiDens + siiDens) / count
          endif
 
          count = 0
@@ -354,9 +345,9 @@ implicit none
            lowtemp = 10000.0
          endif
 
-      enddo
+     enddo
 
-
+ 		PRINT*, ILs(get_ion("oii3726    ",ILs, Iint))%int_dered
 
 ! medium ionisation
         cliiiDens = 0
@@ -371,16 +362,21 @@ implicit none
          count = 0
          if (cliiiNratio .gt. 0 .and. cliiiNratio .lt. 1e10) then
            call get_diagnostic("cliii     ","1,2/                ","1,3/                ",cliiiNratio,"D",medtemp, cliiiDens)
-
            count = count + 1
+         else
+           cliiiDens=0
          endif
          if (ciiiNratio .gt. 0 .and. ciiiNratio .lt. 1e10) then
            call get_diagnostic("ciii      ","1,2/                ","1,3/                ",ciiiNratio,"D",medtemp, ciiiDens)
            count = count + 1
+         else
+           ciiiDens=0
          endif
          if (arivNratio .gt. 0 .and. arivNratio .lt. 1e10) then
            call get_diagnostic("ariv      ","1,2/                ","1,3/                ",arivNratio,"D",medtemp, arivDens)
            count = count + 1
+         else
+           arivDens=0
          endif
 
 ! IR densities, not included in average
@@ -479,6 +475,56 @@ implicit none
          else
            medtemp = 10000.0
          endif
+
+        !dereddening again 
+
+
+
+        ILs%int_dered = 0 
+        H_BS%int_dered = 0 
+        He_lines%int_dered = 0
+
+        !aside: normalisation check, correction
+
+	!update extinction. DS 22/10/11
+	meanextinction=0	
+	CALL calc_extinction_coeffs_loop(H_BS, c1, c2, c3, meanextinction, switch_ext, medtemp, lowdens)
+	print*, "iteration", i, " extinction:"
+        print "(1X,A17,F4.2,A4,F4.2)","Ha/Hb => c(Hb) = ",c1
+        print "(1X,A17,F4.2,A4,F4.2)","Hg/Hb => c(Hb) = ",c2
+        print "(1X,A17,F4.2,A4,F4.2)","Hd/Hb => c(Hb) = ",c3
+
+        PRINT "(1X,A13,F4.2,A4,F4.2)", "Mean c(Hb) = ",meanextinction
+
+
+	linelist = linelist_orig
+        if (switch_ext == "S") then
+                CALL deredden(ILs, Iint, meanextinction)
+                CALL deredden(H_BS, 4, meanextinction)
+                call deredden(He_lines, 4, meanextinction) 
+                CALL deredden(linelist, listlength, meanextinction)
+        elseif (switch_ext == "H") then
+                CALL deredden_LMC(ILs, Iint, meanextinction)
+                CALL deredden_LMC(H_BS, 4, meanextinction)
+                call deredden_LMC(He_lines, 4, meanextinction) 
+                CALL deredden_LMC(linelist, listlength, meanextinction)
+        elseif (switch_ext == "C") then
+                CALL deredden_CCM(ILs, Iint, meanextinction)
+                CALL deredden_CCM(H_BS, 4, meanextinction)
+                call deredden_CCM(He_lines, 4, meanextinction) 
+                CALL deredden_CCM(linelist, listlength, meanextinction)
+        elseif (switch_ext == "P") then
+                CALL deredden_SMC(ILs, Iint, meanextinction)
+                CALL deredden_SMC(H_BS, 4, meanextinction)
+                call deredden_SMC(He_lines, 4, meanextinction) 
+                CALL deredden_SMC(linelist, listlength, meanextinction)
+        elseif (switch_ext == "F") then
+                CALL deredden_Fitz(ILs, Iint, meanextinction)
+                CALL deredden_Fitz(H_BS, 4, meanextinction)
+                call deredden_Fitz(He_lines, 4, meanextinction)
+                CALL deredden_Fitz(linelist, listlength, meanextinction)
+        endif
+              		PRINT*, ILs(get_ion("oii3726    ",ILs, Iint))%int_dered   
 
       enddo
 
