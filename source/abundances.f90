@@ -38,7 +38,7 @@ implicit none
         DOUBLE PRECISION, DIMENSION(2) :: conditions 
         REAL*8 :: result
 
-        TYPE(line), DIMENSION(:), allocatable :: ILs, ILs_orig
+        TYPE(line), DIMENSION(:), allocatable :: ILs
         TYPE(line), DIMENSION(4) :: H_BS
         TYPE(line), DIMENSION(4) :: He_lines
 
@@ -71,7 +71,7 @@ implicit none
         !reading in Rogers "important" lines list
 
         CALL read_ilines(ILs, Iint)
-	ILs_orig = ILs 
+
 !redundant now
 !        CALL fileread(linelist, fname1, listlength) ! see above
         CALL element_assign(ILs, linelist, Iint, listlength)
