@@ -3,7 +3,7 @@ program wrapper
 
         use mod_abundtypes
         use mod_resultarrays
-	use mod_extinction
+        use mod_extinction
 
         CHARACTER*10 :: temp, tempa
         CHARACTER :: switch_ext !switch for extinction laws
@@ -12,9 +12,9 @@ program wrapper
 
         !file reading variables
 
-        TYPE(LINE),DIMENSION(:), allocatable :: linelist 
+        TYPE(LINE),DIMENSION(:), allocatable :: linelist
         TYPE(LINE),DIMENSION(:), allocatable :: linelist_original
-        CHARACTER*80 :: filename 
+        CHARACTER*80 :: filename
         CHARACTER*1 :: null
         INTEGER :: IO, listlength
         DOUBLE PRECISION :: temp1,temp2,temp3, mean_ext
@@ -35,16 +35,16 @@ program wrapper
         endif
 
         CALL getarg(1,temp) !get info from input arguments
-        read (temp,*) runs 
-        CALL getarg(2,filename) 
+        read (temp,*) runs
+        CALL getarg(2,filename)
           switch_ext = "F"
-	if(Narg == 3) then !check additional input arguments for switches (currently extinction laws only)
-               CALL getarg (3, temp) !get argument for extinction laws, allowed values -How for Howarth LMC, -CCM for CCM galactic, -Pre for Prevot SMC, default is Seaton/Howarth galactic.
-	       if (temp == "-How")then
+        if(Narg == 3) then !check additional input arguments for switches (currently extinction laws only)
+               CALL getarg (3, temp) !get argument for extinction laws, allowed values -LMC for Howarth LMC, -CCM for CCM galactic, -SMC for Prevot SMC, default is Seaton/Howarth galactic.
+               if (temp == "-LMC")then
                  switch_ext = "H"
                elseif (temp == "-CCM")then
                  switch_ext = "C"
-               elseif (temp == "-Pre")then
+               elseif (temp == "-SMC")then
                  switch_ext = "P"
                elseif (temp == "-Fit")then
                  switch_ext = "F"
@@ -54,14 +54,14 @@ program wrapper
                else
                  switch_ext = "S"
                endif
-	elseif(Narg == 4)then
-	       CALL getarg (3, temp) !get argument for extinction laws, allowed values -How for Howarth LMC, -CCM for CCM galactic, -Pre for Prevot SMC, default is Seaton/Howarth galactic.
-	       call getarg (4, tempa)	      
-	       if (temp == "-How" .or. tempa == "-How")then
+        elseif(Narg == 4)then
+               CALL getarg (3, temp) !get argument for extinction laws, allowed values -LMC for Howarth LMC, -CCM for CCM galactic, -SMC for Prevot SMC, default is Seaton/Howarth galactic.
+               call getarg (4, tempa)
+               if (temp == "-LMC" .or. tempa == "-LMC")then
                  switch_ext = "H"
                elseif (temp == "-CCM" .or. tempa == "-CCM")then
                  switch_ext = "C"
-               elseif (temp == "-Pre" .or. tempa == "-Pre")then
+               elseif (temp == "-SMC" .or. tempa == "-SMC")then
                  switch_ext = "P"
                elseif (temp == "-Fit" .or. tempa == "-Fit")then
                  switch_ext = "F"
@@ -70,14 +70,14 @@ program wrapper
                  make_dered_ll = 1
                else
                  switch_ext = "S"
-               endif		
-	else
+               endif
+        else
                switch_ext = "S"
-	endif
+        endif
 
 
 
-        !first, read in the line list 
+        !first, read in the line list
 
         print *,"Initialising"
         print *,"------------"
@@ -85,9 +85,9 @@ program wrapper
         I = 1
         OPEN(199, file=filename, iostat=IO, status='old')
                 DO WHILE (IO >= 0)
-                        READ(199,*,end=111) null 
+                        READ(199,*,end=111) null
                         I = I + 1
-                END DO 
+                END DO
         111 print *
         listlength=I
 
@@ -100,7 +100,7 @@ program wrapper
                 READ(199,*,end=110) temp1, temp2, temp3
                 linelist(i)%wavelength = temp1
                 linelist(i)%intensity = temp2
-                linelist(i)%int_err = temp3 
+                linelist(i)%int_err = temp3
         END DO
         CLOSE(199)
 
@@ -122,17 +122,17 @@ program wrapper
         if(runs == 1)then !calculates abundances without uncertainties
                 call abundances(linelist, 1, switch_ext, listlength, filename, iteration_result)
 
-		if(make_dered_ll ==  1)then
-			mean_ext=DBLE(0)
-			CALL deredden_ll(switch_ext, linelist, listlength, mean_ext )
-		endif
+                if(make_dered_ll ==  1)then
+                        mean_ext=DBLE(0)
+                        CALL deredden_ll(switch_ext, linelist, listlength, mean_ext )
+                endif
 
 
         else if(runs > 1)then
 
                 linelist_original = linelist
 
-                call init_random_seed()!sets seed for randomiser 
+                call init_random_seed()!sets seed for randomiser
                 allocate(all_results(runs))
 
                 !open/create files here for adundances
@@ -199,7 +199,7 @@ program wrapper
                 OPEN(887, FILE=trim(filename)//"_high_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
                 OPEN(888, FILE=trim(filename)//"_mean_cHb", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
 
-                do i=1,runs 
+                do i=1,runs
                         write(unit = 841,FMT=*) all_results(i)%NC_abund_CEL
                         write(unit = 842,FMT=*) all_results(i)%C_abund_CEL
                         write(unit = 843,FMT=*) all_results(i)%nii_abund_CEL
@@ -247,17 +247,17 @@ program wrapper
                         write(unit = 885,FMT=*) all_results(i)%arv_temp
                         write(unit = 886,FMT=*) all_results(i)%nev_temp
                         write(unit = 887,FMT=*) all_results(i)%high_temp
-                        write(unit = 888,FMT=*) all_results(i)%mean_cHb 
+                        write(unit = 888,FMT=*) all_results(i)%mean_cHb
                 end do
 
                 DO I=841,888
                         CLOSE(unit=I)
-                END DO 
+                END DO
 
-		if(make_dered_ll ==  1)then
-			mean_ext=DBLE(0)! fix this.
-			CALL deredden_ll(switch_ext, linelist, listlength, mean_ext )
-		endif
+                if(make_dered_ll ==  1)then
+                        mean_ext=DBLE(0)! fix this.
+                        CALL deredden_ll(switch_ext, linelist, listlength, mean_ext )
+                endif
 
 
         else
@@ -269,7 +269,7 @@ contains
 
         subroutine randomizer(linelist, listlength)
 
-                TYPE(line), dimension(listlength) :: linelist 
+                TYPE(line), dimension(listlength) :: linelist
                 INTEGER :: IO, I, j, listlength
                 DOUBLE PRECISION :: temp1,temp2,temp3,temp4
 
@@ -303,8 +303,8 @@ contains
                                 fn_val = v/u
                                 temp4=linelist(j)%intensity+(fn_val*linelist(j)%int_err)
                                 if(temp4 < 0) temp4 = 0
-                                linelist(j)%intensity = temp4 
-                        end do 
+                                linelist(j)%intensity = temp4
+                        end do
                 !end do
                 PRINT*, "Randomizing complete"
         end subroutine
@@ -327,12 +327,12 @@ contains
           END SUBROUTINE
 
 SUBROUTINE deredden_ll(switch_ext, linelist, listlength, meanextinction )
-	INTEGER :: iii, listlength
-	CHARACTER :: switch_ext !switch for extinction laws
-        TYPE(LINE),DIMENSION(:), allocatable :: linelist 
-	double precision :: meanextinction	
+        INTEGER :: iii, listlength
+        CHARACTER :: switch_ext !switch for extinction laws
+        TYPE(LINE),DIMENSION(:), allocatable :: linelist
+        double precision :: meanextinction
 
-	if (switch_ext == "S") then
+        if (switch_ext == "S") then
                 CALL deredden(linelist, listlength, meanextinction)
         elseif (switch_ext == "H") then
                 CALL deredden_LMC(linelist, listlength, meanextinction)
@@ -345,18 +345,18 @@ SUBROUTINE deredden_ll(switch_ext, linelist, listlength, meanextinction )
         endif
 
 
-	500 FORMAT (5(f10.4))
-  	
-	OPEN(801, FILE=trim(filename)//"_dered", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+        500 FORMAT (5(f10.4))
+
+        OPEN(801, FILE=trim(filename)//"_dered", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
         do iii=1, listlength
-		if(linelist(iii)%int_dered .ne. 0)then
-			write(801,500) linelist(iii)%wavelength, linelist(iii)%intensity, linelist(iii)%int_err, linelist(iii)%int_dered
-		endif        	
-	end do
-       	CLOSE(801)
-       	call system("sort "//trim(filename)//"_dered > "//trim(filename)//"_dered_sort")
-       	call system("rm "//trim(filename)//"_dered")	
-	
+                if(linelist(iii)%int_dered .ne. 0)then
+                        write(801,500) linelist(iii)%wavelength, linelist(iii)%intensity, linelist(iii)%int_err, linelist(iii)%int_dered
+                endif
+        end do
+               CLOSE(801)
+               call system("sort "//trim(filename)//"_dered > "//trim(filename)//"_dered_sort")
+               call system("rm "//trim(filename)//"_dered")
+
 
 END SUBROUTINE
 

@@ -5,7 +5,7 @@ implicit none
 contains
 
 subroutine calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction, switch_ext)
-        TYPE(line), DIMENSION(4) :: H_BS
+        TYPE(line), DIMENSION(38) :: H_BS
         DOUBLE PRECISION :: c1, c2, c3, meanextinction
         double precision :: fl_ha, fl_hg, fl_hd
         double precision :: w1, w2, w3
@@ -79,12 +79,12 @@ endif
 end subroutine calc_extinction_coeffs
 
 subroutine calc_extinction_coeffs_loop(H_BS, c1, c2, c3, meanextinction, switch_ext, temp, dens)
-        TYPE(line), DIMENSION(4) :: H_BS
+        TYPE(line), DIMENSION(38) :: H_BS
         DOUBLE PRECISION :: c1, c2, c3, meanextinction
         double precision :: fl_ha, fl_hg, fl_hd
         character :: switch_ext
-	double precision :: temp, dens, a,b,c
-	
+        double precision :: temp, dens, a,b,c
+        
 !determine f(lambda) for the balmer lines, depending on the law used
 !galactic, howarth
 
@@ -114,13 +114,13 @@ endif
 !interpolating over 6 Te points, 5,7.5,10,12.5,15,20kK and 3 Ne points 10^2, 10^3 10^4 cm^(-3)
 
 if (H_BS(1)%intensity .gt. 0 .and. H_BS(2)%intensity .gt. 0) then
-	c1 = log10( ( DBLE(H_BS(1)%intensity) / DBLE(H_BS(2)%intensity) )/ calc_balmer_ratios(temp, dens, 1)    )/(-fl_ha)
+        c1 = log10( ( DBLE(H_BS(1)%intensity) / DBLE(H_BS(2)%intensity) )/ calc_balmer_ratios(temp, dens, 1)    )/(-fl_ha)
 else
         c1 = 0.0
 endif
 
 if (H_BS(3)%intensity .gt. 0 .and. H_BS(2)%intensity .gt. 0) then
-	c2 = log10( ( DBLE(H_BS(3)%intensity) / DBLE(H_BS(2)%intensity) )/ calc_balmer_ratios(temp, dens, 2) )/(-fl_hg)
+        c2 = log10( ( DBLE(H_BS(3)%intensity) / DBLE(H_BS(2)%intensity) )/ calc_balmer_ratios(temp, dens, 2) )/(-fl_hg)
 else
         c2=0.0
 endif
@@ -136,86 +136,86 @@ endif
 end subroutine calc_extinction_coeffs_loop
 
 double precision function calc_balmer_ratios(temp, dens, line)
-	integer :: i, j, line, jj
-	double precision :: d1, d2, temp, dens
-	double precision, dimension(6,3,4) :: HS	
+        integer :: i, j, line, jj
+        double precision :: d1, d2, temp, dens
+        double precision, dimension(6,3,4) :: HS        
 
-	!Ha/Hb
-	HS(1,1,:) = (/ 5000., 3.04, 3.02, 3.00/)
-	HS(2,1,:) = (/ 7500., 2.93, 2.92, 2.90/)
-	HS(3,1,:) = (/10000., 2.86, 2.86, 2.85/)	
-	HS(4,1,:) = (/12500., 2.82, 2.82, 2.81/)
-	HS(5,1,:) = (/15000., 2.79, 2.79, 2.78/)
-	HS(6,1,:) = (/20000., 2.75, 2.75, 2.74/)
-	!Hg/Hb
-	HS(1,2,:) = (/ 5000., 0.458, 0.459, 0.460/)
-	HS(2,2,:) = (/ 7500., 0.465, 0.465, 0.466/)
-	HS(3,2,:) = (/10000., 0.468, 0.469, 0.469/)
-	HS(4,2,:) = (/12500., 0.471, 0.471, 0.472/)
-	HS(5,2,:) = (/15000., 0.473, 0.473, 0.473/)
-	HS(6,2,:) = (/20000., 0.475, 0.475, 0.476/)
-	!Hd/Hb
-	HS(1,3,:) = (/ 5000., 0.251, 0.252, 0.253/)
-	HS(2,3,:) = (/ 7500., 0.256, 0.256, 0.257/)
-	HS(3,3,:) = (/10000., 0.259, 0.259, 0.260/)
-	HS(4,3,:) = (/12500., 0.261, 0.261, 0.261/)
-	HS(5,3,:) = (/15000., 0.262, 0.263, 0.263/)
-	HS(6,3,:) = (/20000., 0.264, 0.264, 0.264/)
+        !Ha/Hb
+        HS(1,1,:) = (/ 5000., 3.04, 3.02, 3.00/)
+        HS(2,1,:) = (/ 7500., 2.93, 2.92, 2.90/)
+        HS(3,1,:) = (/10000., 2.86, 2.86, 2.85/)        
+        HS(4,1,:) = (/12500., 2.82, 2.82, 2.81/)
+        HS(5,1,:) = (/15000., 2.79, 2.79, 2.78/)
+        HS(6,1,:) = (/20000., 2.75, 2.75, 2.74/)
+        !Hg/Hb
+        HS(1,2,:) = (/ 5000., 0.458, 0.459, 0.460/)
+        HS(2,2,:) = (/ 7500., 0.465, 0.465, 0.466/)
+        HS(3,2,:) = (/10000., 0.468, 0.469, 0.469/)
+        HS(4,2,:) = (/12500., 0.471, 0.471, 0.472/)
+        HS(5,2,:) = (/15000., 0.473, 0.473, 0.473/)
+        HS(6,2,:) = (/20000., 0.475, 0.475, 0.476/)
+        !Hd/Hb
+        HS(1,3,:) = (/ 5000., 0.251, 0.252, 0.253/)
+        HS(2,3,:) = (/ 7500., 0.256, 0.256, 0.257/)
+        HS(3,3,:) = (/10000., 0.259, 0.259, 0.260/)
+        HS(4,3,:) = (/12500., 0.261, 0.261, 0.261/)
+        HS(5,3,:) = (/15000., 0.262, 0.263, 0.263/)
+        HS(6,3,:) = (/20000., 0.264, 0.264, 0.264/)
 
-	
-	do i = 1,5
-		if(temp .ge. HS(i,line,1) .and. temp .lt. HS(i+1,line, 1) )then
-			exit
-		endif
-	end do
+        
+        do i = 1,5
+                if(temp .ge. HS(i,line,1) .and. temp .lt. HS(i+1,line, 1) )then
+                        exit
+                endif
+        end do
 
-	do j = 2,3
-		if(dens .ge. 10**j .and. dens .lt. 10**(j+1) )then
-			exit
-		endif
-	end do
+        do j = 2,3
+                if(dens .ge. 10**j .and. dens .lt. 10**(j+1) )then
+                        exit
+                endif
+        end do
 
 
-	if(temp .lt. HS(1,line,1))then
-		if(dens .lt. 10**2)then
-			calc_balmer_ratios = HS(1,line,2)
-			return
-		elseif(dens .ge. 10**4)then
-			calc_balmer_ratios = HS(1,line,4)
-			return
-		endif		
-		!print*, j
-		calc_balmer_ratios=( (HS(1,line,j+1)-HS(1,line,j)) / (10**(j+1)-10**j) )*(dens-(10**j))+HS(1,line,j)
-		return
-	elseif(temp .ge. HS(6,line,1))then
-		if(dens .lt. 10**2)then
-			calc_balmer_ratios = HS(6,line,2)
-			return
-		elseif(dens .gt. 10**4)then
-			calc_balmer_ratios = HS(6,line,4)
-			return
-		endif
-		calc_balmer_ratios =( ( HS(6,line,j+1)-HS(6,line,j) )/ (10**(j+1)-10**j) )*(dens-(10**j) ) + HS(6,line,j)
-		return
-	endif
+        if(temp .lt. HS(1,line,1))then
+                if(dens .lt. 10**2)then
+                        calc_balmer_ratios = HS(1,line,2)
+                        return
+                elseif(dens .ge. 10**4)then
+                        calc_balmer_ratios = HS(1,line,4)
+                        return
+                endif                
+                !print*, j
+                calc_balmer_ratios=( (HS(1,line,j+1)-HS(1,line,j)) / (10**(j+1)-10**j) )*(dens-(10**j))+HS(1,line,j)
+                return
+        elseif(temp .ge. HS(6,line,1))then
+                if(dens .lt. 10**2)then
+                        calc_balmer_ratios = HS(6,line,2)
+                        return
+                elseif(dens .gt. 10**4)then
+                        calc_balmer_ratios = HS(6,line,4)
+                        return
+                endif
+                calc_balmer_ratios =( ( HS(6,line,j+1)-HS(6,line,j) )/ (10**(j+1)-10**j) )*(dens-(10**j) ) + HS(6,line,j)
+                return
+        endif
 
-	if(dens .lt. 10**2)then
-		calc_balmer_ratios = ((HS(i+1,line,2)-HS(i,line,2))/(HS(i+1,line,1)-HS(i,line,1)))*(temp-HS(i,line,1))+HS(i,line,2)
-		return
-	elseif(dens .gt. 10**4)then
-		calc_balmer_ratios = ((HS(i+1,line,4)-HS(i,line,4))/(HS(i+1,line,1)-HS(i,line,1)))*(temp-HS(i,line,1))+HS(i,line,4)
-		return
-	endif
+        if(dens .lt. 10**2)then
+                calc_balmer_ratios = ((HS(i+1,line,2)-HS(i,line,2))/(HS(i+1,line,1)-HS(i,line,1)))*(temp-HS(i,line,1))+HS(i,line,2)
+                return
+        elseif(dens .gt. 10**4)then
+                calc_balmer_ratios = ((HS(i+1,line,4)-HS(i,line,4))/(HS(i+1,line,1)-HS(i,line,1)))*(temp-HS(i,line,1))+HS(i,line,4)
+                return
+        endif
 
-	!	print*, j
-	!PRINT*, i, j
+        !        print*, j
+        !PRINT*, i, j
 
-	d1=((HS(i+1,line,j)-HS(i,line,j))/(HS(i+1,line,1)-HS(i,line,1)))*(temp-HS(i,line,1))+HS(i,line,j)
-	d2=((HS(i+1,line,j+1)-HS(i,line,j+1))/(HS(i+1,line,1)-HS(i,line,1)))*(temp-HS(i,line,1))+HS(i,line,j+1)
+        d1=((HS(i+1,line,j)-HS(i,line,j))/(HS(i+1,line,1)-HS(i,line,1)))*(temp-HS(i,line,1))+HS(i,line,j)
+        d2=((HS(i+1,line,j+1)-HS(i,line,j+1))/(HS(i+1,line,1)-HS(i,line,1)))*(temp-HS(i,line,1))+HS(i,line,j+1)
 
-	!print*, d1, d2
+        !print*, d1, d2
 
-	calc_balmer_ratios =  ( (d2-d1) /(10**(j+1) - 10**j))*(dens - (10**j) ) + d1  !(d1+d2)/2
+        calc_balmer_ratios =  ( (d2-d1) /(10**(j+1) - 10**j))*(dens - (10**j) ) + d1  !(d1+d2)/2
 
 end function 
 

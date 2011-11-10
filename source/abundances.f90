@@ -39,7 +39,7 @@ implicit none
         REAL*8 :: result
 
         TYPE(line), DIMENSION(:), allocatable :: ILs
-        TYPE(line), DIMENSION(4) :: H_BS
+        TYPE(line), DIMENSION(38) :: H_BS
         TYPE(line), DIMENSION(4) :: He_lines
 
 ! recombination line variables
@@ -55,7 +55,7 @@ implicit none
 ! strong line variables
         DOUBLE PRECISION :: X23,O_R23upper, O_R23lower, N2,O_N2, O3N2, O_O3N2, Ar3O3, O_Ar3O3, S3O3, O_S3O3, x23temp1, x23temp2, x23temp3, x23temp4
 
-	linelist_orig = linelist
+        linelist_orig = linelist
 !        linelist = 0
 !        ILs%intensity = 0 !not allocated yet
         H_BS%intensity = 0
@@ -254,8 +254,8 @@ implicit none
       lowtemp = 10000.0
 
       do i = 1,2
-	oiiDens=0
-	siiDens=0
+        oiiDens=0
+        siiDens=0
          count = 0
          if (oiiNratio .gt. 0 .and. oiiNratio .lt. 1e10) then
            call get_diagnostic("oii       ","1,2/                ","1,3/                ",oiiNratio,"D",lowtemp, oiiDens)
@@ -270,7 +270,7 @@ implicit none
          if (count .eq. 0) then
            lowdens = 1000.0
          else
-		lowdens = (oiiDens + siiDens) / count
+                lowdens = (oiiDens + siiDens) / count
          endif
 
          count = 0
@@ -347,7 +347,7 @@ implicit none
 
      enddo
 
- 		PRINT*, ILs(get_ion("oii3726    ",ILs, Iint))%int_dered
+                 PRINT*, ILs(get_ion("oii3726    ",ILs, Iint))%int_dered
 
 ! medium ionisation
         cliiiDens = 0
@@ -486,10 +486,10 @@ implicit none
 
         !aside: normalisation check, correction
 
-	!update extinction. DS 22/10/11
-	meanextinction=0	
-	CALL calc_extinction_coeffs_loop(H_BS, c1, c2, c3, meanextinction, switch_ext, medtemp, lowdens)
-	print*, "iteration", i, " extinction:"
+        !update extinction. DS 22/10/11
+        meanextinction=0        
+        CALL calc_extinction_coeffs_loop(H_BS, c1, c2, c3, meanextinction, switch_ext, medtemp, lowdens)
+        print*, "iteration", i, " extinction:"
         print "(1X,A17,F4.2,A4,F4.2)","Ha/Hb => c(Hb) = ",c1
         print "(1X,A17,F4.2,A4,F4.2)","Hg/Hb => c(Hb) = ",c2
         print "(1X,A17,F4.2,A4,F4.2)","Hd/Hb => c(Hb) = ",c3
@@ -497,7 +497,7 @@ implicit none
         PRINT "(1X,A13,F4.2,A4,F4.2)", "Mean c(Hb) = ",meanextinction
 
 
-	linelist = linelist_orig
+        linelist = linelist_orig
         if (switch_ext == "S") then
                 CALL deredden(ILs, Iint, meanextinction)
                 CALL deredden(H_BS, 4, meanextinction)
@@ -524,7 +524,7 @@ implicit none
                 call deredden_Fitz(He_lines, 4, meanextinction)
                 CALL deredden_Fitz(linelist, listlength, meanextinction)
         endif
-              		PRINT*, ILs(get_ion("oii3726    ",ILs, Iint))%int_dered   
+                PRINT*, ILs(get_ion("oii3726    ",ILs, Iint))%int_dered   
 
       enddo
 
