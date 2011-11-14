@@ -61,7 +61,11 @@ $^4$European Southern Observatory, Garching, Germany\\ %Peter, correct this
 \label{firstpage}
 
 \begin{abstract}
-Abstract Text
+We present NEAT (Nebular Empirical Analysis Tool), a new code for calculating chemical abundances in photoionised nebulae.  The code carries out a standard analysis of lists of emission lines using long-established techniques to estimate the amount of interstellar extinction, calculate representative temperatures and densities, compute ionic abundances from both collisionally excited lines and recombination lines, and finally to estimate total elemental abundances using an ionisation correction scheme.
+
+The code can be used to robustly calculate uncertainties on the derived abundances, via a Monte Carlo technique.  We show that for typical observational data, this approach is superior to analytic estimates of uncertainties, which inherently assume normally distributed uncertainties which are small relative to the quantity being measured.  These assumptions can break down severaly for low signal-to-noise data.
+
+By using different compilations of atomic data, extinction law parametrizations, and "zone" methodologies, we investigate the magnitude of the systematic uncertainties arising from these choices, compared to the magnitude of the statistical uncertainties, for a variety of real and synthetic data.  We find that the most important systematic uncertainty is (what?).
 \end{abstract}
 
 \begin{keywords}
@@ -70,21 +74,27 @@ Keywords
 
 \section{Introduction}
 
-Importance of photoionised nebulae as tools for understanding stellar and galactic evolution.
+Abundance determinations from photoionised nebulae play crucial roles in a variety of astrophysical contexts.  Galactic and extragalactic H~{\sc ii} regions provide vital constraints for galactic chemical evolution models; planetary nebulae provide constraints on theories of stellar nucleosynthesis and evolution; Wolf-Rayet ejecta nebulae reveal the effects of massive star recycling on the interstellar medium.
 
-Development of precision abundance determinations.  Limits to that precision.  Quantifiable and unquantifiable uncertainties.  Sources of uncertainties, and ways to estimate the uncertainties.
+Such studies have a very long history (eg gratuitously ancient reference), but some major questions remain unanswered.  One long standing issue is the sometimes sizable discrepancy between abundances derived from collisionally excited lines (CELs) and those derived from recombination lines (RLs) - see for example recent papers by (a Liu, a Tsamis, a Wesson...).  One difficulty in understanding the significance of abundance data is that it is not trivial to realistically estimate the uncertainty on the derived quantities.  The final uncertainty will be due to both statistical uncertainty (ultimately deriving from the inherent uncertainty on the original line flux measurements) and systematic uncertainty (for example, the choice of reddening law or atomic data set).
+
+In this paper we present a new code for calculating chemical abundances in photoionised nebulae, which can also robustly estimate statistical uncertainties using a Monte Carlo approach.  This method is inherently superior to analytic methods of uncertainty propagation.  We use our code to analyse both real and synthesised data, using different assumptions, to compare the magnitudes of the quantifiable systematic uncertainties to the less easily quantifiable systematic uncertainties.
+
+We find that... (to be completed later)
+
+The words "uncertainty" and "error" are often used synonymously.  However, in this article we maintain the distinction in meaning between the terms: "uncertainty" refers to the limiting accuracy of the knowledge of a quantity, while "error" refers to an actual mistake.
 
 \section{NEAT: Nebular empirical abundance tool}
 
 \subsection{Input}
 
-NEAT requires as input a plain text list of rest wavelengths, line fluxes, and uncertainties.  If line flux measurement uncertainties are not given, the code assumes an uncertainty of 10\% on all line flux measurements.
+The new code, NEAT, largely builds upon previous codes, most importantly the {\sc equib} code (ref) for solving the equations of statistical equilibrium in multi-level atoms.  It requires as input a plain text list of rest wavelengths, line fluxes, and uncertainties.
 
 The user can select the number of iterations of the code to run.  If the number of iterations is one, the code performs a standard empirical analysis on the line list, as described below, and does not calculate any uncertainties.  If the number of iterations is more than one, then the code first randomises the line list.  For each line, the code takes a random number from a Gaussian distribution with mean zero and standard deviation unity, multiplies this number by the line flux uncertainty, and adds it to the measured flux.  The standard analysis is then carried out on the randomised line list.
 
 By carrying out this process many times, it is possible to build up an accurate picture of the true distribution of statistical uncertainties associated with the chemical abundances and empirical diagnostics resulting from the line flux uncertainties. The code collates all of the results from each iteration, and generates histograms showing visually the uncertainty distributions on the output parameters.
 
-We tested our random number generator by running the code 1\,000\,000 times, and plotting the distribution of fluxes obtained for an arbitrarily selected line.  We then fitted a gaussian function to this distribution.  We found that the recovered mean was within 0.008\% of the specified value, while the recovered standard deviation was within 0.13\% of the specified value.  Figure~\ref{gaussiantest} shows the histogram of generated values with the required gaussian distribution overplotted.
+The code relies on the FORTRAN pseudo-random number generator, seeded using the system clock and the time of the code's exection.  The uniformly distributed numbers thus generated are then converted into a gaussian distribution.  We tested the performance of this approach by running the code 1\,000\,000 times, and plotting the distribution of fluxes obtained for an arbitrarily selected line.  We then fitted a gaussian function to this distribution.  We found that the recovered mean was within 0.008\% of the specified value, while the recovered standard deviation was within 0.13\% of the specified value.  Figure~\ref{gaussiantest} shows the histogram of generated values with the required gaussian distribution overplotted.  We thus consider that the random number generator in the code provides a reliably random Gaussian distribution.
 
 \begin{figure}
 \includegraphics[width=0.47\textwidth]{figures/gaussian_test.png}
