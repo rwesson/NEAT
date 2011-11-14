@@ -102,20 +102,20 @@ CALL getarg(1,filename)
             endif 
           enddo
           if (diff .le. 1.e-3) then
-            print "(F8.2,A29,F8.2,1X,A10)",userlines(assign_1)%wavelength," identified as ",neatlines(assign_2)
+            print "(F8.2,A30,F8.2,1X,A10,A21)",userlines(assign_1)%wavelength," =  ",neatlines(assign_2), "(ID = almost certain)"
             write (100,105) neatlines(assign_2)%wavelength, userlines(assign_1)%flux, userlines(assign_1)%uncertainty
             count=count+1
           elseif (diff .gt. 1.e-3 .and. diff .le. 0.02) then
-            print "(F8.2,A29,F8.2,1X,A10)",userlines(assign_1)%wavelength," very likely ",neatlines(assign_2)
+            print "(F8.2,A30,F8.2,1X,A10,A21)",userlines(assign_1)%wavelength," = ",neatlines(assign_2), "(ID = very likely)"
             write (100,105) neatlines(assign_2)%wavelength, userlines(assign_1)%flux, userlines(assign_1)%uncertainty
             count=count+1
           elseif (diff .gt. 0.02 .and. diff .le. 0.1) then
-            print "(F8.2,A29,F8.2,1X,A10)",userlines(assign_1)%wavelength," could be ",neatlines(assign_2)
+            print "(F8.2,A30,F8.2,1X,A10,A21)",userlines(assign_1)%wavelength," = ",neatlines(assign_2), "(ID = probable)"
             write (100,105) neatlines(assign_2)%wavelength, userlines(assign_1)%flux, userlines(assign_1)%uncertainty
             count=count+1
           else
             write (100,105) userlines(assign_1)%wavelength, userlines(assign_1)%flux, userlines(assign_1)%uncertainty
-            print "(F8.2,A29,F8.2,1X,A10)",userlines(assign_1)%wavelength," unidentified. nearest line: ",neatlines(assign_2)
+            print "(F8.2,A30,F8.2,1X,A10,A21)",userlines(assign_1)%wavelength," unrecognised. nearest known: ",neatlines(assign_2)
           endif
         enddo
 
