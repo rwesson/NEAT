@@ -9,7 +9,8 @@
      & A4686,A4471,A5876,A6678,TEh2,NEh2,D,                             &
      & C4471,C5876,C6678,GAMM6683,IHeII4686,                            &
      & IHeI4471,IHeI5876,IHeI6678,                                      &
-     & IHeII6683,AB4686,AB4471,AB5876,AB6678,ABHeII,ABHeIII,hetotabund
+     & IHeII6683,AB4686,AB4471,AB5876,AB6678,ABHeII,ABHeIII,hetotabund 
+      double precision, dimension(3) :: weights
       integer flag1,flag2
       character*10 tech, nech, i4686ch,i4471ch,i5876ch,i6678ch
 
@@ -42,22 +43,20 @@
            Abb4471 = AB4471
            Abb4686 = AB4686
            Abb6678 = AB6678
-           Abb5876 = AB5876  
+           Abb5876 = AB5876
            !ABHeII=(AB4471+AB5876*3+AB6678)/5
 
-           if( (AB4471 > 0 .AND. AB6678 > 0) .AND. AB5876 > 0)then
-                   ABHeII = ( AB4471 + AB6678 + AB5876*3 )/5
-           elseif((AB4471 > 0 .and. AB6678 > 0) .AND. AB5876 == 0 )then
-                   ABHeII = ( AB4471 + AB6678)/2
-           elseif((AB6678 > 0 .and. AB4471 == 0) .AND. AB5876 == 0)then        
-                   ABHeII = AB6678        
-           elseif((AB6678 == 0 .and. AB4471 > 0) .AND. AB5876 == 0)then        
-                   ABHeII = AB4471        
-           elseif((AB6678 == 0 .and. AB4471 == 0) .AND. AB5876 > 0)then        
-                   ABHeII = AB5876        
+           weights=0.D0
+
+           if (AB4471 .gt. 0) weights(1) = 1.
+           if (AB5876 .gt. 0) weights(2) = 3.
+           if (AB6678 .gt. 0) weights(3) = 1.
+
+           if (weights(1)+weights(2)+weights(3).gt.0.0) then
+               ABHeII = ((weights(1)*AB4471) + (weights(2)*AB5876) + (weights(3)*AB6678)) / (weights(1) + weights(2) + weights(3))
            else
-                   ABHeII = 0
-           endif                      
+               ABHeII = 0.D0
+           endif
 
            ABHeIII=AB4686
 
@@ -445,4 +444,4 @@
 !
       GAMM6678=AEFF + HCLL
       END function gamm6678
-      end module mod_helium 
+      end module mod_helium
