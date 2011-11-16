@@ -1,0 +1,208 @@
+% mn2esample.tex
+%
+% v2.1 released 22nd May 2002 (G. Hutton)
+%
+% The mnsample.tex file has been amended to highlight
+% the proper use of LaTeX2e code with the class file
+% and using natbib cross-referencing. These changes
+% do not reflect the original paper by A. V. Raveendran.
+%
+% Previous versions of this sample document were
+% compatible with the LaTeX 2.09 style file mn.sty
+% v1.2 released 5th September 1994 (M. Reed)
+% v1.1 released 18th July 1994
+% v1.0 released 28th January 1994
+
+\documentclass[useAMS,usenatbib]{mn2e}
+\usepackage{graphicx}
+\usepackage{aas_macros}
+
+% If your system does not have the AMS fonts version 2.0 installed, then
+% remove the useAMS option.
+%
+% useAMS allows you to obtain upright Greek characters.
+% e.g. \umu, \upi etc.  See the section on "Upright Greek characters" in
+% this guide for further information.
+%
+% If you are using AMS 2.0 fonts, bold math letters/symbols are available
+% at a larger range of sizes for NFSS release 1 and 2 (using \boldmath or
+% preferably \bmath).
+%
+% The usenatbib command allows the use of Patrick Daly's natbib.sty for
+% cross-referencing.
+%
+% If you wish to typeset the paper in Times font (if you do not have the
+% PostScript Type 1 Computer Modern fonts you will need to do this to get
+% smoother fonts in a PDF file) then uncomment the next line
+% \usepackage{Times}
+
+%%%%% AUTHORS - PLACE YOUR OWN MACROS HERE %%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title[Systematic nebular abundance uncertainties]{Systematic uncertainties affecting abundance determinations in photoionised nebulae} %have to be the same?
+\author[R. Wesson et al.]{R. Wesson$^{1,2}$, D.J. Stock$^{1,3}$ \& P. Scicluna$^{1,4}$\\
+$^1$Department of Physics and Astronomy, University College London, Gower Street, London WC1E 6BT, UK\\
+$^2$European Southern Observatory, Alonso de C ́rdova 3107, Casilla 19001, Santiago, Chile
+$^3$Department of Physics and Astronomy, University of Western Ontario, London, Ontario, Canada, N6K 3K7\\
+$^4$European Southern Observatory, Garching, Germany\\ %Peter, correct this
+}
+
+
+\begin{document}
+
+\date{}
+
+\pagerange{\pageref{firstpage}--\pageref{lastpage}} \pubyear{2002}
+
+\maketitle
+
+\label{firstpage}
+
+\begin{abstract}
+Measurements of chemical abundances in photoionised nebulae are subject to various sources of uncertainty, both random and systematic.  Using the Nebular Empirical Analysis Tool, NEAT, which accurately quantifies the statistical uncertainties on abundances, we carry out an investigation into the magnitudes of various systematic uncertainties.
+
+We consider the effect on abundance determinations of the choice of atomic data; the choice of interstellar extinction law; the application of ``zones" methodologies; and of ionisation correction schemes.  We compare the magnitude of the estimated systematic uncertainties due to each of these to the statistical uncertainties quantified using NEAT.
+
+We find that the most important systematic uncertainty is (what?).
+\end{abstract}
+
+\begin{keywords}
+Keywords
+\end{keywords}
+
+\section{Introduction}
+
+Abundance determinations from photoionised nebulae play crucial roles in a variety of astrophysical contexts.  Galactic and extragalactic H~{\sc ii} regions provide vital constraints for galactic chemical evolution models; planetary nebulae provide constraints on theories of stellar nucleosynthesis and evolution; Wolf-Rayet ejecta nebulae reveal the effects of massive star recycling on the interstellar medium.
+
+Such studies have a very long history (eg gratuitously ancient reference), but some major questions remain unanswered.  One long standing issue is the sometimes sizable discrepancy between abundances derived from collisionally excited lines (CELs) and those derived from recombination lines (RLs) - see for example recent papers by (a Liu, a Tsamis, a Wesson...).  One difficulty in understanding the significance of abundance data is that it is not trivial to realistically estimate the uncertainty on the derived quantities.  The final uncertainty will be due to both statistical uncertainty (ultimately deriving from the inherent uncertainty on the original line flux measurements) and systematic uncertainty (for example, the choice of reddening law or atomic data set).
+
+In this paper we present a new code for calculating chemical abundances in photoionised nebulae, which can also robustly estimate statistical uncertainties using a Monte Carlo approach.  This method is inherently superior to analytic methods of uncertainty propagation.  We use our code to analyse both real and synthesised data, using different assumptions, to compare the magnitudes of the quantifiable systematic uncertainties to the less easily quantifiable systematic uncertainties.
+
+We find that... (to be completed later)
+
+The words ``uncertainty" and ``error" are often used synonymously.  However, in this article we maintain the distinction in meaning between the terms: ``uncertainty" refers to the limiting accuracy of the knowledge of a quantity, while ``error" refers to an actual mistake.
+
+\section{NEAT: Nebular empirical abundance tool}
+
+NEAT was described in detail in Wesson, Stock and Scicluna (2012, hereafer Paper~{\sc i}).  Briefly, the code carries out an analysis of a line list using standard techniques, and propagates uncertainties from line flux measurement uncertainties into the final quantities using a Monte Carlo technique.  The input line list is randomised, taking for each line a flux from a Gaussian distribution with the appropriate mean and standard deviation.  The randomised line list is then analysed, and the process repeated a large number of times to well sample the distribution of possible values for the derived quantities.
+
+In Paper~{\sc i} we used the code to show that analytical methods of uncertainty propagation can underestimate the the true uncertainties.  With an accurate knowledge of the actual uncertainties on chemical abundance determinations, we can also investigate various systematic effects which affect these determinations.
+
+\subsection{Interstellar extinction}
+
+The first step of any abundance analysis is a correction for interstellar extinction.  The amount of extinction is determined by NEAT from the ratios of hydrogen Balmer lines, and the user can select the particular extinction law to be used.  Five extinction laws are currently available: the Galactic extinction curves of \citet{1983MNRAS.203..301H}, \citet{1990ApJS...72..163F} and \citet{1989ApJ...345..245C}, the Large Magellanic Cloud law of \citet{1983MNRAS.203..301H}, and the Small Magellanic Cloud law of \citet{1984A&A...132..389P}.  In section~\ref{extinction} we investigate the magnitude of the systematic uncertainty introduced by the choice of extinction law.
+
+\subsection{Temperatures and densities}
+
+Temperatures and densities are calculated using traditional collisionally excited line diagnostics.  For the purposes of subsequent abundance calculations, the nebula is divided into three ``zones", of low, medium and high excitation.  In each zone, temperatures and densities are calculated iteratively and weighted according to the reliability of each diagnostic.  Table~\ref{zonestable} shows the diagnostics used and the weighting given in each zone.
+
+\begin{table}
+\begin{tabular}{ccc}
+\hline
+\multicolumn{3}{c}{Low ionisation zone}\\
+\hline
+Diagnostic & Lines & Weight \\
+\hline
+\multicolumn{3}{c}{Medium ionisation zone}\\
+\hline
+Diagnostic & Lines & Weight \\
+\hline
+\multicolumn{3}{c}{High ionisation zone}\\
+\hline
+Diagnostic & Lines & Weight \\
+\end{tabular}
+\label{zonestable}
+\caption{Diagnostics used in the calculation of physical conditions.}
+\end{table}
+
+\subsection{Ionic abundances}
+
+Ionic abundances are calculated from collisionally excited lines using the temperature and density appropriate to their ionisation potential.  Where several lines from a given ion are present, the ionic abundance adopted is found by averaging the abundances from each ion, weighting according to the observed intensity of the line.
+
+Recombination lines are also used to derive ionic abundances.  In deep spectra, many more recombination lines may be available than collisionally excited lines.  The code first assigns IDs to each line based on their rest wavelengths, and then calculates the ionic abundance from the line intensity using the atomic data listed in Table~\ref{AD_reftable}.  Then, to determine the ionic abundance to adopt, it first derives an ionic abundance for each individual multiplet from the multiplet's co-added intensity, and then averages the abundances derived for each multiplet to obtain the ionic abundance used in subsequent calculations.
+
+\subsection{Total elemental abundances}
+
+Total elemental abundances are estimated using Ionisation Correction Factors.  The code includes the ICF scheme of \citet{1994MNRAS.271..257K}.
+
+\section{Systematic uncertainties}
+
+We note that the Monte Carlo approach gives robust and meaningful estimates for
+statistical uncertainties only; many systematic uncertainties exist in nebular a
+bundance determinations which can be difficult or impossible to realistically qu
+antify.
+
+In this section we use to code to investigate some sources of systematic uncertainty.  We do this by analysing real and synthesized nebular line lists, while varying the systematic approach.  By comparing the uncertainty distributions obtained in each case, we can assess the relative importance of the various systematic choices that the user may make in analysing an emission line nebula.
+
+\subsection{Atomic data}
+
+Accurate atomic data is crucial to any determination of chemical abundances.  New calculations of atomic data are frequently made, and deciding which atomic data set is the best is a very important choice facing the users of the data.  Here we use several different sets of atomic data to investigate the effect of this choice on the abundances determined.
+
+Assorted
+Chianti 5.2
+Chianti 6
+Anything else?
+
+See Table~\ref{AD_reftable} for a breakdown of references used in \citet{2011arXiv1108.3800S}.
+
+\begin{table}
+        \centering
+        \caption{Sources of Atomic data}
+        \begin{tabular}{p{0.8cm}|p{6.5cm}}
+        Ion &  Reference\\
+        \hline
+        C$^0$      &    \citet{1976AA....50..141P}, \citet{1987JPhB...20.2553J}, \citet{1979AA....72..129N} \\ 
+        Cl$^{++}$  &    \citet{1982MNRAS.198..127M}, \citet{1989AA...208..337B},  \\
+        O$^0$      &    \citet{1981PSS...29..377B}, \citet{1988JPhB...21.1083B}, \citet{1988JPhB...21.1455B} \\
+        O$^{+}$   &    \citet{1976MNRAS.177...31P}, \citet{1982MNRAS.198..111Z}\\
+        S$^{++}$   &    \citet{1982MNRAS.199.1025M}, \citet{1983IAUS..103..143M}        \\
+        All others &    \citet{2006ApJS..162..261L} \\
+        \end{tabular}
+ \label{AD_reftable}    
+\end{table}
+
+\subsection{Interstellar extinction}
+\subsubsection{Reddening functions}
+
+The correction for interstellar extinction can be large for some objects, and the typical assumption that a mean extinction law is appropriate for all lines of sight may be erroneous.  Here we investigate the effect of the extinction correction on abundance determinations.
+
+CCM, Howarth, LMC, SMC, using inappropriate law?, A30, effect of uncertainty in R - include 10\% uncertainty in MC.
+
+\subsubsection{The ratio of total to selective extinction}
+
+We also investigate the effect of the uncertainty in R, the ratio of total to selective extinction given by
+
+\begin{equation}
+R = \frac{A(V)}{E(B-V)}
+\end{equation}
+
+R is known to vary substantially along different sightlines (eg ref1, ref2), but estimating it for particular objects is generally impractical and instead, it is commonly assumed to equal 3.1.  We investigate the effect of an uncertainty in this value by comparing analyses in which R is fixed to be 3.1, and in which R is drawn from a Gaussian distribution with $\mu$=3.1 and $\sigma$=0.1.
+
+\subsection{Zones}
+
+In the standard setup of NEAT, the nebula is divided into three zones of low, medium and high excitation.  Depending on the exact diagnostics available, the code will fall back to two zones or even a single zone for the abundance analysis. \citet{2010MNRAS.401.1375E} found that empirical analyses were subject to significant biases when only one zone was used, but that two zones reduced the biases to less than 0.15dex.  Here we compare analysis of NGC 6543 using one, two and three zones.
+
+\subsection{ICFs}
+
+Different ICFs based on different models.  ICFs are calculated from relations between ionic fractions, but the exact ICF also depends on central star luminosity and temperature, and the morphology of the nebula \citep{2011arXiv1110.2709G}.  In this section we investigate the effect of different ICFs on the resulting abundances.
+
+\section{Discussion}
+
+We have used the nebular analysis code NEAT to robustly calculate the statistical uncertainties on abundances determined from a set of observed line lists.  We have used the code to investigate the relative importance of various systematic uncertainties affecting nebular abundance determinations.  We find:
+
+Which effects are most important
+Are any negligible?
+What can be done to minimise all uncertainties?
+Compare to pynebular?
+
+\section*{Acknowledgments}
+
+\bibliographystyle{mn2e}
+\bibliography{NEAT_paper}
+
+
+\label{lastpage}
+
+\end{document}
