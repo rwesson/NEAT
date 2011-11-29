@@ -317,7 +317,7 @@ contains
                                         snr = linelist(j)%intensity/linelist(j)%int_err
                                         newmean = 0.0765957/(snr**2) + 1.86037/snr - 0.309695
                                      !the actual standard deviation is derived from the observed using
-                                        newsnr = 0.351/(snr**2) + 3.37/snr - 0.473
+                                        newsnr = -1.11329/(snr**3) + 1.8542/(snr**2) - 0.288222/snr + 0.18018
                                      !(fits to the data in Rola & Pelat's table 6)
                                      !the distributions in table 6 give the mean and sigma of log-normal distributions of S/N(obs), given S/N(true).  We don't know S/N(true) but using the distributions as that of the factor by which line fluxes are overestimated is equivalent.  So,
                                         temp4 = exp(fn_val*newsnr + newmean)
