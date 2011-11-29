@@ -524,7 +524,6 @@ implicit none
                 call deredden_Fitz(He_lines, 4, meanextinction)
                 CALL deredden_Fitz(linelist, listlength, meanextinction)
         endif
-                PRINT*, ILs(get_ion("oii3726    ",ILs, Iint))%int_dered   
 
       enddo
 
