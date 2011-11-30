@@ -89,7 +89,6 @@ The words ``uncertainty" and ``error" are often used synonymously.  However, in 
 
 The new code, NEAT, largely builds upon previous codes, most importantly the {\sc equib} code (ref) for solving the equations of statistical equilibrium in multi-level atoms.  All the source code, documentation, atomic data and example line lists are freely available at \texttt{https://github.com/rwesson/NEAT}.
 
-
 The code requires as input a plain text list of rest wavelengths, line fluxes, and uncertainties.  The user can then select the number of iterations of the code to run.  If the number of iterations is one, the code performs a standard empirical analysis on the line list, as described below, and does not calculate any uncertainties.  If the number of iterations is more than one, then the code first randomises the line list.  For each line, the code takes a random number from a Gaussian distribution with mean zero and standard deviation unity, multiplies this number by the line flux uncertainty, and adds it to the measured flux.  The standard analysis is then carried out on the randomised line list.
 
 By carrying out this process many times, it is possible to build up an accurate picture of the true distribution of statistical uncertainties associated with the chemical abundances and empirical diagnostics resulting from the line flux uncertainties. The code collates all of the results from each iteration, and generates histograms showing visually the uncertainty distributions on the output parameters.
@@ -103,8 +102,36 @@ The code relies on the FORTRAN pseudo-random number generator, seeded using the 
 \end{figure}
 
 % eventually, do this:
-\citet{1994A&A...287..676R} observed that measurements of weak lines (SNR$<$3) are strongly biased upwards.  For lines with F/$\sigma > $3, we account for this effect by taking the random number from a log-normal distribution with parameters determined... skewedness, mode...
-%end
+
+\citet{1994A&A...287..676R} observed that measurements of weak lines (SNR$<$6) are strongly biased upwards, and the uncertainty on such lines cannot be well represented by a normal distribution.  We refer to this effect henceforth as the RP effect.  Taking the RP effect into account is trivial with a Monte Carlo approach, requiring only that a log-normal distribution with appropriate mean and standard deviation is used for weak lines, instead of the normal distribution used for strong lines.
+
+For lines with F/$\sigma < $6, we randomise the line fluxes using the following procedure: we first determine the log-normal distribution appropriate to the measured signal-to-noise ratio using the following equations, which are derived from fits to the numbers in Table 6 of \citet{1994A&A...287..676R}.
+
+\begin{equation}
+\mu = \frac{0.0765957}{snr^2} + \frac{1.86037}{snr} - 0.309695
+\end{equation}
+
+\begin{equation}
+\sigma = \frac{0.351}{snr^2} + \frac{3.37}{snr} - 0.473
+\end{equation}
+
+Then, the line flux is found using the following equation:
+
+\begin{equation}
+F(random) = \frac{F(measured)}{e^(RAND\times\sigma + \mu)}
+\end{equation}
+
+where RAND is a random number from a gaussian distribution as before.  The result of this procedure is that weaker lines are drawn from distributions that peak below the observed value, with the effect increasing as SNR decreases.  The statistical behaviour is as described by \citet{1994A&A...287..676R}.
+
+If the quoted uncertainty is larger than the acual line flux, the code assumes that the quote flux represents a 5$\sigma$ upper limit, and thus draws the randomized line flux from a folded gaussian distribution, with $\mu$=0 and $\sigma$=0.2$\times$F(measured).
+
+Figure~\ref{distributions} shows the various possibilities that arise depending on the measured SNR.  The distributions plotted are from 10$^6$ runs of NEAT in which 7 artificial line fluxes were randomized.  Each of the lines had a measured flux of 10.0, and the quoted uncertainties represented SNRs of 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 and 8.0.  The figures shows how the normal distribution appropriate at high SNR is replaced by a log-normal distribution increasingly skewed towards lower values as SNR decreases.
+
+\begin{figure}
+\label{distributions}
+\includegraphics[width=0.47\textwidth]{figures/distributions_2.png}
+\caption{The behaviour of NEAT's line flux randomization as a function of SNR.  At high SNR (i.e. $>$6), normal distributions apply.  At lower SNR, the effect described by \citet{1994A&A...287..676R} results in log-normal distributions which are skewed towards lower values.  If SNR$\leq$1 then the code assumes that the quoted flux is a 5$\sigma$ upper limit}
+\end{figure}
 
 \subsection{Interstellar extinction}
 
@@ -120,14 +147,40 @@ Temperatures and densities are calculated using traditional collisionally excite
 \multicolumn{3}{c}{Low ionisation zone}\\
 \hline
 Diagnostic & Lines & Weight \\
+~[O~{\sc ii}] density & $\lambda$3727/$\lambda$3729 & 1 \\
+~[S~{\sc ii}] density & $\lambda$6717/$\lambda$6731 & 1 \\
+~\\
+~[N~{\sc ii}] temperature & $\frac{\lambda 6548 + \lambda 6584}{\lambda 5754}$ & 5 \\
+~[S~{\sc ii}] temperature & $\frac{\lambda 6717 + \lambda 6731}{\lambda 4068 +  \lambda 4076}$ & 1 \\
+~[O~{\sc ii}] temperature & $\frac{\lambda 7319,20 + \lambda 7330,31}{\lambda 3726 + \lambda 3729}$ & 1 \\
+~[O~{\sc i}] temperature & $\frac{\lambda 6363 + \lambda 6300}{\lambda 5577}$ & 1 \\
+~[C~{\sc i}] temperature & $\frac{\lambda 9850 + \lambda 9824}{\lambda 8727}$ & 1 \\
 \hline
 \multicolumn{3}{c}{Medium ionisation zone}\\
 \hline
 Diagnostic & Lines & Weight \\
+~[Cl~{\sc iii}] density & & 1 \\
+~[Ar~{\sc iv}] density & & 1 \\
+~[C~{\sc iii}] density & & 1 \\
+~[O~{\sc iii}] density & & 0 \\
+~[Ar~{\sc iii}] density & & 0 \\
+~[S~{\sc iii}] density & & 0 \\
+~[Ne~{\sc iii}] density & & 0 \\
+~\\
+~[O~{\sc iii}] temperature & optical & 4\\
+~[Ar~{\sc iii}] temperature & & 2\\
+~[Ne~{\sc iii}] temperature & optical & 2\\
+~[S~{\sc iii}] temperature & & 1\\
+~[Ne~{\sc iii}] temperature & IR & 0\\
+~[O~{\sc iii}] temperature & IR & 0\\
 \hline
 \multicolumn{3}{c}{High ionisation zone}\\
 \hline
 Diagnostic & Lines & Weight \\
+~[Ne~{\sc iv}] density & & 1 \\
+~\\
+~[Ar~{\sc v}] temperature & & 1 \\
+~[Ne~{\sc v}] temperature & & 1 \\
 \end{tabular}
 \label{zonestable}
 \caption{Diagnostics used in the calculation of physical conditions.}
@@ -181,7 +234,6 @@ This expression can be generalised to any number of variables, and gives rise to
 
 The first point is a matter of convenience but none the less one which discourages many authors from even attempting to propagate uncertainties all the way into the final quantities.  The second and third points are clearly violated in many or most real astrophysical observations, by virtue of which the uncertainties estimated using analytical techniques will be unreliable.
 
-
 The Monte Carlo method, on the other hand, exploits the fact that an observation of a quantity $x$ is drawn from a distribution $X$, with mean $x$ and variance $\sigma_x$ . If one knows (or can make sensible assumptions about) the shape of this distribution, a random-number generator can be used to repeatedly draw values from X, creating a random sample from it. Using the above example of $F = f (x)$, if one wanted to examine the uncertainty in F , the operation f(x) could be performed upon every value in the aforementioned sample to produce a sample of the distribution from which F is drawn, which can then be parameterised to estimate the type, mean and standard deviation of this distribution. This process can be repeated ad infinitum for any number or combination of functions of F , x, or any other variable derived in the same way to propagate the uncertainties on the quantities, irrespective of the size of the uncertainties and any statistical interdependence of the variables.  This approach thus has the following advantages over the analytical approach:
 
 \begin{itemize}
@@ -213,29 +265,22 @@ Relative reliability.  RLs are weaker so greater flux uncertainties, but abundan
 
 \subsection{Non-Gaussian line flux uncertainties}
 
-One of the drawbacks of propagating uncertainties analytically, as discussed already, is that this requires an implicit assumption that the uncertatinties can be well described by a normal distribution.  In reality this might be the case for strong, well detected lines, but Rola \& Pelat (1994) showed that for weak lines, there is a strong tendency towards over-estimation of line fluxes.  This is because all line flux measurements include noise, and for weak lines, only when the noise tends to enhance the line flux will it be detected and measured.  The effect results in the statistical uncertainties on weak line measurements being described by a log-normal distribution rather than a normal distribution.
+As discussed earlier, NEAT takes into account the RP effect, in which fluxes measured from lines with SNR$<$6 are generally overestimated, with the magnitude of the effect increasing as SNR$\to$1.  In this section we show the importance of this effect and demonstrate that flawed results will inevitably result if the effect is ignored.
 
-Rola \& Pelat's result is well known, but subsequent authors have not accounted for the effect in a robust way.  To do so with a Monte Carlo approach is trivial, requiring only that a log-normal distribution with appropriate mean and standard deviation is used for weak lines, instead of the normal distribution used for strong lines.
+One important and as yet unresolved issue in nebular abundance studies is the so-called abundance discrepancy problem (see for example \citet{2006IAUS..234..219L} for a recent review).  The RP effect can cause errors in the assessment of the magnitude of the effect; recombination lines of heavy elements are much weaker than the collisionally excited lines of the same species, and are thus measured with lower signal to noise ratios.  Even for quite deep spectra, the weaker RLs may be subject to the RP effect, and their intensities and hence the RL abundances will thus be overestimated.  We reanalysed the observations of NGC 6543 presented by \citep{2004MNRAS.351.1026W}, using NEAT with the RP effect included, and again with the effect neglected.  In Figure~\ref{RPeffect}, we plot the histograms of the abundance discrepancy factor obtained both including and neglecting the RP effect.
 
-We treat this effect in NEAT as follows: Rola \& Pelat give equations giving the observed signal-to-noise ratio (SNR) as a function of the actual SNR; we require a meaningful distribution of the actual SNR, given the observed SNR.  RP94's Table 6 gives the mean and standard deviations of the observed distributions of line flux measurements, for a number of actual SNRs.
+It is clear from the figure that if the RP effect is neglected, a significantly larger ADF is measured than if the effect is included.  In addition, the uncertainty on the measured ADF is larger if the effect is neglected than if it is included.  The ADF determined without accounting for the RP effect is 2.43$\pm$0.30; including the RP effect gives 2.04$\pm$0.23.  The reduction in the measured standard deviation shows that abundance determinations which properly account for the RP effect are more reliable, statistically, than those which do not.
 
-We fit simple functions to the values in their table 6, such that the mean and standard deviation can be calculated for any signal to noise ratio.  Then, for observed SNRs below 6, instead of the flux being taken from a normal distribution with a mean of the observed flux and a standard deviation of the quoted uncertainty, the observed flux is divided by a number taken from a log-normal distribution with mean and standard deviation obtained from the following equations:
-
-\begin{equation}
-\mu = \frac{0.0765957}{snr^2} + \frac{1.86037}{snr} - 0.309695
-\end{equation}
-
-\begin{equation}
-\sigma = \frac{0.351}{snr^2} + \frac{3.37}{snr} - 0.473
-\end{equation}
-
-This statistically reproduces the desired behavior, in which the observed flux of lines with SNR$<$6 is more likely to be overestimated than underestimated, with the effect becoming very strong as SNR\,$\to$\,1.
-
-We stress that accounting for this effect should not be seen as optional, nor its consequences treated as unquantifiable.  As an example, we reanalysed the observations of NGC 6543 presented by \citep{2004MNRAS.351.1026W}.  In Figure~\ref{RPeffect}, we plot the histograms of the abundance discrepancy factor obtained both including and neglecting the RP effect.  We find that if the effect is neglected, a significantly larger ADF is measured than if the effect is included.  This arises because many of the recombination lines are weak enough to be significantly affected, while the collisionally excited lines are not.
+\begin{figure}
+\label{RPeffect}
+\includegraphics[width=0.47\textwidth]{figures/RPeffect.png}
+\caption{The abundance discrepancy factor for oxygen in NGC\,6543, determined both neglecting and including the RP effect}
+\end{figure}
 
 In other shallower spectra, it may often be the case that the auroral lines [N~{\sc ii}] $\lambda$5754 and [O~{\sc iii}] $\lambda$4363 are measured with low enough SNR that they become subject to the RP effect.  In this case, the derived temperatures would be overestimated, and collisionally excited line abundances underestimated.  Example?
 
 \subsection{Interstellar extinction}
+\label{extinction}
 
 We investigate the effect of the uncertainty in R, the ratio of total to selective extinction given by
 
