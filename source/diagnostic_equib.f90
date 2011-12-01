@@ -118,7 +118,7 @@
       !READ(5,1002) ION
       IONL = INDEX(ION,' ') - 1
       OPEN(UNIT=1,STATUS='OLD',                                         &
-     & FILE='atomic_data06/'//ION(1:IONL)//'.dat')
+     & FILE='Atomic-data/'//ION(1:IONL)//'.dat')
 !     + NAME='atomic_data/'//ION(1:IONL)//'.dat')
                                                       !Read in no. comment lines
       READ(1,*) NLINES
