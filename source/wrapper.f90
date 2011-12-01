@@ -10,6 +10,11 @@ program wrapper
         INTEGER :: I, runs, doublext, Narg !runs = number of runs for randomiser
         character*6 :: no
 
+        !time variables
+
+        character*8 :: date
+        character*10 :: time
+
         !file reading variables
 
         TYPE(LINE),DIMENSION(:), allocatable :: linelist
@@ -81,6 +86,12 @@ program wrapper
 
         print *,"Initialising"
         print *,"------------"
+
+        call DATE_AND_TIME(date,time)
+        print *
+        print *,"Start time: ",date(1:4)," ",date(5:6)," ",date(7:8)," ",time(1:2),":",time(3:4),":",time(5:10)
+
+        print *
 
         I = 1
         OPEN(199, file=filename, iostat=IO, status='old')
