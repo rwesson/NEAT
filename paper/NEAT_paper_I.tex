@@ -79,7 +79,9 @@ Abundance determinations from photoionised nebulae play crucial roles in a varie
 
 Such studies have a very long history (eg gratuitously ancient reference), but some major questions remain unanswered.  One long standing issue is the sometimes sizable discrepancy between abundances derived from collisionally excited lines (CELs) and those derived from recombination lines (RLs) - see for example recent papers by (a Liu, a Tsamis, a Wesson...).  One difficulty in understanding the significance of abundance data is that it is not trivial to realistically estimate the uncertainty on the derived quantities.  The final uncertainty will be due to both statistical uncertainty (ultimately deriving from the inherent uncertainty on the original line flux measurements) and systematic uncertainty (for example, the choice of reddening law or atomic data set).
 
-In this paper we present a new code for calculating chemical abundances in photoionised nebulae, which can also robustly estimate statistical uncertainties using a Monte Carlo approach.  This method is inherently superior to analytic methods of uncertainty propagation.  We use our code to reanalyse several published line lists for which uncertainties are available, and we show that analytic methods can dramatically underestimate the true uncertainties on derived quantities.  For low signal to noise data, the true uncertainty distributions can be strongly non-Gaussian.
+In this paper we present a new code for calculating chemical abundances in photoionised nebulae, which can also robustly estimate statistical uncertainties using a Monte Carlo approach.  This method is inherently superior to analytic methods of uncertainty propagation. and can easily account for the effect of non-Gaussian flux uncertainties, such as those found by Rola \& Pelat (1994) in the case of flux measurements with low signal-to-noise ratios.  We use our code to reanalyse several published line lists for which uncertainties are available, and we show that analytic methods can dramatically underestimate the true uncertainties on derived quantities.
+
+For low signal to noise data, the true uncertainty distributions can be strongly non-Gaussian.  Typically uncertainties are better characterised by log-normal distributions than by normal distributions, with most quantities being potentially more subject to upward bias than to downward bias.
 
 The words ``uncertainty" and ``error" are often used synonymously.  However, in this article we maintain the distinction in meaning between the terms: ``uncertainty" refers to the limiting accuracy of the knowledge of a quantity, while ``error" refers to an actual mistake.
 
@@ -87,7 +89,7 @@ The words ``uncertainty" and ``error" are often used synonymously.  However, in 
 
 \subsection{Input}
 
-The new code, NEAT, largely builds upon previous codes, most importantly the {\sc equib} code (ref) for solving the equations of statistical equilibrium in multi-level atoms.  All the source code, documentation, atomic data and example line lists are freely available at \texttt{https://github.com/rwesson/NEAT}.
+The new code, NEAT (Nebular Empirical Analysis Tool), largely builds upon previous codes, most importantly the {\sc equib} code (ref) for solving the equations of statistical equilibrium in multi-level atoms.  All the source code, documentation, atomic data and example line lists are freely available at \texttt{https://github.com/rwesson/NEAT}.
 
 The code requires as input a plain text list of rest wavelengths, line fluxes, and uncertainties.  The user can then select the number of iterations of the code to run.  If the number of iterations is one, the code performs a standard empirical analysis on the line list, as described below, and does not calculate any uncertainties.  If the number of iterations is more than one, then the code first randomises the line list.  For each line, the code takes a random number from a Gaussian distribution with mean zero and standard deviation unity, multiplies this number by the line flux uncertainty, and adds it to the measured flux.  The standard analysis is then carried out on the randomised line list.
 
@@ -112,16 +114,16 @@ For lines with F/$\sigma < $6, we randomise the line fluxes using the following 
 \end{equation}
 
 \begin{equation}
-\sigma = \frac{0.351}{snr^2} + \frac{3.37}{snr} - 0.473
+\sigma = \frac{-1.11329}{snr^3} + \frac{1.8542}{snr^2} - \frac{0.288222}{snr} + 0.18018
 \end{equation}
 
 Then, the line flux is found using the following equation:
 
 \begin{equation}
-F(random) = \frac{F(measured)}{e^(RAND\times\sigma + \mu)}
+F({\rm random}) = \frac{F({\rm measured})}{e^{({\rm RAND}\times\sigma + \mu)}}
 \end{equation}
 
-where RAND is a random number from a gaussian distribution as before.  The result of this procedure is that weaker lines are drawn from distributions that peak below the observed value, with the effect increasing as SNR decreases.  The statistical behaviour is as described by \citet{1994A&A...287..676R}.
+where RAND is a random number from a gaussian distribution as before.  The result of this procedure is that weaker lines are drawn from log-normal distributions that peak below the observed value, with the effect increasing as SNR decreases.  The statistical behaviour is as described by \citet{1994A&A...287..676R}.
 
 If the quoted uncertainty is larger than the acual line flux, the code assumes that the quote flux represents a 5$\sigma$ upper limit, and thus draws the randomized line flux from a folded gaussian distribution, with $\mu$=0 and $\sigma$=0.2$\times$F(measured).
 
@@ -130,7 +132,7 @@ Figure~\ref{distributions} shows the various possibilities that arise depending 
 \begin{figure}
 \label{distributions}
 \includegraphics[width=0.47\textwidth]{figures/distributions_2.png}
-\caption{The behaviour of NEAT's line flux randomization as a function of SNR.  At high SNR (i.e. $>$6), normal distributions apply.  At lower SNR, the effect described by \citet{1994A&A...287..676R} results in log-normal distributions which are skewed towards lower values.  If SNR$\leq$1 then the code assumes that the quoted flux is a 5$\sigma$ upper limit}
+\caption{The behaviour of NEAT's line flux randomization as a function of SNR.  At high SNR (i.e. $>$6), normal distributions apply.  At lower SNR, the effect described by \citet{1994A&A...287..676R} results in log-normal distributions which are skewed towards lower values than the measured intensity.  If SNR$\leq$1 then the code assumes that the quoted flux is a 5$\sigma$ upper limit}
 \end{figure}
 
 \subsection{Interstellar extinction}
@@ -140,6 +142,17 @@ The first step of any abundance analysis is a correction for interstellar extinc
 \subsection{Temperatures and densities}
 
 Temperatures and densities are calculated using traditional collisionally excited line diagnostics.  For the purposes of subsequent abundance calculations, the nebula is divided into three ``zones", of low, medium and high excitation.  In each zone, temperatures and densities are calculated iteratively and weighted according to the reliability of each diagnostic.  Table~\ref{zonestable} shows the diagnostics used and the weighting given in each zone.
+
+The scheme to calculate the densities is iterative, and proceeds as follows:
+
+\begin{enumerate}
+\item A temperature of 10,000K is initially assumed, and the density is then calculated from the line ratios relevant to the zone.
+\item The temperature is then calculated from the temperature diagnostic line ratios, using the derived density.
+\item The density is recalculated using the appropriately weighted average of the temperature diagnostics
+\item The temperature is recalculated using this density.
+\end{enumerate}
+
+This iterative procedure is carried out successively for low, medium and high ionisation zones, and in each case if no diagnostics are available, the temperature and/or density will be taken to be those derived for the previous zone.
 
 \begin{table}
 \begin{tabular}{ccc}
@@ -159,28 +172,28 @@ Diagnostic & Lines & Weight \\
 \multicolumn{3}{c}{Medium ionisation zone}\\
 \hline
 Diagnostic & Lines & Weight \\
-~[Cl~{\sc iii}] density & & 1 \\
-~[Ar~{\sc iv}] density & & 1 \\
-~[C~{\sc iii}] density & & 1 \\
-~[O~{\sc iii}] density & & 0 \\
-~[Ar~{\sc iii}] density & & 0 \\
-~[S~{\sc iii}] density & & 0 \\
-~[Ne~{\sc iii}] density & & 0 \\
+~[Cl~{\sc iii}] density & $\lambda$5517/$\lambda$5537 & 1 \\
+~[Ar~{\sc iv}] density & $\lambda$4711/$\lambda$4740 & 1 \\
+~[C~{\sc iii}] density & $\lambda$1907/$\lambda$1909 & 1 \\
+~[O~{\sc iii}] density & $\lambda$52$\mu$m/$\lambda$88$\mu$m & 0 \\
+~[Ar~{\sc iii}] density & $\lambda$9$\mu$m/$\lambda$21.8$\mu$m & 0 \\
+~[S~{\sc iii}] density & $\lambda$18.7$\mu$m/$\lambda$33.8$\mu$m & 0 \\
+~[Ne~{\sc iii}] density & $\lambda$15.5$\mu$m/$\lambda$36.0$\mu$m & 0 \\
 ~\\
-~[O~{\sc iii}] temperature & optical & 4\\
-~[Ar~{\sc iii}] temperature & & 2\\
-~[Ne~{\sc iii}] temperature & optical & 2\\
-~[S~{\sc iii}] temperature & & 1\\
-~[Ne~{\sc iii}] temperature & IR & 0\\
-~[O~{\sc iii}] temperature & IR & 0\\
+~[O~{\sc iii}] temperature & $\frac{\lambda 4959 + \lambda 5007}{\lambda 4363}$ & 4\\
+~[Ar~{\sc iii}] temperature &7135 + 7751/5192 & 2\\
+~[Ne~{\sc iii}] temperature & 3868 + 3967/3342 & 2\\
+~[S~{\sc iii}] temperature & 9069 + 9531/6312 & 1\\
+~[Ne~{\sc iii}] temperature & 3868 + 3967/15.5$\mu$m & 0\\
+~[O~{\sc iii}] temperature &4959 + 5007/52 & 0\\
 \hline
 \multicolumn{3}{c}{High ionisation zone}\\
 \hline
 Diagnostic & Lines & Weight \\
-~[Ne~{\sc iv}] density & & 1 \\
+~[Ne~{\sc iv}] density & 2423/2425 & 1 \\
 ~\\
-~[Ar~{\sc v}] temperature & & 1 \\
-~[Ne~{\sc v}] temperature & & 1 \\
+~[Ar~{\sc v}] temperature & 6435 + 7005/4625& 1 \\
+~[Ne~{\sc v}] temperature & 3426 + 3345/2975 & 1 \\
 \end{tabular}
 \label{zonestable}
 \caption{Diagnostics used in the calculation of physical conditions.}
@@ -194,9 +207,13 @@ Recombination lines are also used to derive ionic abundances.  In deep spectra, 
 
 \subsection{Total elemental abundances}
 
-Total elemental abundances are estimated using Ionisation Correction Factors.  The code includes the ICF scheme of \citet{1994MNRAS.271..257K}.
+Generally, not all ionisation stages of an ion that are actually present in a nebula will be detected, due to limited wavelength coverage and detection limits.  Total elemental abundances are thus estimated using ionisation correction schemes, which are derived from photoionisation models, or similarities in ionisation potentials, or a combination of the two.
+
+The code currently includes the ICF scheme of \citet{1994MNRAS.271..257K}.  We plan to incorporate further ICFs, and in a forthcoming paper we will compare the magnitude of the systematic uncertainties arising from the choice of ICF with the statistical uncertainties.
 
 \section{Statistical uncertainties}
+
+The most powerful aspect of NEAT is its ability to robustly quantify the statistical uncertainties on the derived quantities.  In this section we discuss commonly applied analytical techniques of uncertainty propagation, and show that they rely on assumptions which are often violated in typical astronomical observations.  We describe the Monte Carlo approach used in NEAT and show that it is superior to analytical techniques.
 
 Uncertainties in observed quantities can be propagated into the uncertainty on derived parameters in a number of different ways, the two most common of which are the traditional analytical technique based on systems of partial derivatives and simplifying assumptions that allow one to apply Taylor expansions, and the `Monte Carlo' method which is a brute-force iterative method that exploits the wealth of computational power now readily available by building on knowledge of the uncertainty in the original observations.
 
@@ -226,30 +243,27 @@ and it thus follows that
 
 This expression can be generalised to any number of variables, and gives rise to the usual quadrature formulae for many simple functions of $x$.  We highlight three key aspects of this approach:
 
-\begin{itemize}
+\begin{enumerate}
   \item Given the number of formulae through which the original line flux data must be put before an abundance can be determined, and the wide variety of functions applied, the equations necessary to propagate uncertainties in this way can become extremely complex;
   \item the approach implicitly assumes that all the input and output uncertainties at each step are normally distributed;
   \item the Taylor expansion requires that the uncertainties be small relative to the quantities.
-\end{itemize}
+\end{enumerate}
 
 The first point is a matter of convenience but none the less one which discourages many authors from even attempting to propagate uncertainties all the way into the final quantities.  The second and third points are clearly violated in many or most real astrophysical observations, by virtue of which the uncertainties estimated using analytical techniques will be unreliable.
 
-The Monte Carlo method, on the other hand, exploits the fact that an observation of a quantity $x$ is drawn from a distribution $X$, with mean $x$ and variance $\sigma_x$ . If one knows (or can make sensible assumptions about) the shape of this distribution, a random-number generator can be used to repeatedly draw values from X, creating a random sample from it. Using the above example of $F = f (x)$, if one wanted to examine the uncertainty in F , the operation f(x) could be performed upon every value in the aforementioned sample to produce a sample of the distribution from which F is drawn, which can then be parameterised to estimate the type, mean and standard deviation of this distribution. This process can be repeated ad infinitum for any number or combination of functions of F , x, or any other variable derived in the same way to propagate the uncertainties on the quantities, irrespective of the size of the uncertainties and any statistical interdependence of the variables.  This approach thus has the following advantages over the analytical approach:
+The Monte Carlo method, on the other hand, exploits the fact that an observation of a quantity $x$ is drawn from a distribution $X$, with mean $x$ and variance $\sigma_x$ . If one knows (or can make sensible assumptions about) the shape of this distribution, a random-number generator can be used to repeatedly draw values from X, creating a random sample from it. Using the above example of $F = f (x)$, if one wanted to examine the uncertainty in F, the operation f(x) could be performed upon every value in the aforementioned sample to produce a sample of the distribution from which F is drawn, which can then be parameterised to estimate the type, mean and standard deviation of this distribution. This process can be repeated ad infinitum for any number or combination of functions of F, x, or any other variable derived in the same way to propagate the uncertainties on the quantities, irrespective of the size of the uncertainties and any statistical interdependence of the variables.  This approach thus has the following advantages over the analytical approach:
 
-\begin{itemize}
+\begin{enumerate}
   \item It is inherently very simple;
   \item it requires no assumption about the particular distribution of uncertainties at any stage;
   \item it does not require relative uncertainties to be small
-\end{itemize}
+\end{enumerate}
 
 The Monte Carlo approach is thus inherently robust when applied to real astrophysical data, in a way that the analytical approach is not.  The only limitation is then the time taken to run the calculation enough times to sample well the statistics of the output distributions.
 
-To demonstrate how traditional methods of uncertainty propagation do not properly reflect the true uncertainties on the derived chemical abundances, we present here a reanalysis using NEAT of observations of the Orion Nebula originally presented by Esteban et al. (2004).  These authors presented input line flux uncertainties as well as output abundance uncertainties, having propagated them analytically, making their dataset ideal for the purposes of comparing analytic and Monte Carlo uncertainty propagation.
+To demonstrate how traditional methods of uncertainty propagation do not properly reflect the true uncertainties on the derived chemical abundances, we present here a reanalysis using NEAT of observations of the nebula surrounding the Large Magellanic Cloud Wolf-Rayet star WR18.  These observations were presented by Stock et al. (2011) and analysed using an earlier version of NEAT.  In this section we calculate the abundances and uncertainties using both the current version of NEAT, which accounts for non-Gaussian line flux uncertainties, and using analytical techniques.
 
-Element		Esteban			Us
-Helium		10.991 +- 0.003		10.98+0.017-0.019
-Carbon		8.42 +- 0.02		8.43 +- 0.02
-Oxygen
+We chose this object as it is distant and faint, and the line measurements are thus necessarily measured with relatively low signal to noise ratios, and the effects of the assumptions in the analytical method are most apparent.  The results of this analysis are presented in Table~\ref{WR18_uncertainties_table}.
 
 %wo objects, along with the results from a third object which was originally analysed with NEAT (WR 18).  We chose objects having very deep, moderately deep and shallow spectra.  \citet{2011MNRAS.415..181F} presented a spectrum of NGC 7009 containing approximately 1300 identified emission lines.  NGC\,6543 \citep{2004MNRAS.351.1026W} has a spectrum with about 200 emission lines measured, and WR18 \citep{2011arXiv1108.3800S} has 36 lines detected.
 
@@ -274,7 +288,7 @@ It is clear from the figure that if the RP effect is neglected, a significantly 
 \begin{figure}
 \label{RPeffect}
 \includegraphics[width=0.47\textwidth]{figures/RPeffect.png}
-\caption{The abundance discrepancy factor for oxygen in NGC\,6543, determined both neglecting and including the RP effect}
+\caption{The abundance discrepancy factor for oxygen in NGC\,6543, determined both neglecting (red points) and including (blue points) the RP effect.  The solid lines are gaussian fits to the observed distributions of results}
 \end{figure}
 
 In other shallower spectra, it may often be the case that the auroral lines [N~{\sc ii}] $\lambda$5754 and [O~{\sc iii}] $\lambda$4363 are measured with low enough SNR that they become subject to the RP effect.  In this case, the derived temperatures would be overestimated, and collisionally excited line abundances underestimated.  Example?
@@ -282,7 +296,7 @@ In other shallower spectra, it may often be the case that the auroral lines [N~{
 \subsection{Interstellar extinction}
 \label{extinction}
 
-We investigate the effect of the uncertainty in R, the ratio of total to selective extinction given by
+NEAT allows a robust propagation of uncertainties from line flux measurements into derived quantities.  It is also possible to investigate the effect of uncertainties arising at different stages of the process.  In this section, we consider the effect of the uncertainty in R, the ratio of total to selective extinction given by
 
 \begin{equation}
 R = \frac{A(V)}{E(B-V)}
