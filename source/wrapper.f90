@@ -10,6 +10,11 @@ program wrapper
         INTEGER :: I, runs, doublext, Narg !runs = number of runs for randomiser
         character*6 :: no
 
+        !time variables
+
+        character*8 :: date
+        character*10 :: time
+
         !file reading variables
 
         TYPE(LINE),DIMENSION(:), allocatable :: linelist
@@ -81,6 +86,12 @@ program wrapper
 
         print *,"Initialising"
         print *,"------------"
+
+        call DATE_AND_TIME(date,time)
+        print *
+        print *,"Start time: ",date(1:4)," ",date(5:6)," ",date(7:8)," ",time(1:2),":",time(3:4),":",time(5:10)
+
+        print *
 
         I = 1
         OPEN(199, file=filename, iostat=IO, status='old')
@@ -279,6 +290,7 @@ contains
                 REAL     :: s = 0.449871, t = -0.386595, a = 0.19600, b = 0.25472,           &
                             r1 = 0.27597, r2 = 0.27846, u, v, x, y, q
                 REAL :: half
+                REAL :: newmean, newsnr, snr
 
                 half = 0.5
 
@@ -301,9 +313,29 @@ contains
                                         IF (v**2 < -4.0*LOG(u)*u**2) EXIT
                                 END DO
                                 fn_val = v/u
-                                temp4=linelist(j)%intensity+(fn_val*linelist(j)%int_err)
-                                if(temp4 < 0) temp4 = 0
-                                linelist(j)%intensity = temp4
+
+
+                                if (linelist(j)%intensity/linelist(j)%int_err .gt. 6.0) then !normal distribution
+
+                                        temp4=linelist(j)%intensity+(fn_val*linelist(j)%int_err)
+                                        if(temp4 < 0) temp4 = 0.D0
+                                        linelist(j)%intensity = temp4
+
+                                elseif (linelist(j)%int_err .ge. linelist(j)%intensity) then !it's an upper limit, take number from semi-gaussian distribution with peak at zero and 5 sigma = intensity
+                                        linelist(j)%intensity = abs(fn_val)*0.2*linelist(j)%intensity
+                                else !if SN<6, then take lognormal distribution, parameters from Rola & Pelat (1994)
+                                     !for SN<6, the actual mean is derived from the observed mean using
+                                        snr = linelist(j)%intensity/linelist(j)%int_err
+                                        newmean = 0.0765957/(snr**2) + 1.86037/snr - 0.309695
+                                     !the actual standard deviation is derived from the observed using
+                                        newsnr = -1.11329/(snr**3) + 1.8542/(snr**2) - 0.288222/snr + 0.18018
+                                     !(fits to the data in Rola & Pelat's table 6)
+                                     !the distributions in table 6 give the mean and sigma of log-normal distributions of S/N(obs), given S/N(true).  We don't know S/N(true) but using the distributions as that of the factor by which line fluxes are overestimated is equivalent.  So,
+                                        temp4 = exp(fn_val*newsnr + newmean)
+                                        if (temp4 < 0 ) temp4 = 0.D0
+                                        linelist(j)%intensity = linelist(j)%intensity / temp4
+
+                                endif
                         end do
                 !end do
                 PRINT*, "Randomizing complete"

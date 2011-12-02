@@ -231,8 +231,7 @@ implicit none
 
 
        else
-                       oiiTratio=0.0
-                PRINT*, "OII temperature diagnostic missing, Wi n�t trei a h�liday in Sweden this yer? "
+                       oiiTratio=0.0 
        endif
 
 ! S II
@@ -346,8 +345,6 @@ implicit none
          endif
 
      enddo
-
-                 PRINT*, ILs(get_ion("oii3726    ",ILs, Iint))%int_dered
 
 ! medium ionisation
         cliiiDens = 0
@@ -524,7 +521,6 @@ implicit none
                 call deredden_Fitz(He_lines, 4, meanextinction)
                 CALL deredden_Fitz(linelist, listlength, meanextinction)
         endif
-                PRINT*, ILs(get_ion("oii3726    ",ILs, Iint))%int_dered   
 
       enddo
 

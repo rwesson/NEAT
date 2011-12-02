@@ -222,7 +222,7 @@
      & 1X, A3, 1X, F7.4, 1X, A3, 1X, A7, 3X, F11.4, A1, A1, 1X, I2, &
      &1X, A1, 1X, A9, 1X, F13.4, 1X, A1, A1, 1X, I2, 1X, A1, 1X, A9, 1X,&
      & F7.4, 1X, F7.4, 1X, F7.4)!, 1X, E10.4, 1X, E10.4, 1X)
-            OPEN(201, file="atomic_data06/Roii.dat", status='old')
+            OPEN(201, file="Atomic-data/Roii.dat", status='old')
             DO i = 1,415
             READ(201,301) oiiRLs(i)%ION, oiiRLs(i)%Wave, oiiRLs(i)%Hyb, &
      &oiiRLs(i)%Rem1, oiiRLs(i)%Rem2, oiiRLs(i)%Rem3, oiiRLs(i)%Rem4,   &
@@ -829,7 +829,7 @@
      & 1X, A3, 1X, F7.4, 1X, A3, 1X, A7, 3X, F11.4, A1, A1, 1X, I2, &
      &1X, A1, 1X, A9, 1X, F13.4, 1X, A1, A1, 1X, I2, 1X, A1, 1X, A9, 1X,&
      & F7.4, 1X, F7.4, 1X, F7.4)!, 1X, E10.4, 1X, E10.4, 1X)
-            OPEN(201, file="atomic_data06/Rnii.dat", status='old')
+            OPEN(201, file="Atomic-data/Rnii.dat", status='old')
             DO i = 1,99
             READ(201,301) niiRLs(i)%ION, niiRLs(i)%Wave, niiRLs(i)%Hyb, &
      &niiRLs(i)%Rem1, niiRLs(i)%Rem2, niiRLs(i)%Rem3, niiRLs(i)%Rem4,   &
@@ -1284,7 +1284,7 @@
 ! read in NII data
 
        301 FORMAT (F7.2, 1X, F6.4, 1X, F7.4, 1X, F7.4, 1X, F7.4, 1X, F7.4) 
-       OPEN(201, file="atomic_data06/Rcii.dat", status='old')
+       OPEN(201, file="Atomic-data/Rcii.dat", status='old')
        DO i = 1,57
          READ(201,301) ciiRLs(i)%Wave, ciiRLs(i)%a, ciiRLs(i)%b, &
          & ciiRLs(i)%c, ciiRLs(i)%d, ciiRLs(i)%f
@@ -1390,7 +1390,7 @@
 ! read in NII data
 
        301 FORMAT (F7.2, 1X, F6.3, 1X, F6.3, 1X, F6.3, 1X, F6.3, 1X, F7.4, 1X, F6.3) 
-       OPEN(201, file="atomic_data06/Rneii.dat", status='old')
+       OPEN(201, file="Atomic-data/Rneii.dat", status='old')
        DO i = 1,38
          READ(201,301) neiiRLs(i)%Wave, neiiRLs(i)%a, neiiRLs(i)%b, &
          & neiiRLs(i)%c, neiiRLs(i)%d, neiiRLs(i)%f, neiiRLs(i)%Br
@@ -1497,7 +1497,7 @@
 ! read in NII data
 
        301 FORMAT (A3,1X,F7.2, 1X, F5.3, 1X, F6.3, 1X, F5.3, 1X, F5.3, 1X, F5.4)
-       OPEN(201, file="atomic_data06/Rxiii.dat", status='old')
+       OPEN(201, file="Atomic-data/Rxiii.dat", status='old')
        DO i = 1,6
          READ(201,301) xiiiRLs(i)%ion, xiiiRLs(i)%Wave, xiiiRLs(i)%a, &
          & xiiiRLs(i)%b, xiiiRLs(i)%c, xiiiRLs(i)%d, xiiiRLs(i)%Br
