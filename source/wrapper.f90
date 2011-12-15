@@ -15,6 +15,10 @@ program wrapper
         character*8 :: date
         character*10 :: time
 
+        !input options
+
+        CHARACTER*2048, DIMENSION(:), allocatable :: options
+
         !file reading variables
 
         TYPE(LINE),DIMENSION(:), allocatable :: linelist
@@ -32,58 +36,63 @@ program wrapper
         !read command line arguments
 
         Narg = IARGC() !count input arguments
+        ALLOCATE (options(Narg))
 
-        if(Narg < 2) then
-                PRINT*, "Incorrect arguments"
-                PRINT*, "syntax: ./abundances.exe #iterations linelist_file"
-                PRINT*, " "
-                STOP
-        endif
+        do i=1,Narg
+                call getarg(i,options(i))
+        enddo
 
-        CALL getarg(1,temp) !get info from input arguments
-        read (temp,*) runs
-        CALL getarg(2,filename)
-          switch_ext = "F"
-        if(Narg .ge. 3) then !check additional input arguments for switches (currently extinction laws only)
-               CALL getarg (3, temp) !get argument for extinction laws, allowed values -LMC for Howarth LMC, -CCM for CCM galactic, -SMC for Prevot SMC, default is Seaton/Howarth galactic.
-               if (temp == "-LMC")then
-                 switch_ext = "H"
-               elseif (temp == "-CCM")then
-                 switch_ext = "C"
-               elseif (temp == "-SMC")then
-                 switch_ext = "P"
-               elseif (temp == "-Fit")then
-                 switch_ext = "F"
-               elseif (temp == "-dll") then
-                 make_dered_ll = 1
-                 switch_ext = "S"
-               else
-                 switch_ext = "S"
-               endif
-        if(Narg == 4)then
-               call getarg(4,tempa)
-               read (tempa,*) R 
-        endif
-!               CALL getarg (3, temp) !get argument for extinction laws, allowed values -LMC for Howarth LMC, -CCM for CCM galactic, -SMC for Prevot SMC, default is Seaton/Howarth galactic.
-!               call getarg (4, tempa)
-!               if (temp == "-LMC" .or. tempa == "-LMC")then
-!                 switch_ext = "H"
-!               elseif (temp == "-CCM" .or. tempa == "-CCM")then
-!                 switch_ext = "C"
-!               elseif (temp == "-SMC" .or. tempa == "-SMC")then
-!                 switch_ext = "P"
-!               elseif (temp == "-Fit" .or. tempa == "-Fit")then
-!                 switch_ext = "F"
-!               elseif (temp == "-dll" .or. tempa == "-dll") then
-!                 switch_ext = "S"
-!                 make_dered_ll = 1
-!               else
-!                 switch_ext = "S"
-!               endif
-!        else
-!               switch_ext = "S"
-        endif
+        ! set defaults
 
+        runs=1
+        switch_ext="S"
+        filename=""
+
+        ! process command line arguments
+
+        do i=1,Narg 
+                if ((trim(options(i))=="-n" .or. trim(options(i))=="--n-iterations") .and. (i+1) .le. Narg) then
+                   read (options(i+1),*) runs
+                endif
+                if ((trim(options(i))=="-i" .or. trim(options(i))=="--input") .and. (i+1) .le. Narg) then
+                  filename=trim(options(i+1)) 
+                endif
+                if ((trim(options(i))=="-e" .or. trim(options(i))=="--extinction-law") .and. (i+1) .le. Narg) then
+                  if (trim(options(i+1)) == "LMC")then
+                    switch_ext = "H"
+                  elseif (trim(options(i+1)) == "CCM")then
+                    switch_ext = "C"
+                  elseif (trim(options(i+1)) == "SMC")then
+                    switch_ext = "P"
+                  elseif (trim(options(i+1)) == "Fit")then
+                    switch_ext = "F" 
+                  endif
+                endif
+         enddo
+
+         deallocate(options)
+
+         if (filename=="") then
+                print *,"Error: No input file specified"
+                stop
+         endif
+
+        ! read all arguments into array
+        ! loop through and read the relevant variables
+        ! print warning for unrecognised options
+        ! options are:
+        !  -n / --n-iterations    : number of iterations (default 1)
+        !  -i / --input           : input file (no default)
+        !  -e / --extinction-law  : extinction law (default Howarth 1983)
+        !  to be implemented:
+        !  -R                     : R (default 3.1)
+        !  -nelow / --density-low : low ionisation zone density (default - calculate from line list)
+        !  -telow / --temperature-low : low i. zone temperature
+        !  -nemed / --density-med : medium i. density
+        !  -temed / --temperature-med : medium i. temperature
+        !  -nehigh / --density-high : high i. density
+        !  -tehigh / --temperature-high : high i. temperature
+        !  -chb                   : value of c(Hb), the logarithmic extinction at H beta
 
 
         !first, read in the line list
@@ -93,9 +102,8 @@ program wrapper
 
         call DATE_AND_TIME(date,time)
         print *
-        print *,"Start time: ",date(1:4)," ",date(5:6)," ",date(7:8)," ",time(1:2),":",time(3:4),":",time(5:10)
-
-        print *
+        print *,"Start time: ",time(1:2),":",time(3:4),":",time(5:10)," on ",date(7:8),"/",date(5:6),"/",date(1:4)
+        print *,"Input file: ",filename
 
         I = 1
         OPEN(199, file=filename, iostat=IO, status='old')
@@ -280,6 +288,9 @@ program wrapper
                 print*, "I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."
         endif
 
+        call DATE_AND_TIME(date,time)
+        print *
+        print *,"End time:   ",time(1:2),":",time(3:4),":",time(5:10)," on ",date(7:8),"/",date(5:6),"/",date(1:4)
 
 contains
 
