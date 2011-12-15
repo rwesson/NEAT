@@ -4,9 +4,9 @@ implicit none
 
 contains
 
-subroutine calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction, switch_ext)
+subroutine calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction, switch_ext, R)
         TYPE(line), DIMENSION(38) :: H_BS
-        DOUBLE PRECISION :: c1, c2, c3, meanextinction
+        DOUBLE PRECISION :: c1, c2, c3, meanextinction, R
         double precision :: fl_ha, fl_hg, fl_hd
         double precision :: w1, w2, w3
         character :: switch_ext
@@ -23,9 +23,9 @@ elseif (switch_ext=="H") then ! howarth lmc
         fl_hg = flambdaLMC(dble(10000./4340.47),2)
         fl_hd = flambdaLMC(dble(10000./4101.74),2)
 elseif (switch_ext=="C") then ! CCM galactic
-        fl_ha = flambdaCCM(dble(10000./6562.77),3)
-        fl_hg = flambdaCCM(dble(10000./4340.47),3)
-        fl_hd = flambdaCCM(dble(10000./4101.74),3)
+        fl_ha = flambdaCCM(dble(10000./6562.77),3, R)
+        fl_hg = flambdaCCM(dble(10000./4340.47),3, R)
+        fl_hd = flambdaCCM(dble(10000./4101.74),3, R)
 elseif (switch_ext=="P") then ! Prevot SMC
         fl_ha = flambdaSMC(dble(10000./6562.77),3)
         fl_hg = flambdaSMC(dble(10000./4340.47),2)
@@ -78,9 +78,9 @@ endif
 
 end subroutine calc_extinction_coeffs
 
-subroutine calc_extinction_coeffs_loop(H_BS, c1, c2, c3, meanextinction, switch_ext, temp, dens)
+subroutine calc_extinction_coeffs_loop(H_BS, c1, c2, c3, meanextinction, switch_ext, temp, dens, R)
         TYPE(line), DIMENSION(38) :: H_BS
-        DOUBLE PRECISION :: c1, c2, c3, meanextinction
+        DOUBLE PRECISION :: c1, c2, c3, meanextinction, R
         double precision :: fl_ha, fl_hg, fl_hd
         character :: switch_ext
         double precision :: temp, dens, a,b,c
@@ -97,9 +97,9 @@ elseif (switch_ext=="H") then ! howarth lmc
         fl_hg = flambdaLMC(dble(10000./4340.47),2)
         fl_hd = flambdaLMC(dble(10000./4101.74),2)
 elseif (switch_ext=="C") then ! CCM galactic
-        fl_ha = flambdaCCM(dble(10000./6562.77),3)
-        fl_hg = flambdaCCM(dble(10000./4340.47),3)
-        fl_hd = flambdaCCM(dble(10000./4101.74),3)
+        fl_ha = flambdaCCM(dble(10000./6562.77),3, R)
+        fl_hg = flambdaCCM(dble(10000./4340.47),3, R)
+        fl_hd = flambdaCCM(dble(10000./4101.74),3, R)
 elseif (switch_ext=="P") then ! Prevot SMC
         fl_ha = flambdaSMC(dble(10000./6562.77),3)
         fl_hg = flambdaSMC(dble(10000./4340.47),2)
@@ -323,8 +323,8 @@ end subroutine
 
 !-------CCM GALACTIC LAW----------------------------------!
 
-double precision function flambdaCCM(X,switch)
-        DOUBLE PRECISION :: X, a, b, y, Fa, Fb
+double precision function flambdaCCM(X,switch, R)
+        DOUBLE PRECISION :: X, a, b, y, Fa, Fb, R
         INTEGER :: switch
         !CCM 1989 Galactic
         if(switch == 1) then !far UV
@@ -348,15 +348,15 @@ double precision function flambdaCCM(X,switch)
                 b = (-1)*(0.527)*(X**1.61)
         endif
 
-        flambdaCCM = 3.1*a + b
-        flambdaCCM = (flambdaCCM / 3.61) - 1 ! 1.015452R + 0.461000
+        flambdaCCM = R*a + b
+        flambdaCCM = (flambdaCCM / ((1.015452*R) + 0.461000)) - 1 ! 1.015452R + 0.461000
 
 end function
 
-subroutine deredden_CCM(lines, number, m_ext)
+subroutine deredden_CCM(lines, number, m_ext, R)
         TYPE(line), DIMENSION(:) :: lines
         INTEGER :: number
-        DOUBLE PRECISION :: m_ext, fl
+        DOUBLE PRECISION :: m_ext, fl, R
         INTEGER :: i
 
         do i = 1,number
@@ -368,19 +368,19 @@ subroutine deredden_CCM(lines, number, m_ext)
                 endif
 
                 if(lines(i)%freq .gt. 8)then ! Far UV
-                        fl = flambdaCCM(lines(i)%freq, 1)
+                        fl = flambdaCCM(lines(i)%freq, 1, R)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
 
                 elseif((lines(i)%freq .gt. 3.3) .AND. (lines(i)%freq .lt. 8))then ! UV
-                        fl = flambdaCCM(lines(i)%freq, 2)
+                        fl = flambdaCCM(lines(i)%freq, 2, R)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
 
                 elseif((lines(i)%freq .gt. 1.1) .AND. (lines(i)%freq .lt. 3.3))then !optical & NIR
-                        fl = flambdaCCM(lines(i)%freq, 3)
+                        fl = flambdaCCM(lines(i)%freq, 3, R)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
 
                 elseif(lines(i)%freq .lt. 1.1)then !IR
-                        fl = flambdaCCM(lines(i)%freq, 4)
+                        fl = flambdaCCM(lines(i)%freq, 4, R)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl) 
 
                 endif

@@ -22,11 +22,12 @@ program wrapper
         CHARACTER*80 :: filename
         CHARACTER*1 :: null
         INTEGER :: IO, listlength
-        DOUBLE PRECISION :: temp1,temp2,temp3, mean_ext
+        DOUBLE PRECISION :: temp1,temp2,temp3, mean_ext, R
         type(resultarray), dimension(:), allocatable :: all_results
         type(resultarray), dimension(1) :: iteration_result
 
         make_dered_ll=0
+        R=3.1
 
         !read command line arguments
 
@@ -43,7 +44,7 @@ program wrapper
         read (temp,*) runs
         CALL getarg(2,filename)
           switch_ext = "F"
-        if(Narg == 3) then !check additional input arguments for switches (currently extinction laws only)
+        if(Narg .ge. 3) then !check additional input arguments for switches (currently extinction laws only)
                CALL getarg (3, temp) !get argument for extinction laws, allowed values -LMC for Howarth LMC, -CCM for CCM galactic, -SMC for Prevot SMC, default is Seaton/Howarth galactic.
                if (temp == "-LMC")then
                  switch_ext = "H"
@@ -59,25 +60,28 @@ program wrapper
                else
                  switch_ext = "S"
                endif
-        elseif(Narg == 4)then
-               CALL getarg (3, temp) !get argument for extinction laws, allowed values -LMC for Howarth LMC, -CCM for CCM galactic, -SMC for Prevot SMC, default is Seaton/Howarth galactic.
-               call getarg (4, tempa)
-               if (temp == "-LMC" .or. tempa == "-LMC")then
-                 switch_ext = "H"
-               elseif (temp == "-CCM" .or. tempa == "-CCM")then
-                 switch_ext = "C"
-               elseif (temp == "-SMC" .or. tempa == "-SMC")then
-                 switch_ext = "P"
-               elseif (temp == "-Fit" .or. tempa == "-Fit")then
-                 switch_ext = "F"
-               elseif (temp == "-dll" .or. tempa == "-dll") then
-                 switch_ext = "S"
-                 make_dered_ll = 1
-               else
-                 switch_ext = "S"
-               endif
-        else
-               switch_ext = "S"
+        if(Narg == 4)then
+               call getarg(4,tempa)
+               read (tempa,*) R 
+        endif
+!               CALL getarg (3, temp) !get argument for extinction laws, allowed values -LMC for Howarth LMC, -CCM for CCM galactic, -SMC for Prevot SMC, default is Seaton/Howarth galactic.
+!               call getarg (4, tempa)
+!               if (temp == "-LMC" .or. tempa == "-LMC")then
+!                 switch_ext = "H"
+!               elseif (temp == "-CCM" .or. tempa == "-CCM")then
+!                 switch_ext = "C"
+!               elseif (temp == "-SMC" .or. tempa == "-SMC")then
+!                 switch_ext = "P"
+!               elseif (temp == "-Fit" .or. tempa == "-Fit")then
+!                 switch_ext = "F"
+!               elseif (temp == "-dll" .or. tempa == "-dll") then
+!                 switch_ext = "S"
+!                 make_dered_ll = 1
+!               else
+!                 switch_ext = "S"
+!               endif
+!        else
+!               switch_ext = "S"
         endif
 
 
@@ -131,7 +135,7 @@ program wrapper
         !now check number of iterations.  If 1, line list is fine as is.  If more than one, randomize the fluxes
 
         if(runs == 1)then !calculates abundances without uncertainties
-                call abundances(linelist, 1, switch_ext, listlength, filename, iteration_result)
+                call abundances(linelist, 1, switch_ext, listlength, filename, iteration_result, R)
 
                 if(make_dered_ll ==  1)then
                         mean_ext=DBLE(0)
@@ -155,8 +159,9 @@ program wrapper
                         print*, " "
                         write (no, '(I6)') i
 
-                        call randomizer(linelist, listlength)
-                        call abundances(linelist, 0, switch_ext, listlength, filename, iteration_result)
+                        call randomizer(linelist, listlength, R)
+                        R=3.1 ! no randomisation
+                        call abundances(linelist, 0, switch_ext, listlength, filename, iteration_result, R)
                         linelist = linelist_original
                         all_results(i)=iteration_result(1)
                 END DO
@@ -278,11 +283,11 @@ program wrapper
 
 contains
 
-        subroutine randomizer(linelist, listlength)
+        subroutine randomizer(linelist, listlength, R)
 
                 TYPE(line), dimension(listlength) :: linelist
                 INTEGER :: IO, I, j, listlength
-                DOUBLE PRECISION :: temp1,temp2,temp3,temp4
+                DOUBLE PRECISION :: temp1,temp2,temp3,temp4, R
 
                 REAL :: fn_val
 
@@ -314,6 +319,7 @@ contains
                                 END DO
                                 fn_val = v/u
 
+                                if (j==1) R=3.1+(0.15*fn_val)
 
                                 if (linelist(j)%intensity/linelist(j)%int_err .gt. 6.0) then !normal distribution
 
@@ -369,7 +375,7 @@ SUBROUTINE deredden_ll(switch_ext, linelist, listlength, meanextinction )
         elseif (switch_ext == "H") then
                 CALL deredden_LMC(linelist, listlength, meanextinction)
         elseif (switch_ext == "C") then
-                CALL deredden_CCM(linelist, listlength, meanextinction)
+                CALL deredden_CCM(linelist, listlength, meanextinction, R)
         elseif (switch_ext == "P") then
                 CALL deredden_SMC(linelist, listlength, meanextinction)
         elseif (switch_ext == "F") then

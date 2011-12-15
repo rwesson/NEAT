@@ -1,5 +1,5 @@
 
-subroutine abundances(linelist, run, switch_ext,listlength, filename, iteration_result)
+subroutine abundances(linelist, run, switch_ext,listlength, filename, iteration_result, R)
 use mod_abundmaths
 use mod_abundtypes
 use mod_diagnostics
@@ -31,7 +31,7 @@ implicit none
         DOUBLE PRECISION :: CabundRL, CabundCEL, NabundRL, NabundCEL, OabundRL, OabundCEL, NeabundRL, NeabundCEL, SabundCEL, ArabundCEL, NOabundCEL, NCabundCEL, ClabundCEL
         DOUBLE PRECISION :: adfC, adfN, adfO, adfNe, w1, w2, w3, w4
         DOUBLE PRECISION :: adfC2plus, adfN2plus, adfO2plus, adfNe2plus
-        DOUBLE PRECISION :: c1, c2, c3, meanextinction, fl, ratob, tempi, temp, temp2, A4471, A4686, A6678, A5876
+        DOUBLE PRECISION :: c1, c2, c3, meanextinction, fl, ratob, tempi, temp, temp2, A4471, A4686, A6678, A5876, R
         REAL :: heiabund,heiiabund,Hetotabund
         REAL*8 :: HW
 
@@ -121,10 +121,12 @@ implicit none
                 print *,"Using Fitzpatrick (1990) galactic law" 
         endif
 
-        CALL calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction, switch_ext)
+        CALL calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction, switch_ext, R)
 
         !need to write output/ input stuff so user can insert own c(Hb)
         !assume we go on with calculated extinctions
+
+        print "(1X,A11,F4.2)","Adopted R: ",R
 
         print "(1X,A17,F5.2)","Ha/Hb => c(Hb) = ",c1
         print "(1X,A17,F5.2)","Hg/Hb => c(Hb) = ",c2
@@ -151,10 +153,10 @@ implicit none
                 call deredden_LMC(He_lines, 4, meanextinction) 
                 CALL deredden_LMC(linelist, listlength, meanextinction)
         elseif (switch_ext == "C") then
-                CALL deredden_CCM(ILs, Iint, meanextinction)
-                CALL deredden_CCM(H_BS, 4, meanextinction)
-                call deredden_CCM(He_lines, 4, meanextinction) 
-                CALL deredden_CCM(linelist, listlength, meanextinction)
+                CALL deredden_CCM(ILs, Iint, meanextinction, R)
+                CALL deredden_CCM(H_BS, 4, meanextinction, R)
+                call deredden_CCM(He_lines, 4, meanextinction, R) 
+                CALL deredden_CCM(linelist, listlength, meanextinction, R)
         elseif (switch_ext == "P") then
                 CALL deredden_SMC(ILs, Iint, meanextinction)
                 CALL deredden_SMC(H_BS, 4, meanextinction)
@@ -485,7 +487,7 @@ implicit none
 
         !update extinction. DS 22/10/11
         meanextinction=0        
-        CALL calc_extinction_coeffs_loop(H_BS, c1, c2, c3, meanextinction, switch_ext, medtemp, lowdens)
+        CALL calc_extinction_coeffs_loop(H_BS, c1, c2, c3, meanextinction, switch_ext, medtemp, lowdens, R)
         print*, "iteration", i, " extinction:"
         print "(1X,A17,F4.2,A4,F4.2)","Ha/Hb => c(Hb) = ",c1
         print "(1X,A17,F4.2,A4,F4.2)","Hg/Hb => c(Hb) = ",c2
@@ -506,10 +508,10 @@ implicit none
                 call deredden_LMC(He_lines, 4, meanextinction) 
                 CALL deredden_LMC(linelist, listlength, meanextinction)
         elseif (switch_ext == "C") then
-                CALL deredden_CCM(ILs, Iint, meanextinction)
-                CALL deredden_CCM(H_BS, 4, meanextinction)
-                call deredden_CCM(He_lines, 4, meanextinction) 
-                CALL deredden_CCM(linelist, listlength, meanextinction)
+                CALL deredden_CCM(ILs, Iint, meanextinction, R)
+                CALL deredden_CCM(H_BS, 4, meanextinction, R)
+                call deredden_CCM(He_lines, 4, meanextinction, R) 
+                CALL deredden_CCM(linelist, listlength, meanextinction, R)
         elseif (switch_ext == "P") then
                 CALL deredden_SMC(ILs, Iint, meanextinction)
                 CALL deredden_SMC(H_BS, 4, meanextinction)
