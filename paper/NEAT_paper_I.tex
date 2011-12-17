@@ -97,7 +97,7 @@ The words ``uncertainty" and ``error" are often used synonymously.  In this arti
 
 The new code, {\sc neat} (Nebular Empirical Analysis Tool), largely builds upon previous codes, most importantly the {\sc equib} code, also developed at UCL, for solving the equations of statistical equilibrium in multi-level atoms.  All the source code, documentation, atomic data and example line lists are freely available at \texttt{https://github.com/rwesson/NEAT}.  The code is designed to be as simple as possible from the user's perspective, and our aim is that the user should be able to simply pass the code a line list and get out abundances determined robustly.  The code requires no external libraries and should compile without problems on any Unix system.  We have also verified that it compiles and runs on Windows systems, should the user be restricted to such an OS.
 
-Almost all the atomic data used by the code is stored externally in plain text files, so that the user can easily change the atomic data being used without needing to recompile the code.  The only exception to this is that hydrogen recombination data from Hummer \& Storey (1995) is used throughout.  XXXX justify this
+Almost all the atomic data used by the code is stored externally in plain text files, so that the user can easily change the atomic data being used without needing to recompile the code.  The only exception to this is that hydrogen recombination data from Hummer \& Storey (1995) is used throughout.
 
 {\sc neat} requires as input a plain text list of rest wavelengths, line fluxes, and uncertainties.  The user can then select the number of iterations of the code to run.  If the number of iterations is one, the code performs a standard empirical analysis on the line list, as described below, and does not calculate any uncertainties.  If the number of iterations is more than one, then the code first randomises the line list, as described below.  The standard analysis is then carried out on the randomised line list.
 
@@ -358,7 +358,18 @@ Ne & 4.17 $\pm$ 0.94 & 3.23 $\pm$ 0.56 & 0.60 \\
 \label{RP_figures}
 \end{figure*}
 
-In other shallower spectra, it may often be the case that the auroral lines [N~{\sc ii}] $\lambda$5754 and [O~{\sc iii}] $\lambda$4363 are measured with low enough SNR that they become subject to the RP effect.  In this case, the derived temperatures would be overestimated, and collisionally excited line abundances underestimated.  H1013 from Esteban 2009 should be investigated here.
+In other shallower spectra, it may often be the case that the auroral lines [N~{\sc ii}] $\lambda$5754 and [O~{\sc iii}] $\lambda$4363 are measured with low enough SNR that they become subject to the RP effect.  In this case, the derived temperatures would be overestimated, and collisionally excited line abundances underestimated.  To investigate this effect, we analysed the line list of H1013, an extragalactic H~{\sc ii} region in the spiral galaxy M101, presented by Esteban et al. (2009).  In this nebula, the [O~{\sc iii}] line at 4363{\AA} is detected with an SNR of only 2.7.
+
+Figure~\ref{h1013_RP_effect} shows that significant systematic uncertainties are produces when the RP effect on temperature diagnostic lines is ignored.  When the effect is neglected, we determine an [O~{\sc iii}] temperature of 7480$\pm$610\,K, in very close agreement with the value of 7370$\pm$630\,K reported by Esteban et al. (2009).  However, when we account for the RP effect, we find a value of 6840$\pm$390\,K.  Similarly for abundances, considering O$^{2+}$/H$^+$, we find that by neglecting the RP effect we obtain a value of 7.95$\pm$0.15 (on a logarithmic scale where N(H)=12), close to the value of 8.05$\pm$0.12 obtained by Esteban at al. (2009).  Accounting for the effect yields a value of 8.16$\pm$0.12.
+
+We re-emphasise, therefore, that neglecting this effect results in incorrect abundances.  Accounting for it improves both the accuracy and precision of the abundances determined.
+
+\begin{figure*}
+\includegraphics[width=0.48\textwidth]{figures/h1013_rp_temperature.png}
+\includegraphics[width=0.48\textwidth]{figures/h1013_rp_abundance.png}
+\caption{The RP effect when CEL temperature diagnostic lines are measured with low SNR.  The figure shows a reanalysis of data for the H~{\sc ii} region H1013, showing the RP effect on the derived [O~{\sc iii}] temperature (l) and O$^{2+}$/H$^+$ abundance (r).}
+\label{h1013_RP_effect}
+\end{figure*}
 
 \section{Interstellar extinction}
 \label{extinction}
@@ -384,7 +395,7 @@ We find that including the effect of an uncertainty in R has a noticeable effect
 
 \section{Discussion}
 
-Motivated by the necessity of properly understanding sources of uncertainties in analyses of photoionised nebulae, we have presented a new code for calculating chemical abundances in photoionised nebulae, which also robustly calculates the statistical uncertainties on the abundances determined.  The code is freely available and we welcome feature requests and bug reports.
+Motivated by the necessity of properly understanding sources of uncertainties in analyses of photoionised nebulae, we have presented a new code for calculating chemical abundances in photoionised nebulae, which also robustly calculates the statistical uncertainties on the abundances determined.  The code is freely available and we welcome bug reports and feature requests.
 
 We have demonstrated that analytic methods of uncertainty propagation rely on assumptions that typically do not hold for real astronomical data, and therefore we have adopted a Monte Carlo approach.  We have shown that the analytic approach does not give a good estimate of the true statistical uncertainties.
 
