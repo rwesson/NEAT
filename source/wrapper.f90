@@ -92,6 +92,10 @@ program wrapper
                 endif
          enddo
 
+         if (Narg .eq. 1) then
+           filename=trim(options(1))
+         endif
+
          deallocate(options)
 
          if (filename=="") then
