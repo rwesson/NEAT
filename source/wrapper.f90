@@ -36,6 +36,28 @@ program wrapper
         !read command line arguments
 
         Narg = IARGC() !count input arguments
+
+        if (Narg .eq. 0) then
+           print *,"Syntax: ./abundances.exe [option1 value1] [option2 value2] .. [optionx valuex]"
+           print *,"Available options:" 
+           print *,"  -i / --input"
+           print *,"       Input file"
+           print *,"       No default"
+           print *,"  -n / --n-iterations"
+           print *,"       Number of iterations"
+           print *,"       Default: 1"
+           print *,"  -e / --extinction-law"
+           print *,"       Extinction law"
+           print *,"       Default: Howarth (1983, MNRAS, 203, 301)"
+           print *,"       Values:"
+           print *,"          How:  Galactic law of Howarth (1983, MNRAS, 203, 301)"
+           print *,"          CCM:  Galactic law of Cardelli, Clayton, Mathis (1989, ApJ, 345, 245)"
+           print *,"          Fitz: Galactic law of Fitzpatrick & Massa (1990, ApJS, 72, 163)"
+           print *,"          LMC:  LMC law of Howarth (1983, MNRAS, 203, 301)"
+           print *,"          SMC:  SMC law of Prevot et al. (984, A&A, 132, 389)"
+           stop
+        endif
+
         ALLOCATE (options(Narg))
 
         do i=1,Narg
