@@ -7,7 +7,7 @@ program wrapper
 
         CHARACTER*10 :: temp, tempa
         CHARACTER :: switch_ext !switch for extinction laws
-        INTEGER :: I, runs, doublext, Narg !runs = number of runs for randomiser
+        INTEGER :: I, runs, Narg !runs = number of runs for randomiser
         character*6 :: no
 
         !time variables
