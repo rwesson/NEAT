@@ -133,7 +133,6 @@ implicit none
         print "(1X,A17,F5.2)","Hd/Hb => c(Hb) = ",c3
 
         PRINT "(1X,A13,F4.2,A4,F4.2)", "Mean c(Hb) = ",meanextinction
-        if (runonce == 0 .and. meanextinction > 0) iteration_result(1)%mean_cHb = meanextinction
 
         if (meanextinction .lt. 0.0) then
            print *,"Derived extinction <0 ; assuming 0"
@@ -526,6 +525,7 @@ implicit none
 
       enddo
 
+        if (runonce == 0 .and. meanextinction > 0) iteration_result(1)%mean_cHb = meanextinction
 
 
 ! high ionisation
