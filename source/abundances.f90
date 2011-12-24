@@ -494,6 +494,10 @@ implicit none
 
         PRINT "(1X,A13,F4.2,A4,F4.2)", "Mean c(Hb) = ",meanextinction
 
+        if (meanextinction .lt. 0.0) then
+           print *,"Derived extinction <0 ; assuming 0"
+           meanextinction = 0.0
+        endif
 
         linelist = linelist_orig
         if (switch_ext == "S") then
