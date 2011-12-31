@@ -75,11 +75,11 @@ ISM: abundances -- atomic processes -- methods: statistical
 
 \section{Introduction}
 
-Abundance determinations from photoionised nebulae play crucial roles in a variety of astrophysical contexts. Nebulae around evolved stars, e.g. Planetary Nebulae (PNe) or Wolf-Rayet (WR) ejecta nebulae provide constraints on theories of stellar nucleosynthesis and evolution (e.g. \citealt{2009ApJ...690.1130K};  \citealt{2011arXiv1110.1186M}; \citealt{1992A&A...264..105M}; \citealt{2011MNRAS.tmp.1754S}). Such data is invaluable as constraints on stellar yields; the \textit{inputs} of galactic chemical evolution models. While Galactic and extragalactic H~{\sc ii} regions provide insights into the current composition of the ISM and therefore are vital constraints for the \textit{output} of galactic chemical evolution models (e.g. \citealt{1997nceg.book.....P}; \citealt{2003ceg..book.....M}).
+Abundance determinations from photoionised nebulae play crucial roles in a variety of astrophysical contexts. Nebulae around evolved stars, e.g. Planetary Nebulae (PNe) or Wolf-Rayet (WR) ejecta nebulae provide constraints on theories of stellar nucleosynthesis and evolution (e.g. \citealt{2009ApJ...690.1130K};  \citealt{2011arXiv1110.1186M}; \citealt{1992A&A...264..105M}; \citealt{2011MNRAS.tmp.1754S}). Such data is invaluable as constraints on stellar yields; the \textit{inputs} of galactic chemical evolution models. Meanwhile, Galactic and extragalactic H~{\sc ii} regions provide insights into the current composition of the ISM and therefore are vital constraints for the \textit{output} of galactic chemical evolution models (e.g. \citealt{1997nceg.book.....P}; \citealt{2003ceg..book.....M}).
 
-Such studies have a very long history, stretching back to the dawn of astrophysics (e.g. \citep{1864RSPT..154..437H}), but some major questions remain unanswered.  One long standing issue is the sometimes sizable discrepancy between abundances derived from collisionally excited lines (CELs) and those derived from recombination lines (RLs) (\citealt{2005MNRAS.362..424W}; \citet{2006MNRAS.368.1959L}; \citealt{2007ApJ...670..457G}; \citealt{2008MNRAS.386...22T}).
+Studies of photoionised nebulae have a very long history, stretching back to the dawn of astrophysics (e.g. \citep{1864RSPT..154..437H}), but some major questions remain unanswered.  One long standing issue is the sometimes sizable discrepancy between abundances derived from collisionally excited lines (CELs) and those derived from recombination lines (RLs) (\citealt{2005MNRAS.362..424W}; \citet{2006MNRAS.368.1959L}; \citealt{2007ApJ...670..457G}; \citealt{2008MNRAS.386...22T}).
 
-A meaningful comparison of observations with models is only possible if the uncertainties on both the observations and the model can be estimated.  In neither case, though, is such an estimate straightforward.  The uncertainty on the observations is a combination of statistical uncertainties, relating ultimately to measurement uncertainties, and systematic uncertainties, which may arise from many sources including the instrumentation used to obtain the line flux measurements, the chosen parametrisation of the interstellar reddening law, and the methodological choices made in the analysis.  Sources of systematic uncertainty may be unknown and even unquantifiable.  Finally, the uncertainty attributed to models is perhaps the most difficult to quantify, being related ultimately to the confidence the modeller has that the model encapsulates the underlying physics without excessive simplification or unwarranted assumptions.
+To meaningully assess whether results determined observationally are consistent or discprepent with model predictions, the uncertainties on both the observations and the model must be estimated.  In neither case is such an estimate straightforward.  The uncertainty on the observations is a combination of statistical uncertainties, relating ultimately to measurement uncertainties, and systematic uncertainties, which may arise from many sources including the instrumentation used to obtain the line flux measurements, the chosen parametrisation of the interstellar reddening law, and the methodological choices made in the analysis.  Sources of systematic uncertainty may be unknown and even unquantifiable.  Finally, the uncertainty attributed to models is perhaps the most difficult to quantify, being related ultimately to the confidence the modeller has that the model encapsulates the underlying physics without excessive simplification or unwarranted assumptions.
 
 We concern ourselves in this paper with an improved understanding of statistical uncertainties and their effect on empirically determined nebular abundances.  We present a new code for calculating chemical abundances in photoionised nebulae, which can also robustly estimate statistical uncertainties using a Monte Carlo approach, so called because of its reliance on probabilities.  This method is inherently superior to analytic methods of uncertainty propagation, which rely on assumptions which are almost always violated by the measurement uncertainties inherent to actual astronomical observations.
 
@@ -150,9 +150,10 @@ and similarly for c(H$\beta)_\gamma$ and c(H$\beta)_\delta$.  The analytically e
 
 where
 
-\begin{equation}
-\Delta c(H\beta)_\alpha = c(H\beta)_\alpha \times \sqrt{\left(\frac{\Delta I(H\alpha)}{I(H\alpha)}\right)^2 + \left(\frac{0.434 \times (\Delta\frac{I(H\alpha)}{I_0(H\alpha)})}{\frac{I(H\alpha)}{I_0(H\alpha)}}\right)^2}
-\end{equation}
+\begin{eqnarray}
+\Delta c(H\beta)_\alpha &= c(H\beta)_\alpha \times \bigg(\left(\frac{\Delta I(H\alpha)}{I(H\alpha)}\right)^2 \\
+&+ \left(\frac{0.434 \times (\Delta\frac{I(H\alpha)}{I_0(H\alpha)})}{\frac{I(H\alpha)}{I_0(H\alpha)}}\right)^2\bigg)^{0.5}
+\end{eqnarray}
 
 The mere derivation of such a formula is tiresome and complicated, and it would be exceedingly easy for errors to be introduced.  Even this is somewhat simplified: this equation assumes zero uncertainty in the values of f(H$\alpha, \gamma, \delta$) and I$_0(H\alpha, \gamma, \delta)$.  The uncertainty estimated for c(H$\beta$) then has to be propagated into the complex functions of line ratios which are used to give temperatures and densities, and then into the calculations of ionic abundances.
 
@@ -172,7 +173,7 @@ We have developed a new code, {\sc neat} (Nebular Empirical Analysis Tool), to q
 
 \subsection{Input}
 
-{\sc neat} incorporates elements of several previous codes, most importantly the {\sc equib} code, also developed at UCL, for solving the equations of statistical equilibrium in multi-level atoms.  All the source code, documentation, atomic data and example line lists are freely available at \texttt{https://github.com/rwesson/NEAT}.  The code is designed to be as simple as possible from the user's perspective, and our aim is that the user should be able to simply pass the code a line list and get out abundances determined robustly.  The code has no external dependencies and should compile without problems on any Unix system.  We have also verified that it compiles and runs on Windows systems, should the user be restricted to such an OS.
+{\sc neat} incorporates elements of several previous codes, most importantly the {\sc equib} code, also developed at UCL, for solving the equations of statistical equilibrium in multi-level atoms.  All the source code, documentation, atomic data and example line lists are freely available at \texttt{https://github.com/rwesson/NEAT}.  The code is designed to be as simple as possible from the user's perspective, and our aim is that the user should be able to simply pass the code a line list and get out abundances determined by an objective methodology in which the user need not make any choices.  The code has no external dependencies and should compile without problems on any Unix-based system.  We have also verified that it compiles and runs on Windows systems, should the user be restricted to such an OS.
 
 Hydrogen recombination data from \citet{1995MNRAS.272...41S} is used throughout.  All atomic data for heavier elements is stored externally in plain text files, so that the user can easily change the atomic data being used without needing to recompile the code.  We provide three sets of atomic data for collisionally excited lines with the code - a compilation from a variety of sources compiled on an ad hoc basis, CHIANTI 5.2 \citep{2006ApJS..162..261L}, and CHIANTI 6.0 \citep{2009A&A...498..915D}.  In all the analyses presented in this paper, we used atomic data from CHIANTI 5.2, with the exception of data for O$^{+}$ for which a documented error exists in the CHIANTI 5.2 data \citep{2009MNRAS.397..903K}, and S$^{2+}$, which we believe is affected by a similar error.  For O$^{+}$ we used transition probabilites from \citet{1982MNRAS.198..111Z} and collision strengths from \citet{1976MNRAS.177...31P}; for S$^{2+}$ we used transition probabilities from \citet{1982MNRAS.199.1025M} and collision strengths from \citet{1983IAUS..103..143M}.  For recombination lines, we use data from the sources given in Table~\ref{RL_atomic_data}.
 
@@ -214,7 +215,7 @@ where R is a random number drawn from a Gaussian distribution with a mean of zer
 
 {\bf 1.0$<$SNR$<$6.0: } \citet[][hereafter RP94]{1994A&A...287..676R} observed that measurements of weak lines (SNR$<$6) are strongly biased upwards, and the uncertainty on such lines cannot be well represented by a normal distribution.  We refer to this effect henceforth as the RP effect.  Taking the RP94 effect into account is straightforward with a Monte Carlo approach, requiring only that a log-normal distribution with appropriate mean and standard deviation is used for weak lines, instead of the normal distribution used for strong lines.
 
-For lines with F/$\sigma < $6, we randomise the line fluxes using the following procedure: we first determine the log-normal distribution appropriate to the measured signal-to-noise ratio.  RP94 gave parameters for the log-normal distributions of F$_{obs}$/F$_{true}$, as a function of SNR, and we fitted the following equations to the parameters in their Table 6:
+For lines with F/$\sigma < $6, we randomise the line fluxes using the following procedure: we first determine the log-normal distribution appropriate to the measured signal-to-noise ratio.  RP94 gave parameters for the log-normal distributions of F$_{obs}$/F$_{true}$, as a function of the observed SNR, and we fitted the following equations to the parameters in their Table 6:
 
 \begin{equation}
 \mu = \frac{0.0765957}{snr^2} + \frac{1.86037}{snr} - 0.309695
@@ -334,8 +335,8 @@ Diagnostic & Lines & Weight \\
 Diagnostic & Lines & Weight \\
 ~[Ne~{\sc iv}] density & $\frac{\lambda2423}{\lambda2425}$ & 1 \\
 ~\\
-~[Ar~{\sc v}] temperature & $\frac{\lambda \lambda6435 + \lambda7005}{\lambda4625}$ & 1 \\
-~[Ne~{\sc v}] temperature & $\frac{\lambda \lambda3426 + \lambda3345}{\lambda2975}$ & 1 \\
+~[Ar~{\sc v}] temperature & $\frac{\lambda 6435 + \lambda7005}{\lambda4625}$ & 1 \\
+~[Ne~{\sc v}] temperature & $\frac{\lambda 3426 + \lambda3345}{\lambda2975}$ & 1 \\
 \end{tabular}
 \label{zonestable}
 \caption{Diagnostics used in the calculation of physical conditions.}
@@ -355,12 +356,40 @@ The code currently includes the ICF scheme of \citet{1994MNRAS.271..257K}.  We p
 
 \section{The nature of actual uncertainties}
 
-In this section we discuss the nature of the uncertainties revealed by the Monte Carlo technique.  We find that three distinct behaviours emerge, depending on the overall depth of the line list being analysed.  In a minority of cases, where all lines being analysed are well detected, the final uncertainties may resemble Gaussian distributions.  However, in the majority of the nebulae that we have analysed, the final distributions are better described by log-normal distributions than by Gaussian.  In a minority of cases, very unusual uncertainty distributions emerge which cannot be sensibly fitting by any meaningful analytic function.
+In this section we discuss the nature of the uncertainties revealed by the Monte Carlo technique.  We find that three distinct behaviours emerge, depending on the overall depth of the line list being analysed.  In some cases, where all lines being analysed are well detected, the final uncertainties may resemble Gaussian distributions.  However, in the nebulae that we have analysed, the final distributions are typically better described by log-normal distributions than by Gaussian.  In a minority of cases, very unusual uncertainty distributions emerge which cannot be sensibly fitted by analytic functions.  The origin of such distributions arises in some cases from the methodology adopted.  For example, if temperature diagnostic lines are weakly detected, then in some fraction of {\sc neat} iterations the temperature may be undefined, and thus taken as the default of 10\,000\,K.  In other iterations it may have a determined value different from 10\,000\,K.  The temperature distribution then becomes double peaked, and this propagates into CEL abundances, although it has little effect on RL abundances.  In situations like these, one can say that the true uncertainty distribution is broader even than {\sc neat} suggests, and must realistically encompass both values of the double peaked distribution.
 
 We show a selection of illustrative examples in Figure~\ref{Typical_uncertainties_images}, and we plot Gaussian and log-normal fits to the distributions shown where possible.  In Table~\ref{Typical_undertainties_table} we give the parameters of Gaussian and log-normal fits to the plotted distributions.  The $\chi^2$ values from our fits are shown and can be used to determine which option is a better fit to the data.
 
-The finding that the majority of uncertainty distributions are best described by log-normal distributions demonstrates that analytic uncertainty propagation generally does not accurately quantify the true uncertainties arising from real measurements of the spectra of astronomical objects.  It also implies that most quantities are more likely to be underestimated than overestimated.  The emergence of unquantifiable distributions shows that analytic techniques can break down very severely; most significantly there is on the face of it no obvious difference between the line lists that give generally log-normal final uncertainties, and those that give unquantifiable distributions.  Thus, it appears that there is no {\it a priori} way of telling whether the uncertainties are going to be well behaved or erratic.
-%Todo: finish this
+\begin{table*}
+\begin{tabular}{lllllllll}
+\hline
+Nebula & Quantity & \multicolumn{3}{c}{Gaussian} & \multicolumn{3}{c}{Log-normal} & Reference \\
+       &          & $\mu$ & $\sigma$ & RMS of residuals & $\mu$ & $\sigma$ & RMS of residuals\\
+\hline
+NGC 6543 & He/H     & 0.117 & 0.003 & 15.5 & -0.930 & 0.023 & 14.7 & (1) \\
+Orion    & He/H     & 0.096 & 0.004 & 14.0 & -1.019 & 0.041 & 13.5 & (2) \\
+LMC B11  & He/H     & 0.086 & 0.014 & 23.8 & -1.073 & 0.159 & 14.7 & (3) \\
+%Sp 4-1   & O/H (RL) & 
+NGC 2022 & He/H     & 0.096 & 0.014 & 18.6 & -1.025 & 0.150 & 11.9 & (4) \\
+\hline
+\end{tabular}
+\label{Typical_undertainties_table}
+\caption{Analytic fits to observed uncertainty distributions in a few representative cases.  Log-normal distributions emerge much more frequently than Gaussian or unquantifiable distributions.  The line lists analysed are from (1) Wesson \& Liu (2004), (2) Esteban et al. (2004), (3) Stock, Barlow \& Wesson (2011), (4) \citet{2005A&A...436..953P}.}%, (5) Wesson, Liu \& Barlow (2005).}
+\end{table*}
+
+\begin{figure*}
+\includegraphics[width=0.48\textwidth]{figures/plot_binned_ngc6543_He_abund_ORL.png}
+\includegraphics[width=0.48\textwidth]{figures/plot_binned_orion_esteban2004_He_abund_ORL.png}
+\includegraphics[width=0.48\textwidth]{figures/plot_binned_B11_neat_He_abund_ORL.png}
+\includegraphics[width=0.48\textwidth]{figures/plot_binned_NGC2022_He_abund_ORL.png}
+\includegraphics[width=0.48\textwidth]{figures/plot_binned_Sp4-1_O_abund_CEL.png}
+\includegraphics[width=0.48\textwidth]{figures/plot_binned_DdDm1-3_S_abund_CEL.png}
+\label{Typical_uncertainties_images}
+\caption{Some representative examples of realistic probability distributions which emerge in a typical analysis.}
+\end{figure*}
+
+The finding that the majority of uncertainty distributions are best described by log-normal distributions demonstrates that analytic uncertainty propagation generally does not accurately quantify the true uncertainties arising from real measurements of the spectra of astronomical objects.  It also implies that most quantities are more likely to be underestimated than overestimated, although this effect will generally be small.  The emergence of unquantifiable distributions shows that analytic techniques can break down very severely; most significantly there is on the face of it no obvious difference between the line lists that give generally log-normal final uncertainties, and those that give unquantifiable distributions.  Thus, it appears that there is no {\it a priori} way of telling whether the uncertainties are going to be well behaved or erratic.
+
 \section{The RP effect}
 
 As discussed earlier, {\sc neat} accounts for the RP effect, in which fluxes measured from lines with SNR$<$6 are generally overestimated, with the magnitude of the effect increasing as SNR$\to$1.  In this section we show the importance of this effect and demonstrate that flawed results will inevitably result if the effect is ignored.
@@ -373,7 +402,9 @@ Figure~\ref{RP_figures} shows that in these two nebulae, the RP effect indeed ha
 
 \begin{table*}
 \begin{tabular}{l ll l}
+\hline
 Element & 10$^4 \times$ X/H (RP ignored) & 10$^4 \times$ X/H (RP included) & $\frac{\sigma (RP included)}{\sigma (RP ignored)}$ \\
+\hline
 \multicolumn{4}{c}{Orion}\\
 
 N & 2.74 $\pm$ 0.16 & 2.37 $\pm$ 0.11 & 0.69 \\
@@ -385,7 +416,7 @@ Ne & 1.52 $\pm$ 0.26 & 1.20 $\pm$ 0.17 & 0.66 \\
 N & 6.93 $\pm$  0.56 & 5.83 $\pm$  0.37 & 0.66 \\
 O & 14.94 $\pm$ 1.15 & 12.48 $\pm$ 0.74 & 0.65 \\
 Ne & 4.17 $\pm$ 0.94 & 3.23 $\pm$ 0.56 & 0.60 \\
-
+\hline
 \end{tabular}
 \caption{Results of heavy element abundance determinations from recombination lines, using the published line lists of \citet{2004MNRAS.351.1026W} and \citet{2004MNRAS.355..229E} for the Orion Nebula.}
 \label{RP_numbers}
@@ -418,13 +449,13 @@ We re-emphasise, therefore, that neglecting this effect results in incorrect abu
 \section{Interstellar extinction}
 \label{extinction}
 
-{\sc neat} allows a robust propagation of uncertainties from line flux measurements into derived quantities.  It is also possible to investigate the effect of uncertainties arising at different stages of the process.  In this section, we consider the effect of the uncertainty in R, the ratio of total to selective extinction given by
+{\sc neat} allows a robust propagation of uncertainties from line flux measurements into derived quantities.  It is also possible to investigate the effect of statistical uncertainties arising at different stages of the process.  In this section, we consider the effect of the uncertainty in R, the ratio of total to selective extinction given by
 
 \begin{equation}
 R = \frac{A(V)}{E(B-V)}
 \end{equation}
 
-It is well known that R varies along different sightlines (eg \citet{2004ApJ...616..912V}, \citet{2005ApJ...623..897L}), but estimating its value for particular objects is generally impractical and instead, it is commonly assumed to equal 3.1.  We investigate the effect of an uncertainty in this value by comparing analyses in which R is fixed to be 3.1, and in which R is drawn from a Gaussian distribution with $\mu$=3.1 and $\sigma$=0.15.  For this investigation we used the R-dependent extinction law parametrization of \citet{1989ApJ...345..245C}.  We took the uncertainty as the largest value that we found quoted in the literature for the diffuse ISM \citep{2005ApJ...623..897L}.
+It is well known that R varies along different sightlines (eg \citet{2004ApJ...616..912V}, \citet{2005ApJ...623..897L}), but determining its value for particular objects is generally impractical and instead, it is commonly assumed to equal 3.1.  We investigate the effect of an uncertainty in this value by comparing analyses in which R is fixed to be 3.1, and in which R is drawn from a Gaussian distribution with $\mu$=3.1 and $\sigma$=0.15.  For this investigation we used the R-dependent extinction law parametrization of \citet{1989ApJ...345..245C}.  We took the uncertainty as the largest value that we found quoted in the literature for the diffuse ISM \citep{2005ApJ...623..897L}.
 
 We analysed the emission line measurements of NGC 7026 presented by \citet{2005MNRAS.362..424W}, including the line flux uncertainties which were not published in that paper.  We chose this object as it is significantly reddened (c(H$\beta$)=1.0), and has many very well detected lines in its spectrum (142 lines measured, 120 with SNR$>$3 and 65 with SNR$>$10).  This combination should maximise the effect of an uncertainty on R, relative to the effect of the line flux measurement uncertainties.
 
