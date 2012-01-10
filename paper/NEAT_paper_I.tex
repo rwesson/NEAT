@@ -161,7 +161,7 @@ The Monte Carlo method, on the other hand, avoids all of the pitfalls of the ana
 
 \begin{enumerate}
   \item It is inherently very simple;
-  \item it requires no assumption about the particular distribution of uncertainties at any stage;
+  \item Any distribution of uncertainties can be propagated at any stage;
   \item it does not require relative uncertainties to be small
 \end{enumerate}
 
@@ -192,8 +192,8 @@ Ne$^{2+}$ (3s--3p)& \citet{1998AAS..133..257K} \\
 Ne$^{2+}$ (3d-4f) & Storey (unpublished) \\
 \hline
 \end{tabular}
-\label{RL_atomic_data}
 \caption{Atomic data used in {\sc neat} for recombination lines}
+\label{RL_atomic_data}
 \end{table}
 
 {\sc neat} requires as input a plain text list of rest wavelengths, line fluxes, and uncertainties.  The user can then select the number of iterations of the code to run.  If the number of iterations is one, the code performs a standard empirical analysis on the line list, as described below, and does not calculate any uncertainties.  If the number of iterations is more than one, then the code first randomises the line list, as described below.  The standard analysis is then carried out on the randomised line list.
@@ -233,7 +233,7 @@ F_i = \frac{F}{e^{(R\times\sigma + \mu)}}
 
 where R is a random number from a Gaussian distribution as before.  The result of this procedure is that weaker lines are drawn from log-normal distributions that peak below the observed value, with the effect increasing as SNR decreases.
 
-{\bf SNR$<$1.0: } If the quoted uncertainty is larger than the acual line flux, the code assumes that the quote flux represents a 5$\sigma$ upper limit, and thus draws the randomized line flux from a folded Gaussian distribution, with $\mu$=0 and $\sigma$=0.2$\times$F.  The line flux is given by
+{\bf SNR$<$1.0: } If the quoted uncertainty is larger than the actual line flux, the code assumes that the quote flux represents a 5$\sigma$ upper limit, and thus draws the randomized line flux from a folded Gaussian distribution, with $\mu$=0 and $\sigma$=0.2$\times$F.  The line flux is given by
 
 \begin{equation}
 F_i = abs(R)\times0.2F
@@ -338,8 +338,8 @@ Diagnostic & Lines & Weight \\
 ~[Ar~{\sc v}] temperature & $\frac{\lambda 6435 + \lambda7005}{\lambda4625}$ & 1 \\
 ~[Ne~{\sc v}] temperature & $\frac{\lambda 3426 + \lambda3345}{\lambda2975}$ & 1 \\
 \end{tabular}
-\label{zonestable}
 \caption{Diagnostics used in the calculation of physical conditions.}
+\label{zonestable}
 \end{table}
 
 \subsection{Ionic abundances}
@@ -373,8 +373,8 @@ BAT99-11 & He/H     & 0.086 & 0.014 & 23.8 & -1.073 & 0.159 & 14.7 & (3) \\
 NGC 2022 & He/H     & 0.096 & 0.014 & 18.6 & -1.025 & 0.150 & 11.9 & (4) \\
 \hline
 \end{tabular}
-\label{Typical_uncertainties_table}
 \caption{Analytic fits to observed uncertainty distributions in a few representative cases.  Log-normal distributions emerge much more frequently than Gaussian or unquantifiable distributions.  The line lists analysed are from (1) Wesson \& Liu (2004), (2) Esteban et al. (2004), (3) Stock, Barlow \& Wesson (2011), (4) \citet{2005A&A...436..953P}.}%, (5) Wesson, Liu \& Barlow (2005).}
+\label{Typical_uncertainties_table}
 \end{table*}
 
 \begin{figure*}
@@ -384,8 +384,8 @@ NGC 2022 & He/H     & 0.096 & 0.014 & 18.6 & -1.025 & 0.150 & 11.9 & (4) \\
 \includegraphics[width=0.48\textwidth]{figures/plot_binned_NGC2022_He_abund_ORL.png}
 \includegraphics[width=0.48\textwidth]{figures/plot_binned_Sp4-1_O_abund_CEL.png}
 \includegraphics[width=0.48\textwidth]{figures/plot_binned_DdDm1-3_S_abund_CEL.png}
-\label{Typical_uncertainties_images}
 \caption{Some representative examples of realistic probability distributions which emerge in a typical analysis.  These results are from analysis of NGC 6543 (top left), the Orion Nebula (top right), WR nebula BAT99-11 (middle left), NGC 2022 (middle right), Sp 4-1 (bottom left) and DdDm 1 (bottom right).}
+\label{Typical_uncertainties_images}
 \end{figure*}
 
 The finding that the majority of uncertainty distributions are best described by log-normal distributions demonstrates that analytic uncertainty propagation generally does not accurately quantify the true uncertainties arising from real measurements of the spectra of astronomical objects.  It also implies that most quantities are more likely to be underestimated than overestimated, although this effect will generally be small.  The emergence of unquantifiable distributions shows that analytic techniques can break down very severely; most significantly there is on the face of it no obvious difference between the line lists that give generally log-normal final uncertainties, and those that give unquantifiable distributions.  Thus, it appears that there is no {\it a priori} way of telling whether the uncertainties are going to be well behaved or erratic.
