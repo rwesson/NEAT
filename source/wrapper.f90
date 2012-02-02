@@ -356,7 +356,7 @@ contains
                                 END DO
                                 fn_val = v/u
 
-                                if (j==1) R=3.1+(0.15*fn_val)
+!                                if (j==1) R=3.1+(0.15*fn_val)
 
                                 if (linelist(j)%intensity/linelist(j)%int_err .gt. 6.0) then !normal distribution
 
