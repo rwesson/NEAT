@@ -4,81 +4,7 @@ implicit none
 
 contains
 
-subroutine calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction, switch_ext, R)
-        TYPE(line), DIMENSION(38) :: H_BS
-        DOUBLE PRECISION :: c1, c2, c3, meanextinction, R
-        double precision :: fl_ha, fl_hg, fl_hd
-        double precision :: w1, w2, w3
-        character :: switch_ext
-
-!determine f(lambda) for the balmer lines, depending on the law used
-!galactic, howarth
-
-if (switch_ext=="S") then ! howarth galactic
-        fl_ha = flambda(dble(10000./6562.77),5)
-        fl_hg = flambda(dble(10000./4340.47),4)
-        fl_hd = flambda(dble(10000./4101.74),4)
-elseif (switch_ext=="H") then ! howarth lmc
-        fl_ha = flambdaLMC(dble(10000./6562.77),3)
-        fl_hg = flambdaLMC(dble(10000./4340.47),2)
-        fl_hd = flambdaLMC(dble(10000./4101.74),2)
-elseif (switch_ext=="C") then ! CCM galactic
-        fl_ha = flambdaCCM(dble(10000./6562.77),3, R)
-        fl_hg = flambdaCCM(dble(10000./4340.47),3, R)
-        fl_hd = flambdaCCM(dble(10000./4101.74),3, R)
-elseif (switch_ext=="P") then ! Prevot SMC
-        fl_ha = flambdaSMC(dble(10000./6562.77),3)
-        fl_hg = flambdaSMC(dble(10000./4340.47),2)
-        fl_hd = flambdaSMC(dble(10000./4101.74),2)
-elseif (switch_ext=="F") then ! Fitzpatrick galactic
-        fl_ha = flambdaFitz(dble(10000./6562.77),1)
-        fl_hg = flambdaFitz(dble(10000./4340.47),2)
-        fl_hd = flambdaFitz(dble(10000./4101.74),2)
-endif
-
-if (H_BS(1)%intensity .gt. 0 .and. H_BS(2)%intensity .gt. 0) then
-        c1 = log10( ( DBLE(H_BS(1)%intensity) / DBLE(H_BS(2)%intensity) )/2.850 )/(-fl_ha)
-        w1 = H_BS(1)%intensity
-else
-        c1 = 0.0
-        w1 = 0.0
-endif
-if (H_BS(3)%intensity .gt. 0 .and. H_BS(2)%intensity .gt. 0) then
-        c2 = log10( ( DBLE(H_BS(3)%intensity) / DBLE(H_BS(2)%intensity) )/0.469 )/(-fl_hg)
-        w2 = H_BS(3)%intensity
-else
-        c2=0.0
-        w2=0
-endif
-if (H_BS(4)%intensity .gt. 0 .and. H_BS(2)%intensity .gt. 0) then
-        c3 = log10( ( DBLE(H_BS(4)%intensity) / DBLE(H_BS(2)%intensity) )/0.259 )/(-fl_hd)
-        w3 = H_BS(4)%intensity
-else
-        c3 = 0.0
-        w3 = 0
-endif
-
-if (c1<0) then
-        print *,"Warning: c(Ha) less than zero"
-        c1=0
-        w1=0
-endif
-if (c2<0) then
-        print *,"Warning: c(Hg) less than zero"
-        c2=0
-        w2=0
-endif
-if (c3<0) then
-        print *,"Warning: c(Hd) less than zero"
-        c3=0
-        w3=0
-endif
-
-        meanextinction = (c1*w1 + c2*w2 + c3*w3) / (w1 + w2 + w3)   
-
-end subroutine calc_extinction_coeffs
-
-subroutine calc_extinction_coeffs_loop(H_BS, c1, c2, c3, meanextinction, switch_ext, temp, dens, R)
+subroutine calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction, switch_ext, temp, dens, R)
         TYPE(line), DIMENSION(38) :: H_BS
         DOUBLE PRECISION :: c1, c2, c3, meanextinction, R
         double precision :: fl_ha, fl_hg, fl_hd
@@ -131,9 +57,22 @@ else
         c3 = 0.0
 endif
 
+if (c1<0) then
+        print *,"Warning: c(Ha) less than zero"
+        c1=0
+endif
+if (c2<0) then
+        print *,"Warning: c(Hg) less than zero"
+        c2=0
+endif
+if (c3<0) then
+        print *,"Warning: c(Hd) less than zero"
+        c3=0
+endif
+
         meanextinction = (c1*H_BS(1)%intensity + c2*H_BS(3)%intensity + c3*H_BS(4)%intensity) / (H_BS(1)%intensity + H_BS(3)%intensity + H_BS(4)%intensity)   
 
-end subroutine calc_extinction_coeffs_loop
+end subroutine calc_extinction_coeffs
 
 double precision function calc_balmer_ratios(temp, dens, line)
         integer :: i, j, line, jj

@@ -121,7 +121,7 @@ implicit none
                 print *,"Using Fitzpatrick (1990) galactic law" 
         endif
 
-        CALL calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction, switch_ext, R)
+        CALL calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction, switch_ext, DBLE(10000.),DBLE(1000.), R)
 
         !need to write output/ input stuff so user can insert own c(Hb)
         !assume we go on with calculated extinctions
@@ -486,7 +486,7 @@ implicit none
 
         !update extinction. DS 22/10/11
         meanextinction=0        
-        CALL calc_extinction_coeffs_loop(H_BS, c1, c2, c3, meanextinction, switch_ext, medtemp, lowdens, R)
+        CALL calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction, switch_ext, medtemp, lowdens, R)
         print*, "iteration", i, " extinction:"
         print "(1X,A17,F4.2,A4,F4.2)","Ha/Hb => c(Hb) = ",c1
         print "(1X,A17,F4.2,A4,F4.2)","Hg/Hb => c(Hb) = ",c2
