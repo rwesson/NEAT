@@ -25,12 +25,14 @@ program wrapper
         TYPE(LINE),DIMENSION(:), allocatable :: linelist_original
         CHARACTER*80 :: filename
         CHARACTER*1 :: null
-        INTEGER :: IO, listlength
-        DOUBLE PRECISION :: temp1,temp2,temp3, meanextinction, R
+        INTEGER :: IO, listlength 
         type(resultarray), dimension(:), allocatable :: all_results
         type(resultarray), dimension(1) :: iteration_result
 
+        !extinction
+
         logical :: calculate_extinction=.true.
+        DOUBLE PRECISION :: temp1,temp2,temp3, meanextinction, R
 
         R=3.1
 
@@ -172,10 +174,102 @@ program wrapper
                 STOP
         endif
 
+        if (switch_ext == "S") then
+                print *,"Using Howarth (1983) galactic law"
+        elseif (switch_ext == "H") then
+                print *,"Using Howarth (1983) LMC law"
+        elseif (switch_ext == "C") then
+                print *,"Using CCM (1989) galactic law"
+        elseif (switch_ext == "P") then
+                print *,"Using Prevot et al. (1984) SMC law"
+        elseif (switch_ext == "F") then
+                print *,"Using Fitzpatrick (1990) galactic law"
+        endif
+
         !now check number of iterations.  If 1, line list is fine as is.  If more than one, randomize the fluxes
 
         if(runs == 1)then !calculates abundances without uncertainties
                 call abundances(linelist, 1, switch_ext, listlength, filename, iteration_result, R, meanextinction, calculate_extinction)
+!generate outputs
+
+print *,"NC_abund_CEL: ",iteration_result(1)%NC_abund_CEL
+print *,"cii_abund_CEL: ",iteration_result(1)%cii_abund_CEL
+print *,"ciii_abund_CEL: ",iteration_result(1)%ciii_abund_CEL
+print *,"civ_abund_CEL: ",iteration_result(1)%civ_abund_CEL
+print *,"C_abund_CEL: ",iteration_result(1)%C_abund_CEL
+print *,"Nii_abund_CEL: ",iteration_result(1)%Nii_abund_CEL
+print *,"Niii_abund_CEL: ",iteration_result(1)%Niii_abund_CEL
+print *,"Niv_abund_CEL: ",iteration_result(1)%Niv_abund_CEL
+print *,"Nv_abund_CEL: ",iteration_result(1)%Nv_abund_CEL
+print *,"N_abund_CEL: ",iteration_result(1)%N_abund_CEL
+print *,"NO_abund_CEL: ",iteration_result(1)%NO_abund_CEL
+print *,"Oii_abund_CEL: ",iteration_result(1)%Oii_abund_CEL
+print *,"Oiii_abund_CEL: ",iteration_result(1)%Oiii_abund_CEL
+print *,"Oiv_abund_CEL: ",iteration_result(1)%Oiv_abund_CEL
+print *,"O_abund_CEL: ",iteration_result(1)%O_abund_CEL
+print *,"Neii_abund_CEL: ",iteration_result(1)%Neii_abund_CEL
+print *,"Neiii_abund_CEL: ",iteration_result(1)%Neiii_abund_CEL
+print *,"Neiv_abund_CEL: ",iteration_result(1)%Neiv_abund_CEL
+print *,"Nev_abund_CEL: ",iteration_result(1)%Nev_abund_CEL
+print *,"Ne_abund_CEL: ",iteration_result(1)%Ne_abund_CEL
+print *,"Ariii_abund_CEL: ",iteration_result(1)%Ariii_abund_CEL
+print *,"Ariv_abund_CEL: ",iteration_result(1)%Ariv_abund_CEL
+print *,"Arv_abund_CEL: ",iteration_result(1)%Arv_abund_CEL
+print *,"Ar_abund_CEL: ",iteration_result(1)%Ar_abund_CEL
+print *,"Sii_abund_CEL: ",iteration_result(1)%Sii_abund_CEL
+print *,"Siii_abund_CEL: ",iteration_result(1)%Siii_abund_CEL
+print *,"Cliii_abund_CEL: ",iteration_result(1)%Cliii_abund_CEL
+print *,"Cl_abund_CEL: ",iteration_result(1)%Cl_abund_CEL
+print *,"S_abund_CEL: ",iteration_result(1)%S_abund_CEL
+print *,"He_abund_ORL: ",iteration_result(1)%He_abund_ORL
+print *,"C_abund_ORL: ",iteration_result(1)%C_abund_ORL
+print *,"N_abund_ORL: ",iteration_result(1)%N_abund_ORL
+print *,"O_abund_ORL: ",iteration_result(1)%O_abund_ORL
+print *,"Ne_abund_ORL: ",iteration_result(1)%Ne_abund_ORL
+print *,"OII_density: ",iteration_result(1)%OII_density
+print *,"SII_density: ",iteration_result(1)%SII_density
+print *,"low_density: ",iteration_result(1)%low_density
+print *,"OII_temp: ",iteration_result(1)%OII_temp
+print *,"NII_temp: ",iteration_result(1)%NII_temp
+print *,"SII_temp: ",iteration_result(1)%SII_temp
+print *,"OI_temp: ",iteration_result(1)%OI_temp
+print *,"CI_temp: ",iteration_result(1)%CI_temp
+print *,"low_temp: ",iteration_result(1)%low_temp
+print *,"ClIII_density: ",iteration_result(1)%ClIII_density
+print *,"ArIV_density: ",iteration_result(1)%ArIV_density
+print *,"CIII_density: ",iteration_result(1)%CIII_density
+print *,"OIII_IR_density: ",iteration_result(1)%OIII_IR_density
+print *,"SIII_IR_density: ",iteration_result(1)%SIII_IR_density
+print *,"ArIII_IR_density: ",iteration_result(1)%ArIII_IR_density
+print *,"NeIII_IR_density: ",iteration_result(1)%NeIII_IR_density
+print *,"med_density: ",iteration_result(1)%med_density
+print *,"OIII_temp: ",iteration_result(1)%OIII_temp
+print *,"OIII_IR_temp: ",iteration_result(1)%OIII_IR_temp
+print *,"NeIII_temp: ",iteration_result(1)%NeIII_temp
+print *,"NeIII_IR_temp: ",iteration_result(1)%NeIII_IR_temp
+print *,"ArIII_temp: ",iteration_result(1)%ArIII_temp
+print *,"SIII_temp: ",iteration_result(1)%SIII_temp
+print *,"med_temp: ",iteration_result(1)%med_temp
+print *,"NeIV_density: ",iteration_result(1)%NeIV_density
+print *,"high_density: ",iteration_result(1)%high_density
+print *,"ArV_temp: ",iteration_result(1)%ArV_temp
+print *,"NeV_temp: ",iteration_result(1)%NeV_temp
+print *,"high_temp: ",iteration_result(1)%high_temp
+print *,"mean_cHb: ",iteration_result(1)%mean_cHb
+print *,"O_R23_upper: ",iteration_result(1)%O_R23_upper
+print *,"O_R23_lower: ",iteration_result(1)%O_R23_lower
+print *,"O_N2: ",iteration_result(1)%O_N2
+print *,"O_O3N2: ",iteration_result(1)%O_O3N2
+print *,"O_Ar3O3: ",iteration_result(1)%O_Ar3O3
+print *,"O_S3O3: ",iteration_result(1)%O_S3O3
+print *,"adf_O: ",iteration_result(1)%adf_O
+print *,"adf_O2plus: ",iteration_result(1)%adf_O2plus
+print *,"adf_N: ",iteration_result(1)%adf_N
+print *,"adf_N2plus: ",iteration_result(1)%adf_N2plus
+print *,"adf_C: ",iteration_result(1)%adf_C
+print *,"adf_C2plus: ",iteration_result(1)%adf_C2plus
+print *,"adf_Ne: ",iteration_result(1)%adf_Ne
+print *,"adf_Ne2plus : ",iteration_result(1)%adf_Ne2plus
 
 
         else if(runs > 1)then

@@ -82,6 +82,20 @@ TYPE resultarray
         double precision :: NeV_temp
         double precision :: high_temp
         double precision :: mean_cHb
+        double precision :: O_R23_upper
+        double precision :: O_R23_lower
+        double precision :: O_N2
+        double precision :: O_O3N2
+        double precision :: O_Ar3O3
+        double precision :: O_S3O3
+        double precision :: adf_O
+        double precision :: adf_O2plus
+        double precision :: adf_N
+        double precision :: adf_N2plus
+        double precision :: adf_C
+        double precision :: adf_C2plus
+        double precision :: adf_Ne
+        double precision :: adf_Ne2plus
 end type
 
 
