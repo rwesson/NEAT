@@ -1,5 +1,5 @@
 
-subroutine abundances(linelist, run, switch_ext,listlength, filename, iteration_result, R)
+subroutine abundances(linelist, run, switch_ext,listlength, filename, iteration_result, R, meanextinction, calculate_extinction)
 use mod_abundmaths
 use mod_abundtypes
 use mod_diagnostics
@@ -34,6 +34,7 @@ implicit none
         DOUBLE PRECISION :: c1, c2, c3, meanextinction, fl, ratob, tempi, temp, temp2, A4471, A4686, A6678, A5876, R
         REAL :: heiabund,heiiabund,Hetotabund
         REAL*8 :: HW
+        logical :: calculate_extinction
 
         DOUBLE PRECISION, DIMENSION(2) :: conditions 
         REAL*8 :: result
@@ -96,11 +97,11 @@ implicit none
                 do i = 1, Iint !normalising important ions
                         ILs(i)%intensity = ILs(i)%intensity * normalise
                 end do
-                do i = 1, 4 !normalising balmer series
+                do i = 1, 38 !normalising balmer series
                         H_BS(i)%intensity = H_BS(i)%intensity*normalise
                 end do
                 do i = 1,4 !normalise helium
-                        He_lines(i)%intensity = He_lines(i)%intensity * normalise
+                        He_lines(i)%intensity = He_lines(i)%intensity * normalise 
                 end do
         endif
 
@@ -121,24 +122,24 @@ implicit none
                 print *,"Using Fitzpatrick (1990) galactic law" 
         endif
 
-        CALL calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction, switch_ext, DBLE(10000.),DBLE(1000.), R)
+        if (calculate_extinction) then
+                CALL calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction, switch_ext, DBLE(10000.),DBLE(1000.), R)
 
-        !need to write output/ input stuff so user can insert own c(Hb)
-        !assume we go on with calculated extinctions
+                print "(1X,A11,F4.2)","Adopted R: ",R
 
-        print "(1X,A11,F4.2)","Adopted R: ",R
+                print "(1X,A17,F5.2)","Ha/Hb => c(Hb) = ",c1
+                print "(1X,A17,F5.2)","Hg/Hb => c(Hb) = ",c2
+                print "(1X,A17,F5.2)","Hd/Hb => c(Hb) = ",c3
 
-        print "(1X,A17,F5.2)","Ha/Hb => c(Hb) = ",c1
-        print "(1X,A17,F5.2)","Hg/Hb => c(Hb) = ",c2
-        print "(1X,A17,F5.2)","Hd/Hb => c(Hb) = ",c3
+                PRINT "(1X,A13,F4.2,A4,F4.2)", "Mean c(Hb) = ",meanextinction
 
-        PRINT "(1X,A13,F4.2,A4,F4.2)", "Mean c(Hb) = ",meanextinction
-
-        if (meanextinction .lt. 0.0) then
-           print *,"Derived extinction <0 ; assuming 0"
-           meanextinction = 0.0
+                if (meanextinction .lt. 0.0) then
+                   print *,"Derived extinction <0 ; assuming 0"
+                   meanextinction = 0.0
+                endif
+        else
+                print "(1X,A16,F4.2,A4,F4.2)", "Adopted c(Hb) = ",meanextinction
         endif
-
         !actual dereddening
 
         if (switch_ext == "S") then
@@ -476,58 +477,58 @@ implicit none
 
         !dereddening again 
 
+        if (calculate_extinction) then
 
+          ILs%int_dered = 0 
+          H_BS%int_dered = 0 
+          He_lines%int_dered = 0
 
-        ILs%int_dered = 0 
-        H_BS%int_dered = 0 
-        He_lines%int_dered = 0
-
-        !aside: normalisation check, correction
 
         !update extinction. DS 22/10/11
-        meanextinction=0        
-        CALL calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction, switch_ext, medtemp, lowdens, R)
-        print*, "iteration", i, " extinction:"
-        print "(1X,A17,F4.2,A4,F4.2)","Ha/Hb => c(Hb) = ",c1
-        print "(1X,A17,F4.2,A4,F4.2)","Hg/Hb => c(Hb) = ",c2
-        print "(1X,A17,F4.2,A4,F4.2)","Hd/Hb => c(Hb) = ",c3
+          meanextinction=0        
+          CALL calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction, switch_ext, medtemp, lowdens, R)
+          print*, "iteration", i, " extinction:"
+          print "(1X,A17,F4.2,A4,F4.2)","Ha/Hb => c(Hb) = ",c1
+          print "(1X,A17,F4.2,A4,F4.2)","Hg/Hb => c(Hb) = ",c2
+          print "(1X,A17,F4.2,A4,F4.2)","Hd/Hb => c(Hb) = ",c3
 
-        PRINT "(1X,A13,F4.2,A4,F4.2)", "Mean c(Hb) = ",meanextinction
+          PRINT "(1X,A13,F4.2,A4,F4.2)", "Mean c(Hb) = ",meanextinction
 
-        if (meanextinction .lt. 0.0) then
-           print *,"Derived extinction <0 ; assuming 0"
-           meanextinction = 0.0
-        endif
+          if (meanextinction .lt. 0.0) then
+             print *,"Derived extinction <0 ; assuming 0"
+             meanextinction = 0.0
+          endif
 
-        linelist = linelist_orig
-        if (switch_ext == "S") then
-                CALL deredden(ILs, Iint, meanextinction)
-                CALL deredden(H_BS, 4, meanextinction)
-                call deredden(He_lines, 4, meanextinction) 
-                CALL deredden(linelist, listlength, meanextinction)
-        elseif (switch_ext == "H") then
-                CALL deredden_LMC(ILs, Iint, meanextinction)
-                CALL deredden_LMC(H_BS, 4, meanextinction)
-                call deredden_LMC(He_lines, 4, meanextinction) 
-                CALL deredden_LMC(linelist, listlength, meanextinction)
-        elseif (switch_ext == "C") then
-                CALL deredden_CCM(ILs, Iint, meanextinction, R)
-                CALL deredden_CCM(H_BS, 4, meanextinction, R)
-                call deredden_CCM(He_lines, 4, meanextinction, R) 
-                CALL deredden_CCM(linelist, listlength, meanextinction, R)
-        elseif (switch_ext == "P") then
-                CALL deredden_SMC(ILs, Iint, meanextinction)
-                CALL deredden_SMC(H_BS, 4, meanextinction)
-                call deredden_SMC(He_lines, 4, meanextinction) 
-                CALL deredden_SMC(linelist, listlength, meanextinction)
-        elseif (switch_ext == "F") then
-                CALL deredden_Fitz(ILs, Iint, meanextinction)
-                CALL deredden_Fitz(H_BS, 4, meanextinction)
-                call deredden_Fitz(He_lines, 4, meanextinction)
-                CALL deredden_Fitz(linelist, listlength, meanextinction)
-        endif
+          linelist = linelist_orig
+          if (switch_ext == "S") then
+                  CALL deredden(ILs, Iint, meanextinction)
+                  CALL deredden(H_BS, 4, meanextinction)
+                  call deredden(He_lines, 4, meanextinction) 
+                  CALL deredden(linelist, listlength, meanextinction)
+          elseif (switch_ext == "H") then
+                  CALL deredden_LMC(ILs, Iint, meanextinction)
+                  CALL deredden_LMC(H_BS, 4, meanextinction)
+                  call deredden_LMC(He_lines, 4, meanextinction) 
+                  CALL deredden_LMC(linelist, listlength, meanextinction)
+          elseif (switch_ext == "C") then
+                  CALL deredden_CCM(ILs, Iint, meanextinction, R)
+                  CALL deredden_CCM(H_BS, 4, meanextinction, R)
+                  call deredden_CCM(He_lines, 4, meanextinction, R) 
+                  CALL deredden_CCM(linelist, listlength, meanextinction, R)
+          elseif (switch_ext == "P") then
+                  CALL deredden_SMC(ILs, Iint, meanextinction)
+                  CALL deredden_SMC(H_BS, 4, meanextinction)
+                  call deredden_SMC(He_lines, 4, meanextinction) 
+                  CALL deredden_SMC(linelist, listlength, meanextinction)
+          elseif (switch_ext == "F") then
+                  CALL deredden_Fitz(ILs, Iint, meanextinction)
+                  CALL deredden_Fitz(H_BS, 4, meanextinction)
+                  call deredden_Fitz(He_lines, 4, meanextinction)
+                  CALL deredden_Fitz(linelist, listlength, meanextinction)
+          endif
+        endif ! end of exinction calculating
 
-      enddo
+      enddo ! end of diagnostic iteration
 
         if (runonce == 0 .and. meanextinction > 0) iteration_result(1)%mean_cHb = meanextinction
 

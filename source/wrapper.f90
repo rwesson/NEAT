@@ -26,11 +26,12 @@ program wrapper
         CHARACTER*80 :: filename
         CHARACTER*1 :: null
         INTEGER :: IO, listlength
-        DOUBLE PRECISION :: temp1,temp2,temp3, mean_ext, R
+        DOUBLE PRECISION :: temp1,temp2,temp3, meanextinction, R
         type(resultarray), dimension(:), allocatable :: all_results
         type(resultarray), dimension(1) :: iteration_result
 
-        make_dered_ll=0
+        logical :: calculate_extinction=.true.
+
         R=3.1
 
         !read command line arguments
@@ -69,6 +70,7 @@ program wrapper
         runs=1
         switch_ext="S"
         filename=""
+        meanextinction=0.
 
         ! process command line arguments
 
@@ -89,6 +91,10 @@ program wrapper
                   elseif (trim(options(i+1)) == "Fit")then
                     switch_ext = "F" 
                   endif
+                endif
+                if (trim(options(i))=="-c" .and. (i+1) .le. Narg) then
+                   read (options(i+1),*) meanextinction
+                   calculate_extinction = .false.
                 endif
          enddo
 
@@ -169,12 +175,7 @@ program wrapper
         !now check number of iterations.  If 1, line list is fine as is.  If more than one, randomize the fluxes
 
         if(runs == 1)then !calculates abundances without uncertainties
-                call abundances(linelist, 1, switch_ext, listlength, filename, iteration_result, R)
-
-                if(make_dered_ll ==  1)then
-                        mean_ext=DBLE(0)
-                        CALL deredden_ll(switch_ext, linelist, listlength, mean_ext )
-                endif
+                call abundances(linelist, 1, switch_ext, listlength, filename, iteration_result, R, meanextinction, calculate_extinction)
 
 
         else if(runs > 1)then
@@ -195,7 +196,7 @@ program wrapper
 
                         call randomizer(linelist, listlength, R)
                         R=3.1 ! no randomisation
-                        call abundances(linelist, 0, switch_ext, listlength, filename, iteration_result, R)
+                        call abundances(linelist, 0, switch_ext, listlength, filename, iteration_result, R, meanextinction, calculate_extinction)
                         linelist = linelist_original
                         all_results(i)=iteration_result(1)
                 END DO
@@ -303,11 +304,6 @@ program wrapper
                 DO I=841,888
                         CLOSE(unit=I)
                 END DO
-
-                if(make_dered_ll ==  1)then
-                        mean_ext=DBLE(0)! fix this.
-                        CALL deredden_ll(switch_ext, linelist, listlength, mean_ext )
-                endif
 
 
         else
