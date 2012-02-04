@@ -58,6 +58,9 @@ program wrapper
            print *,"          Fitz: Galactic law of Fitzpatrick & Massa (1990, ApJS, 72, 163)"
            print *,"          LMC:  LMC law of Howarth (1983, MNRAS, 203, 301)"
            print *,"          SMC:  SMC law of Prevot et al. (984, A&A, 132, 389)"
+           print *,"  -c"
+           print *,"       The logarithmic extinction at H beta"
+           print *,"       Default: calculated from Balmer line ratios"
            stop
         endif
 
