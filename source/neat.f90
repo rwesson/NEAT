@@ -79,6 +79,15 @@ program neat
            print *,"  -c"
            print *,"       The logarithmic extinction at H beta"
            print *,"       Default: calculated from Balmer line ratios"
+        !  to be implemented:
+        !  -R                     : R (default 3.1)
+        !  -nelow / --density-low : low ionisation zone density (default - calculate from line list)
+        !  -telow / --temperature-low : low i. zone temperature
+        !  -nemed / --density-med : medium i. density
+        !  -temed / --temperature-med : medium i. temperature
+        !  -nehigh / --density-high : high i. density
+        !  -tehigh / --temperature-high : high i. temperature
+        !  -c                     : value of c(Hb), the logarithmic extinction at H beta
            stop
         endif
 
@@ -131,24 +140,6 @@ program neat
                 print *,"Error: No input file specified"
                 stop
          endif
-
-        ! read all arguments into array
-        ! loop through and read the relevant variables
-        ! print warning for unrecognised options
-        ! options are:
-        !  -n / --n-iterations    : number of iterations (default 1)
-        !  -i / --input           : input file (no default)
-        !  -e / --extinction-law  : extinction law (default Howarth 1983)
-        !  to be implemented:
-        !  -R                     : R (default 3.1)
-        !  -nelow / --density-low : low ionisation zone density (default - calculate from line list)
-        !  -telow / --temperature-low : low i. zone temperature
-        !  -nemed / --density-med : medium i. density
-        !  -temed / --temperature-med : medium i. temperature
-        !  -nehigh / --density-high : high i. density
-        !  -tehigh / --temperature-high : high i. temperature
-        !  -c                     : value of c(Hb), the logarithmic extinction at H beta
-
 
         !first, read in the line list
 
@@ -211,122 +202,123 @@ program neat
 
         if(runs == 1)then !calculates abundances without uncertainties
                 call abundances(linelist, 1, switch_ext, listlength, filename, iteration_result, R, meanextinction, calculate_extinction)
-!generate outputs
 
-700 FORMAT(X,A20,F5.3) !extinction format
-701 FORMAT(X,A20,I5) !diagnostics format
-702 FORMAT(X,A20,ES14.3) !abundances format
-703 FORMAT(X,A20,F5.2) !strong line format
-704 FORMAT(X,A20,F5.2) !adf format
+                !generate outputs
 
-print *
-print *,"Extinction"
-print *,"=========="
-print *
-write (*,700) "mean_cHb: ",iteration_result(1)%mean_cHb
-print *
-print *,"Diagnostics"
-print *,"==========="
-print *
-write (*,701) "OII_density: ",INT(iteration_result(1)%OII_density)
-write (*,701) "SII_density: ",INT(iteration_result(1)%SII_density)
-write (*,701) "low_density: ",INT(iteration_result(1)%low_density)
-print *
-write (*,701) "OII_temp: ",INT(iteration_result(1)%OII_temp)
-write (*,701) "NII_temp: ",INT(iteration_result(1)%NII_temp)
-write (*,701) "SII_temp: ",INT(iteration_result(1)%SII_temp)
-write (*,701) "OI_temp: ",INT(iteration_result(1)%OI_temp)
-write (*,701) "CI_temp: ",INT(iteration_result(1)%CI_temp)
-write (*,701) "low_temp: ",INT(iteration_result(1)%low_temp)
-print *
-write (*,701) "ClIII_density: ",INT(iteration_result(1)%ClIII_density)
-write (*,701) "ArIV_density: ",INT(iteration_result(1)%ArIV_density)
-write (*,701) "CIII_density: ",INT(iteration_result(1)%CIII_density)
-write (*,701) "OIII_IR_density: ",INT(iteration_result(1)%OIII_IR_density)
-write (*,701) "SIII_IR_density: ",INT(iteration_result(1)%SIII_IR_density)
-write (*,701) "ArIII_IR_density: ",INT(iteration_result(1)%ArIII_IR_density)
-write (*,701) "NeIII_IR_density: ",INT(iteration_result(1)%NeIII_IR_density)
-write (*,701) "med_density: ",INT(iteration_result(1)%med_density)
-print *
-write (*,701) "OIII_temp: ",INT(iteration_result(1)%OIII_temp)
-write (*,701) "OIII_IR_temp: ",INT(iteration_result(1)%OIII_IR_temp)
-write (*,701) "NeIII_temp: ",INT(iteration_result(1)%NeIII_temp)
-write (*,701) "NeIII_IR_temp: ",INT(iteration_result(1)%NeIII_IR_temp)
-write (*,701) "ArIII_temp: ",INT(iteration_result(1)%ArIII_temp)
-write (*,701) "SIII_temp: ",INT(iteration_result(1)%SIII_temp)
-write (*,701) "med_temp: ",INT(iteration_result(1)%med_temp)
-print *
-write (*,701) "NeIV_density: ",INT(iteration_result(1)%NeIV_density)
-write (*,701) "high_density: ",INT(iteration_result(1)%high_density)
-print *
-write (*,701) "ArV_temp: ",INT(iteration_result(1)%ArV_temp)
-write (*,701) "NeV_temp: ",INT(iteration_result(1)%NeV_temp)
-write (*,701) "high_temp: ",INT(iteration_result(1)%high_temp)
-print *
-print *,"Abundances"
-print *,"=========="
-print *
-print *,"Collisionally excited lines"
-write (*,702) "NC_abund_CEL: ",iteration_result(1)%NC_abund_CEL
-write (*,702) "cii_abund_CEL: ",iteration_result(1)%cii_abund_CEL
-write (*,702) "ciii_abund_CEL: ",iteration_result(1)%ciii_abund_CEL
-write (*,702) "civ_abund_CEL: ",iteration_result(1)%civ_abund_CEL
-write (*,702) "C_abund_CEL: ",iteration_result(1)%C_abund_CEL
-write (*,702) "Nii_abund_CEL: ",iteration_result(1)%Nii_abund_CEL
-write (*,702) "Niii_abund_CEL: ",iteration_result(1)%Niii_abund_CEL
-write (*,702) "Niv_abund_CEL: ",iteration_result(1)%Niv_abund_CEL
-write (*,702) "Nv_abund_CEL: ",iteration_result(1)%Nv_abund_CEL
-write (*,702) "N_abund_CEL: ",iteration_result(1)%N_abund_CEL
-write (*,702) "NO_abund_CEL: ",iteration_result(1)%NO_abund_CEL
-write (*,702) "Oii_abund_CEL: ",iteration_result(1)%Oii_abund_CEL
-write (*,702) "Oiii_abund_CEL: ",iteration_result(1)%Oiii_abund_CEL
-write (*,702) "Oiv_abund_CEL: ",iteration_result(1)%Oiv_abund_CEL
-write (*,702) "O_abund_CEL: ",iteration_result(1)%O_abund_CEL
-write (*,702) "Neii_abund_CEL: ",iteration_result(1)%Neii_abund_CEL
-write (*,702) "Neiii_abund_CEL: ",iteration_result(1)%Neiii_abund_CEL
-write (*,702) "Neiv_abund_CEL: ",iteration_result(1)%Neiv_abund_CEL
-write (*,702) "Nev_abund_CEL: ",iteration_result(1)%Nev_abund_CEL
-write (*,702) "Ne_abund_CEL: ",iteration_result(1)%Ne_abund_CEL
-write (*,702) "Ariii_abund_CEL: ",iteration_result(1)%Ariii_abund_CEL
-write (*,702) "Ariv_abund_CEL: ",iteration_result(1)%Ariv_abund_CEL
-write (*,702) "Arv_abund_CEL: ",iteration_result(1)%Arv_abund_CEL
-write (*,702) "Ar_abund_CEL: ",iteration_result(1)%Ar_abund_CEL
-write (*,702) "Sii_abund_CEL: ",iteration_result(1)%Sii_abund_CEL
-write (*,702) "Siii_abund_CEL: ",iteration_result(1)%Siii_abund_CEL
-write (*,702) "Cliii_abund_CEL: ",iteration_result(1)%Cliii_abund_CEL
-write (*,702) "Cl_abund_CEL: ",iteration_result(1)%Cl_abund_CEL
-write (*,702) "S_abund_CEL: ",iteration_result(1)%S_abund_CEL
-print *
-print *,"Recombination lines"
-print *,"-------------------"
-print *
-write (*,702) "He_abund_ORL: ",iteration_result(1)%He_abund_ORL
-write (*,702) "C_abund_ORL: ",iteration_result(1)%C_abund_ORL
-write (*,702) "N_abund_ORL: ",iteration_result(1)%N_abund_ORL
-write (*,702) "O_abund_ORL: ",iteration_result(1)%O_abund_ORL
-write (*,702) "Ne_abund_ORL: ",iteration_result(1)%Ne_abund_ORL
-print *
-print *,"Strong line methods"
-print *,"-------------------"
-print *
-write (*,703) "O_R23_upper: ",iteration_result(1)%O_R23_upper
-write (*,703) "O_R23_lower: ",iteration_result(1)%O_R23_lower
-write (*,703) "O_N2: ",iteration_result(1)%O_N2
-write (*,703) "O_O3N2: ",iteration_result(1)%O_O3N2
-write (*,703) "O_Ar3O3: ",iteration_result(1)%O_Ar3O3
-write (*,703) "O_S3O3: ",iteration_result(1)%O_S3O3
-print *
-print *,"Abundance discrepancy factors"
-print *,"-----------------------------"
-print *
-write (*,704) "adf_O: ",iteration_result(1)%adf_O
-write (*,704) "adf_O2plus: ",iteration_result(1)%adf_O2plus
-write (*,704) "adf_N: ",iteration_result(1)%adf_N
-write (*,704) "adf_N2plus: ",iteration_result(1)%adf_N2plus
-write (*,704) "adf_C: ",iteration_result(1)%adf_C
-write (*,704) "adf_C2plus: ",iteration_result(1)%adf_C2plus
-write (*,704) "adf_Ne: ",iteration_result(1)%adf_Ne
-write (*,704) "adf_Ne2plus : ",iteration_result(1)%adf_Ne2plus
+                700 FORMAT(X,A20,F5.3) !extinction format
+                701 FORMAT(X,A20,I5) !diagnostics format
+                702 FORMAT(X,A20,ES14.3) !abundances format
+                703 FORMAT(X,A20,F5.2) !strong line format
+                704 FORMAT(X,A20,F5.2) !adf format
+
+                print *
+                print *,"Extinction"
+                print *,"=========="
+                print *
+                write (*,700) "mean_cHb: ",iteration_result(1)%mean_cHb
+                print *
+                print *,"Diagnostics"
+                print *,"==========="
+                print *
+                write (*,701) "OII_density: ",INT(iteration_result(1)%OII_density)
+                write (*,701) "SII_density: ",INT(iteration_result(1)%SII_density)
+                write (*,701) "low_density: ",INT(iteration_result(1)%low_density)
+                print *
+                write (*,701) "OII_temp: ",INT(iteration_result(1)%OII_temp)
+                write (*,701) "NII_temp: ",INT(iteration_result(1)%NII_temp)
+                write (*,701) "SII_temp: ",INT(iteration_result(1)%SII_temp)
+                write (*,701) "OI_temp: ",INT(iteration_result(1)%OI_temp)
+                write (*,701) "CI_temp: ",INT(iteration_result(1)%CI_temp)
+                write (*,701) "low_temp: ",INT(iteration_result(1)%low_temp)
+                print *
+                write (*,701) "ClIII_density: ",INT(iteration_result(1)%ClIII_density)
+                write (*,701) "ArIV_density: ",INT(iteration_result(1)%ArIV_density)
+                write (*,701) "CIII_density: ",INT(iteration_result(1)%CIII_density)
+                write (*,701) "OIII_IR_density: ",INT(iteration_result(1)%OIII_IR_density)
+                write (*,701) "SIII_IR_density: ",INT(iteration_result(1)%SIII_IR_density)
+                write (*,701) "ArIII_IR_density: ",INT(iteration_result(1)%ArIII_IR_density)
+                write (*,701) "NeIII_IR_density: ",INT(iteration_result(1)%NeIII_IR_density)
+                write (*,701) "med_density: ",INT(iteration_result(1)%med_density)
+                print *
+                write (*,701) "OIII_temp: ",INT(iteration_result(1)%OIII_temp)
+                write (*,701) "OIII_IR_temp: ",INT(iteration_result(1)%OIII_IR_temp)
+                write (*,701) "NeIII_temp: ",INT(iteration_result(1)%NeIII_temp)
+                write (*,701) "NeIII_IR_temp: ",INT(iteration_result(1)%NeIII_IR_temp)
+                write (*,701) "ArIII_temp: ",INT(iteration_result(1)%ArIII_temp)
+                write (*,701) "SIII_temp: ",INT(iteration_result(1)%SIII_temp)
+                write (*,701) "med_temp: ",INT(iteration_result(1)%med_temp)
+                print *
+                write (*,701) "NeIV_density: ",INT(iteration_result(1)%NeIV_density)
+                write (*,701) "high_density: ",INT(iteration_result(1)%high_density)
+                print *
+                write (*,701) "ArV_temp: ",INT(iteration_result(1)%ArV_temp)
+                write (*,701) "NeV_temp: ",INT(iteration_result(1)%NeV_temp)
+                write (*,701) "high_temp: ",INT(iteration_result(1)%high_temp)
+                print *
+                print *,"Abundances"
+                print *,"=========="
+                print *
+                print *,"Collisionally excited lines"
+                write (*,702) "NC_abund_CEL: ",iteration_result(1)%NC_abund_CEL
+                write (*,702) "cii_abund_CEL: ",iteration_result(1)%cii_abund_CEL
+                write (*,702) "ciii_abund_CEL: ",iteration_result(1)%ciii_abund_CEL
+                write (*,702) "civ_abund_CEL: ",iteration_result(1)%civ_abund_CEL
+                write (*,702) "C_abund_CEL: ",iteration_result(1)%C_abund_CEL
+                write (*,702) "Nii_abund_CEL: ",iteration_result(1)%Nii_abund_CEL
+                write (*,702) "Niii_abund_CEL: ",iteration_result(1)%Niii_abund_CEL
+                write (*,702) "Niv_abund_CEL: ",iteration_result(1)%Niv_abund_CEL
+                write (*,702) "Nv_abund_CEL: ",iteration_result(1)%Nv_abund_CEL
+                write (*,702) "N_abund_CEL: ",iteration_result(1)%N_abund_CEL
+                write (*,702) "NO_abund_CEL: ",iteration_result(1)%NO_abund_CEL
+                write (*,702) "Oii_abund_CEL: ",iteration_result(1)%Oii_abund_CEL
+                write (*,702) "Oiii_abund_CEL: ",iteration_result(1)%Oiii_abund_CEL
+                write (*,702) "Oiv_abund_CEL: ",iteration_result(1)%Oiv_abund_CEL
+                write (*,702) "O_abund_CEL: ",iteration_result(1)%O_abund_CEL
+                write (*,702) "Neii_abund_CEL: ",iteration_result(1)%Neii_abund_CEL
+                write (*,702) "Neiii_abund_CEL: ",iteration_result(1)%Neiii_abund_CEL
+                write (*,702) "Neiv_abund_CEL: ",iteration_result(1)%Neiv_abund_CEL
+                write (*,702) "Nev_abund_CEL: ",iteration_result(1)%Nev_abund_CEL
+                write (*,702) "Ne_abund_CEL: ",iteration_result(1)%Ne_abund_CEL
+                write (*,702) "Ariii_abund_CEL: ",iteration_result(1)%Ariii_abund_CEL
+                write (*,702) "Ariv_abund_CEL: ",iteration_result(1)%Ariv_abund_CEL
+                write (*,702) "Arv_abund_CEL: ",iteration_result(1)%Arv_abund_CEL
+                write (*,702) "Ar_abund_CEL: ",iteration_result(1)%Ar_abund_CEL
+                write (*,702) "Sii_abund_CEL: ",iteration_result(1)%Sii_abund_CEL
+                write (*,702) "Siii_abund_CEL: ",iteration_result(1)%Siii_abund_CEL
+                write (*,702) "Cliii_abund_CEL: ",iteration_result(1)%Cliii_abund_CEL
+                write (*,702) "Cl_abund_CEL: ",iteration_result(1)%Cl_abund_CEL
+                write (*,702) "S_abund_CEL: ",iteration_result(1)%S_abund_CEL
+                print *
+                print *,"Recombination lines"
+                print *,"-------------------"
+                print *
+                write (*,702) "He_abund_ORL: ",iteration_result(1)%He_abund_ORL
+                write (*,702) "C_abund_ORL: ",iteration_result(1)%C_abund_ORL
+                write (*,702) "N_abund_ORL: ",iteration_result(1)%N_abund_ORL
+                write (*,702) "O_abund_ORL: ",iteration_result(1)%O_abund_ORL
+                write (*,702) "Ne_abund_ORL: ",iteration_result(1)%Ne_abund_ORL
+                print *
+                print *,"Strong line methods"
+                print *,"-------------------"
+                print *
+                write (*,703) "O_R23_upper: ",iteration_result(1)%O_R23_upper
+                write (*,703) "O_R23_lower: ",iteration_result(1)%O_R23_lower
+                write (*,703) "O_N2: ",iteration_result(1)%O_N2
+                write (*,703) "O_O3N2: ",iteration_result(1)%O_O3N2
+                write (*,703) "O_Ar3O3: ",iteration_result(1)%O_Ar3O3
+                write (*,703) "O_S3O3: ",iteration_result(1)%O_S3O3
+                print *
+                print *,"Abundance discrepancy factors"
+                print *,"-----------------------------"
+                print *
+                write (*,704) "adf_O: ",iteration_result(1)%adf_O
+                write (*,704) "adf_O2plus: ",iteration_result(1)%adf_O2plus
+                write (*,704) "adf_N: ",iteration_result(1)%adf_N
+                write (*,704) "adf_N2plus: ",iteration_result(1)%adf_N2plus
+                write (*,704) "adf_C: ",iteration_result(1)%adf_C
+                write (*,704) "adf_C2plus: ",iteration_result(1)%adf_C2plus
+                write (*,704) "adf_Ne: ",iteration_result(1)%adf_Ne
+                write (*,704) "adf_Ne2plus : ",iteration_result(1)%adf_Ne2plus
 
 
         else if(runs > 1)then
@@ -455,8 +447,16 @@ write (*,704) "adf_Ne2plus : ",iteration_result(1)%adf_Ne2plus
                 DO I=841,888
                         CLOSE(unit=I)
                 END DO
-
-
+! sort and bin
+                call system("sort -g "//trim(filename)//"_mean_cHb > temp")
+                open(901,file="temp")
+                do i=1,runs
+                  read (901,*) temp1
+                  if (i==int(runs*0.159)) print *,"low:    ",temp1
+                  if (i==int(runs*0.500)) print *,"median: ",temp1
+                  if (i==int(runs*0.841)) print *,"high:   ",temp1
+                 enddo
+                close(901)
         else
                 print*, "I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."
         endif
