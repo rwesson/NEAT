@@ -213,109 +213,120 @@ program neat
                 call abundances(linelist, 1, switch_ext, listlength, filename, iteration_result, R, meanextinction, calculate_extinction)
 !generate outputs
 
+700 FORMAT(X,A20,F5.3) !extinction format
+701 FORMAT(X,A20,I5) !diagnostics format
+702 FORMAT(X,A20,ES14.3) !abundances format
+703 FORMAT(X,A20,F5.2) !strong line format
+704 FORMAT(X,A20,F5.2) !adf format
+
 print *
 print *,"Extinction"
 print *,"=========="
 print *
-print *,"mean_cHb: ",iteration_result(1)%mean_cHb
+write (*,700) "mean_cHb: ",iteration_result(1)%mean_cHb
 print *
 print *,"Diagnostics"
 print *,"==========="
 print *
-print *,"OII_density: ",iteration_result(1)%OII_density
-print *,"SII_density: ",iteration_result(1)%SII_density
-print *,"low_density: ",iteration_result(1)%low_density
-print *,"OII_temp: ",iteration_result(1)%OII_temp
-print *,"NII_temp: ",iteration_result(1)%NII_temp
-print *,"SII_temp: ",iteration_result(1)%SII_temp
-print *,"OI_temp: ",iteration_result(1)%OI_temp
-print *,"CI_temp: ",iteration_result(1)%CI_temp
-print *,"low_temp: ",iteration_result(1)%low_temp
-print *,"ClIII_density: ",iteration_result(1)%ClIII_density
-print *,"ArIV_density: ",iteration_result(1)%ArIV_density
-print *,"CIII_density: ",iteration_result(1)%CIII_density
-print *,"OIII_IR_density: ",iteration_result(1)%OIII_IR_density
-print *,"SIII_IR_density: ",iteration_result(1)%SIII_IR_density
-print *,"ArIII_IR_density: ",iteration_result(1)%ArIII_IR_density
-print *,"NeIII_IR_density: ",iteration_result(1)%NeIII_IR_density
-print *,"med_density: ",iteration_result(1)%med_density
-print *,"OIII_temp: ",iteration_result(1)%OIII_temp
-print *,"OIII_IR_temp: ",iteration_result(1)%OIII_IR_temp
-print *,"NeIII_temp: ",iteration_result(1)%NeIII_temp
-print *,"NeIII_IR_temp: ",iteration_result(1)%NeIII_IR_temp
-print *,"ArIII_temp: ",iteration_result(1)%ArIII_temp
-print *,"SIII_temp: ",iteration_result(1)%SIII_temp
-print *,"med_temp: ",iteration_result(1)%med_temp
-print *,"NeIV_density: ",iteration_result(1)%NeIV_density
-print *,"high_density: ",iteration_result(1)%high_density
-print *,"ArV_temp: ",iteration_result(1)%ArV_temp
-print *,"NeV_temp: ",iteration_result(1)%NeV_temp
-print *,"high_temp: ",iteration_result(1)%high_temp
+write (*,701) "OII_density: ",INT(iteration_result(1)%OII_density)
+write (*,701) "SII_density: ",INT(iteration_result(1)%SII_density)
+write (*,701) "low_density: ",INT(iteration_result(1)%low_density)
+print *
+write (*,701) "OII_temp: ",INT(iteration_result(1)%OII_temp)
+write (*,701) "NII_temp: ",INT(iteration_result(1)%NII_temp)
+write (*,701) "SII_temp: ",INT(iteration_result(1)%SII_temp)
+write (*,701) "OI_temp: ",INT(iteration_result(1)%OI_temp)
+write (*,701) "CI_temp: ",INT(iteration_result(1)%CI_temp)
+write (*,701) "low_temp: ",INT(iteration_result(1)%low_temp)
+print *
+write (*,701) "ClIII_density: ",INT(iteration_result(1)%ClIII_density)
+write (*,701) "ArIV_density: ",INT(iteration_result(1)%ArIV_density)
+write (*,701) "CIII_density: ",INT(iteration_result(1)%CIII_density)
+write (*,701) "OIII_IR_density: ",INT(iteration_result(1)%OIII_IR_density)
+write (*,701) "SIII_IR_density: ",INT(iteration_result(1)%SIII_IR_density)
+write (*,701) "ArIII_IR_density: ",INT(iteration_result(1)%ArIII_IR_density)
+write (*,701) "NeIII_IR_density: ",INT(iteration_result(1)%NeIII_IR_density)
+write (*,701) "med_density: ",INT(iteration_result(1)%med_density)
+print *
+write (*,701) "OIII_temp: ",INT(iteration_result(1)%OIII_temp)
+write (*,701) "OIII_IR_temp: ",INT(iteration_result(1)%OIII_IR_temp)
+write (*,701) "NeIII_temp: ",INT(iteration_result(1)%NeIII_temp)
+write (*,701) "NeIII_IR_temp: ",INT(iteration_result(1)%NeIII_IR_temp)
+write (*,701) "ArIII_temp: ",INT(iteration_result(1)%ArIII_temp)
+write (*,701) "SIII_temp: ",INT(iteration_result(1)%SIII_temp)
+write (*,701) "med_temp: ",INT(iteration_result(1)%med_temp)
+print *
+write (*,701) "NeIV_density: ",INT(iteration_result(1)%NeIV_density)
+write (*,701) "high_density: ",INT(iteration_result(1)%high_density)
+print *
+write (*,701) "ArV_temp: ",INT(iteration_result(1)%ArV_temp)
+write (*,701) "NeV_temp: ",INT(iteration_result(1)%NeV_temp)
+write (*,701) "high_temp: ",INT(iteration_result(1)%high_temp)
 print *
 print *,"Abundances"
 print *,"=========="
 print *
 print *,"Collisionally excited lines"
-print *,"NC_abund_CEL: ",iteration_result(1)%NC_abund_CEL
-print *,"cii_abund_CEL: ",iteration_result(1)%cii_abund_CEL
-print *,"ciii_abund_CEL: ",iteration_result(1)%ciii_abund_CEL
-print *,"civ_abund_CEL: ",iteration_result(1)%civ_abund_CEL
-print *,"C_abund_CEL: ",iteration_result(1)%C_abund_CEL
-print *,"Nii_abund_CEL: ",iteration_result(1)%Nii_abund_CEL
-print *,"Niii_abund_CEL: ",iteration_result(1)%Niii_abund_CEL
-print *,"Niv_abund_CEL: ",iteration_result(1)%Niv_abund_CEL
-print *,"Nv_abund_CEL: ",iteration_result(1)%Nv_abund_CEL
-print *,"N_abund_CEL: ",iteration_result(1)%N_abund_CEL
-print *,"NO_abund_CEL: ",iteration_result(1)%NO_abund_CEL
-print *,"Oii_abund_CEL: ",iteration_result(1)%Oii_abund_CEL
-print *,"Oiii_abund_CEL: ",iteration_result(1)%Oiii_abund_CEL
-print *,"Oiv_abund_CEL: ",iteration_result(1)%Oiv_abund_CEL
-print *,"O_abund_CEL: ",iteration_result(1)%O_abund_CEL
-print *,"Neii_abund_CEL: ",iteration_result(1)%Neii_abund_CEL
-print *,"Neiii_abund_CEL: ",iteration_result(1)%Neiii_abund_CEL
-print *,"Neiv_abund_CEL: ",iteration_result(1)%Neiv_abund_CEL
-print *,"Nev_abund_CEL: ",iteration_result(1)%Nev_abund_CEL
-print *,"Ne_abund_CEL: ",iteration_result(1)%Ne_abund_CEL
-print *,"Ariii_abund_CEL: ",iteration_result(1)%Ariii_abund_CEL
-print *,"Ariv_abund_CEL: ",iteration_result(1)%Ariv_abund_CEL
-print *,"Arv_abund_CEL: ",iteration_result(1)%Arv_abund_CEL
-print *,"Ar_abund_CEL: ",iteration_result(1)%Ar_abund_CEL
-print *,"Sii_abund_CEL: ",iteration_result(1)%Sii_abund_CEL
-print *,"Siii_abund_CEL: ",iteration_result(1)%Siii_abund_CEL
-print *,"Cliii_abund_CEL: ",iteration_result(1)%Cliii_abund_CEL
-print *,"Cl_abund_CEL: ",iteration_result(1)%Cl_abund_CEL
-print *,"S_abund_CEL: ",iteration_result(1)%S_abund_CEL
+write (*,702) "NC_abund_CEL: ",iteration_result(1)%NC_abund_CEL
+write (*,702) "cii_abund_CEL: ",iteration_result(1)%cii_abund_CEL
+write (*,702) "ciii_abund_CEL: ",iteration_result(1)%ciii_abund_CEL
+write (*,702) "civ_abund_CEL: ",iteration_result(1)%civ_abund_CEL
+write (*,702) "C_abund_CEL: ",iteration_result(1)%C_abund_CEL
+write (*,702) "Nii_abund_CEL: ",iteration_result(1)%Nii_abund_CEL
+write (*,702) "Niii_abund_CEL: ",iteration_result(1)%Niii_abund_CEL
+write (*,702) "Niv_abund_CEL: ",iteration_result(1)%Niv_abund_CEL
+write (*,702) "Nv_abund_CEL: ",iteration_result(1)%Nv_abund_CEL
+write (*,702) "N_abund_CEL: ",iteration_result(1)%N_abund_CEL
+write (*,702) "NO_abund_CEL: ",iteration_result(1)%NO_abund_CEL
+write (*,702) "Oii_abund_CEL: ",iteration_result(1)%Oii_abund_CEL
+write (*,702) "Oiii_abund_CEL: ",iteration_result(1)%Oiii_abund_CEL
+write (*,702) "Oiv_abund_CEL: ",iteration_result(1)%Oiv_abund_CEL
+write (*,702) "O_abund_CEL: ",iteration_result(1)%O_abund_CEL
+write (*,702) "Neii_abund_CEL: ",iteration_result(1)%Neii_abund_CEL
+write (*,702) "Neiii_abund_CEL: ",iteration_result(1)%Neiii_abund_CEL
+write (*,702) "Neiv_abund_CEL: ",iteration_result(1)%Neiv_abund_CEL
+write (*,702) "Nev_abund_CEL: ",iteration_result(1)%Nev_abund_CEL
+write (*,702) "Ne_abund_CEL: ",iteration_result(1)%Ne_abund_CEL
+write (*,702) "Ariii_abund_CEL: ",iteration_result(1)%Ariii_abund_CEL
+write (*,702) "Ariv_abund_CEL: ",iteration_result(1)%Ariv_abund_CEL
+write (*,702) "Arv_abund_CEL: ",iteration_result(1)%Arv_abund_CEL
+write (*,702) "Ar_abund_CEL: ",iteration_result(1)%Ar_abund_CEL
+write (*,702) "Sii_abund_CEL: ",iteration_result(1)%Sii_abund_CEL
+write (*,702) "Siii_abund_CEL: ",iteration_result(1)%Siii_abund_CEL
+write (*,702) "Cliii_abund_CEL: ",iteration_result(1)%Cliii_abund_CEL
+write (*,702) "Cl_abund_CEL: ",iteration_result(1)%Cl_abund_CEL
+write (*,702) "S_abund_CEL: ",iteration_result(1)%S_abund_CEL
 print *
 print *,"Recombination lines"
 print *,"-------------------"
 print *
-print *,"He_abund_ORL: ",iteration_result(1)%He_abund_ORL
-print *,"C_abund_ORL: ",iteration_result(1)%C_abund_ORL
-print *,"N_abund_ORL: ",iteration_result(1)%N_abund_ORL
-print *,"O_abund_ORL: ",iteration_result(1)%O_abund_ORL
-print *,"Ne_abund_ORL: ",iteration_result(1)%Ne_abund_ORL
+write (*,702) "He_abund_ORL: ",iteration_result(1)%He_abund_ORL
+write (*,702) "C_abund_ORL: ",iteration_result(1)%C_abund_ORL
+write (*,702) "N_abund_ORL: ",iteration_result(1)%N_abund_ORL
+write (*,702) "O_abund_ORL: ",iteration_result(1)%O_abund_ORL
+write (*,702) "Ne_abund_ORL: ",iteration_result(1)%Ne_abund_ORL
 print *
 print *,"Strong line methods"
 print *,"-------------------"
 print *
-print *,"O_R23_upper: ",iteration_result(1)%O_R23_upper
-print *,"O_R23_lower: ",iteration_result(1)%O_R23_lower
-print *,"O_N2: ",iteration_result(1)%O_N2
-print *,"O_O3N2: ",iteration_result(1)%O_O3N2
-print *,"O_Ar3O3: ",iteration_result(1)%O_Ar3O3
-print *,"O_S3O3: ",iteration_result(1)%O_S3O3
+write (*,703) "O_R23_upper: ",iteration_result(1)%O_R23_upper
+write (*,703) "O_R23_lower: ",iteration_result(1)%O_R23_lower
+write (*,703) "O_N2: ",iteration_result(1)%O_N2
+write (*,703) "O_O3N2: ",iteration_result(1)%O_O3N2
+write (*,703) "O_Ar3O3: ",iteration_result(1)%O_Ar3O3
+write (*,703) "O_S3O3: ",iteration_result(1)%O_S3O3
 print *
 print *,"Abundance discrepancy factors"
 print *,"-----------------------------"
 print *
-print *,"adf_O: ",iteration_result(1)%adf_O
-print *,"adf_O2plus: ",iteration_result(1)%adf_O2plus
-print *,"adf_N: ",iteration_result(1)%adf_N
-print *,"adf_N2plus: ",iteration_result(1)%adf_N2plus
-print *,"adf_C: ",iteration_result(1)%adf_C
-print *,"adf_C2plus: ",iteration_result(1)%adf_C2plus
-print *,"adf_Ne: ",iteration_result(1)%adf_Ne
-print *,"adf_Ne2plus : ",iteration_result(1)%adf_Ne2plus
+write (*,704) "adf_O: ",iteration_result(1)%adf_O
+write (*,704) "adf_O2plus: ",iteration_result(1)%adf_O2plus
+write (*,704) "adf_N: ",iteration_result(1)%adf_N
+write (*,704) "adf_N2plus: ",iteration_result(1)%adf_N2plus
+write (*,704) "adf_C: ",iteration_result(1)%adf_C
+write (*,704) "adf_C2plus: ",iteration_result(1)%adf_C2plus
+write (*,704) "adf_Ne: ",iteration_result(1)%adf_Ne
+write (*,704) "adf_Ne2plus : ",iteration_result(1)%adf_Ne2plus
 
 
         else if(runs > 1)then
