@@ -1,5 +1,23 @@
+! NEAT, the nebular abundance analysis tool
+! (C) 2006 Roger Wesson, Dave Stock, Peter Scicluna
+! NEAT incorporates aspects of several codes developed over decades at UCL:
+! equib, by I. Howarth and S. Adams, updated significantly by B. Ercolano
+! MIDAS scripts written by X-W. Liu for calculating recombination line abundances
 
-program wrapper
+! This program is free software: you can redistribute it and/or modify
+! it under the terms of the GNU General Public License as published by
+! the Free Software Foundation, either version 3 of the License, or
+! (at your option) any later version.
+
+! This program is distributed in the hope that it will be useful,
+! but WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+! GNU General Public License for more details.
+
+! You should have received a copy of the GNU General Public License
+! along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+program neat
 
         use mod_abundtypes
         use mod_resultarrays
@@ -129,7 +147,7 @@ program wrapper
         !  -temed / --temperature-med : medium i. temperature
         !  -nehigh / --density-high : high i. density
         !  -tehigh / --temperature-high : high i. temperature
-        !  -chb                   : value of c(Hb), the logarithmic extinction at H beta
+        !  -c                     : value of c(Hb), the logarithmic extinction at H beta
 
 
         !first, read in the line list
@@ -195,40 +213,15 @@ program wrapper
                 call abundances(linelist, 1, switch_ext, listlength, filename, iteration_result, R, meanextinction, calculate_extinction)
 !generate outputs
 
-print *,"NC_abund_CEL: ",iteration_result(1)%NC_abund_CEL
-print *,"cii_abund_CEL: ",iteration_result(1)%cii_abund_CEL
-print *,"ciii_abund_CEL: ",iteration_result(1)%ciii_abund_CEL
-print *,"civ_abund_CEL: ",iteration_result(1)%civ_abund_CEL
-print *,"C_abund_CEL: ",iteration_result(1)%C_abund_CEL
-print *,"Nii_abund_CEL: ",iteration_result(1)%Nii_abund_CEL
-print *,"Niii_abund_CEL: ",iteration_result(1)%Niii_abund_CEL
-print *,"Niv_abund_CEL: ",iteration_result(1)%Niv_abund_CEL
-print *,"Nv_abund_CEL: ",iteration_result(1)%Nv_abund_CEL
-print *,"N_abund_CEL: ",iteration_result(1)%N_abund_CEL
-print *,"NO_abund_CEL: ",iteration_result(1)%NO_abund_CEL
-print *,"Oii_abund_CEL: ",iteration_result(1)%Oii_abund_CEL
-print *,"Oiii_abund_CEL: ",iteration_result(1)%Oiii_abund_CEL
-print *,"Oiv_abund_CEL: ",iteration_result(1)%Oiv_abund_CEL
-print *,"O_abund_CEL: ",iteration_result(1)%O_abund_CEL
-print *,"Neii_abund_CEL: ",iteration_result(1)%Neii_abund_CEL
-print *,"Neiii_abund_CEL: ",iteration_result(1)%Neiii_abund_CEL
-print *,"Neiv_abund_CEL: ",iteration_result(1)%Neiv_abund_CEL
-print *,"Nev_abund_CEL: ",iteration_result(1)%Nev_abund_CEL
-print *,"Ne_abund_CEL: ",iteration_result(1)%Ne_abund_CEL
-print *,"Ariii_abund_CEL: ",iteration_result(1)%Ariii_abund_CEL
-print *,"Ariv_abund_CEL: ",iteration_result(1)%Ariv_abund_CEL
-print *,"Arv_abund_CEL: ",iteration_result(1)%Arv_abund_CEL
-print *,"Ar_abund_CEL: ",iteration_result(1)%Ar_abund_CEL
-print *,"Sii_abund_CEL: ",iteration_result(1)%Sii_abund_CEL
-print *,"Siii_abund_CEL: ",iteration_result(1)%Siii_abund_CEL
-print *,"Cliii_abund_CEL: ",iteration_result(1)%Cliii_abund_CEL
-print *,"Cl_abund_CEL: ",iteration_result(1)%Cl_abund_CEL
-print *,"S_abund_CEL: ",iteration_result(1)%S_abund_CEL
-print *,"He_abund_ORL: ",iteration_result(1)%He_abund_ORL
-print *,"C_abund_ORL: ",iteration_result(1)%C_abund_ORL
-print *,"N_abund_ORL: ",iteration_result(1)%N_abund_ORL
-print *,"O_abund_ORL: ",iteration_result(1)%O_abund_ORL
-print *,"Ne_abund_ORL: ",iteration_result(1)%Ne_abund_ORL
+print *
+print *,"Extinction"
+print *,"=========="
+print *
+print *,"mean_cHb: ",iteration_result(1)%mean_cHb
+print *
+print *,"Diagnostics"
+print *,"==========="
+print *
 print *,"OII_density: ",iteration_result(1)%OII_density
 print *,"SII_density: ",iteration_result(1)%SII_density
 print *,"low_density: ",iteration_result(1)%low_density
@@ -258,13 +251,63 @@ print *,"high_density: ",iteration_result(1)%high_density
 print *,"ArV_temp: ",iteration_result(1)%ArV_temp
 print *,"NeV_temp: ",iteration_result(1)%NeV_temp
 print *,"high_temp: ",iteration_result(1)%high_temp
-print *,"mean_cHb: ",iteration_result(1)%mean_cHb
+print *
+print *,"Abundances"
+print *,"=========="
+print *
+print *,"Collisionally excited lines"
+print *,"NC_abund_CEL: ",iteration_result(1)%NC_abund_CEL
+print *,"cii_abund_CEL: ",iteration_result(1)%cii_abund_CEL
+print *,"ciii_abund_CEL: ",iteration_result(1)%ciii_abund_CEL
+print *,"civ_abund_CEL: ",iteration_result(1)%civ_abund_CEL
+print *,"C_abund_CEL: ",iteration_result(1)%C_abund_CEL
+print *,"Nii_abund_CEL: ",iteration_result(1)%Nii_abund_CEL
+print *,"Niii_abund_CEL: ",iteration_result(1)%Niii_abund_CEL
+print *,"Niv_abund_CEL: ",iteration_result(1)%Niv_abund_CEL
+print *,"Nv_abund_CEL: ",iteration_result(1)%Nv_abund_CEL
+print *,"N_abund_CEL: ",iteration_result(1)%N_abund_CEL
+print *,"NO_abund_CEL: ",iteration_result(1)%NO_abund_CEL
+print *,"Oii_abund_CEL: ",iteration_result(1)%Oii_abund_CEL
+print *,"Oiii_abund_CEL: ",iteration_result(1)%Oiii_abund_CEL
+print *,"Oiv_abund_CEL: ",iteration_result(1)%Oiv_abund_CEL
+print *,"O_abund_CEL: ",iteration_result(1)%O_abund_CEL
+print *,"Neii_abund_CEL: ",iteration_result(1)%Neii_abund_CEL
+print *,"Neiii_abund_CEL: ",iteration_result(1)%Neiii_abund_CEL
+print *,"Neiv_abund_CEL: ",iteration_result(1)%Neiv_abund_CEL
+print *,"Nev_abund_CEL: ",iteration_result(1)%Nev_abund_CEL
+print *,"Ne_abund_CEL: ",iteration_result(1)%Ne_abund_CEL
+print *,"Ariii_abund_CEL: ",iteration_result(1)%Ariii_abund_CEL
+print *,"Ariv_abund_CEL: ",iteration_result(1)%Ariv_abund_CEL
+print *,"Arv_abund_CEL: ",iteration_result(1)%Arv_abund_CEL
+print *,"Ar_abund_CEL: ",iteration_result(1)%Ar_abund_CEL
+print *,"Sii_abund_CEL: ",iteration_result(1)%Sii_abund_CEL
+print *,"Siii_abund_CEL: ",iteration_result(1)%Siii_abund_CEL
+print *,"Cliii_abund_CEL: ",iteration_result(1)%Cliii_abund_CEL
+print *,"Cl_abund_CEL: ",iteration_result(1)%Cl_abund_CEL
+print *,"S_abund_CEL: ",iteration_result(1)%S_abund_CEL
+print *
+print *,"Recombination lines"
+print *,"-------------------"
+print *
+print *,"He_abund_ORL: ",iteration_result(1)%He_abund_ORL
+print *,"C_abund_ORL: ",iteration_result(1)%C_abund_ORL
+print *,"N_abund_ORL: ",iteration_result(1)%N_abund_ORL
+print *,"O_abund_ORL: ",iteration_result(1)%O_abund_ORL
+print *,"Ne_abund_ORL: ",iteration_result(1)%Ne_abund_ORL
+print *
+print *,"Strong line methods"
+print *,"-------------------"
+print *
 print *,"O_R23_upper: ",iteration_result(1)%O_R23_upper
 print *,"O_R23_lower: ",iteration_result(1)%O_R23_lower
 print *,"O_N2: ",iteration_result(1)%O_N2
 print *,"O_O3N2: ",iteration_result(1)%O_O3N2
 print *,"O_Ar3O3: ",iteration_result(1)%O_Ar3O3
 print *,"O_S3O3: ",iteration_result(1)%O_S3O3
+print *
+print *,"Abundance discrepancy factors"
+print *,"-----------------------------"
+print *
 print *,"adf_O: ",iteration_result(1)%adf_O
 print *,"adf_O2plus: ",iteration_result(1)%adf_O2plus
 print *,"adf_N: ",iteration_result(1)%adf_N
