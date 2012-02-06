@@ -591,8 +591,7 @@ contains
 
                                 endif
                         end do
-                !end do
-                PRINT*, "Randomizing complete"
+                !end do 
         end subroutine
 
            SUBROUTINE init_random_seed()
