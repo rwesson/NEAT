@@ -3,6 +3,7 @@
 ! NEAT incorporates aspects of several codes developed over decades at UCL:
 ! equib, by I. Howarth and S. Adams, updated significantly by B. Ercolano
 ! MIDAS scripts written by X-W. Liu for calculating recombination line abundances
+! It also uses the quicksort algorithm as implemented in F90 by Alberto Ramos
 
 ! This program is free software: you can redistribute it and/or modify
 ! it under the terms of the GNU General Public License as published by
@@ -22,6 +23,7 @@ program neat
         use mod_abundtypes
         use mod_resultarrays
         use mod_extinction
+        use mod_quicksort
 
         CHARACTER*10 :: temp, tempa
         CHARACTER :: switch_ext !switch for extinction laws
@@ -43,14 +45,23 @@ program neat
         TYPE(LINE),DIMENSION(:), allocatable :: linelist_original
         CHARACTER*80 :: filename
         CHARACTER*1 :: null
-        INTEGER :: IO, listlength 
+        INTEGER :: IO, listlength, ii 
         type(resultarray), dimension(:), allocatable :: all_results
         type(resultarray), dimension(1) :: iteration_result
+        double precision, dimension(:), allocatable :: quantity_result
+        double precision, dimension(:,:), allocatable :: binned_quantity_result
+        integer :: bincount, bincountmax
+        double precision :: binvalue
 
         !extinction
 
         logical :: calculate_extinction=.true.
         DOUBLE PRECISION :: temp1,temp2,temp3, meanextinction, R
+
+        !binning
+
+        double precision :: mode, binsize
+        double precision, dimension(3) :: median_array
 
         R=3.1
 
@@ -323,12 +334,14 @@ program neat
 
         else if(runs > 1)then
 
+                !save unrandomised line list
+
                 linelist_original = linelist
 
                 call init_random_seed()!sets seed for randomiser
                 allocate(all_results(runs))
 
-                !open/create files here for adundances
+                !main loop
 
                 DO I=1,runs
                         print*, "-=-=-=-=-=-=-=-"
@@ -343,6 +356,8 @@ program neat
                         linelist = linelist_original
                         all_results(i)=iteration_result(1)
                 END DO
+
+                ! now process outputs
 
                 OPEN(841, FILE=trim(filename)//"_NC_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
                 OPEN(842, FILE=trim(filename)//"_C_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
@@ -392,6 +407,57 @@ program neat
                 OPEN(886, FILE=trim(filename)//"_[NeV]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
                 OPEN(887, FILE=trim(filename)//"_high_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
                 OPEN(888, FILE=trim(filename)//"_mean_cHb", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+
+! sort all the arrays into ascending order
+
+                call qsort(all_results%NC_abund_CEL)
+                call qsort(all_results%C_abund_CEL)
+                call qsort(all_results%nii_abund_CEL)
+                call qsort(all_results%N_abund_CEL)
+                call qsort(all_results%NO_abund_CEL)
+                call qsort(all_results%oii_abund_CEL)
+                call qsort(all_results%oiii_abund_CEL)
+                call qsort(all_results%O_abund_CEL)
+                call qsort(all_results%neiii_abund_CEL)
+                call qsort(all_results%neiv_abund_CEL)
+                call qsort(all_results%nev_abund_CEL)
+                call qsort(all_results%Ne_abund_CEL)
+                call qsort(all_results%ariii_abund_CEL)
+                call qsort(all_results%ariv_abund_CEL)
+                call qsort(all_results%arv_abund_CEL)
+                call qsort(all_results%Ar_abund_CEL)
+                call qsort(all_results%sii_abund_CEL)
+                call qsort(all_results%siii_abund_CEL)
+                call qsort(all_results%S_abund_CEL)
+                call qsort(all_results%He_abund_ORL)
+                call qsort(all_results%C_abund_ORL)
+                call qsort(all_results%N_abund_ORL)
+                call qsort(all_results%O_abund_ORL)
+                call qsort(all_results%Ne_abund_ORL)
+                call qsort(all_results%oii_density)
+                call qsort(all_results%sii_density)
+                call qsort(all_results%low_density)
+                call qsort(all_results%nii_temp)
+                call qsort(all_results%oii_temp)
+                call qsort(all_results%sii_temp)
+                call qsort(all_results%oi_temp)
+                call qsort(all_results%ci_temp)
+                call qsort(all_results%low_temp)
+                call qsort(all_results%cliii_density)
+                call qsort(all_results%ariv_density)
+                call qsort(all_results%ciii_density)
+                call qsort(all_results%med_density)
+                call qsort(all_results%oiii_temp)
+                call qsort(all_results%neiii_temp)
+                call qsort(all_results%ariii_temp)
+                call qsort(all_results%siii_temp)
+                call qsort(all_results%med_temp)
+                call qsort(all_results%neiv_density)
+                call qsort(all_results%high_density)
+                call qsort(all_results%arv_temp)
+                call qsort(all_results%nev_temp)
+                call qsort(all_results%high_temp)
+                call qsort(all_results%mean_cHb)
 
                 do i=1,runs
                         write(unit = 841,FMT=*) all_results(i)%NC_abund_CEL
@@ -447,16 +513,14 @@ program neat
                 DO I=841,888
                         CLOSE(unit=I)
                 END DO
-! sort and bin
-                call system("sort -g "//trim(filename)//"_mean_cHb > temp")
-                open(901,file="temp")
-                do i=1,runs
-                  read (901,*) temp1
-                  if (i==int(runs*0.159)) print *,"low:    ",temp1
-                  if (i==int(runs*0.500)) print *,"median: ",temp1
-                  if (i==int(runs*0.841)) print *,"high:   ",temp1
-                 enddo
-                close(901)
+! get median +- pseudo gaussian 34.1% and mode
+                allocate (quantity_result(runs))
+                quantity_result = all_results%mean_cHb
+                call get_median(quantity_result, median_array, binsize)
+                print "(X,A,F5.3,A,F5.3,A,F5.3)","c(Hb): median = ",median_array(2)," +",median_array(3),"-",median_array(1)
+                call get_mode(quantity_result, binsize, binned_quantity_result, mode)
+                print "(X,A,F5.3)","       mode   = ",mode
+
         else
                 print*, "I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."
         endif
@@ -582,5 +646,56 @@ SUBROUTINE deredden_ll(switch_ext, linelist, listlength, meanextinction )
 
 END SUBROUTINE
 
+subroutine get_median(input_array, median_array, binsize)
+double precision, intent(in) :: input_array(:)
+double precision, intent(out) :: median_array(3)
+double precision, intent(out) :: binsize
+
+median_array(1) = input_array(int(0.500*size(input_array))) - input_array(int(0.159*size(input_array)))
+median_array(2) = input_array(int(0.500*size(input_array)))
+median_array(3) = input_array(int(0.841*size(input_array))) - input_array(int(0.500*size(input_array)))
+
+binsize = (median_array(3)+median_array(1))/20
+
+end subroutine get_median
+
+subroutine get_mode(input_array, binsize, binned_quantity_result, mode)
+
+double precision, intent(in)  :: input_array(:)
+double precision, intent(in)  :: binsize
+double precision, intent(out) :: mode
+double precision, dimension (:,:), allocatable :: binned_quantity_result
+integer :: ii, bincount, bincountmax, arraysize
+
+arraysize = size(input_array)
+
+allocate(binned_quantity_result( (int(quantity_result(arraysize)/binsize)-int(quantity_result(1)/binsize)),2)) 
+binned_quantity_result = 0.D0
+
+ii=1
+bincount=1 !(why does this need to be one and not zero??)
+binvalue = int(quantity_result(1)/binsize)
+mode=0.D0
+bincountmax=0
+
+do i=1,runs 
+  if (int(quantity_result(i)/binsize) == binvalue) then 
+    bincount = bincount + 1
+  else 
+    binned_quantity_result(ii,1) = binvalue*binsize
+    binned_quantity_result(ii,2) = bincount 
+
+    if (bincount>bincountmax) then
+      bincountmax=bincount
+      mode = binned_quantity_result(ii,1)
+    endif
+
+    ii=ii+1
+    bincount = 1
+    binvalue = binvalue + 1
+  endif
+enddo
+
+end subroutine get_mode
 
 end program
