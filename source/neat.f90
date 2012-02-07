@@ -216,7 +216,7 @@ program neat
 
                 700 FORMAT(X,A20,F5.3) !extinction format
                 701 FORMAT(X,A20,I5) !diagnostics format
-                702 FORMAT(X,A20,ES14.3) !abundances format
+                702 FORMAT(X,A20,ES14.2) !abundances format
                 703 FORMAT(X,A20,F5.2) !strong line format
                 704 FORMAT(X,A20,F5.2) !adf format
 
@@ -356,6 +356,7 @@ program neat
                 END DO
 
                 ! now process outputs
+                print *, "Processing results..."
 
                 OPEN(841, FILE=trim(filename)//"_NC_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
                 OPEN(842, FILE=trim(filename)//"_C_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
@@ -365,57 +366,71 @@ program neat
                 OPEN(846, FILE=trim(filename)//"_Oii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
                 OPEN(847, FILE=trim(filename)//"_Oiii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
                 OPEN(848, FILE=trim(filename)//"_O_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(849, FILE=trim(filename)//"_Neiii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(850, FILE=trim(filename)//"_Neiv_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(851, FILE=trim(filename)//"_Nev_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(852, FILE=trim(filename)//"_Ne_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(853, FILE=trim(filename)//"_Ariii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(854, FILE=trim(filename)//"_Ariv_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(855, FILE=trim(filename)//"_Arv_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(856, FILE=trim(filename)//"_Ar_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(857, FILE=trim(filename)//"_Sii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(858, FILE=trim(filename)//"_Siii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(859, FILE=trim(filename)//"_S_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(860, FILE=trim(filename)//"_He_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(861, FILE=trim(filename)//"_C_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(862, FILE=trim(filename)//"_N_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(863, FILE=trim(filename)//"_O_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(864, FILE=trim(filename)//"_Ne_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(865, FILE=trim(filename)//"_[OII]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(866, FILE=trim(filename)//"_[SII]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(867, FILE=trim(filename)//"_low_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(868, FILE=trim(filename)//"_[OII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(869, FILE=trim(filename)//"_[NII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(870, FILE=trim(filename)//"_[SII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(871, FILE=trim(filename)//"_[OI]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(872, FILE=trim(filename)//"_[CI]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(873, FILE=trim(filename)//"_low_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(874, FILE=trim(filename)//"_[ClIII]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(875, FILE=trim(filename)//"_[ArIV]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(876, FILE=trim(filename)//"_CIII]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(877, FILE=trim(filename)//"_med_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(878, FILE=trim(filename)//"_[OIII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(879, FILE=trim(filename)//"_[NeIII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(880, FILE=trim(filename)//"_[ArIII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(881, FILE=trim(filename)//"_[SIII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(882, FILE=trim(filename)//"_med_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(883, FILE=trim(filename)//"_[NeIV]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(884, FILE=trim(filename)//"_high_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(885, FILE=trim(filename)//"_[ArV]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(886, FILE=trim(filename)//"_[NeV]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(887, FILE=trim(filename)//"_high_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(888, FILE=trim(filename)//"_mean_cHb", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(849, FILE=trim(filename)//"_Neii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(850, FILE=trim(filename)//"_Neiii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(851, FILE=trim(filename)//"_Neiv_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(852, FILE=trim(filename)//"_Nev_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(853, FILE=trim(filename)//"_Ne_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(854, FILE=trim(filename)//"_Ariii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(855, FILE=trim(filename)//"_Ariv_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(856, FILE=trim(filename)//"_Arv_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(857, FILE=trim(filename)//"_Ar_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(858, FILE=trim(filename)//"_Sii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(859, FILE=trim(filename)//"_Siii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(860, FILE=trim(filename)//"_S_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(861, FILE=trim(filename)//"_He_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(862, FILE=trim(filename)//"_C_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(863, FILE=trim(filename)//"_N_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(864, FILE=trim(filename)//"_O_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(865, FILE=trim(filename)//"_Ne_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(866, FILE=trim(filename)//"_[OII]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(867, FILE=trim(filename)//"_[SII]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(868, FILE=trim(filename)//"_low_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(869, FILE=trim(filename)//"_[OII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(870, FILE=trim(filename)//"_[NII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(871, FILE=trim(filename)//"_[SII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(872, FILE=trim(filename)//"_[OI]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(873, FILE=trim(filename)//"_[CI]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(874, FILE=trim(filename)//"_low_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(875, FILE=trim(filename)//"_[ClIII]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(876, FILE=trim(filename)//"_[ArIV]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(877, FILE=trim(filename)//"_CIII]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(878, FILE=trim(filename)//"_med_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(879, FILE=trim(filename)//"_[OIII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(880, FILE=trim(filename)//"_[NeIII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(881, FILE=trim(filename)//"_[ArIII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(882, FILE=trim(filename)//"_[SIII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(883, FILE=trim(filename)//"_med_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(884, FILE=trim(filename)//"_[NeIV]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(885, FILE=trim(filename)//"_high_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(886, FILE=trim(filename)//"_[ArV]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(887, FILE=trim(filename)//"_[NeV]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(888, FILE=trim(filename)//"_high_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(889, FILE=trim(filename)//"_mean_cHb", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(890, FILE=trim(filename)//"_adf_O", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(891, FILE=trim(filename)//"_adf_O2plus", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(892, FILE=trim(filename)//"_adf_C", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(893, FILE=trim(filename)//"_adf_C2plus", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(894, FILE=trim(filename)//"_adf_N", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(895, FILE=trim(filename)//"_adf_N2plus", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(896, FILE=trim(filename)//"_adf_Ne", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(897, FILE=trim(filename)//"_adf_Ne2plus", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+!XXXX add Cl III, Cl/H, Niii, cii, ciii, ArIII IR dens, NeIII IR dens, strong line, ICF files
 
 ! sort all the arrays into ascending order
 
                 call qsort(all_results%NC_abund_CEL)
+                call qsort(all_results%Cii_abund_CEL)
+                call qsort(all_results%Ciii_abund_CEL)
                 call qsort(all_results%C_abund_CEL)
                 call qsort(all_results%nii_abund_CEL)
+                call qsort(all_results%niii_abund_CEL)
                 call qsort(all_results%N_abund_CEL)
                 call qsort(all_results%NO_abund_CEL)
                 call qsort(all_results%oii_abund_CEL)
                 call qsort(all_results%oiii_abund_CEL)
                 call qsort(all_results%O_abund_CEL)
+                call qsort(all_results%Neii_abund_CEL)
                 call qsort(all_results%neiii_abund_CEL)
                 call qsort(all_results%neiv_abund_CEL)
                 call qsort(all_results%nev_abund_CEL)
@@ -427,6 +442,8 @@ program neat
                 call qsort(all_results%sii_abund_CEL)
                 call qsort(all_results%siii_abund_CEL)
                 call qsort(all_results%S_abund_CEL)
+                call qsort(all_results%cliii_abund_CEL)
+                call qsort(all_results%cl_abund_CEL)
                 call qsort(all_results%He_abund_ORL)
                 call qsort(all_results%C_abund_ORL)
                 call qsort(all_results%N_abund_ORL)
@@ -444,6 +461,8 @@ program neat
                 call qsort(all_results%cliii_density)
                 call qsort(all_results%ariv_density)
                 call qsort(all_results%ciii_density)
+                call qsort(all_results%ariii_ir_density)
+                call qsort(all_results%Neiii_IR_density)
                 call qsort(all_results%med_density)
                 call qsort(all_results%oiii_temp)
                 call qsort(all_results%neiii_temp)
@@ -456,6 +475,21 @@ program neat
                 call qsort(all_results%nev_temp)
                 call qsort(all_results%high_temp)
                 call qsort(all_results%mean_cHb)
+                call qsort(all_results%adf_C2plus)
+                call qsort(all_results%adf_C)
+                call qsort(all_results%adf_O2plus)
+                call qsort(all_results%adf_O)
+                call qsort(all_results%adf_N2plus)
+                call qsort(all_results%adf_N)
+                call qsort(all_results%adf_Ne2plus)
+                call qsort(all_results%adf_Ne)
+                call qsort(all_results%O_R23_upper)
+                call qsort(all_results%O_R23_lower)
+                call qsort(all_results%O_N2)
+                call qsort(all_results%O_o3n2)
+                call qsort(all_results%O_Ar3O3)
+                call qsort(all_results%O_S3O3)
+
 
                 do i=1,runs
                         write(unit = 841,FMT=*) all_results(i)%NC_abund_CEL
@@ -466,58 +500,507 @@ program neat
                         write(unit = 846,FMT=*) all_results(i)%oii_abund_CEL
                         write(unit = 847,FMT=*) all_results(i)%oiii_abund_CEL
                         write(unit = 848,FMT=*) all_results(i)%O_abund_CEL
-                        write(unit = 849,FMT=*) all_results(i)%neiii_abund_CEL
-                        write(unit = 850,FMT=*) all_results(i)%neiv_abund_CEL
-                        write(unit = 851,FMT=*) all_results(i)%nev_abund_CEL
-                        write(unit = 852,FMT=*) all_results(i)%Ne_abund_CEL
-                        write(unit = 853,FMT=*) all_results(i)%ariii_abund_CEL
-                        write(unit = 854,FMT=*) all_results(i)%ariv_abund_CEL
-                        write(unit = 855,FMT=*) all_results(i)%arv_abund_CEL
-                        write(unit = 856,FMT=*) all_results(i)%Ar_abund_CEL
-                        write(unit = 857,FMT=*) all_results(i)%sii_abund_CEL
-                        write(unit = 858,FMT=*) all_results(i)%siii_abund_CEL
-                        write(unit = 859,FMT=*) all_results(i)%S_abund_CEL
-                        write(unit = 860,FMT=*) all_results(i)%He_abund_ORL
-                        write(unit = 861,FMT=*) all_results(i)%C_abund_ORL
-                        write(unit = 862,FMT=*) all_results(i)%N_abund_ORL
-                        write(unit = 863,FMT=*) all_results(i)%O_abund_ORL
-                        write(unit = 864,FMT=*) all_results(i)%Ne_abund_ORL
-                        write(unit = 865,FMT=*) all_results(i)%oii_density
-                        write(unit = 866,FMT=*) all_results(i)%sii_density
-                        write(unit = 867,FMT=*) all_results(i)%low_density
-                        write(unit = 868,FMT=*) all_results(i)%nii_temp
-                        write(unit = 869,FMT=*) all_results(i)%oii_temp
-                        write(unit = 870,FMT=*) all_results(i)%sii_temp
-                        write(unit = 871,FMT=*) all_results(i)%oi_temp
-                        write(unit = 872,FMT=*) all_results(i)%ci_temp
-                        write(unit = 873,FMT=*) all_results(i)%low_temp
-                        write(unit = 874,FMT=*) all_results(i)%cliii_density
-                        write(unit = 875,FMT=*) all_results(i)%ariv_density
-                        write(unit = 876,FMT=*) all_results(i)%ciii_density
-                        write(unit = 877,FMT=*) all_results(i)%med_density
-                        write(unit = 878,FMT=*) all_results(i)%oiii_temp
-                        write(unit = 879,FMT=*) all_results(i)%neiii_temp
-                        write(unit = 880,FMT=*) all_results(i)%ariii_temp
-                        write(unit = 881,FMT=*) all_results(i)%siii_temp
-                        write(unit = 882,FMT=*) all_results(i)%med_temp
-                        write(unit = 883,FMT=*) all_results(i)%neiv_density
-                        write(unit = 884,FMT=*) all_results(i)%high_density
-                        write(unit = 885,FMT=*) all_results(i)%arv_temp
-                        write(unit = 886,FMT=*) all_results(i)%nev_temp
-                        write(unit = 887,FMT=*) all_results(i)%high_temp
-                        write(unit = 888,FMT=*) all_results(i)%mean_cHb
+                        write(unit = 848,FMT=*) all_results(i)%Neii_abund_CEL
+                        write(unit = 850,FMT=*) all_results(i)%neiii_abund_CEL
+                        write(unit = 851,FMT=*) all_results(i)%neiv_abund_CEL
+                        write(unit = 852,FMT=*) all_results(i)%nev_abund_CEL
+                        write(unit = 853,FMT=*) all_results(i)%Ne_abund_CEL
+                        write(unit = 854,FMT=*) all_results(i)%ariii_abund_CEL
+                        write(unit = 855,FMT=*) all_results(i)%ariv_abund_CEL
+                        write(unit = 856,FMT=*) all_results(i)%arv_abund_CEL
+                        write(unit = 857,FMT=*) all_results(i)%Ar_abund_CEL
+                        write(unit = 858,FMT=*) all_results(i)%sii_abund_CEL
+                        write(unit = 859,FMT=*) all_results(i)%siii_abund_CEL
+                        write(unit = 860,FMT=*) all_results(i)%S_abund_CEL
+                        write(unit = 861,FMT=*) all_results(i)%He_abund_ORL
+                        write(unit = 862,FMT=*) all_results(i)%C_abund_ORL
+                        write(unit = 863,FMT=*) all_results(i)%N_abund_ORL
+                        write(unit = 864,FMT=*) all_results(i)%O_abund_ORL
+                        write(unit = 865,FMT=*) all_results(i)%Ne_abund_ORL
+                        write(unit = 866,FMT=*) all_results(i)%oii_density
+                        write(unit = 867,FMT=*) all_results(i)%sii_density
+                        write(unit = 868,FMT=*) all_results(i)%low_density
+                        write(unit = 869,FMT=*) all_results(i)%nii_temp
+                        write(unit = 870,FMT=*) all_results(i)%oii_temp
+                        write(unit = 871,FMT=*) all_results(i)%sii_temp
+                        write(unit = 872,FMT=*) all_results(i)%oi_temp
+                        write(unit = 873,FMT=*) all_results(i)%ci_temp
+                        write(unit = 874,FMT=*) all_results(i)%low_temp
+                        write(unit = 875,FMT=*) all_results(i)%cliii_density
+                        write(unit = 876,FMT=*) all_results(i)%ariv_density
+                        write(unit = 877,FMT=*) all_results(i)%ciii_density
+                        write(unit = 878,FMT=*) all_results(i)%med_density
+                        write(unit = 879,FMT=*) all_results(i)%oiii_temp
+                        write(unit = 880,FMT=*) all_results(i)%neiii_temp
+                        write(unit = 881,FMT=*) all_results(i)%ariii_temp
+                        write(unit = 882,FMT=*) all_results(i)%siii_temp
+                        write(unit = 883,FMT=*) all_results(i)%med_temp
+                        write(unit = 884,FMT=*) all_results(i)%neiv_density
+                        write(unit = 885,FMT=*) all_results(i)%high_density
+                        write(unit = 886,FMT=*) all_results(i)%arv_temp
+                        write(unit = 887,FMT=*) all_results(i)%nev_temp
+                        write(unit = 888,FMT=*) all_results(i)%high_temp
+                        write(unit = 889,FMT=*) all_results(i)%mean_cHb
+                        write(unit = 890,FMT=*) all_results(i)%adf_O2plus
+                        write(unit = 891,FMT=*) all_results(i)%adf_O
+                        write(unit = 892,FMT=*) all_results(i)%adf_N2plus
+                        write(unit = 893,FMT=*) all_results(i)%adf_N
+                        write(unit = 894,FMT=*) all_results(i)%adf_C2plus
+                        write(unit = 895,FMT=*) all_results(i)%adf_C
+                        write(unit = 896,FMT=*) all_results(i)%adf_Ne2plus
+                        write(unit = 897,FMT=*) all_results(i)%adf_Ne
                 end do
 
-                DO I=841,888
+                DO I=841,897
                         CLOSE(unit=I)
                 END DO
 ! get median +- pseudo gaussian 34.1% and mode
                 allocate (quantity_result(runs))
+!cHb
+                print *,"Extinction"
+                print *,"=========="
+                print *
                 quantity_result = all_results%mean_cHb
-                call get_median(quantity_result, median_array, binsize)
+                call get_median_mode(quantity_result, median_array, mode)
                 print "(X,A,F5.3,A,F5.3,A,F5.3)","c(Hb): median = ",median_array(2)," +",median_array(3),"-",median_array(1)
-                call get_mode(quantity_result, binsize, binned_quantity_result, mode)
+!                call get_mode(quantity_result, binsize, binned_quantity_result, mode)
                 print "(X,A,F5.3)","       mode   = ",mode
+print *
+print *,"Diagnostics"
+print *,"==========="
+print *
+711 format (X,3(A,I5)) ! diagnostic format
+712 format (X,A,I5)! diagnostic format 2 
+!low densities
+
+                quantity_result = all_results%oii_density
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"[OII] density: median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"               mode   = ",int(mode)
+
+                quantity_result = all_results%SII_density
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"[SII] density: median = ",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"               mode   = ",int(mode)
+
+                quantity_result = all_results%low_density
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"low density  : median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"               mode   = ",int(mode)
+
+!low temperatures
+print *
+
+                quantity_result = all_results%oii_temp
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"[OII] temperature: median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"                   mode   = ",int(mode)
+
+                quantity_result = all_results%SII_temp
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"[SII] temperature: median = ",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"                   mode   = ",int(mode)
+
+                quantity_result = all_results%NII_temp
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"[NII] temperature: median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"                   mode   = ",int(mode)
+
+                quantity_result = all_results%OI_temp
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"[OI] temperature:  median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"                   mode   = ",int(mode)
+
+                quantity_result = all_results%CI_temp
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"[CI] temperature:  median = ",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"                   mode   = ",int(mode)
+
+                quantity_result = all_results%low_temp
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"low temperature  : median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"                   mode   = ",int(mode)
+
+!medium density
+print *
+
+                quantity_result = all_results%cliii_density
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"[ClIII] density:    median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"                    mode   = ",int(mode)
+
+                quantity_result = all_results%ArIV_density
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"[ArIV] density:     median = ",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"                    mode   = ",int(mode)
+
+                quantity_result = all_results%CIII_density
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"[CIII] density:     median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"                    mode   = ",int(mode)
+
+                quantity_result = all_results%OIII_IR_density
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"[OIII] IR density:  median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"                    mode   = ",int(mode)
+
+                quantity_result = all_results%SIII_IR_density
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"[SIII] IRdensity:   median = ",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"                    mode   = ",int(mode)
+
+                quantity_result = all_results%ArIII_IR_density
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"[ArIII] IR density: median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"                    mode   = ",int(mode)
+
+                quantity_result = all_results%NeIII_IR_density
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"[NeIII] IR density: median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"                    mode   = ",int(mode)
+
+                quantity_result = all_results%med_density
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"medium density:     median = ",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"                    mode   = ",int(mode)
+
+!medium temperature
+print *
+
+                quantity_result = all_results%OIII_temp
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"[OIII] temperature:      median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"                         mode   = ",int(mode)
+
+                quantity_result = all_results%OIII_IR_temp
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"[OIII] IR temperature:   median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"                         mode   = ",int(mode)
+
+                quantity_result = all_results%NeIII_temp
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"[NeIII] temperature:    median = ",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"                        mode   = ",int(mode)
+
+                quantity_result = all_results%NeIII_IR_temp
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"[NeIII] IR temperature: median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"                        mode   = ",int(mode)
+
+                quantity_result = all_results%ArIII_temp
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"[ArIII] temperature:    median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"                        mode   = ",int(mode)
+
+                quantity_result = all_results%SIII_temp
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"[SIII] temperature:     median = ",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"                        mode   = ",int(mode)
+
+                quantity_result = all_results%med_temp
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"medium temperature:     median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"                        mode   = ",int(mode)
+
+!high density
+print *
+
+                quantity_result = all_results%neiv_density
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"[NeIV] density:  median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"                 mode   = ",int(mode)
+
+                quantity_result = all_results%high_density
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"high density:    median = ",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"                 mode   = ",int(mode)
+
+!high temperature
+
+                quantity_result = all_results%ArV_temp
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"[ArV] temperature: median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"                   mode   = ",int(mode)
+
+                quantity_result = all_results%NeV_temp
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"[NeV] temperature: median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"                   mode   = ",int(mode)
+
+                quantity_result = all_results%high_temp
+                call get_median_mode(quantity_result, median_array, mode)
+                print 711,"High temperature:  median = ",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
+                print 712,"                   mode   = ",int(mode)
+
+!CEL abundances
+print *
+print *,"Abundances (collisionally excited lines)"
+print *,"========================================"
+print *
+
+713 format (X,3(A,ES10.2)) ! abundances formats
+714 format (X,A,ES10.2)      ! abundances formats
+
+                quantity_result = all_results%NC_abund_CEL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"[CI] abundance: median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                   mode   = ",mode
+
+                quantity_result = all_results%cii_abund_CEL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"[CII] abundance:  median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                   mode   = ",mode
+
+                quantity_result = all_results%ciii_abund_CEL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"[CIII] abundance:  median = ",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                   mode   = ",mode
+
+                quantity_result = all_results%civ_abund_CEL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"[CIV] abundance  : median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                   mode   = ",mode
+
+                quantity_result = all_results%C_abund_CEL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"C/H abundance: median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                   mode   = ",mode
+
+                quantity_result = all_results%nii_abund_CEL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"[NII] abundance:  median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                   mode   = ",mode
+
+                quantity_result = all_results%niii_abund_CEL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"[NIII] abundance:  median = ",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                   mode   = ",mode
+
+                quantity_result = all_results%niv_abund_CEL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"[NIV] abundance  : median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                   mode   = ",mode
+
+                quantity_result = all_results%nv_abund_CEL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"[NV] abundance: median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                   mode   = ",mode
+
+                quantity_result = all_results%N_abund_CEL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"N/H abundance:  median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                   mode   = ",mode
+
+                quantity_result = all_results%NO_abund_CEL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"[OI] abundance:  median = ",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                   mode   = ",mode
+
+                quantity_result = all_results%Oii_abund_CEL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"[OII] abundance  : median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                   mode   = ",mode
+
+                quantity_result = all_results%Oiii_abund_CEL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"[OIII] abundance: median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                   mode   = ",mode
+
+                quantity_result = all_results%Oiv_abund_CEL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"[OIV] abundance:  median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                   mode   = ",mode
+
+                quantity_result = all_results%O_abund_CEL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"O/H abundance:  median = ",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                   mode   = ",mode
+
+!                quantity_result = all_results%NeII_abund_CEL
+!                call get_median_mode(quantity_result, median_array, mode)
+!                print 713,"[NeII] abundance  : median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+!                print 714,"                   mode   = ",mode
+
+                quantity_result = all_results%NeIII_abund_CEL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"[NeIII] abundance: median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                   mode   = ",mode
+
+                quantity_result = all_results%NeIV_abund_CEL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"[NeIV] abundance:  median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                   mode   = ",mode
+
+                quantity_result = all_results%NeV_abund_CEL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"[NeV] abundance:  median = ",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                   mode   = ",mode
+
+                quantity_result = all_results%Ne_abund_CEL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"Ne/H abundance  : median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                   mode   = ",mode
+
+                quantity_result = all_results%ArIII_abund_CEL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"[ArIII] abundance: median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                   mode   = ",mode
+
+                quantity_result = all_results%ArIV_abund_CEL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"[ArIV] abundance:  median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                   mode   = ",mode
+
+                quantity_result = all_results%ArV_abund_CEL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"[ArV] abundance:  median = ",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                   mode   = ",mode
+
+                quantity_result = all_results%Ar_abund_CEL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"Ar/H abundance  : median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                   mode   = ",mode
+
+                quantity_result = all_results%SII_abund_CEL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"[SII] abundance: median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                   mode   = ",mode
+
+                quantity_result = all_results%SIII_abund_CEL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"[SIII] abundance:  median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                   mode   = ",mode
+
+                quantity_result = all_results%S_abund_CEL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"S/H abundance:  median = ",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                   mode   = ",mode
+
+                quantity_result = all_results%ClIII_abund_CEL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"[ClIII] abundance  : median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                   mode   = ",mode
+
+                quantity_result = all_results%Cl_abund_CEL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"Cl/H abundance: median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                   mode   = ",mode
+
+!RL abundances
+print *
+print *,"Abundances (recombination lines)"
+print *,"================================"
+print *
+
+                quantity_result = all_results%He_abund_ORL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"He/H abundance:  median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                 mode   = ",mode
+
+                quantity_result = all_results%C_abund_ORL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"C/H abundance:   median = ",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                 mode   = ",mode
+
+                quantity_result = all_results%N_abund_ORL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"N/H abundance:  median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                mode   = ",mode
+
+                quantity_result = all_results%O_abund_ORL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"O/H abundance:  median = ",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                mode   = ",mode
+
+                quantity_result = all_results%Ne_abund_ORL
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"Ne/H abundance: median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                mode   = ",mode
+
+!strong line abundances
+print *
+print *,"Abundances (strong line methods)"
+print *,"================================"
+print *
+
+                quantity_result = all_results%O_R23_upper
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"O/H (R23 upper): median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                 mode   = ",mode
+
+                quantity_result = all_results%O_R23_lower
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"O/H (R23 lower): median = ",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                 mode   = ",mode
+
+                quantity_result = all_results%O_N2
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"O/H (N2):       median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                mode   = ",mode
+
+                quantity_result = all_results%O_O3N2
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"O/H (O3N2):     median = ",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                mode   = ",mode
+
+                quantity_result = all_results%O_Ar3O3
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"O/H (Ar3O3):    median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                mode   = ",mode
+
+                quantity_result = all_results%O_S3O3
+                call get_median_mode(quantity_result, median_array, mode)
+                print 713,"O/H (S3O3):     median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 714,"                mode   = ",mode
+
+!adfs
+print *
+print *,"Abundance discrepancy factors"
+print *,"============================="
+print *
+
+715 format (X,3(A,F5.2))
+716 format (X,A,F5.2)
+
+                quantity_result = all_results%adf_o2plus
+                call get_median_mode(quantity_result, median_array, mode)
+                print 715,"adf(O2+/H):   median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 716,"              mode   = ",mode
+
+                quantity_result = all_results%adf_o
+                call get_median_mode(quantity_result, median_array, mode)
+                print 715,"adf(O/H+):    median = ",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 716,"              mode   = ",mode
+
+                quantity_result = all_results%adf_n2plus
+                call get_median_mode(quantity_result, median_array, mode)
+                print 715,"adf(N2+/H):   median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 716,"              mode   = ",mode
+
+                quantity_result = all_results%adf_n
+                call get_median_mode(quantity_result, median_array, mode)
+                print 715,"adf(N/H):     median = ",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 716,"              mode   = ",mode
+
+                quantity_result = all_results%adf_c2plus
+                call get_median_mode(quantity_result, median_array, mode)
+                print 715,"adf(C2+/H+):  median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 716,"              mode   = ",mode
+
+                quantity_result = all_results%adf_c
+                call get_median_mode(quantity_result, median_array, mode)
+                print 715,"adf(C/H):     median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 716,"              mode   = ",mode
+
+                quantity_result = all_results%adf_ne2plus
+                call get_median_mode(quantity_result, median_array, mode)
+                print 715,"adf(Ne2+/H+): median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 716,"            : mode   = ",mode
+
+                quantity_result = all_results%adf_ne
+                call get_median_mode(quantity_result, median_array, mode)
+                print 715,"adf(Ne/H):    median =",median_array(2)," +",median_array(3),"-",median_array(1) 
+                print 716,"              mode   = ",mode
 
         else
                 print*, "I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."
@@ -643,10 +1126,18 @@ SUBROUTINE deredden_ll(switch_ext, linelist, listlength, meanextinction )
 
 END SUBROUTINE
 
-subroutine get_median(input_array, median_array, binsize)
+subroutine get_median_mode(input_array, median_array, mode)
 double precision, intent(in) :: input_array(:)
 double precision, intent(out) :: median_array(3)
-double precision, intent(out) :: binsize
+double precision :: binsize
+double precision, intent(out) :: mode
+double precision, dimension (:,:), allocatable :: binned_quantity_result
+integer :: ii, bincount, bincountmax, arraysize
+
+mode=0.D0
+median_array = (/0.0,0.0,0.0/)
+
+arraysize = size(input_array)
 
 median_array(1) = input_array(int(0.500*size(input_array))) - input_array(int(0.159*size(input_array)))
 median_array(2) = input_array(int(0.500*size(input_array)))
@@ -654,45 +1145,38 @@ median_array(3) = input_array(int(0.841*size(input_array))) - input_array(int(0.
 
 binsize = (median_array(3)+median_array(1))/20
 
-end subroutine get_median
+if (binsize .gt. 0) then
+!  allocate(binned_quantity_result(1+(int(quantity_result(arraysize)/binsize)-int(quantity_result(1)/binsize)),2)) 
+  allocate(binned_quantity_result(arraysize,2))
+  binned_quantity_result = 0.D0
 
-subroutine get_mode(input_array, binsize, binned_quantity_result, mode)
+  ii=1
+  bincount=1 !(why does this need to be one and not zero??)
+  binvalue = int(quantity_result(1)/binsize)
+  mode=0.D0
+  bincountmax=0
 
-double precision, intent(in)  :: input_array(:)
-double precision, intent(in)  :: binsize
-double precision, intent(out) :: mode
-double precision, dimension (:,:), allocatable :: binned_quantity_result
-integer :: ii, bincount, bincountmax, arraysize
+  do i=1,runs 
+    if (int(quantity_result(i)/binsize) == binvalue) then 
+      bincount = bincount + 1
+    else 
+      binned_quantity_result(ii,1) = binvalue*binsize
+      binned_quantity_result(ii,2) = bincount 
 
-arraysize = size(input_array)
+      if (bincount>bincountmax) then
+        bincountmax=bincount
+        mode = binned_quantity_result(ii,1)
+      endif
 
-allocate(binned_quantity_result( (int(quantity_result(arraysize)/binsize)-int(quantity_result(1)/binsize)),2)) 
-binned_quantity_result = 0.D0
-
-ii=1
-bincount=1 !(why does this need to be one and not zero??)
-binvalue = int(quantity_result(1)/binsize)
-mode=0.D0
-bincountmax=0
-
-do i=1,runs 
-  if (int(quantity_result(i)/binsize) == binvalue) then 
-    bincount = bincount + 1
-  else 
-    binned_quantity_result(ii,1) = binvalue*binsize
-    binned_quantity_result(ii,2) = bincount 
-
-    if (bincount>bincountmax) then
-      bincountmax=bincount
-      mode = binned_quantity_result(ii,1)
+      ii=ii+1
+      bincount = 1
+      binvalue = binvalue + 1
     endif
+  enddo
 
-    ii=ii+1
-    bincount = 1
-    binvalue = binvalue + 1
-  endif
-enddo
+  deallocate(binned_quantity_result)
+endif
 
-end subroutine get_mode
+end subroutine get_median_mode
 
 end program
