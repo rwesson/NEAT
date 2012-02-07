@@ -124,8 +124,8 @@
       subroutine oii_rec_lines(te,ne,abund,oiiRLs)
 
       IMPLICIT NONE
-      DOUBLE PRECISION :: g2, Br, Wave, aeff, aeff_Hb, Em, Em_Hb, Int,  &
-     & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund, logte, logne,  &
+      DOUBLE PRECISION :: aeff, Em_Hb, &
+     & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund, &
      & logem
       DOUBLE PRECISION :: a, b, c, d, an(4)
 
@@ -733,10 +733,10 @@
       subroutine nii_rec_lines(te, ne, abund, niiRLs)
 
       IMPLICIT NONE
-      DOUBLE PRECISION :: g2, Br, Wave, aeff, aeff_Hb, Em, Em_Hb, Int,  &
-     & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund, logte, logne,  &
-     & logem, Br_term, z, J2_u
-      DOUBLE PRECISION :: a, b, c, d, an(4)
+      DOUBLE PRECISION :: aeff, Em_Hb, &
+     & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund, &
+     & logem, Br_term, z
+      DOUBLE PRECISION :: a, b, c, d
 
       INTEGER :: ii, i
 
@@ -1213,12 +1213,11 @@
       subroutine cii_rec_lines(te, ne, abund, ciiRLs)
 
       IMPLICIT NONE
-      DOUBLE PRECISION :: g2, Br, Wave, aeff, aeff_Hb, Em, Em_Hb, Int,  &
-     & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund, logte, logne,  &
-     & logem, Br_term, z, J2_u
-      DOUBLE PRECISION :: a, b, c, d
+      DOUBLE PRECISION :: aeff_Hb, Em_Hb, &
+     & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund, &
+     & logem
 
-      INTEGER :: ii, i
+      INTEGER :: i
 
    !   TYPE ciiRL 
    !         DOUBLE PRECISION :: Wave
@@ -1318,12 +1317,11 @@
       subroutine neii_rec_lines(te, ne, abund, neiiRLs)
 
       IMPLICIT NONE
-      DOUBLE PRECISION :: g2, Br, Wave, aeff, aeff_Hb, Em, Em_Hb, Int,  &
-     & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund, logte, logne,  &
+      DOUBLE PRECISION :: aeff_Hb, Em_Hb,                         &
+     & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund,                &
      & logem
-      DOUBLE PRECISION :: a, b, c, d, f
 
-      INTEGER :: ii, i
+      INTEGER :: i
 
   !    TYPE neiiRL 
   !          DOUBLE PRECISION :: Wave
@@ -1425,17 +1423,16 @@
       subroutine xiii_rec_lines(te, ne, abund, xiiiRLs)
 
       IMPLICIT NONE
-      DOUBLE PRECISION :: g2, Br, Wave, aeff, aeff_Hb, Em, Em_Hb, Int,  &
-     & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund, logte, logne,  &
+      DOUBLE PRECISION :: aeff_Hb, Em_Hb, &
+     & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund, &
      & logem
-      DOUBLE PRECISION :: a, b, c, d
 
-      INTEGER :: ii, i
+      INTEGER :: i
 
- !     TYPE xiiiRL 
-  !          CHARACTER*3      :: Ion
-   !         DOUBLE PRECISION :: Wave
-    !        DOUBLE PRECISION :: a
+!      TYPE xiiiRL 
+!            CHARACTER*3      :: Ion
+!            DOUBLE PRECISION :: Wave
+!            DOUBLE PRECISION :: a
      !       DOUBLE PRECISION :: b
       !      DOUBLE PRECISION :: c
        !     DOUBLE PRECISION :: d 

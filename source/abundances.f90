@@ -12,32 +12,28 @@ use mod_resultarrays
 
 implicit none
 
-        INTEGER :: count, Iint, fIL, i, j, ion_no1, ion_no2, ion_no3, ion_no4, iii, ion_no5, ion_no6
-        INTEGER :: opt, runonce, run
+        INTEGER :: count, Iint, i, j, ion_no1, ion_no2, ion_no3, ion_no4, ion_no5, ion_no6
+        INTEGER :: runonce, run
         integer, intent(in) :: listlength
-        TYPE(line), dimension(listlength) :: linelist, linelist_orig
-        CHARACTER*8 :: lion
+        TYPE(line), dimension(listlength) :: linelist, linelist_orig 
         CHARACTER :: switch_ext !switch for extinction laws
         CHARACTER*80 :: filename
         type(resultarray), dimension(1) :: iteration_result
 
-        DOUBLE PRECISION :: normalise, oiiNratio, oiiDens, oiiiTratio, oiiiTemp, oiiiIRNratio, oiiiIRTratio, oiiiIRtemp, oiiiIRdens, niiTratio, niiTemp, ariiiIRNratio, ariiiIRdens, arivNratio, arivDens, cliiiNratio, cliiiDens, siiNratio, siiDens, siiTratio, siiTemp, siiiIRNratio, siiiIRdens, oiiTratio, oiiTemp, neiiiTratio, neiiiIRTratio, neiiiIRNratio, neiiiIRdens, neiiiTemp, neiiiIRTemp, abund, meandensity, meantemp, oitemp, citemp
+        DOUBLE PRECISION :: normalise, oiiNratio, oiiDens, oiiiTratio, oiiiTemp, oiiiIRNratio, oiiiIRTratio, oiiiIRtemp, oiiiIRdens, niiTratio, niiTemp, ariiiIRNratio, ariiiIRdens, arivNratio, arivDens, cliiiNratio, cliiiDens, siiNratio, siiDens, siiTratio, siiTemp, siiiIRNratio, siiiIRdens, oiiTratio, oiiTemp, neiiiTratio, neiiiIRTratio, neiiiIRNratio, neiiiIRdens, neiiiTemp, neiiiIRTemp, oitemp, citemp
         DOUBLE PRECISION :: ciiiNratio,neivNratio,nevTratio,siiiTratio,ariiiTratio,arvTratio,lowtemp,lowdens,medtemp,ciiidens,meddens,siiitemp,ariiitemp,hightemp,neivdens,highdens,arvtemp,nevtemp,oiTratio,ciTratio
         DOUBLE PRECISION :: oiiRLabund, niiRLabund, ciiRLabund, cii4267rlabund, neiiRLabund, ciiiRLabund, niiiRLabund, RLabundtemp, weight
-        DOUBLE PRECISION :: ciiiCELabund, niiCELabund, niiiIRCELabund, niiiUVCELabund, oiiCELabund, oiiiCELabund, oiiiIRCELabund, oivCELabund, neiiIRCELabund, neiiiIRCELabund, neiiiCELabund, neivCELabund, siiCELabund, siiiCELabund, siiiIRCELabund, sivIRCELabund, cliiiCELabund, ariiiCELabund, arivCELabund, ariiiIRCELabund, nivCELabund, niCELabund, niiiCELabund, ciiCELabund, civCELabund, nvCELabund, nevCELabund, arvCELabund, CELabundtemp, ciCELabund, oiCELabund
+        DOUBLE PRECISION :: ciiiCELabund, niiCELabund, niiiIRCELabund, niiiUVCELabund, oiiCELabund, oiiiCELabund, oiiiIRCELabund, oivCELabund, neiiIRCELabund, neiiiIRCELabund, neiiiCELabund, neivCELabund, siiCELabund, siiiCELabund, siiiIRCELabund, sivIRCELabund, cliiiCELabund, ariiiCELabund, arivCELabund, ariiiIRCELabund, nivCELabund, niiiCELabund, ciiCELabund, civCELabund, nvCELabund, nevCELabund, arvCELabund, CELabundtemp, ciCELabund, oiCELabund
         DOUBLE PRECISION :: fn4
         DOUBLE PRECISION :: CELicfO, CELicfC, CELicfN, CELicfNe, CELicfAr, CELicfS, CELicfCl
         DOUBLE PRECISION :: RLicfO, RLicfC, RLicfN, RLicfNe
         DOUBLE PRECISION :: CabundRL, CabundCEL, NabundRL, NabundCEL, OabundRL, OabundCEL, NeabundRL, NeabundCEL, SabundCEL, ArabundCEL, NOabundCEL, NCabundCEL, ClabundCEL
         DOUBLE PRECISION :: adfC, adfN, adfO, adfNe, w1, w2, w3, w4
         DOUBLE PRECISION :: adfC2plus, adfN2plus, adfO2plus, adfNe2plus
-        DOUBLE PRECISION :: c1, c2, c3, meanextinction, fl, ratob, tempi, temp, temp2, A4471, A4686, A6678, A5876, R
+        DOUBLE PRECISION :: c1, c2, c3, meanextinction, A4471, A4686, A6678, A5876, R
         REAL :: heiabund,heiiabund,Hetotabund
-        REAL*8 :: HW
-        logical :: calculate_extinction
 
-        DOUBLE PRECISION, DIMENSION(2) :: conditions 
-        REAL*8 :: result
+        logical :: calculate_extinction
 
         TYPE(line), DIMENSION(:), allocatable :: ILs
         TYPE(line), DIMENSION(38) :: H_BS
@@ -1681,7 +1677,7 @@ contains
                 TYPE(line), DIMENSION(:), INTENT(IN) :: lines
                 CHARACTER*11 :: name1, name2, name3
                 INTEGER :: ion_no1, ion_no2, ion_no3
-                DOUBLE PRECISION :: diag, factor1, factor2, ratio, ratio2
+                DOUBLE PRECISION :: factor1, factor2, ratio, ratio2
 
 
                 ion_no1 = get_ion(name1, ILs, Iint)

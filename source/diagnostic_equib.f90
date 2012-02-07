@@ -45,10 +45,11 @@
       PARAMETER (MAXND=100)
       INTEGER GX, G(NDIM2), ID(2), JD(2),                               &
      &  ITRANA(2,NDIM2),ITRANB(2,NDIM2),ITRANC(2,NDIM2),LOOP
-      REAL*8 N2(NDIM2),N(NDIM2)
-      REAL*8 TDRAT(2,MAXND), TNIJ(NDIM2,NDIM2), FINTIJ(NDIM2,NDIM2),    &
+      REAL*8 N(NDIM2)
+      REAL*8 & !TDRAT(2,MAXND)
+     & TNIJ(NDIM2,NDIM2), FINTIJ(NDIM2,NDIM2),    &
      & WAVA(NDIM2), WAVB(NDIM2), WAVC(NDIM2), CS(NDIM2,NDIM2),          &
-     & QEFF(NDIM2,NDIM2), QQ(NDIM1), Q(NDIM1,NDIM2,NDIM2),              &
+     & QEFF(NDIM2,NDIM2), QQ(NDIM1),                                    &
      & QOM(NDIM1,NDIM2,NDIM2), A(NDIM2,NDIM2), E(NDIM2), T(NDIM1),      &
      & ROOTT(NDIM1), X(NDIM2,NDIM2), Y(NDIM2),                          &
      & X2(NDIM2,NDIM2), XKEEP(NDIM2,NDIM2), Y2(NDIM2), YKEEP(NDIM2),    &
@@ -56,8 +57,8 @@
       CHARACTER*20 LABEL(NDIM2)
       CHARACTER*10 ION
       CHARACTER*1 LTEXT(78)
-      INTEGER I, I1, I2, J, K, L, II, JJ, KK, LL, JT, JJD,              &
-     & IONL, NLINES, NLEV, NTEMP, IBIG, IRATS, NTRA, NSETS, ITEMP,      &
+      INTEGER I, I1, I2, J, K, L, KK, LL, JT, JJD,              &
+     & IONL, NLINES, NLEV, NTEMP, IBIG, IRATS, NTRA, ITEMP,      &
      & IN, NLEV1, KP1, INT, IND, IOPT, IT, IM1, JM1, IP1,               &
      & IAPR, IBPR, ICPR, IKT, IA, IB, IC, IA1, IA2, IB1, IB2, IC1, IC2
       REAL*8 TEMPI, TINC, DENSI, DINC, DENS, DLOGD, TEMP, TLOGT,        &
@@ -571,7 +572,7 @@
 
       RETURN
 
- 1000 FORMAT(1X,T4,F5.0,T32,F5.0)
+! 1000 FORMAT(1X,T4,F5.0,T32,F5.0)
 ! 1000 FORMAT(/,60('*'),/,5X,' Welcome to the EQUIB program',            &
 !     & /5X,' Data is available for the following ions ( and others) : ',&
 !     & /,9X,' AlIII, AlV, AlVI, AlVII, AlVIII, AlIX',                   &
@@ -602,23 +603,23 @@
 !     & 1X,'Transitions for line A : ',$)
 ! 1011 FORMAT(1X,'Transitions for line B : ',$)
 ! 1012 FORMAT(1X,'Transitions for which A value is required : ',$)
- 1013 FORMAT(//1X,' TEMPorDENS | ',(1X,1PE9.3),                         &
-     & /1X,' ---------+-',('----------'))
- 1014 FORMAT(1H ,1PE9.3,' | ',(1X,1PE9.3))
+! 1013 FORMAT(//1X,' TEMPorDENS | ',(1X,1PE9.3),                         &
+!     & /1X,' ---------+-',('----------'))
+! 1014 FORMAT(1H ,1PE9.3,' | ',(1X,1PE9.3))
 ! 1015 FORMAT(/1X,'The A value, N(ion)/N(H+) = A * I(sum)/I(Hb), is',    &
 !     & /1X,'for the total intensity of the following lines',            &
 !     & /1X,(F9.1,' ')/)
- 1017 FORMAT(4(1X,1PE10.3))
- 1018 FORMAT(/1X,A20,' ( ',(F9.1,','),' ) / ( ',                        &
-     & (F9.1,','),' )'/)
- 3000 FORMAT (//1H ,10X,A20/                                            &
-     & 10X,' T =',F9.0,', LOG T =',F7.3/                                &
-     & 10X,' D =',1PD9.2,', LOG D =',0PF7.3/                            &
-     & ' POPULATIONS:')
- 3100 FORMAT (1H ,I4,3X,A20,1PD12.4)
+! 1017 FORMAT(4(1X,1PE10.3))
+! 1018 FORMAT(/1X,A20,' ( ',(F9.1,','),' ) / ( ',                        &
+!     & (F9.1,','),' )'/)
+! 3000 FORMAT (//1H ,10X,A20/                                            &
+!     & 10X,' T =',F9.0,', LOG T =',F7.3/                                &
+!     & 10X,' D =',1PD9.2,', LOG D =',0PF7.3/                            &
+!     & ' POPULATIONS:')
+! 3100 FORMAT (1H ,I4,3X,A20,1PD12.4)
 ! 3200 FORMAT (1H ,'TRANSITION',4X,'LAMDA(A)',5X,'INTENSITY',            &
 !     & 4X,' I(line)*N(H+)/ I(Hbeta)*N(ion)')
- 3300 FORMAT (1H ,I4,I3,5X,F12.2,2(1PD13.3))
+! 3300 FORMAT (1H ,I4,I3,5X,F12.2,2(1PD13.3))
  6100 FORMAT (' PROCESSING COMPLETED'/                                  &
      & ' GOODBYE!!'///)
  7000 FORMAT (4(2I4,2X,1PE10.3))
@@ -912,12 +913,12 @@
       ENDDO
       Y=TT
       RETURN
-  400 FORMAT(2X,'TEMPERATURE CHOSEN IS BELOW THE AVAILABLE RANGE,',/,   &
-     &2X,'THE FIRST TEMP-COLLISION STRENGTH IS BEING USED,',/,          &
-     &2X,'FOR T=',F8.4)
-  401 FORMAT(2X,'TEMPERATURE CHOSEN IS ABOVE THE AVAILABLE RANGE,',/,   &
-     &2X,'THE HIGHEST TEMP-COLLISION STRENGTH IS BEING USED,',/,        &
-     &2X,'FOR T=',F8.4)
+!  400 FORMAT(2X,'TEMPERATURE CHOSEN IS BELOW THE AVAILABLE RANGE,',/,   &
+!     &2X,'THE FIRST TEMP-COLLISION STRENGTH IS BEING USED,',/,          &
+!     &2X,'FOR T=',F8.4)
+!  401 FORMAT(2X,'TEMPERATURE CHOSEN IS ABOVE THE AVAILABLE RANGE,',/,   &
+!     &2X,'THE HIGHEST TEMP-COLLISION STRENGTH IS BEING USED,',/,        &
+!     &2X,'FOR T=',F8.4)
       END subroutine cfy
 !
 !---- PROC CFD
@@ -949,11 +950,11 @@
           RETURN
         ENDIF
       ENDDO
-  400 FORMAT(2X,'TEMPERATURE CHOSEN IS BELOW THE AVAILABLE RANGE,',/,   &
-     &2X,'THE FIRST TEMP-COLLISION STRENGTH IS BEING USED,',/,          &
-     &2X,'FOR T=',F8.4)
-  401 FORMAT(2X,'TEMPERATURE CHOSEN IS ABOVE THE AVAILABLE RANGE,',/,   &
-     &2X,'THE HIGHEST TEMP-COLLISION STRENGTH IS BEING USED,',/,        &
-     &2X,'FOR T=',F8.4)
+!  400 FORMAT(2X,'TEMPERATURE CHOSEN IS BELOW THE AVAILABLE RANGE,',/,   &
+!     &2X,'THE FIRST TEMP-COLLISION STRENGTH IS BEING USED,',/,          &
+!     &2X,'FOR T=',F8.4)
+!  401 FORMAT(2X,'TEMPERATURE CHOSEN IS ABOVE THE AVAILABLE RANGE,',/,   &
+!     &2X,'THE HIGHEST TEMP-COLLISION STRENGTH IS BEING USED,',/,        &
+!     &2X,'FOR T=',F8.4)
       END subroutine cfd
       end module mod_diagnostics

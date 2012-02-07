@@ -25,7 +25,6 @@ program neat
         use mod_extinction
         use mod_quicksort
 
-        CHARACTER*10 :: temp, tempa
         CHARACTER :: switch_ext !switch for extinction laws
         INTEGER :: I, runs, Narg !runs = number of runs for randomiser
         character*6 :: no
@@ -45,12 +44,11 @@ program neat
         TYPE(LINE),DIMENSION(:), allocatable :: linelist_original
         CHARACTER*80 :: filename
         CHARACTER*1 :: null
-        INTEGER :: IO, listlength, ii 
+        INTEGER :: IO, listlength
         type(resultarray), dimension(:), allocatable :: all_results
         type(resultarray), dimension(1) :: iteration_result
         double precision, dimension(:), allocatable :: quantity_result
-        double precision, dimension(:,:), allocatable :: binned_quantity_result
-        integer :: bincount, bincountmax
+        double precision, dimension(:,:), allocatable :: binned_quantity_result 
         double precision :: binvalue
 
         !extinction
@@ -535,7 +533,7 @@ contains
 
                 TYPE(line), dimension(listlength) :: linelist
                 INTEGER :: IO, I, j, listlength
-                DOUBLE PRECISION :: temp1,temp2,temp3,temp4, R
+                DOUBLE PRECISION :: temp4, R
 
                 REAL :: fn_val
 

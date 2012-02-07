@@ -9,7 +9,7 @@ subroutine calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction, switch_ext, 
         DOUBLE PRECISION :: c1, c2, c3, meanextinction, R
         double precision :: fl_ha, fl_hg, fl_hd
         character :: switch_ext
-        double precision :: temp, dens, a,b,c
+        double precision :: temp, dens
         
 !determine f(lambda) for the balmer lines, depending on the law used
 !galactic, howarth
@@ -75,7 +75,7 @@ endif
 end subroutine calc_extinction_coeffs
 
 double precision function calc_balmer_ratios(temp, dens, line)
-        integer :: i, j, line, jj
+        integer :: i, j, line
         double precision :: d1, d2, temp, dens
         double precision, dimension(6,3,4) :: HS        
 
