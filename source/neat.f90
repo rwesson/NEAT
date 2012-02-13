@@ -500,7 +500,7 @@ program neat
                         write(unit = 846,FMT=*) all_results(i)%oii_abund_CEL
                         write(unit = 847,FMT=*) all_results(i)%oiii_abund_CEL
                         write(unit = 848,FMT=*) all_results(i)%O_abund_CEL
-                        write(unit = 848,FMT=*) all_results(i)%Neii_abund_CEL
+                        write(unit = 849,FMT=*) all_results(i)%Neii_abund_CEL
                         write(unit = 850,FMT=*) all_results(i)%neiii_abund_CEL
                         write(unit = 851,FMT=*) all_results(i)%neiv_abund_CEL
                         write(unit = 852,FMT=*) all_results(i)%nev_abund_CEL
