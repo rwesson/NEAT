@@ -1,5 +1,5 @@
 
-subroutine abundances(linelist, switch_ext,listlength, filename, iteration_result, R, meanextinction, calculate_extinction)
+subroutine abundances(linelist, switch_ext,listlength, filename, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint)
 use mod_abundmaths
 use mod_abundtypes
 use mod_diagnostics
@@ -34,7 +34,7 @@ implicit none
 
         logical :: calculate_extinction
 
-        TYPE(line), DIMENSION(:), allocatable :: ILs
+        TYPE(line), DIMENSION(Iint) :: ILs
         TYPE(line), DIMENSION(38) :: H_BS
         TYPE(line), DIMENSION(4) :: He_lines
 
@@ -58,9 +58,8 @@ implicit none
 
         !file reading stuff
 
-        !reading in CEL information
+        !assign IDs to CELs
 
-        CALL read_ilines(ILs, Iint) 
         CALL element_assign(ILs, linelist, Iint, listlength)
 
         !dereddening

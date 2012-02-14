@@ -24,6 +24,7 @@ program neat
         use mod_resultarrays
         use mod_extinction
         use mod_quicksort
+        use mod_abundIO
 
         CHARACTER :: switch_ext !switch for extinction laws
         INTEGER :: I, runs, Narg !runs = number of runs for randomiser
@@ -60,6 +61,10 @@ program neat
 
         double precision :: mode, binsize
         double precision, dimension(3) :: median_array
+
+        !CEL array
+
+        TYPE(line), DIMENSION(:), allocatable :: ILs
 
         R=3.1
 
@@ -159,6 +164,7 @@ program neat
         print *
         print *,"Start time: ",time(1:2),":",time(3:4),":",time(5:10)," on ",date(7:8),"/",date(5:6),"/",date(1:4)
         print *,"Input file: ",filename
+        print *,"Iterations: ",runs
 
         I = 1
         OPEN(199, file=filename, iostat=IO, status='old')
@@ -207,12 +213,14 @@ program neat
                 print *,"Using Fitzpatrick (1990) galactic law"
         endif
 
-! 
+! read the CEL data
+
+        call read_ilines(ILs, Iint)
 
         !now check number of iterations.  If 1, line list is fine as is.  If more than one, randomize the fluxes
 
         if(runs == 1)then !calculates abundances without uncertainties
-                call abundances(linelist, switch_ext, listlength, filename, iteration_result, R, meanextinction, calculate_extinction)
+                call abundances(linelist, switch_ext, listlength, filename, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint)
 
                 !generate outputs
 
@@ -352,7 +360,7 @@ program neat
 
                         call randomizer(linelist, listlength, R)
                         R=3.1 ! no randomisation
-                        call abundances(linelist, switch_ext, listlength, filename, iteration_result, R, meanextinction, calculate_extinction)
+                        call abundances(linelist, switch_ext, listlength, filename, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint)
                         linelist = linelist_original
                         all_results(i)=iteration_result(1)
                 END DO
