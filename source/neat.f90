@@ -28,7 +28,6 @@ program neat
 
         CHARACTER :: switch_ext !switch for extinction laws
         INTEGER :: I, runs, Narg !runs = number of runs for randomiser
-        character*6 :: no
 
         !time variables
 
@@ -48,8 +47,7 @@ program neat
         INTEGER :: IO, listlength
         type(resultarray), dimension(:), allocatable :: all_results
         type(resultarray), dimension(1) :: iteration_result
-        double precision, dimension(:), allocatable :: quantity_result
-        double precision, dimension(:,:), allocatable :: binned_quantity_result 
+        double precision, dimension(:), allocatable :: quantity_result 
         double precision :: binvalue
 
         !extinction
@@ -59,7 +57,7 @@ program neat
 
         !binning
 
-        double precision :: mode, binsize
+        double precision :: mode
         double precision, dimension(3) :: median_array
 
         !CEL array
@@ -353,7 +351,6 @@ program neat
 
                 DO I=1,runs 
                         print*, "iteration ", i, "of", runs 
-                        write (no, '(I6)') i
 
                         call randomizer(linelist, listlength, R)
                         R=3.1 ! no randomisation
@@ -569,8 +566,7 @@ program neat
                 print *
                 quantity_result = all_results%mean_cHb
                 call get_median_mode(quantity_result, median_array, mode)
-                print "(X,A,F5.3,A,F5.3,A,F5.3)","c(Hb): median = ",median_array(2)," +",median_array(3),"-",median_array(1)
-!                call get_mode(quantity_result, binsize, binned_quantity_result, mode)
+                print "(X,A,F5.3,A,F5.3,A,F5.3)","c(Hb): median = ",median_array(2)," +",median_array(3),"-",median_array(1) 
                 print "(X,A,F5.3)","       mode   = ",mode
 print *
 print *,"Diagnostics"
