@@ -351,11 +351,8 @@ program neat
 
                 !main loop
 
-                DO I=1,runs
-                        print*, "-=-=-=-=-=-=-=-"
-                        print*, "iteration ", i
-                        print*, "=-=-=-=-=-=-=-="
-                        print*, " "
+                DO I=1,runs 
+                        print*, "iteration ", i, "of", runs 
                         write (no, '(I6)') i
 
                         call randomizer(linelist, listlength, R)
