@@ -65,12 +65,9 @@ implicit none
 
         !file reading stuff
 
-        !reading in Rogers "important" lines list
+        !reading in CEL information
 
-        CALL read_ilines(ILs, Iint)
-
-!redundant now
-!        CALL fileread(linelist, fname1, listlength) ! see above
+        CALL read_ilines(ILs, Iint) 
         CALL element_assign(ILs, linelist, Iint, listlength)
 
         !dereddening
