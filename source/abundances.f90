@@ -1,5 +1,5 @@
 
-subroutine abundances(linelist, run, switch_ext,listlength, filename, iteration_result, R, meanextinction, calculate_extinction)
+subroutine abundances(linelist, switch_ext,listlength, filename, iteration_result, R, meanextinction, calculate_extinction)
 use mod_abundmaths
 use mod_abundtypes
 use mod_diagnostics
@@ -12,8 +12,7 @@ use mod_resultarrays
 
 implicit none
 
-        INTEGER :: count, Iint, i, j, ion_no1, ion_no2, ion_no3, ion_no4, ion_no5, ion_no6
-        INTEGER :: runonce, run
+        INTEGER :: count, Iint, i, j, ion_no1, ion_no2, ion_no3, ion_no4, ion_no5, ion_no6 
         integer, intent(in) :: listlength
         TYPE(line), dimension(listlength) :: linelist, linelist_orig 
         CHARACTER :: switch_ext !switch for extinction laws
@@ -53,15 +52,9 @@ implicit none
         DOUBLE PRECISION :: X23,O_R23upper, O_R23lower, N2,O_N2, O3N2, O_O3N2, Ar3O3, O_Ar3O3, S3O3, O_S3O3, x23temp1, x23temp2, x23temp3, x23temp4
 
         linelist_orig = linelist
-!        linelist = 0
-!        ILs%intensity = 0 !not allocated yet
+
         H_BS%intensity = 0
         He_lines%intensity = 0
-        !runonce = 1 !allows printing of supplementary files
-        runonce = run !suppresses supplementary files and enables monte-carlo error estimation
-!        nivCELabund = 0.0  \
-!        nvCELabund = 0.0    |- used to be not calculated, they are now so don't need to be set to zero.
-!        civCELabund = 0.0  /
 
         !file reading stuff
 

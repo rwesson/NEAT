@@ -1,5 +1,5 @@
 ! NEAT, the nebular abundance analysis tool
-! (C) 2006 Roger Wesson, Dave Stock, Peter Scicluna
+! (C) 2006-2012 Roger Wesson, Dave Stock, Peter Scicluna
 ! NEAT incorporates aspects of several codes developed over decades at UCL:
 ! equib, by I. Howarth and S. Adams, updated significantly by B. Ercolano
 ! MIDAS scripts written by X-W. Liu for calculating recombination line abundances
@@ -207,10 +207,12 @@ program neat
                 print *,"Using Fitzpatrick (1990) galactic law"
         endif
 
+! 
+
         !now check number of iterations.  If 1, line list is fine as is.  If more than one, randomize the fluxes
 
         if(runs == 1)then !calculates abundances without uncertainties
-                call abundances(linelist, 1, switch_ext, listlength, filename, iteration_result, R, meanextinction, calculate_extinction)
+                call abundances(linelist, switch_ext, listlength, filename, iteration_result, R, meanextinction, calculate_extinction)
 
                 !generate outputs
 
@@ -350,7 +352,7 @@ program neat
 
                         call randomizer(linelist, listlength, R)
                         R=3.1 ! no randomisation
-                        call abundances(linelist, 0, switch_ext, listlength, filename, iteration_result, R, meanextinction, calculate_extinction)
+                        call abundances(linelist, switch_ext, listlength, filename, iteration_result, R, meanextinction, calculate_extinction)
                         linelist = linelist_original
                         all_results(i)=iteration_result(1)
                 END DO
