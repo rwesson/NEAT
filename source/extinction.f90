@@ -58,15 +58,15 @@ else
 endif
 
 if (c1<0) then
-        print *,"Warning: c(Ha) less than zero"
+!        print *,"Warning: c(Ha) less than zero"
         c1=0
 endif
 if (c2<0) then
-        print *,"Warning: c(Hg) less than zero"
+!        print *,"Warning: c(Hg) less than zero"
         c2=0
 endif
 if (c3<0) then
-        print *,"Warning: c(Hd) less than zero"
+!        print *,"Warning: c(Hd) less than zero"
         c3=0
 endif
 
