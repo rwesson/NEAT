@@ -58,7 +58,7 @@ program neat
         !binning
 
         double precision :: mode
-        double precision, dimension(3) :: median_array
+        double precision, dimension(3) :: uncertainty_array
 
         !CEL array
 
@@ -350,7 +350,8 @@ program neat
                 !main loop
 
                 DO I=1,runs 
-                        print*, "iteration ", i, "of", runs 
+if ( (10.0*dble(i)/dble(runs)) == int(10*i/runs) ) print *,"Completed ",100*i/runs,"%"
+!                        print*, "iteration ", i, "of", runs 
 
                         call randomizer(linelist, listlength, R)
                         R=3.1 ! no randomisation
@@ -565,9 +566,9 @@ program neat
                 print *,"=========="
                 print *
                 quantity_result = all_results%mean_cHb
-                call get_median_mode(quantity_result, median_array, mode)
-                print "(X,A,F5.3,A,F5.3,A,F5.3)","c(Hb): median = ",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print "(X,A,F5.3)","       mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print "(X,A,F5.3,A,F5.3,A,F5.3)","c(Hb):  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+
 print *
 print *,"Diagnostics"
 print *,"==========="
@@ -577,163 +578,134 @@ print *
 !low densities
 
                 quantity_result = all_results%oii_density
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"[OII] density: median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"               mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"[OII] density: ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%SII_density
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"[SII] density: median = ",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"               mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"[SII] density:  ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%low_density
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"low density  : median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"               mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"low density  : ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
 !low temperatures
 print *
 
                 quantity_result = all_results%oii_temp
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"[OII] temperature: median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"                   mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"[OII] temperature: ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%SII_temp
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"[SII] temperature: median = ",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"                   mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"[SII] temperature:  ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%NII_temp
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"[NII] temperature: median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"                   mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"[NII] temperature: ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%OI_temp
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"[OI] temperature:  median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"                   mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"[OI] temperature:  ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%CI_temp
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"[CI] temperature:  median = ",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"                   mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"[CI] temperature:   ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%low_temp
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"low temperature  : median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"                   mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"low temperature  : ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
 !medium density
 print *
 
                 quantity_result = all_results%cliii_density
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"[ClIII] density:    median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"                    mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"[ClIII] density:    ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%ArIV_density
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"[ArIV] density:     median = ",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"                    mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"[ArIV] density:      ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%CIII_density
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"[CIII] density:     median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"                    mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"[CIII] density:     ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%OIII_IR_density
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"[OIII] IR density:  median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"                    mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"[OIII] IR density:  ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%SIII_IR_density
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"[SIII] IRdensity:   median = ",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"                    mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"[SIII] IRdensity:    ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%ArIII_IR_density
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"[ArIII] IR density: median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"                    mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"[ArIII] IR density: ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%NeIII_IR_density
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"[NeIII] IR density: median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"                    mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"[NeIII] IR density: ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%med_density
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"medium density:     median = ",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"                    mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"medium density:      ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
 !medium temperature
 print *
 
                 quantity_result = all_results%OIII_temp
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"[OIII] temperature:      median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"                         mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"[OIII] temperature:      ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%OIII_IR_temp
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"[OIII] IR temperature:   median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"                         mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"[OIII] IR temperature:   ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%NeIII_temp
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"[NeIII] temperature:    median = ",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"                        mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"[NeIII] temperature:     ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%NeIII_IR_temp
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"[NeIII] IR temperature: median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"                        mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"[NeIII] IR temperature: ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%ArIII_temp
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"[ArIII] temperature:    median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"                        mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"[ArIII] temperature:    ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%SIII_temp
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"[SIII] temperature:     median = ",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"                        mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"[SIII] temperature:      ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%med_temp
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"medium temperature:     median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"                        mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"medium temperature:     ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
 !high density
 print *
 
                 quantity_result = all_results%neiv_density
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"[NeIV] density:  median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"                 mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"[NeIV] density:  ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%high_density
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"high density:    median = ",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"                 mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"high density:     ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
 !high temperature
 
                 quantity_result = all_results%ArV_temp
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"[ArV] temperature: median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"                   mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"[ArV] temperature: ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%NeV_temp
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"[NeV] temperature: median =",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"                   mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"[NeV] temperature: ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%high_temp
-                call get_median_mode(quantity_result, median_array, mode)
-                print 711,"High temperature:  median = ",int(median_array(2))," +",int(median_array(3)),"-",int(median_array(1)) 
-                print 712,"                   mode   = ",int(mode)
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 711,"High temperature:   ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
 !CEL abundances
 print *
@@ -745,149 +717,120 @@ print *
 714 format (X,A,ES10.2)      ! abundances formats
 
                 quantity_result = all_results%NC_abund_CEL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"[CI] abundance: median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                   mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"[CI] abundance: ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%cii_abund_CEL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"[CII] abundance:  median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                   mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"[CII] abundance:  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%ciii_abund_CEL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"[CIII] abundance:  median = ",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                   mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"[CIII] abundance:   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%civ_abund_CEL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"[CIV] abundance  : median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                   mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"[CIV] abundance  : ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%C_abund_CEL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"C/H abundance: median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                   mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"C/H abundance: ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%nii_abund_CEL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"[NII] abundance:  median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                   mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"[NII] abundance:  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%niii_abund_CEL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"[NIII] abundance:  median = ",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                   mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"[NIII] abundance:   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%niv_abund_CEL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"[NIV] abundance  : median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                   mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"[NIV] abundance  : ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%nv_abund_CEL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"[NV] abundance: median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                   mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"[NV] abundance: ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%N_abund_CEL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"N/H abundance:  median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                   mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"N/H abundance:  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%NO_abund_CEL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"[OI] abundance:  median = ",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                   mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"[OI] abundance:   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%Oii_abund_CEL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"[OII] abundance  : median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                   mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"[OII] abundance  : ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%Oiii_abund_CEL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"[OIII] abundance: median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                   mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"[OIII] abundance: ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%Oiv_abund_CEL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"[OIV] abundance:  median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                   mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"[OIV] abundance:  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%O_abund_CEL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"O/H abundance:  median = ",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                   mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"O/H abundance:   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
 !                quantity_result = all_results%NeII_abund_CEL
-!                call get_median_mode(quantity_result, median_array, mode)
-!                print 713,"[NeII] abundance  : median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-!                print 714,"                   mode   = ",mode
-
+!                call get_uncertainties(quantity_result, uncertainty_array)
+!                print 713,"[NeII] abundance  : ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+!
                 quantity_result = all_results%NeIII_abund_CEL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"[NeIII] abundance: median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                   mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"[NeIII] abundance: ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%NeIV_abund_CEL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"[NeIV] abundance:  median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                   mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"[NeIV] abundance:  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%NeV_abund_CEL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"[NeV] abundance:  median = ",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                   mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"[NeV] abundance:   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%Ne_abund_CEL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"Ne/H abundance  : median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                   mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"Ne/H abundance  : ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%ArIII_abund_CEL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"[ArIII] abundance: median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                   mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"[ArIII] abundance: ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%ArIV_abund_CEL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"[ArIV] abundance:  median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                   mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"[ArIV] abundance:  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%ArV_abund_CEL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"[ArV] abundance:  median = ",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                   mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"[ArV] abundance:   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%Ar_abund_CEL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"Ar/H abundance  : median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                   mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"Ar/H abundance  : ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%SII_abund_CEL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"[SII] abundance: median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                   mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"[SII] abundance: ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%SIII_abund_CEL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"[SIII] abundance:  median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                   mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"[SIII] abundance:  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%S_abund_CEL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"S/H abundance:  median = ",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                   mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"S/H abundance:   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%ClIII_abund_CEL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"[ClIII] abundance  : median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                   mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"[ClIII] abundance  : ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%Cl_abund_CEL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"Cl/H abundance: median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                   mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"Cl/H abundance: ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
 !RL abundances
 print *
@@ -896,29 +839,24 @@ print *,"================================"
 print *
 
                 quantity_result = all_results%He_abund_ORL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"He/H abundance:  median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                 mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"He/H abundance:  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%C_abund_ORL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"C/H abundance:   median = ",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                 mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"C/H abundance:    ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%N_abund_ORL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"N/H abundance:  median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"N/H abundance:  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%O_abund_ORL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"O/H abundance:  median = ",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"O/H abundance:   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%Ne_abund_ORL
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"Ne/H abundance: median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"Ne/H abundance: ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
 !strong line abundances
 print *
@@ -927,34 +865,28 @@ print *,"================================"
 print *
 
                 quantity_result = all_results%O_R23_upper
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"O/H (R23 upper): median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                 mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"O/H (R23 upper): ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%O_R23_lower
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"O/H (R23 lower): median = ",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                 mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"O/H (R23 lower):  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%O_N2
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"O/H (N2):       median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"O/H (N2):       ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%O_O3N2
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"O/H (O3N2):     median = ",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"O/H (O3N2):      ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%O_Ar3O3
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"O/H (Ar3O3):    median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"O/H (Ar3O3):    ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%O_S3O3
-                call get_median_mode(quantity_result, median_array, mode)
-                print 713,"O/H (S3O3):     median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 714,"                mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 713,"O/H (S3O3):     ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
 !adfs
 print *
@@ -966,44 +898,36 @@ print *
 716 format (X,A,F5.2)
 
                 quantity_result = all_results%adf_o2plus
-                call get_median_mode(quantity_result, median_array, mode)
-                print 715,"adf(O2+/H):   median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 716,"              mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 715,"adf(O2+/H):   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%adf_o
-                call get_median_mode(quantity_result, median_array, mode)
-                print 715,"adf(O/H+):    median = ",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 716,"              mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 715,"adf(O/H+):     ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%adf_n2plus
-                call get_median_mode(quantity_result, median_array, mode)
-                print 715,"adf(N2+/H):   median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 716,"              mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 715,"adf(N2+/H):   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%adf_n
-                call get_median_mode(quantity_result, median_array, mode)
-                print 715,"adf(N/H):     median = ",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 716,"              mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 715,"adf(N/H):      ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%adf_c2plus
-                call get_median_mode(quantity_result, median_array, mode)
-                print 715,"adf(C2+/H+):  median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 716,"              mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 715,"adf(C2+/H+):  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%adf_c
-                call get_median_mode(quantity_result, median_array, mode)
-                print 715,"adf(C/H):     median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 716,"              mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 715,"adf(C/H):     ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%adf_ne2plus
-                call get_median_mode(quantity_result, median_array, mode)
-                print 715,"adf(Ne2+/H+): median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 716,"            : mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 715,"adf(Ne2+/H+): ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%adf_ne
-                call get_median_mode(quantity_result, median_array, mode)
-                print 715,"adf(Ne/H):    median =",median_array(2)," +",median_array(3),"-",median_array(1) 
-                print 716,"              mode   = ",mode
+                call get_uncertainties(quantity_result, uncertainty_array)
+                print 715,"adf(Ne/H):    ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
         else
                 print*, "I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."
@@ -1129,34 +1053,26 @@ SUBROUTINE deredden_ll(switch_ext, linelist, listlength, meanextinction )
 
 END SUBROUTINE
 
-subroutine get_median_mode(input_array, median_array, mode)
-double precision, intent(in) :: input_array(:)
-double precision, intent(out) :: median_array(3)
-double precision :: binsize
-double precision, intent(out) :: mode
-double precision, dimension (:,:), allocatable :: binned_quantity_result
-integer :: ii, bincount, bincountmax, arraysize
+subroutine get_uncertainties(input_array, uncertainty_array)
 
-mode=0.D0
-median_array = (/0.0,0.0,0.0/)
+double precision, intent(in) :: input_array(:)
+double precision, intent(out) :: uncertainty_array(3)
+double precision :: binsize, comp
+double precision, dimension (:,:), allocatable :: binned_quantity_result
+integer :: ii, bincount, bincountmax, arraysize, abovepos, belowpos
+
+uncertainty_array = (/0.0,0.0,0.0/)
 
 arraysize = size(input_array)
+binsize=(input_array(int(0.841*size(input_array))) - input_array(int(0.159*size(input_array))))/20
 
-median_array(1) = input_array(int(0.500*size(input_array))) - input_array(int(0.159*size(input_array)))
-median_array(2) = input_array(int(0.500*size(input_array)))
-median_array(3) = input_array(int(0.841*size(input_array))) - input_array(int(0.500*size(input_array)))
-
-binsize = (median_array(3)+median_array(1))/20
-
-if (binsize .gt. 0) then
-!  allocate(binned_quantity_result(1+(int(quantity_result(arraysize)/binsize)-int(quantity_result(1)/binsize)),2)) 
+if (binsize .gt. 0) then 
   allocate(binned_quantity_result(arraysize,2))
   binned_quantity_result = 0.D0
 
   ii=1
   bincount=1 !(why does this need to be one and not zero??)
-  binvalue = int(quantity_result(1)/binsize)
-  mode=0.D0
+  binvalue = int(quantity_result(1)/binsize) 
   bincountmax=0
 
   do i=1,runs 
@@ -1168,7 +1084,7 @@ if (binsize .gt. 0) then
 
       if (bincount>bincountmax) then
         bincountmax=bincount
-        mode = binned_quantity_result(ii,1)
+        uncertainty_array(2) = binned_quantity_result(ii,1) + 0.5*binsize ! otherwise it is the value of the edge of the bin and not the centre
       endif
 
       ii=ii+1
@@ -1180,6 +1096,29 @@ if (binsize .gt. 0) then
   deallocate(binned_quantity_result)
 endif
 
-end subroutine get_median_mode
+!find value in array closest to mode
+
+comp = 1.e10
+do i=1,arraysize
+  if (abs(input_array(i)-uncertainty_array(2))>comp) exit
+  comp = abs(input_array(i)-uncertainty_array(2))
+enddo
+
+abovepos = i+int(0.341*arraysize)
+belowpos = i-int(0.341*arraysize)
+
+if (abovepos>arraysize) then
+  uncertainty_array(3) = 99999999
+else
+  uncertainty_array(3) = input_array(abovepos) - uncertainty_array(2)
+endif
+
+if (belowpos<1) then
+  uncertainty_array(1) = 0.D0
+else
+  uncertainty_array(1) = uncertainty_array(2) - input_array(belowpos)
+endif
+
+end subroutine get_uncertainties
 
 end program
