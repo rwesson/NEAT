@@ -2,8 +2,7 @@
 subroutine abundances(linelist, switch_ext,listlength, filename, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint)
 use mod_abundmaths
 use mod_abundtypes
-use mod_diagnostics
-use mod_getabunds
+use mod_equib
 use mod_abundIO
 use mod_helium
 use mod_recombination_lines
