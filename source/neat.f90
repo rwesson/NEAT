@@ -65,6 +65,10 @@ program neat
 
         TYPE(line), DIMENSION(:), allocatable :: ILs
 
+        !diagnostic array
+
+        double precision, dimension(6) :: diagnostic_array
+
         R=3.1
 
         !read command line arguments
@@ -92,15 +96,13 @@ program neat
            print *,"  -c"
            print *,"       The logarithmic extinction at H beta"
            print *,"       Default: calculated from Balmer line ratios"
-        !  to be implemented:
-        !  -R                     : R (default 3.1)
-        !  -nelow / --density-low : low ionisation zone density (default - calculate from line list)
-        !  -telow / --temperature-low : low i. zone temperature
-        !  -nemed / --density-med : medium i. density
-        !  -temed / --temperature-med : medium i. temperature
-        !  -nehigh / --density-high : high i. density
-        !  -tehigh / --temperature-high : high i. temperature
-        !  -c                     : value of c(Hb), the logarithmic extinction at H beta
+           print *,"  -nelow, -nemed, -nehigh"
+           print *,"  -telow, -temed, -tehigh"
+           print *,"       The electron densities and temperatures to be used."
+           print *,"       Units: cm-3 for densities, K for temperatures"
+           print *,"       Default: calculated from available diagnostics." 
+        !  to be fully implemented:
+        !  -R                     : R (default 3.1) 
            stop
         endif
 
@@ -117,7 +119,8 @@ program neat
         runs=1
         switch_ext="S"
         filename=""
-        meanextinction=0.
+        meanextinction=0.D0
+        diagnostic_array=0.D0
 
         ! process command line arguments
 
@@ -142,6 +145,24 @@ program neat
                 if (trim(options(i))=="-c" .and. (i+1) .le. Narg) then
                    read (options(i+1),*) meanextinction
                    calculate_extinction = .false.
+                endif
+                if (trim(options(i))=="-nelow" .and. (i+1) .le. Narg) then
+                   read (options(i+1),*) diagnostic_array(1)
+                endif
+                if (trim(options(i))=="-nemed" .and. (i+1) .le. Narg) then
+                   read (options(i+1),*) diagnostic_array(2)
+                endif
+                if (trim(options(i))=="-nehigh" .and. (i+1) .le. Narg) then
+                   read (options(i+1),*) diagnostic_array(3)
+                endif
+                if (trim(options(i))=="-telow" .and. (i+1) .le. Narg) then
+                   read (options(i+1),*) diagnostic_array(4)
+                endif
+                if (trim(options(i))=="-temed" .and. (i+1) .le. Narg) then
+                   read (options(i+1),*) diagnostic_array(5)
+                endif
+                if (trim(options(i))=="-tehigh" .and. (i+1) .le. Narg) then
+                   read (options(i+1),*) diagnostic_array(6)
                 endif
          enddo
 
@@ -220,7 +241,7 @@ program neat
         !now check number of iterations.  If 1, line list is fine as is.  If more than one, randomize the fluxes
 
         if(runs == 1)then !calculates abundances without uncertainties
-                call abundances(linelist, switch_ext, listlength, filename, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint)
+                call abundances(linelist, switch_ext, listlength, filename, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array)
 
                 !generate outputs
 
@@ -357,7 +378,7 @@ if ( (10.0*dble(i)/dble(runs)) == int(10*i/runs) ) print *,"Completed ",100*i/ru
 
                         call randomizer(linelist, listlength, R)
                         R=3.1 ! no randomisation
-                        call abundances(linelist, switch_ext, listlength, filename, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint)
+                        call abundances(linelist, switch_ext, listlength, filename, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array)
                         linelist = linelist_original
                         all_results(i)=iteration_result(1)
                 END DO

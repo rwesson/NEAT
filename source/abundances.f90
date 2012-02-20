@@ -1,5 +1,5 @@
 
-subroutine abundances(linelist, switch_ext,listlength, filename, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint)
+subroutine abundances(linelist, switch_ext, listlength, filename, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array)
 use mod_abundmaths
 use mod_abundtypes
 use mod_equib
@@ -17,6 +17,7 @@ implicit none
         CHARACTER :: switch_ext !switch for extinction laws
         CHARACTER*80 :: filename
         type(resultarray), dimension(1) :: iteration_result
+        double precision, dimension(6), intent(in) :: diagnostic_array
 
         DOUBLE PRECISION :: normalise, oiiNratio, oiiDens, oiiiTratio, oiiiTemp, oiiiIRNratio, oiiiIRTratio, oiiiIRtemp, oiiiIRdens, niiTratio, niiTemp, ariiiIRNratio, ariiiIRdens, arivNratio, arivDens, cliiiNratio, cliiiDens, siiNratio, siiDens, siiTratio, siiTemp, siiiIRNratio, siiiIRdens, oiiTratio, oiiTemp, neiiiTratio, neiiiIRTratio, neiiiIRNratio, neiiiIRdens, neiiiTemp, neiiiIRTemp, oitemp, citemp
         DOUBLE PRECISION :: ciiiNratio,neivNratio,nevTratio,siiiTratio,ariiiTratio,arvTratio,lowtemp,lowdens,medtemp,ciiidens,meddens,siiitemp,ariiitemp,hightemp,neivdens,highdens,arvtemp,nevtemp,oiTratio,ciTratio
@@ -225,10 +226,12 @@ implicit none
            count = count + 1
          endif
 
-         if (count .eq. 0) then
+         if (count .eq. 0 .and. diagnostic_array(1) .eq. 0) then
            lowdens = 1000.0
+         elseif (diagnostic_array(1) .gt. 0.0) then
+           lowdens = diagnostic_array(1)
          else
-                lowdens = (oiiDens + siiDens) / count
+           lowdens = (oiiDens + siiDens) / count
          endif
 
          count = 0
@@ -297,8 +300,10 @@ implicit none
            oitemp = 0.0
          endif
 
-         if (count .gt. 0) then
+         if (count .gt. 0 .and. diagnostic_array(4) .eq. 0) then
            lowtemp = ((5*niitemp) + siitemp + oiitemp + oitemp + citemp) / count
+         elseif (diagnostic_array(4) .gt. 0.0) then
+           lowtemp = diagnostic_array(4)
          else
            lowtemp = 10000.0
          endif
@@ -354,8 +359,10 @@ implicit none
            call get_diagnostic("neiii     ","1,2/                ","2,3/                ",neiiiIRNratio,"D",medtemp, neiiiIRDens)
          endif
 
-         if (count .eq. 0) then
+         if (count .eq. 0 .and. diagnostic_array(2) .eq. 0) then
            meddens = 1000.0
+         elseif (diagnostic_array(2) .gt. 0.0) then
+           meddens = diagnostic_array(2)
          else
            meddens = (ciiiDens + cliiiDens + arivDens) / count
          endif
@@ -426,8 +433,10 @@ implicit none
 
 !averaging
 
-         if (count .gt. 0) then
+         if (count .gt. 0 .and. diagnostic_array(5) .eq. 0.0) then
            medtemp = (4*oiiitemp + siiitemp + 2*ariiitemp + 2*neiiitemp) / count
+         elseif (diagnostic_array(5) .gt. 0.0) then
+           medtemp = diagnostic_array(5)
          else
            medtemp = 10000.0
          endif
@@ -490,10 +499,14 @@ implicit none
 
          if (neivNratio .gt. 0 .and. neivNratio .lt. 1e10) then
            call get_diagnostic("neiv      ","1,2/                ","1,3/                ",neivNratio,"D",hightemp, neivDens)
-           highdens = neivdens
+           highdens = neivdens 
          else
            neivDens = 0.0
            highdens = meddens
+         endif
+
+         if (diagnostic_array(3) .gt. 0.0) then
+           highdens = diagnostic_array(3)
          endif
 
          count = 0
@@ -512,8 +525,10 @@ implicit none
            nevtemp = 0.0
          endif
 
-         if (count .gt. 0) then
+         if (count .gt. 0 .and. diagnostic_array(6) .eq. 0) then
            hightemp = (arvtemp + nevtemp) / count
+         elseif (diagnostic_array(6) .gt. 0.0) then
+           hightemp = diagnostic_array(6)
          else
            hightemp = medtemp
          endif
