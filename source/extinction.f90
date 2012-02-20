@@ -109,11 +109,10 @@ double precision function calc_balmer_ratios(temp, dens, line)
         end do
 
         do j = 2,3
-                if(dens .ge. 10**j .and. dens .lt. 10**(j+1) )then
+                if(dens .ge. 10**j .and. dens .le. 10**(j+1) )then
                         exit
                 endif
         end do
-
 
         if(temp .lt. HS(1,line,1))then
                 if(dens .lt. 10**2)then
