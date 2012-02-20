@@ -1117,29 +1117,34 @@ if (binsize .gt. 0) then
   enddo
 
   deallocate(binned_quantity_result)
-endif
 
 !find value in array closest to mode
 
-comp = 1.e10
-do i=1,arraysize
-  if (abs(input_array(i)-uncertainty_array(2))>comp) exit
-  comp = abs(input_array(i)-uncertainty_array(2))
-enddo
+  comp = 1.e10
+  do i=1,arraysize
+    if (abs(input_array(i)-uncertainty_array(2))>comp) exit
+    comp = abs(input_array(i)-uncertainty_array(2))
+  enddo
 
-abovepos = i+int(0.341*arraysize)
-belowpos = i-int(0.341*arraysize)
+  abovepos = i+int(0.341*arraysize)
+  belowpos = i-int(0.341*arraysize)
 
-if (abovepos>arraysize) then
-  uncertainty_array(3) = 99999999
-else
-  uncertainty_array(3) = input_array(abovepos) - uncertainty_array(2)
-endif
+  if (abovepos>arraysize) then
+    uncertainty_array(3) = 99999999
+  else
+    uncertainty_array(3) = input_array(abovepos) - uncertainty_array(2)
+  endif
 
-if (belowpos<1) then
+  if (belowpos<1) then
+    uncertainty_array(1) = 0.D0
+  else
+    uncertainty_array(1) = uncertainty_array(2) - input_array(belowpos)
+  endif
+
+else !all results are identical
   uncertainty_array(1) = 0.D0
-else
-  uncertainty_array(1) = uncertainty_array(2) - input_array(belowpos)
+  uncertainty_array(2) = input_array(1)
+  uncertainty_array(3) = 0.D0 
 endif
 
 end subroutine get_uncertainties
