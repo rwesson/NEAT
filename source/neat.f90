@@ -37,6 +37,7 @@ program neat
         !input options
 
         CHARACTER*2048, DIMENSION(:), allocatable :: options
+        CHARACTER*2048 :: commandline
 
         !file reading variables
 
@@ -103,6 +104,8 @@ program neat
            stop
         endif
 
+        call get_command(commandline)
+
         ALLOCATE (options(Narg))
 
         do i=1,Narg
@@ -146,8 +149,6 @@ program neat
            filename=trim(options(1))
          endif
 
-         deallocate(options)
-
          if (filename=="") then
                 print *,"Error: No input file specified"
                 stop
@@ -160,9 +161,10 @@ program neat
 
         call DATE_AND_TIME(date,time)
         print *
-        print *,"Start time: ",time(1:2),":",time(3:4),":",time(5:10)," on ",date(7:8),"/",date(5:6),"/",date(1:4)
-        print *,"Input file: ",filename
-        print *,"Iterations: ",runs
+        print *,"Start time:   ",time(1:2),":",time(3:4),":",time(5:10)," on ",date(7:8),"/",date(5:6),"/",date(1:4)
+        print *,"Command line: ",trim(commandline)
+
+        deallocate(options)
 
         I = 1
         OPEN(199, file=filename, iostat=IO, status='old')
