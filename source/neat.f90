@@ -247,7 +247,7 @@ program neat
 
                 700 FORMAT(X,A20,F5.3) !extinction format
                 701 FORMAT(X,A20,I5) !diagnostics format
-                702 FORMAT(X,A20,ES14.2) !abundances format
+                702 FORMAT(X,A20,ES14.3) !abundances format
                 703 FORMAT(X,A20,F5.2) !strong line format
                 704 FORMAT(X,A20,F5.2) !adf format
 
@@ -299,43 +299,64 @@ program neat
                 print *,"=========="
                 print *
                 print *,"Collisionally excited lines"
+                print *,"-------------------"
+                print *
                 write (*,702) "NC_abund_CEL: ",iteration_result(1)%NC_abund_CEL
                 write (*,702) "cii_abund_CEL: ",iteration_result(1)%cii_abund_CEL
                 write (*,702) "ciii_abund_CEL: ",iteration_result(1)%ciii_abund_CEL
                 write (*,702) "civ_abund_CEL: ",iteration_result(1)%civ_abund_CEL
+                write (*,702) "C_icf_CEL: ", iteration_result(1)%C_icf_CEL
                 write (*,702) "C_abund_CEL: ",iteration_result(1)%C_abund_CEL
                 write (*,702) "Nii_abund_CEL: ",iteration_result(1)%Nii_abund_CEL
                 write (*,702) "Niii_abund_CEL: ",iteration_result(1)%Niii_abund_CEL
                 write (*,702) "Niv_abund_CEL: ",iteration_result(1)%Niv_abund_CEL
                 write (*,702) "Nv_abund_CEL: ",iteration_result(1)%Nv_abund_CEL
+                write (*,702) "N_icf_CEL: ", iteration_result(1)%N_icf_CEL
                 write (*,702) "N_abund_CEL: ",iteration_result(1)%N_abund_CEL
                 write (*,702) "NO_abund_CEL: ",iteration_result(1)%NO_abund_CEL
                 write (*,702) "Oii_abund_CEL: ",iteration_result(1)%Oii_abund_CEL
                 write (*,702) "Oiii_abund_CEL: ",iteration_result(1)%Oiii_abund_CEL
                 write (*,702) "Oiv_abund_CEL: ",iteration_result(1)%Oiv_abund_CEL
+                write (*,702) "O_icf_CEL: ", iteration_result(1)%O_icf_CEL
                 write (*,702) "O_abund_CEL: ",iteration_result(1)%O_abund_CEL
                 write (*,702) "Neii_abund_CEL: ",iteration_result(1)%Neii_abund_CEL
                 write (*,702) "Neiii_abund_CEL: ",iteration_result(1)%Neiii_abund_CEL
                 write (*,702) "Neiv_abund_CEL: ",iteration_result(1)%Neiv_abund_CEL
                 write (*,702) "Nev_abund_CEL: ",iteration_result(1)%Nev_abund_CEL
+                write (*,702) "Ne_icf_CEL: ", iteration_result(1)%Ne_icf_CEL
                 write (*,702) "Ne_abund_CEL: ",iteration_result(1)%Ne_abund_CEL
                 write (*,702) "Ariii_abund_CEL: ",iteration_result(1)%Ariii_abund_CEL
                 write (*,702) "Ariv_abund_CEL: ",iteration_result(1)%Ariv_abund_CEL
                 write (*,702) "Arv_abund_CEL: ",iteration_result(1)%Arv_abund_CEL
+                write (*,702) "Ar_icf_CEL: ", iteration_result(1)%Ar_icf_CEL
                 write (*,702) "Ar_abund_CEL: ",iteration_result(1)%Ar_abund_CEL
                 write (*,702) "Sii_abund_CEL: ",iteration_result(1)%Sii_abund_CEL
                 write (*,702) "Siii_abund_CEL: ",iteration_result(1)%Siii_abund_CEL
-                write (*,702) "Cliii_abund_CEL: ",iteration_result(1)%Cliii_abund_CEL
-                write (*,702) "Cl_abund_CEL: ",iteration_result(1)%Cl_abund_CEL
+                write (*,702) "S_icf_CEL: ", iteration_result(1)%S_icf_CEL
                 write (*,702) "S_abund_CEL: ",iteration_result(1)%S_abund_CEL
+                write (*,702) "Cliii_abund_CEL: ",iteration_result(1)%Cliii_abund_CEL
+                write (*,702) "Cl_icf_CEL: ", iteration_result(1)%Cl_icf_CEL
+                write (*,702) "Cl_abund_CEL: ",iteration_result(1)%Cl_abund_CEL
                 print *
                 print *,"Recombination lines"
                 print *,"-------------------"
                 print *
+                write (*,702) "Hei_abund_ORL: ",iteration_result(1)%Hei_abund_ORL
+                write (*,702) "Heii_abund_ORL: ",iteration_result(1)%Heii_abund_ORL
                 write (*,702) "He_abund_ORL: ",iteration_result(1)%He_abund_ORL
+                write (*,702) "Cii_abund_ORL: ",iteration_result(1)%Cii_abund_ORL
+                write (*,702) "Ciii_abund_ORL: ",iteration_result(1)%Ciii_abund_ORL
+                write (*,702) "C_icf_ORL: ", iteration_result(1)%C_icf_ORL
                 write (*,702) "C_abund_ORL: ",iteration_result(1)%C_abund_ORL
+                write (*,702) "Nii_abund_ORL: ",iteration_result(1)%Nii_abund_ORL
+                write (*,702) "Niii_abund_ORL: ",iteration_result(1)%Niii_abund_ORL
+                write (*,702) "N_icf_ORL: ", iteration_result(1)%N_icf_ORL
                 write (*,702) "N_abund_ORL: ",iteration_result(1)%N_abund_ORL
+                write (*,702) "Oii_abund_ORL: ",iteration_result(1)%Oii_abund_ORL
+                write (*,702) "O_icf_ORL: ", iteration_result(1)%O_icf_ORL
                 write (*,702) "O_abund_ORL: ",iteration_result(1)%O_abund_ORL
+                write (*,702) "Neii_abund_ORL: ",iteration_result(1)%Neii_abund_ORL
+                write (*,702) "Ne_icf_ORL: ", iteration_result(1)%Ne_icf_ORL
                 write (*,702) "Ne_abund_ORL: ",iteration_result(1)%Ne_abund_ORL
                 print *
                 print *,"Strong line methods"
@@ -387,95 +408,147 @@ if ( (10.0*dble(i)/dble(runs)) == int(10*i/runs) ) print *,"Completed ",100*i/ru
                 print *, "Processing results..."
 
                 OPEN(841, FILE=trim(filename)//"_NC_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(842, FILE=trim(filename)//"_C_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(843, FILE=trim(filename)//"_Nii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(844, FILE=trim(filename)//"_N_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(845, FILE=trim(filename)//"_NO_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(846, FILE=trim(filename)//"_Oii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(847, FILE=trim(filename)//"_Oiii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(848, FILE=trim(filename)//"_O_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(849, FILE=trim(filename)//"_Neii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(850, FILE=trim(filename)//"_Neiii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(851, FILE=trim(filename)//"_Neiv_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(852, FILE=trim(filename)//"_Nev_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(853, FILE=trim(filename)//"_Ne_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(854, FILE=trim(filename)//"_Ariii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(855, FILE=trim(filename)//"_Ariv_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(856, FILE=trim(filename)//"_Arv_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(857, FILE=trim(filename)//"_Ar_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(858, FILE=trim(filename)//"_Sii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(859, FILE=trim(filename)//"_Siii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(860, FILE=trim(filename)//"_S_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(861, FILE=trim(filename)//"_He_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(862, FILE=trim(filename)//"_C_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(863, FILE=trim(filename)//"_N_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(864, FILE=trim(filename)//"_O_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(865, FILE=trim(filename)//"_Ne_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(866, FILE=trim(filename)//"_[OII]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(867, FILE=trim(filename)//"_[SII]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(868, FILE=trim(filename)//"_low_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(869, FILE=trim(filename)//"_[OII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(870, FILE=trim(filename)//"_[NII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(871, FILE=trim(filename)//"_[SII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(872, FILE=trim(filename)//"_[OI]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(873, FILE=trim(filename)//"_[CI]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(874, FILE=trim(filename)//"_low_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(875, FILE=trim(filename)//"_[ClIII]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(876, FILE=trim(filename)//"_[ArIV]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(877, FILE=trim(filename)//"_CIII]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(878, FILE=trim(filename)//"_med_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(879, FILE=trim(filename)//"_[OIII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(880, FILE=trim(filename)//"_[NeIII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(881, FILE=trim(filename)//"_[ArIII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(882, FILE=trim(filename)//"_[SIII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(883, FILE=trim(filename)//"_med_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(884, FILE=trim(filename)//"_[NeIV]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(885, FILE=trim(filename)//"_high_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(886, FILE=trim(filename)//"_[ArV]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(887, FILE=trim(filename)//"_[NeV]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(888, FILE=trim(filename)//"_high_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(889, FILE=trim(filename)//"_mean_cHb", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(890, FILE=trim(filename)//"_adf_O", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(891, FILE=trim(filename)//"_adf_O2plus", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(892, FILE=trim(filename)//"_adf_C", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(893, FILE=trim(filename)//"_adf_C2plus", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(894, FILE=trim(filename)//"_adf_N", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(895, FILE=trim(filename)//"_adf_N2plus", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(896, FILE=trim(filename)//"_adf_Ne", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(897, FILE=trim(filename)//"_adf_Ne2plus", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-!XXXX add Cl III, Cl/H, Niii, cii, ciii, ArIII IR dens, NeIII IR dens, strong line, ICF files
+                OPEN(842, FILE=trim(filename)//"_Cii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(843, FILE=trim(filename)//"_Ciii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(844, FILE=trim(filename)//"_Civ_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(845, FILE=trim(filename)//"_C_icf_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(846, FILE=trim(filename)//"_C_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(847, FILE=trim(filename)//"_Nii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(848, FILE=trim(filename)//"_N_icf_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(849, FILE=trim(filename)//"_N_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(850, FILE=trim(filename)//"_NO_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(851, FILE=trim(filename)//"_Oii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(852, FILE=trim(filename)//"_Oiii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(853, FILE=trim(filename)//"_O_icf_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(854, FILE=trim(filename)//"_O_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(855, FILE=trim(filename)//"_Neii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(856, FILE=trim(filename)//"_Neiii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(857, FILE=trim(filename)//"_Neiv_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(858, FILE=trim(filename)//"_Nev_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(859, FILE=trim(filename)//"_Ne_icf_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(860, FILE=trim(filename)//"_Ne_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(861, FILE=trim(filename)//"_Ariii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(862, FILE=trim(filename)//"_Ariv_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(863, FILE=trim(filename)//"_Arv_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(864, FILE=trim(filename)//"_Ar_icf_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(865, FILE=trim(filename)//"_Ar_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(866, FILE=trim(filename)//"_Sii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(867, FILE=trim(filename)//"_Siii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(868, FILE=trim(filename)//"_S_icf_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE') 
+                OPEN(869, FILE=trim(filename)//"_S_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(870, FILE=trim(filename)//"_Cliii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(871, FILE=trim(filename)//"_Cl_icf_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(872, FILE=trim(filename)//"_Cl_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(873, FILE=trim(filename)//"_Hei_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(873, FILE=trim(filename)//"_Heii_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(873, FILE=trim(filename)//"_He_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(874, FILE=trim(filename)//"_Cii_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(875, FILE=trim(filename)//"_Ciii_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(876, FILE=trim(filename)//"_C_icf_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(877, FILE=trim(filename)//"_C_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(878, FILE=trim(filename)//"_Nii_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(879, FILE=trim(filename)//"_Niii_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(880, FILE=trim(filename)//"_N_icf_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(881, FILE=trim(filename)//"_N_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(882, FILE=trim(filename)//"_Oii_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(883, FILE=trim(filename)//"_O_icf_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(884, FILE=trim(filename)//"_O_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(885, FILE=trim(filename)//"_Neii_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(886, FILE=trim(filename)//"_Ne_icf_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(887, FILE=trim(filename)//"_Ne_abund_ORL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(888, FILE=trim(filename)//"_[OII]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(889, FILE=trim(filename)//"_[SII]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(890, FILE=trim(filename)//"_low_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(891, FILE=trim(filename)//"_[OII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(892, FILE=trim(filename)//"_[NII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(893, FILE=trim(filename)//"_[SII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(894, FILE=trim(filename)//"_[OI]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(895, FILE=trim(filename)//"_[CI]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(896, FILE=trim(filename)//"_low_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(897, FILE=trim(filename)//"_[ClIII]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(898, FILE=trim(filename)//"_[ArIV]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(899, FILE=trim(filename)//"_CIII]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(900, FILE=trim(filename)//"_[ArIII]_IR_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(901, FILE=trim(filename)//"_[NeIII]_IR_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(902, FILE=trim(filename)//"_med_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(903, FILE=trim(filename)//"_[OIII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(904, FILE=trim(filename)//"_[NeIII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(905, FILE=trim(filename)//"_[ArIII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(906, FILE=trim(filename)//"_[SIII]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(907, FILE=trim(filename)//"_med_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(908, FILE=trim(filename)//"_[NeIV]_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(909, FILE=trim(filename)//"_high_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(910, FILE=trim(filename)//"_[ArV]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(911, FILE=trim(filename)//"_[NeV]_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(912, FILE=trim(filename)//"_high_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(913, FILE=trim(filename)//"_mean_cHb", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(914, FILE=trim(filename)//"_adf_O", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(915, FILE=trim(filename)//"_adf_O2plus", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(916, FILE=trim(filename)//"_adf_C", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(917, FILE=trim(filename)//"_adf_C2plus", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(918, FILE=trim(filename)//"_adf_N", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(919, FILE=trim(filename)//"_adf_N2plus", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(920, FILE=trim(filename)//"_adf_Ne", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(921, FILE=trim(filename)//"_adf_Ne2plus", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(922, FILE=trim(filename)//"_O_R23_upper", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(923, FILE=trim(filename)//"_O_R23_lower", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(924, FILE=trim(filename)//"_O_N2", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(925, FILE=trim(filename)//"_O_O3N2", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(926, FILE=trim(filename)//"_O_Ar3O3", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(927, FILE=trim(filename)//"_O_S3O3", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+
+!XXXX add Cl/H, Niii, cii, ciii, ArIII IR dens, NeIII IR dens, strong line, ICF files
 
 ! sort all the arrays into ascending order
 
                 call qsort(all_results%NC_abund_CEL)
                 call qsort(all_results%Cii_abund_CEL)
                 call qsort(all_results%Ciii_abund_CEL)
+                call qsort(all_results%C_icf_CEL)
                 call qsort(all_results%C_abund_CEL)
                 call qsort(all_results%nii_abund_CEL)
                 call qsort(all_results%niii_abund_CEL)
+                call qsort(all_results%N_icf_CEL)
                 call qsort(all_results%N_abund_CEL)
                 call qsort(all_results%NO_abund_CEL)
                 call qsort(all_results%oii_abund_CEL)
                 call qsort(all_results%oiii_abund_CEL)
+                call qsort(all_results%O_icf_CEL)
                 call qsort(all_results%O_abund_CEL)
                 call qsort(all_results%Neii_abund_CEL)
                 call qsort(all_results%neiii_abund_CEL)
                 call qsort(all_results%neiv_abund_CEL)
                 call qsort(all_results%nev_abund_CEL)
+                call qsort(all_results%Ne_icf_CEL)
                 call qsort(all_results%Ne_abund_CEL)
                 call qsort(all_results%ariii_abund_CEL)
                 call qsort(all_results%ariv_abund_CEL)
                 call qsort(all_results%arv_abund_CEL)
+                call qsort(all_results%Ar_icf_CEL)
                 call qsort(all_results%Ar_abund_CEL)
                 call qsort(all_results%sii_abund_CEL)
                 call qsort(all_results%siii_abund_CEL)
+                call qsort(all_results%S_icf_CEL)
                 call qsort(all_results%S_abund_CEL)
                 call qsort(all_results%cliii_abund_CEL)
+                call qsort(all_results%Cl_icf_CEL)
                 call qsort(all_results%cl_abund_CEL)
+                call qsort(all_results%Hei_abund_ORL)
+                call qsort(all_results%Heii_abund_ORL)
                 call qsort(all_results%He_abund_ORL)
+                call qsort(all_results%Cii_abund_ORL)
+                call qsort(all_results%Ciii_abund_ORL)
+                call qsort(all_results%C_icf_ORL)
                 call qsort(all_results%C_abund_ORL)
+                call qsort(all_results%Nii_abund_ORL)
+                call qsort(all_results%Niii_abund_ORL)
+                call qsort(all_results%N_icf_ORL)
                 call qsort(all_results%N_abund_ORL)
+                call qsort(all_results%Oii_abund_ORL)
+                call qsort(all_results%O_icf_ORL)
                 call qsort(all_results%O_abund_ORL)
+                call qsort(all_results%Neii_abund_ORL)
+                call qsort(all_results%Ne_icf_ORL)
                 call qsort(all_results%Ne_abund_ORL)
                 call qsort(all_results%oii_density)
                 call qsort(all_results%sii_density)
@@ -518,65 +591,98 @@ if ( (10.0*dble(i)/dble(runs)) == int(10*i/runs) ) print *,"Completed ",100*i/ru
                 call qsort(all_results%O_Ar3O3)
                 call qsort(all_results%O_S3O3)
 
+print *, "Sorted arrays.  Now writing to file"
 
                 do i=1,runs
-                        write(unit = 841,FMT=*) all_results(i)%NC_abund_CEL
-                        write(unit = 842,FMT=*) all_results(i)%C_abund_CEL
-                        write(unit = 843,FMT=*) all_results(i)%nii_abund_CEL
-                        write(unit = 844,FMT=*) all_results(i)%N_abund_CEL
-                        write(unit = 845,FMT=*) all_results(i)%NO_abund_CEL
-                        write(unit = 846,FMT=*) all_results(i)%oii_abund_CEL
-                        write(unit = 847,FMT=*) all_results(i)%oiii_abund_CEL
-                        write(unit = 848,FMT=*) all_results(i)%O_abund_CEL
-                        write(unit = 849,FMT=*) all_results(i)%Neii_abund_CEL
-                        write(unit = 850,FMT=*) all_results(i)%neiii_abund_CEL
-                        write(unit = 851,FMT=*) all_results(i)%neiv_abund_CEL
-                        write(unit = 852,FMT=*) all_results(i)%nev_abund_CEL
-                        write(unit = 853,FMT=*) all_results(i)%Ne_abund_CEL
-                        write(unit = 854,FMT=*) all_results(i)%ariii_abund_CEL
-                        write(unit = 855,FMT=*) all_results(i)%ariv_abund_CEL
-                        write(unit = 856,FMT=*) all_results(i)%arv_abund_CEL
-                        write(unit = 857,FMT=*) all_results(i)%Ar_abund_CEL
-                        write(unit = 858,FMT=*) all_results(i)%sii_abund_CEL
-                        write(unit = 859,FMT=*) all_results(i)%siii_abund_CEL
-                        write(unit = 860,FMT=*) all_results(i)%S_abund_CEL
-                        write(unit = 861,FMT=*) all_results(i)%He_abund_ORL
-                        write(unit = 862,FMT=*) all_results(i)%C_abund_ORL
-                        write(unit = 863,FMT=*) all_results(i)%N_abund_ORL
-                        write(unit = 864,FMT=*) all_results(i)%O_abund_ORL
-                        write(unit = 865,FMT=*) all_results(i)%Ne_abund_ORL
-                        write(unit = 866,FMT=*) all_results(i)%oii_density
-                        write(unit = 867,FMT=*) all_results(i)%sii_density
-                        write(unit = 868,FMT=*) all_results(i)%low_density
-                        write(unit = 869,FMT=*) all_results(i)%nii_temp
-                        write(unit = 870,FMT=*) all_results(i)%oii_temp
-                        write(unit = 871,FMT=*) all_results(i)%sii_temp
-                        write(unit = 872,FMT=*) all_results(i)%oi_temp
-                        write(unit = 873,FMT=*) all_results(i)%ci_temp
-                        write(unit = 874,FMT=*) all_results(i)%low_temp
-                        write(unit = 875,FMT=*) all_results(i)%cliii_density
-                        write(unit = 876,FMT=*) all_results(i)%ariv_density
-                        write(unit = 877,FMT=*) all_results(i)%ciii_density
-                        write(unit = 878,FMT=*) all_results(i)%med_density
-                        write(unit = 879,FMT=*) all_results(i)%oiii_temp
-                        write(unit = 880,FMT=*) all_results(i)%neiii_temp
-                        write(unit = 881,FMT=*) all_results(i)%ariii_temp
-                        write(unit = 882,FMT=*) all_results(i)%siii_temp
-                        write(unit = 883,FMT=*) all_results(i)%med_temp
-                        write(unit = 884,FMT=*) all_results(i)%neiv_density
-                        write(unit = 885,FMT=*) all_results(i)%high_density
-                        write(unit = 886,FMT=*) all_results(i)%arv_temp
-                        write(unit = 887,FMT=*) all_results(i)%nev_temp
-                        write(unit = 888,FMT=*) all_results(i)%high_temp
-                        write(unit = 889,FMT=*) all_results(i)%mean_cHb
-                        write(unit = 890,FMT=*) all_results(i)%adf_O2plus
-                        write(unit = 891,FMT=*) all_results(i)%adf_O
-                        write(unit = 892,FMT=*) all_results(i)%adf_N2plus
-                        write(unit = 893,FMT=*) all_results(i)%adf_N
-                        write(unit = 894,FMT=*) all_results(i)%adf_C2plus
-                        write(unit = 895,FMT=*) all_results(i)%adf_C
-                        write(unit = 896,FMT=*) all_results(i)%adf_Ne2plus
-                        write(unit = 897,FMT=*) all_results(i)%adf_Ne
+                    write(unit = 841,FMT=*) all_results(i)%NC_abund_CEL
+                    write(unit = 842,FMT=*) all_results(i)%Cii_abund_CEL
+                    write(unit = 843,FMT=*) all_results(i)%Ciii_abund_CEL
+                    write(unit = 844,FMT=*) all_results(i)%Civ_abund_CEL
+                    write(unit = 845,FMT=*) all_results(i)%C_icf_CEL
+                    write(unit = 846,FMT=*) all_results(i)%C_abund_CEL
+                    write(unit = 847,FMT=*) all_results(i)%Nii_abund_CEL
+                    write(unit = 848,FMT=*) all_results(i)%N_icf_CEL
+                    write(unit = 849,FMT=*) all_results(i)%N_abund_CEL
+                    write(unit = 850,FMT=*) all_results(i)%NO_abund_CEL
+                    write(unit = 851,FMT=*) all_results(i)%Oii_abund_CEL
+                    write(unit = 852,FMT=*) all_results(i)%Oiii_abund_CEL
+                    write(unit = 853,FMT=*) all_results(i)%O_icf_CEL
+                    write(unit = 854,FMT=*) all_results(i)%O_abund_CEL
+                    write(unit = 855,FMT=*) all_results(i)%Neii_abund_CEL
+                    write(unit = 856,FMT=*) all_results(i)%Neiii_abund_CEL
+                    write(unit = 857,FMT=*) all_results(i)%Neiv_abund_CEL
+                    write(unit = 858,FMT=*) all_results(i)%Nev_abund_CEL
+                    write(unit = 859,FMT=*) all_results(i)%Ne_icf_CEL
+                    write(unit = 860,FMT=*) all_results(i)%Ne_abund_CEL
+                    write(unit = 861,FMT=*) all_results(i)%Ariii_abund_CEL
+                    write(unit = 862,FMT=*) all_results(i)%Ariv_abund_CEL
+                    write(unit = 863,FMT=*) all_results(i)%Arv_abund_CEL
+                    write(unit = 864,FMT=*) all_results(i)%Ar_icf_CEL
+                    write(unit = 865,FMT=*) all_results(i)%Ar_abund_CEL
+                    write(unit = 866,FMT=*) all_results(i)%Sii_abund_CEL
+                    write(unit = 867,FMT=*) all_results(i)%Siii_abund_CEL
+                    write(unit = 868,FMT=*) all_results(i)%S_icf_CEL
+                    write(unit = 869,FMT=*) all_results(i)%S_abund_CEL
+                    write(unit = 870,FMT=*) all_results(i)%Cliii_abund_CEL
+                    write(unit = 871,FMT=*) all_results(i)%Cl_icf_CEL
+                    write(unit = 872,FMT=*) all_results(i)%Cl_abund_CEL
+                    write(unit = 873,FMT=*) all_results(i)%Hei_abund_ORL
+                    write(unit = 873,FMT=*) all_results(i)%Heii_abund_ORL
+                    write(unit = 873,FMT=*) all_results(i)%He_abund_ORL
+                    write(unit = 874,FMT=*) all_results(i)%Cii_abund_ORL
+                    write(unit = 875,FMT=*) all_results(i)%Ciii_abund_ORL
+                    write(unit = 876,FMT=*) all_results(i)%C_icf_ORL
+                    write(unit = 877,FMT=*) all_results(i)%C_abund_ORL
+                    write(unit = 878,FMT=*) all_results(i)%Nii_abund_ORL
+                    write(unit = 879,FMT=*) all_results(i)%Niii_abund_ORL
+                    write(unit = 880,FMT=*) all_results(i)%N_icf_ORL
+                    write(unit = 881,FMT=*) all_results(i)%N_abund_ORL
+                    write(unit = 882,FMT=*) all_results(i)%Oii_abund_ORL
+                    write(unit = 883,FMT=*) all_results(i)%O_icf_ORL
+                    write(unit = 884,FMT=*) all_results(i)%O_abund_ORL
+                    write(unit = 885,FMT=*) all_results(i)%Neii_abund_ORL
+                    write(unit = 886,FMT=*) all_results(i)%Ne_icf_ORL
+                    write(unit = 887,FMT=*) all_results(i)%Ne_abund_ORL
+                    write(unit = 888,FMT=*) all_results(i)%OII_density
+                    write(unit = 889,FMT=*) all_results(i)%SII_density
+                    write(unit = 890,FMT=*) all_results(i)%low_density
+                    write(unit = 891,FMT=*) all_results(i)%OII_temp
+                    write(unit = 892,FMT=*) all_results(i)%NII_temp
+                    write(unit = 893,FMT=*) all_results(i)%SII_temp
+                    write(unit = 894,FMT=*) all_results(i)%OI_temp
+                    write(unit = 895,FMT=*) all_results(i)%CI_temp
+                    write(unit = 896,FMT=*) all_results(i)%low_temp
+                    write(unit = 897,FMT=*) all_results(i)%ClIII_density
+                    write(unit = 898,FMT=*) all_results(i)%ArIV_density
+                    write(unit = 899,FMT=*) all_results(i)%CIII_density
+                    write(unit = 900,FMT=*) all_results(i)%ArIII_IR_density
+                    write(unit = 901,FMT=*) all_results(i)%NeIII_IR_density
+                    write(unit = 902,FMT=*) all_results(i)%med_density
+                    write(unit = 903,FMT=*) all_results(i)%OIII_temp
+                    write(unit = 904,FMT=*) all_results(i)%NeIII_temp
+                    write(unit = 905,FMT=*) all_results(i)%ArIII_temp
+                    write(unit = 906,FMT=*) all_results(i)%SIII_temp
+                    write(unit = 907,FMT=*) all_results(i)%med_temp
+                    write(unit = 908,FMT=*) all_results(i)%NeIV_density
+                    write(unit = 909,FMT=*) all_results(i)%high_density
+                    write(unit = 910,FMT=*) all_results(i)%ArV_temp
+                    write(unit = 911,FMT=*) all_results(i)%NeV_temp
+                    write(unit = 912,FMT=*) all_results(i)%high_temp
+                    write(unit = 913,FMT=*) all_results(i)%mean_cHb
+                    write(unit = 914,FMT=*) all_results(i)%adf_O
+                    write(unit = 915,FMT=*) all_results(i)%adf_O2plus
+                    write(unit = 916,FMT=*) all_results(i)%adf_C
+                    write(unit = 917,FMT=*) all_results(i)%adf_C2plus
+                    write(unit = 918,FMT=*) all_results(i)%adf_N
+                    write(unit = 919,FMT=*) all_results(i)%adf_N2plus
+                    write(unit = 920,FMT=*) all_results(i)%adf_Ne
+                    write(unit = 921,FMT=*) all_results(i)%adf_Ne2plus
+                    write(unit = 922,FMT=*) all_results(i)%O_R23_upper
+                    write(unit = 923,FMT=*) all_results(i)%O_R23_lower
+                    write(unit = 924,FMT=*) all_results(i)%O_N2
+                    write(unit = 925,FMT=*) all_results(i)%O_O3N2
+                    write(unit = 926,FMT=*) all_results(i)%O_Ar3O3
+                    write(unit = 927,FMT=*) all_results(i)%O_S3O3 
                 end do
 
                 DO I=841,897

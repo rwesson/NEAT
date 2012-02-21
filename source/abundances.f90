@@ -1491,43 +1491,62 @@ iteration_result(1)%high_temp = hightemp
         iteration_result(1)%cii_abund_CEL = ciiCELabund 
         iteration_result(1)%ciii_abund_CEL = ciiiCELabund 
         iteration_result(1)%civ_abund_CEL = civCELabund 
+        iteration_result(1)%c_icf_CEL = CELicfC
         iteration_result(1)%C_abund_CEL = CabundCEL
 !nitrogen 
         iteration_result(1)%Nii_abund_CEL = niiCELabund 
         iteration_result(1)%Niii_abund_CEL = niiiCELabund 
         iteration_result(1)%Niv_abund_CEL = nivCELabund 
         iteration_result(1)%Nv_abund_CEL = nvCELabund 
+        iteration_result(1)%N_icf_CEL = CELicfN
         iteration_result(1)%N_abund_CEL = NabundCEL
 !oxygen
         iteration_result(1)%NO_abund_CEL = NOabundCEL
         iteration_result(1)%Oii_abund_CEL = oiiCELabund
         iteration_result(1)%Oiii_abund_CEL = oiiiCELabund
         iteration_result(1)%Oiv_abund_CEL = oivCELabund
+        iteration_result(1)%O_icf_CEL = CELicfO
         iteration_result(1)%O_abund_CEL = OabundCEL
 !neon
         iteration_result(1)%Neii_abund_CEL = neiiIRCELabund
         iteration_result(1)%Neiii_abund_CEL = neiiiCELabund
         iteration_result(1)%Neiv_abund_CEL = neivCELabund
         iteration_result(1)%Nev_abund_CEL = nevCELabund
+        iteration_result(1)%Ne_icf_CEL = CELicfNe
         iteration_result(1)%Ne_abund_CEL = NeabundCEL
 !argon
         iteration_result(1)%Ariii_abund_CEL = ariiiCELabund
         iteration_result(1)%Ariv_abund_CEL = arivCELabund
         iteration_result(1)%Arv_abund_CEL = arvCELabund
+        iteration_result(1)%Ar_icf_CEL = CELicfAr
         iteration_result(1)%Ar_abund_CEL = ArabundCEL
 !sulphur
         iteration_result(1)%Sii_abund_CEL = siiCELabund
         iteration_result(1)%Siii_abund_CEL = siiiCELabund
+        iteration_result(1)%S_icf_CEL = CELicfS
         iteration_result(1)%S_abund_CEL = SabundCEL
 !chlorine
         iteration_result(1)%Cliii_abund_CEL = cliiiCELabund
+        iteration_result(1)%Cl_icf_CEL = CELicfCl
         iteration_result(1)%Cl_abund_CEL = ClabundCEL
 
 !ORLs
-        iteration_result(1)%He_abund_ORL = Hetotabund 
-        iteration_result(1)%C_abund_ORL = CabundRL 
-        iteration_result(1)%N_abund_ORL = NabundRL 
-        iteration_result(1)%O_abund_ORL = OabundRL 
+        iteration_result(1)%Hei_abund_ORL = Heiabund
+        iteration_result(1)%Heii_abund_ORL = Heiiabund
+        iteration_result(1)%He_abund_ORL = Hetotabund
+        iteration_result(1)%Cii_abund_ORL = ciiRLabund
+        iteration_result(1)%Ciii_abund_ORL = ciiiRLabund
+        iteration_result(1)%C_icf_ORL = RLicfC
+        iteration_result(1)%C_abund_ORL = CabundRL
+        iteration_result(1)%Nii_abund_ORL = niiRLabund
+        iteration_result(1)%Niii_abund_ORL = niiiRLabund
+        iteration_result(1)%N_icf_ORL = RLicfN
+        iteration_result(1)%N_abund_ORL = NabundRL
+        iteration_result(1)%Oii_abund_ORL = oiiRLabund
+        iteration_result(1)%O_icf_ORL = RLicfO
+        iteration_result(1)%O_abund_ORL = OabundRL
+        iteration_result(1)%Neii_abund_ORL = NeiiRLabund
+        iteration_result(1)%Ne_icf_ORL = RLicfNe
         iteration_result(1)%Ne_abund_ORL = NeabundRL 
 
 !Strong line methods
