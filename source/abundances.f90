@@ -1176,7 +1176,11 @@ iteration_result(1)%high_temp = hightemp
              weight = weight + niiRLs(i)%Int
           endif
         enddo 
+      if (isnan((rlabundtemp/weight))) then
+        niimultiplets(j)%Abundance = 0.
+      else
         niimultiplets(j)%Abundance = rlabundtemp/weight
+      endif
       enddo
 
       rlabundtemp = 0.
@@ -1207,8 +1211,11 @@ iteration_result(1)%high_temp = hightemp
         endif
       enddo
 
-      niiRLabund = rlabundtemp/weight 
-
+      if (weight .gt. 0) then
+        niiRLabund = rlabundtemp/weight 
+      else
+        niiRLabund = 0.D0
+      endif
   endif
 
 !oii recombination lines
@@ -1281,7 +1288,11 @@ iteration_result(1)%high_temp = hightemp
         endif
       enddo
 
-      oiiRLabund = rlabundtemp/weight 
+      if (weight .gt. 0) then
+        oiiRLabund = rlabundtemp/weight
+      else
+        oiiRLabund = 0.D0
+      endif
 
    endif
 
@@ -1301,7 +1312,10 @@ iteration_result(1)%high_temp = hightemp
 
    if (weight .gt. 0) then
       neiiRLabund = rlabundtemp/weight 
+   else
+      neiiRLabund = 0.D0
    endif
+
 
       rlabundtemp = 0.0
       weight = 0.0
