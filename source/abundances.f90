@@ -544,16 +544,16 @@ if(oiidens > 0) iteration_result(1)%OII_density = oiidens
 if(siidens > 0) iteration_result(1)%SII_density = siidens
 if(lowdens > 0) iteration_result(1)%low_density = lowdens
 if(niitemp > 0.2)then
-        iteration_result(1)%OII_temp = niitemp
+        iteration_result(1)%NII_temp = niitemp
 else if(INT(niitemp) == -1)then
-        iteration_result(1)%OII_temp = 20000
+        iteration_result(1)%NII_temp = 20000
 else
 endif
 
 if(oiitemp >0.2)then
-        iteration_result(1)%NII_temp = oiitemp
+        iteration_result(1)%OII_temp = oiitemp
 else if(INT(oiitemp) == -1)then
-        iteration_result(1)%NII_temp = 20000
+        iteration_result(1)%OII_temp = 20000
 else
 endif
 
