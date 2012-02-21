@@ -131,39 +131,6 @@
 
       INTEGER :: i
 
-  !    TYPE oiiRL
-  !          CHARACTER*1 :: Hyb
-  !          CHARACTER*1 :: n_E1
-  !          CHARACTER*1 :: n_E1GA
-  !          CHARACTER*1 :: n_E2
-  !          CHARACTER*1 :: n_E2GA
-  !          CHARACTER*1 :: n_g1
-  !          CHARACTER*1 :: n_g2
-  !         CHARACTER*1 :: Rem1
-  !          CHARACTER*1 :: Rem2
-  !         CHARACTER*1 :: Rem3
-  !          CHARACTER*1 :: Rem4
-  !          CHARACTER*3 :: q_gf1
-  !          CHARACTER*3 :: q_gf2
-  !          CHARACTER*7 :: Mult
-  !          CHARACTER*9 :: Term1
-  !          CHARACTER*9 :: Term2
-  !          INTEGER :: g1
-  !          INTEGER :: g2
-  !          INTEGER :: ION
-  !          DOUBLE PRECISION :: Wave
-  !          DOUBLE PRECISION :: E1
-  !          DOUBLE PRECISION :: E2
-  !          DOUBLE PRECISION :: Em
-  !          DOUBLE PRECISION :: Int
-  !          DOUBLE PRECISION :: Br_A
-  !          DOUBLE PRECISION :: Br_B
-  !          DOUBLE PRECISION :: Br_C
-  !          DOUBLE PRECISION :: gf1
-  !          DOUBLE PRECISION :: gf2
-  !          DOUBLE PRECISION :: Obs
-  !          DOUBLE PRECISION :: abundance
-  !    END TYPE
 
       TYPE(oiiRL), DIMENSION(415) :: oiiRLs
 
@@ -740,37 +707,6 @@
 
       INTEGER :: ii, i
 
-      !TYPE niiRL
-      !      CHARACTER*1 :: Hyb
-      !      CHARACTER*1 :: n_E1
-      !      CHARACTER*1 :: n_E1GA
-      !      CHARACTER*1 :: n_E2
-      !      CHARACTER*1 :: n_E2GA
-      !      CHARACTER*1 :: n_g1
-      !      CHARACTER*1 :: n_g2
-      !      CHARACTER*1 :: Rem1
-      !      CHARACTER*1 :: Rem2
-      !      CHARACTER*1 :: Rem3
-      !      CHARACTER*1 :: Rem4
-      !      CHARACTER*3 :: q_gf1
-      !      CHARACTER*3 :: q_gf2
-      !      CHARACTER*7 :: Mult
-      !      CHARACTER*9 :: Term1
-      !      CHARACTER*9 :: Term2
-      !      INTEGER :: g1
-      !      INTEGER :: g2
-      !      INTEGER :: ION
-      !      DOUBLE PRECISION :: Wave
-      !      DOUBLE PRECISION :: E1
-      !      DOUBLE PRECISION :: E2
-      !      DOUBLE PRECISION :: Em
-      !      DOUBLE PRECISION :: Int
-      !      DOUBLE PRECISION :: Br_LS 
-      !      DOUBLE PRECISION :: gf1
-      !      DOUBLE PRECISION :: gf2
-      !      DOUBLE PRECISION :: Obs
-      !      DOUBLE PRECISION :: abundance
-      !END TYPE
 
       TYPE(niiRL), DIMENSION(99) :: niiRLs
 
@@ -843,8 +779,8 @@
 
       te = te/10000
 
-      ! 2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p E1 3P* - 3D  M03  transitions 
-      !i = 0002     !case A
+!       2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p E1 3P* - 3D  M03  transitions 
+!      i = 0002     !case A
       i = 0003     !case B
       a = -12.7289
       b = -0.689816
@@ -855,9 +791,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund 
       enddo 
-      !
-      ! 2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 3P* - 3S     M04 transitions
-      !i = 0004     !case A
+!      
+!       2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 3P* - 3S     M04 transitions
+!      i = 0004     !case A
       i = 0005     !case B
       a = -13.8161
       b = -0.778606
@@ -868,9 +804,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 3P* - 3P     M05 transitions
-      !i = 0006     !case A
+!      
+!       2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 3P* - 3P     M05 transitions
+!      i = 0006     !case A
       i = 0007     !case B
       a = -13.0765
       b = -0.734594
@@ -881,10 +817,10 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 1P* - 1P     M08 transitions
+!      
+!       2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 1P* - 1P     M08 transitions
       i = 0008     !case A
-      !i = 0009     !case B
+!      i = 0009     !case B
       a = -14.1211
       b = -0.608107
       c = 0.0362301
@@ -894,10 +830,10 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 1P* - 1D     M12 transitions
+!      
+!       2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 1P* - 1D     M12 transitions
       i = 0010     !case A
-      !i = 0011     !case B
+!      i = 0011     !case B
       a = -13.7473
       b = -0.509595
       c = 0.0255685
@@ -907,10 +843,10 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 1P* - 1S     M13 transitions
+!      
+!       2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 1P* - 1S     M13 transitions
       i = 0012     !case A
-      !i = 0013     !case B
+!      i = 0013     !case B
       a = -14.3753
       b = -0.515547
       c = 0.0100966
@@ -920,10 +856,10 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 1P - 1D*     M15 transitions
+!      
+!       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 1P - 1D*     M15 transitions
       i = 0014     !case A
-      !i = 0015     !case B
+!      i = 0015     !case B
       a = -14.3932
       b = -0.887946
       c = -0.0525855
@@ -933,10 +869,10 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 1P - 1P*     M17 transitions
+!      
+!       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 1P - 1P*     M17 transitions
       i = 0016     !case A
-      !i = 0017     !case B
+!      i = 0017     !case B
       a = -15.0052
       b = -0.89811
       c = -0.0581789
@@ -946,9 +882,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3D - 3F*     M19 transitions
-      !i = 0018     !case A
+!      
+!       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3D - 3F*     M19 transitions
+!      i = 0018     !case A
       i = 0019     !case B
       a = -12.6183
       b = -0.840727
@@ -959,9 +895,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3D - 3D*     M20 transitions
-      !i = 0020     !case A
+!      
+!       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3D - 3D*     M20 transitions
+!      i = 0020     !case A
       i = 0021     !case B
       a = -13.3184
       b = -0.884034
@@ -972,9 +908,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3D - 3P*     M21 transitions
-      !i = 0022     !case A
+!      
+!       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3D - 3P*     M21 transitions
+!      i = 0022     !case A
       i = 0023     !case B
       a = -14.5113
       b = -0.87792
@@ -985,9 +921,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3p - 2s2.2p.(2P*).4s 3D - 3P*     M22 transitions
-      !i = 0024     !case A
+!      
+!       2s2.2p.(2P*).3p - 2s2.2p.(2P*).4s 3D - 3P*     M22 transitions
+!      i = 0024     !case A
       i = 0025     !case B
       a = -14.1305
       b = -0.487037
@@ -998,9 +934,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3S - 3P*     M24 transitions
-      !i = 0026     !case A
+!      
+!       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3S - 3P*     M24 transitions
+!      i = 0026     !case A
       i = 0027     !case B
       a = -13.3527
       b = -0.878224
@@ -1011,9 +947,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3p - 2s2.2p.(2P*).4s 3S - 3P*     M26 transitions
-      !i = 0028     !case A
+!      
+!       2s2.2p.(2P*).3p - 2s2.2p.(2P*).4s 3S - 3P*     M26 transitions
+!      i = 0028     !case A
       i = 0029     !case B
       a = -14.9628
       b = -0.486746
@@ -1024,9 +960,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3P - 3D*     M28 transitions
-      !i = 0030     !case A
+!      
+!       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3P - 3D*     M28 transitions
+!      i = 0030     !case A
       i = 0031     !case B
       a = -13.0871
       b = -0.883624
@@ -1037,9 +973,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3P - 3P*     M29 transitions
-      !i = 0032     !case A
+!      
+!       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3P - 3P*     M29 transitions
+!      i = 0032     !case A
       i = 0033     !case B
       a = -13.5581
       b = -0.878488
@@ -1050,9 +986,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3p - 2s2.2p.(2P*).4s 3P - 3P*     M30 transitions
-      !i = 0034     !case A
+!      
+!       2s2.2p.(2P*).3p - 2s2.2p.(2P*).4s 3P - 3P*     M30 transitions
+!      i = 0034     !case A
       i = 0035     !case B
       a = -14.3521
       b = -0.487527
@@ -1063,10 +999,10 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 1D - 1F*     M31 transitions
+!      
+!       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 1D - 1F*     M31 transitions
       i = 0036     !case A
-      !i = 0037     !case B
+!      i = 0037     !case B
       a = -15.0026
       b = -0.923093
       c = -0.0588371
@@ -1076,9 +1012,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3d - 2s2.2p.(2P*).4p 3F* - 3D     M36 transitions
-      !i = 0038     !case A
+!      
+!       2s2.2p.(2P*).3d - 2s2.2p.(2P*).4p 3F* - 3D     M36 transitions
+!      i = 0038     !case A
       i = 0039     !case B
       a = -13.8636
       b = -0.569144
@@ -1089,9 +1025,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3d - 2s2.2p.(2P*<3/2>).4f 3F* - 3G M39 transitions
-      !i = 0040     !case A
+!      
+!       2s2.2p.(2P*).3d - 2s2.2p.(2P*<3/2>).4f 3F* - 3G M39 transitions
+!      i = 0040     !case A
       i = 0041     !case B
       a = -13.035
       b = -1.12035
@@ -1102,10 +1038,10 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3d - 2s2.2p.(2P*<3/2>).4f 1F* - 1G M58 transitions
+!      
+!       2s2.2p.(2P*).3d - 2s2.2p.(2P*<3/2>).4f 1F* - 1G M58 transitions
       i = 0042     !case A
-      !i = 0043     !case B
+!      i = 0043     !case B
       a = -13.5484
       b = -1.11909
       c = -0.105123
@@ -1115,9 +1051,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 3d 3D* - 4f 3F 4242 M48 transitions
-      !i = 0044     !case A
+!      
+!       3d 3D* - 4f 3F 4242 M48 transitions
+!      i = 0044     !case A
       i = 0045     !case B
       a = -13.2548
       b = -1.12902
@@ -1128,9 +1064,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 3d 3P* - 4f 3D 4435 M55 transitions
-      !i = 0046     !case A
+!      
+!       3d 3P* - 4f 3D 4435 M55 transitions
+!      i = 0046     !case A
       i = 0047     !case B
       a = -13.5656
       b = -1.11989
@@ -1141,10 +1077,10 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 3d 1D* - 4f 1F 4176 M43 (RMT M42) transitions
+!      
+!       3d 1D* - 4f 1F 4176 M43 (RMT M42) transitions
       i = 0048     !case A
-      !i = 0049     !case B
+!      i = 0049     !case B
       a = -13.7426
       b = -1.13351
       c = -0.111146
@@ -1154,10 +1090,10 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 3d 1P* - 4f 1D 4677 M61 (RMT M62) transitions
+!      
+!       3d 1P* - 4f 1D 4677 M61 (RMT M62) transitions
       i = 0049     !case A
-      !i = 0051     !case B
+!      i = 0051     !case B
       a = -13.7373
       b = -1.12695
       c = -0.108158
@@ -1168,31 +1104,31 @@
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
 !
-      ! 3d 3F* - 4f 1G 4026 M39b transitions
-      !case A (PPB):
+!       3d 3F* - 4f 1G 4026 M39b transitions
+!      case A (PPB):
       a = 0.108
       b = -0.754
       c = 2.587
       d = 0.719
       z = 2.
       Br_term = 0.350
-      !
+!      
       aeff = 1.e-13 * z * a  * (te/z**2) ** (b)
       aeff = aeff / (1. + c * (te/z**2) ** (d)) * Br_term
       do ii = 98,98
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 3d 1F* - 4f 3G 4552 M58a transitions
-      !case A (PPB):
+!      
+!       3d 1F* - 4f 3G 4552 M58a transitions
+!      case A (PPB):
       a = 0.326
       b = -0.754
       c = 2.587
       d = 0.719
       z = 2.
       Br_term = 0.074
-      !
+!      
       aeff = 1.e-13 * z * a  * (te/z**2) ** (b)
       aeff = aeff / (1. + c * (te/z**2) ** (d)) * Br_term
       do ii = 99,99
@@ -1219,18 +1155,6 @@
 
       INTEGER :: i
 
-   !   TYPE ciiRL 
-   !         DOUBLE PRECISION :: Wave
-   !         DOUBLE PRECISION :: a
-   !         DOUBLE PRECISION :: b
-   !         DOUBLE PRECISION :: c
-   !         DOUBLE PRECISION :: d
-   !         DOUBLE PRECISION :: f 
-   !         DOUBLE PRECISION :: aeff
-   !         DOUBLE PRECISION :: Int
-   !         DOUBLE PRECISION :: Obs
-   !         DOUBLE PRECISION :: abundance
-   !   END TYPE
 
       TYPE(ciiRL), DIMENSION(57) :: ciiRLs
 
@@ -1323,19 +1247,6 @@
 
       INTEGER :: i
 
-  !    TYPE neiiRL 
-  !          DOUBLE PRECISION :: Wave
-  !          DOUBLE PRECISION :: a
-  !          DOUBLE PRECISION :: b
-  !          DOUBLE PRECISION :: c
-  !          DOUBLE PRECISION :: d
-  !          DOUBLE PRECISION :: f 
-  !          DOUBLE PRECISION :: Br
-  !          DOUBLE PRECISION :: aeff
-  !          DOUBLE PRECISION :: Int
-  !          DOUBLE PRECISION :: Obs
-  !          DOUBLE PRECISION :: abundance
-  !    END TYPE
 
       TYPE(neiiRL), DIMENSION(38) :: neiiRLs
 
@@ -1428,20 +1339,6 @@
      & logem
 
       INTEGER :: i
-
-!      TYPE xiiiRL 
-!            CHARACTER*3      :: Ion
-!            DOUBLE PRECISION :: Wave
-!            DOUBLE PRECISION :: a
-     !       DOUBLE PRECISION :: b
-      !      DOUBLE PRECISION :: c
-       !     DOUBLE PRECISION :: d 
-        !    DOUBLE PRECISION :: Br
-         !   DOUBLE PRECISION :: aeff
-          !  DOUBLE PRECISION :: Int
-           ! DOUBLE PRECISION :: Obs
-            !DOUBLE PRECISION :: abundance
-      !END TYPE
 
       TYPE(xiiiRL), DIMENSION(6) :: xiiiRLs
 
