@@ -489,7 +489,7 @@ implicit none
 
       enddo ! end of diagnostic iteration
 
-        if (meanextinction > 0) iteration_result(1)%mean_cHb = meanextinction
+        iteration_result(1)%mean_cHb = meanextinction
 
 
 ! high ionisation
@@ -540,9 +540,9 @@ implicit none
 !edited diagnostic section to reflect above changes which stopped high/low limit densities/temperatures being included in averages. High limit cases set to 0.1 so that we know that it was in the high limit and not the low limit. DJS
 
 
-if(oiidens > 0) iteration_result(1)%OII_density = oiidens
-if(siidens > 0) iteration_result(1)%SII_density = siidens
-if(lowdens > 0) iteration_result(1)%low_density = lowdens
+iteration_result(1)%OII_density = oiidens
+iteration_result(1)%SII_density = siidens
+iteration_result(1)%low_density = lowdens
 if(niitemp > 0.2)then
         iteration_result(1)%NII_temp = niitemp
 else if(INT(niitemp) == -1)then
@@ -579,15 +579,15 @@ else
 endif
 
 
-if(lowtemp > 0) iteration_result(1)%low_temp = lowtemp
-if(cliiidens > 0 ) iteration_result(1)%ClIII_density = cliiidens
-if(arivdens > 0 ) iteration_result(1)%ArIV_density = arivdens
-if(ciiidens > 0 ) iteration_result(1)%CIII_density = ciiidens
-if(oiiiIRdens > 0 ) iteration_result(1)%OIII_IR_density = oiiiIRdens
-if(ariiiIRdens > 0 ) iteration_result(1)%ArIII_IR_density = ariiiIRdens
-if(siiiIRdens > 0 ) iteration_result(1)%SIII_IR_density = siiiIRdens
-if(neiiiIRdens > 0 ) iteration_result(1)%NeIII_IR_density = neiiiIRdens
-if(meddens > 0 ) iteration_result(1)%med_density = meddens
+iteration_result(1)%low_temp = lowtemp
+iteration_result(1)%ClIII_density = cliiidens
+iteration_result(1)%ArIV_density = arivdens
+iteration_result(1)%CIII_density = ciiidens
+iteration_result(1)%OIII_IR_density = oiiiIRdens
+iteration_result(1)%ArIII_IR_density = ariiiIRdens
+iteration_result(1)%SIII_IR_density = siiiIRdens
+iteration_result(1)%NeIII_IR_density = neiiiIRdens
+iteration_result(1)%med_density = meddens
 if(oiiitemp >0.2)then 
         iteration_result(1)%OIII_temp = oiiitemp
 else if(INT(oiiitemp) == -1)then 
@@ -627,12 +627,12 @@ else if(int(neiiiIRtemp) == -1)then
         iteration_result(1)%NeIII_IR_temp = 20000
 endif
 
-if(medtemp > 0) iteration_result(1)%med_temp = medtemp
-if(neivdens > 0) iteration_result(1)%NeIV_density = neivdens
-if(highdens > 0) iteration_result(1)%high_density = highdens
-if(arvtemp > 0) iteration_result(1)%ArV_temp = arvtemp
-if(nevtemp > 0) iteration_result(1)%NeV_temp = nevtemp
-if(hightemp > 0) iteration_result(1)%high_temp = hightemp
+iteration_result(1)%med_temp = medtemp
+iteration_result(1)%NeIV_density = neivdens
+iteration_result(1)%high_density = highdens
+iteration_result(1)%ArV_temp = arvtemp
+iteration_result(1)%NeV_temp = nevtemp
+iteration_result(1)%high_temp = hightemp
 
 ! Helium abundances
 
@@ -1487,48 +1487,48 @@ if(hightemp > 0) iteration_result(1)%high_temp = hightemp
 
 !carbon
 
-        if(NCabundCEL > 0) iteration_result(1)%NC_abund_CEL = NCabundCEL 
-        if(ciiCELabund> 0) iteration_result(1)%cii_abund_CEL = ciiCELabund 
-        if(ciiiCELabund> 0) iteration_result(1)%ciii_abund_CEL = ciiiCELabund 
-        if(civCELabund> 0) iteration_result(1)%civ_abund_CEL = civCELabund 
-        if(CabundCEL > 0) iteration_result(1)%C_abund_CEL = CabundCEL
+        iteration_result(1)%NC_abund_CEL = NCabundCEL 
+        iteration_result(1)%cii_abund_CEL = ciiCELabund 
+        iteration_result(1)%ciii_abund_CEL = ciiiCELabund 
+        iteration_result(1)%civ_abund_CEL = civCELabund 
+        iteration_result(1)%C_abund_CEL = CabundCEL
 !nitrogen 
-        if(niiCELabund > 0) iteration_result(1)%Nii_abund_CEL = niiCELabund 
-        if(niiiCELabund > 0) iteration_result(1)%Niii_abund_CEL = niiiCELabund 
-        if(nivCELabund > 0) iteration_result(1)%Niv_abund_CEL = nivCELabund 
-        if(nvCELabund > 0) iteration_result(1)%Nv_abund_CEL = nvCELabund 
-        if(NabundCEL > 0) iteration_result(1)%N_abund_CEL = NabundCEL
+        iteration_result(1)%Nii_abund_CEL = niiCELabund 
+        iteration_result(1)%Niii_abund_CEL = niiiCELabund 
+        iteration_result(1)%Niv_abund_CEL = nivCELabund 
+        iteration_result(1)%Nv_abund_CEL = nvCELabund 
+        iteration_result(1)%N_abund_CEL = NabundCEL
 !oxygen
-        if(NOabundCEL > 0) iteration_result(1)%NO_abund_CEL = NOabundCEL
-        if(oiiCELabund >0) iteration_result(1)%Oii_abund_CEL = oiiCELabund
-        if(oiiiCELabund >0) iteration_result(1)%Oiii_abund_CEL = oiiiCELabund
-        if(oivCELabund > 0) iteration_result(1)%Oiv_abund_CEL = oivCELabund
-        if(OabundCEL > 0) iteration_result(1)%O_abund_CEL = OabundCEL
+        iteration_result(1)%NO_abund_CEL = NOabundCEL
+        iteration_result(1)%Oii_abund_CEL = oiiCELabund
+        iteration_result(1)%Oiii_abund_CEL = oiiiCELabund
+        iteration_result(1)%Oiv_abund_CEL = oivCELabund
+        iteration_result(1)%O_abund_CEL = OabundCEL
 !neon
-        if(neiiIRCELabund > 0) iteration_result(1)%Neii_abund_CEL = neiiIRCELabund
-        if(neiiiCELabund >0) iteration_result(1)%Neiii_abund_CEL = neiiiCELabund
-        if(neivCELabund >0) iteration_result(1)%Neiv_abund_CEL = neivCELabund
-        if(nevCELabund >0) iteration_result(1)%Nev_abund_CEL = nevCELabund
-        if(NeabundCEL > 0) iteration_result(1)%Ne_abund_CEL = NeabundCEL
+        iteration_result(1)%Neii_abund_CEL = neiiIRCELabund
+        iteration_result(1)%Neiii_abund_CEL = neiiiCELabund
+        iteration_result(1)%Neiv_abund_CEL = neivCELabund
+        iteration_result(1)%Nev_abund_CEL = nevCELabund
+        iteration_result(1)%Ne_abund_CEL = NeabundCEL
 !argon
-        if(ariiiCELabund >0) iteration_result(1)%Ariii_abund_CEL = ariiiCELabund
-        if(arivCELabund >0) iteration_result(1)%Ariv_abund_CEL = arivCELabund
-        if(arvCELabund >0) iteration_result(1)%Arv_abund_CEL = arvCELabund
-        if(ArabundCEL > 0) iteration_result(1)%Ar_abund_CEL = ArabundCEL
+        iteration_result(1)%Ariii_abund_CEL = ariiiCELabund
+        iteration_result(1)%Ariv_abund_CEL = arivCELabund
+        iteration_result(1)%Arv_abund_CEL = arvCELabund
+        iteration_result(1)%Ar_abund_CEL = ArabundCEL
 !sulphur
-        if(siiCELabund >0) iteration_result(1)%Sii_abund_CEL = siiCELabund
-        if(siiiCELabund >0) iteration_result(1)%Siii_abund_CEL = siiiCELabund
-        if(SabundCEL > 0) iteration_result(1)%S_abund_CEL = SabundCEL
+        iteration_result(1)%Sii_abund_CEL = siiCELabund
+        iteration_result(1)%Siii_abund_CEL = siiiCELabund
+        iteration_result(1)%S_abund_CEL = SabundCEL
 !chlorine
-        if(cliiiCELabund >0) iteration_result(1)%Cliii_abund_CEL = cliiiCELabund
-        if(ClabundCEL > 0) iteration_result(1)%Cl_abund_CEL = ClabundCEL
+        iteration_result(1)%Cliii_abund_CEL = cliiiCELabund
+        iteration_result(1)%Cl_abund_CEL = ClabundCEL
 
 !ORLs
-        if(Hetotabund > 0) iteration_result(1)%He_abund_ORL = Hetotabund 
-        if(CabundRL > 0) iteration_result(1)%C_abund_ORL = CabundRL 
-        if(NabundRL > 0) iteration_result(1)%N_abund_ORL = NabundRL 
-        if(OabundRL > 0) iteration_result(1)%O_abund_ORL = OabundRL 
-        if(NeabundRL > 0) iteration_result(1)%Ne_abund_ORL = NeabundRL 
+        iteration_result(1)%He_abund_ORL = Hetotabund 
+        iteration_result(1)%C_abund_ORL = CabundRL 
+        iteration_result(1)%N_abund_ORL = NabundRL 
+        iteration_result(1)%O_abund_ORL = OabundRL 
+        iteration_result(1)%Ne_abund_ORL = NeabundRL 
 
 !Strong line methods
 
@@ -1643,17 +1643,17 @@ endif
     adfNe = 0.0
   endif
 
-if(adfo2plus >0) iteration_result(1)%adf_o2plus = adfo2plus
-if(adfO>0) iteration_result(1)%adf_O = adfO
+iteration_result(1)%adf_o2plus = adfo2plus
+iteration_result(1)%adf_O = adfO
 
-if(adfn2plus>0) iteration_result(1)%adf_n2plus = adfn2plus
-if(adfn>0) iteration_result(1)%adf_n = adfn
+iteration_result(1)%adf_n2plus = adfn2plus
+iteration_result(1)%adf_n = adfn
 
-if(adfc2plus>0) iteration_result(1)%adf_c2plus = adfc2plus
-if(adfc>0) iteration_result(1)%adf_c = adfc
+iteration_result(1)%adf_c2plus = adfc2plus
+iteration_result(1)%adf_c = adfc
 
-if(adfne2plus>0) iteration_result(1)%adf_ne2plus = adfne2plus
-if(adfne>0) iteration_result(1)%adf_ne = adfne
+iteration_result(1)%adf_ne2plus = adfne2plus
+iteration_result(1)%adf_ne = adfne
 
 
 contains
