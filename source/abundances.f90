@@ -1407,6 +1407,9 @@ iteration_result(1)%high_temp = hightemp
      elseif (ciiCELabund .ge. 1e-20 .and. ciiiCELabund .ge. 1e-20 .and. civCELabund .ge. 1e-20 .and. heiiabund .ge. 1e-20 .and. (nivCELabund .lt. 1e-20 .or. nvCELabund .lt. 1e-20)) then !final case i think.
         CELicfC = ((oiiCELabund + oiiiCELabund)/oiiiCELabund)*((heiiabund + heiabund)*heiabund)**(1./3.) !A25
         CabundCEL = CELicfC * (ciiCELabund + ciiiCELabund + civCELabund) !A26
+     else
+        CabundCEL = 0.D0 ! nothing at all seen
+        CELicfC = 1.0
      endif
 
 ! Neon - complete
