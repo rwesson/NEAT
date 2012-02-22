@@ -305,37 +305,37 @@ program neat
                 write (*,702) "cii_abund_CEL: ",iteration_result(1)%cii_abund_CEL
                 write (*,702) "ciii_abund_CEL: ",iteration_result(1)%ciii_abund_CEL
                 write (*,702) "civ_abund_CEL: ",iteration_result(1)%civ_abund_CEL
-                write (*,702) "C_icf_CEL: ", iteration_result(1)%C_icf_CEL
+                write (*,704) "C_icf_CEL: ", iteration_result(1)%C_icf_CEL
                 write (*,702) "C_abund_CEL: ",iteration_result(1)%C_abund_CEL
                 write (*,702) "Nii_abund_CEL: ",iteration_result(1)%Nii_abund_CEL
                 write (*,702) "Niii_abund_CEL: ",iteration_result(1)%Niii_abund_CEL
                 write (*,702) "Niv_abund_CEL: ",iteration_result(1)%Niv_abund_CEL
                 write (*,702) "Nv_abund_CEL: ",iteration_result(1)%Nv_abund_CEL
-                write (*,702) "N_icf_CEL: ", iteration_result(1)%N_icf_CEL
+                write (*,704) "N_icf_CEL: ", iteration_result(1)%N_icf_CEL
                 write (*,702) "N_abund_CEL: ",iteration_result(1)%N_abund_CEL
                 write (*,702) "NO_abund_CEL: ",iteration_result(1)%NO_abund_CEL
                 write (*,702) "Oii_abund_CEL: ",iteration_result(1)%Oii_abund_CEL
                 write (*,702) "Oiii_abund_CEL: ",iteration_result(1)%Oiii_abund_CEL
                 write (*,702) "Oiv_abund_CEL: ",iteration_result(1)%Oiv_abund_CEL
-                write (*,702) "O_icf_CEL: ", iteration_result(1)%O_icf_CEL
+                write (*,704) "O_icf_CEL: ", iteration_result(1)%O_icf_CEL
                 write (*,702) "O_abund_CEL: ",iteration_result(1)%O_abund_CEL
                 write (*,702) "Neii_abund_CEL: ",iteration_result(1)%Neii_abund_CEL
                 write (*,702) "Neiii_abund_CEL: ",iteration_result(1)%Neiii_abund_CEL
                 write (*,702) "Neiv_abund_CEL: ",iteration_result(1)%Neiv_abund_CEL
                 write (*,702) "Nev_abund_CEL: ",iteration_result(1)%Nev_abund_CEL
-                write (*,702) "Ne_icf_CEL: ", iteration_result(1)%Ne_icf_CEL
+                write (*,704) "Ne_icf_CEL: ", iteration_result(1)%Ne_icf_CEL
                 write (*,702) "Ne_abund_CEL: ",iteration_result(1)%Ne_abund_CEL
                 write (*,702) "Ariii_abund_CEL: ",iteration_result(1)%Ariii_abund_CEL
                 write (*,702) "Ariv_abund_CEL: ",iteration_result(1)%Ariv_abund_CEL
                 write (*,702) "Arv_abund_CEL: ",iteration_result(1)%Arv_abund_CEL
-                write (*,702) "Ar_icf_CEL: ", iteration_result(1)%Ar_icf_CEL
+                write (*,704) "Ar_icf_CEL: ", iteration_result(1)%Ar_icf_CEL
                 write (*,702) "Ar_abund_CEL: ",iteration_result(1)%Ar_abund_CEL
                 write (*,702) "Sii_abund_CEL: ",iteration_result(1)%Sii_abund_CEL
                 write (*,702) "Siii_abund_CEL: ",iteration_result(1)%Siii_abund_CEL
-                write (*,702) "S_icf_CEL: ", iteration_result(1)%S_icf_CEL
+                write (*,704) "S_icf_CEL: ", iteration_result(1)%S_icf_CEL
                 write (*,702) "S_abund_CEL: ",iteration_result(1)%S_abund_CEL
                 write (*,702) "Cliii_abund_CEL: ",iteration_result(1)%Cliii_abund_CEL
-                write (*,702) "Cl_icf_CEL: ", iteration_result(1)%Cl_icf_CEL
+                write (*,704) "Cl_icf_CEL: ", iteration_result(1)%Cl_icf_CEL
                 write (*,702) "Cl_abund_CEL: ",iteration_result(1)%Cl_abund_CEL
                 print *
                 print *,"Recombination lines"
@@ -346,17 +346,17 @@ program neat
                 write (*,702) "He_abund_ORL: ",iteration_result(1)%He_abund_ORL
                 write (*,702) "Cii_abund_ORL: ",iteration_result(1)%Cii_abund_ORL
                 write (*,702) "Ciii_abund_ORL: ",iteration_result(1)%Ciii_abund_ORL
-                write (*,702) "C_icf_ORL: ", iteration_result(1)%C_icf_ORL
+                write (*,704) "C_icf_ORL: ", iteration_result(1)%C_icf_ORL
                 write (*,702) "C_abund_ORL: ",iteration_result(1)%C_abund_ORL
                 write (*,702) "Nii_abund_ORL: ",iteration_result(1)%Nii_abund_ORL
                 write (*,702) "Niii_abund_ORL: ",iteration_result(1)%Niii_abund_ORL
-                write (*,702) "N_icf_ORL: ", iteration_result(1)%N_icf_ORL
+                write (*,704) "N_icf_ORL: ", iteration_result(1)%N_icf_ORL
                 write (*,702) "N_abund_ORL: ",iteration_result(1)%N_abund_ORL
                 write (*,702) "Oii_abund_ORL: ",iteration_result(1)%Oii_abund_ORL
-                write (*,702) "O_icf_ORL: ", iteration_result(1)%O_icf_ORL
+                write (*,704) "O_icf_ORL: ", iteration_result(1)%O_icf_ORL
                 write (*,702) "O_abund_ORL: ",iteration_result(1)%O_abund_ORL
                 write (*,702) "Neii_abund_ORL: ",iteration_result(1)%Neii_abund_ORL
-                write (*,702) "Ne_icf_ORL: ", iteration_result(1)%Ne_icf_ORL
+                write (*,704) "Ne_icf_ORL: ", iteration_result(1)%Ne_icf_ORL
                 write (*,702) "Ne_abund_ORL: ",iteration_result(1)%Ne_abund_ORL
                 print *
                 print *,"Strong line methods"
@@ -393,8 +393,11 @@ program neat
 
                 !main loop
 
+                print *
+                print "(X,A,F5.3,A)","Starting calculations.  This should take around ",(dble(runs)*0.2)/60," minutes on a single processor"
+                print *,"Completed ",0,"%"
                 DO I=1,runs 
-if ( (10.0*dble(i)/dble(runs)) == int(10*i/runs) ) print *,"Completed ",100*i/runs,"%"
+                         if ( (10.0*dble(i)/dble(runs)) == int(10*i/runs) ) print *,"Completed ",100*i/runs,"%"
 !                        print*, "iteration ", i, "of", runs 
 
                         call randomizer(linelist, listlength, R)
@@ -591,7 +594,8 @@ if ( (10.0*dble(i)/dble(runs)) == int(10*i/runs) ) print *,"Completed ",100*i/ru
                 call qsort(all_results%O_Ar3O3)
                 call qsort(all_results%O_S3O3)
 
-print *, "Sorted arrays.  Now writing to file"
+print *, "Sorted arrays.  Now writing to files"
+print *
 
                 do i=1,runs
                     write(unit = 841,FMT=*) all_results(i)%NC_abund_CEL
@@ -703,7 +707,7 @@ print *,"Diagnostics"
 print *,"==========="
 print *
 711 format (X,3(A,I5)) ! diagnostic format
-712 format (X,A,I5)! diagnostic format 2 
+
 !low densities
 
                 quantity_result = all_results%oii_density
@@ -843,7 +847,7 @@ print *,"========================================"
 print *
 
 713 format (X,3(A,ES10.2)) ! abundances formats
-714 format (X,A,ES10.2)      ! abundances formats
+
 
                 quantity_result = all_results%NC_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
@@ -1024,7 +1028,7 @@ print *,"============================="
 print *
 
 715 format (X,3(A,F5.2))
-716 format (X,A,F5.2)
+
 
                 quantity_result = all_results%adf_o2plus
                 call get_uncertainties(quantity_result, uncertainty_array)
