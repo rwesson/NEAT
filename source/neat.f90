@@ -393,7 +393,7 @@ program neat
                 !main loop
 
                 print *
-                print "(X,A,F5.3,A)","Starting calculations.  This should take around ",(dble(runs)*0.2)/60," minutes on a single processor"
+                print "(X,A,F6.3,A)","Starting calculations.  This should take around ",(dble(runs)*0.25)/60," minutes on a single processor"
                 print *,"Completed ",0,"%"
                 DO I=1,runs 
                          if ( (10.0*dble(i)/dble(runs)) == int(10*i/runs) ) print *,"Completed ",100*i/runs,"%"
