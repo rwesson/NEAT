@@ -1,5 +1,5 @@
 
-subroutine abundances(linelist, switch_ext, listlength, filename, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array)
+subroutine abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array)
 use mod_abundmaths
 use mod_abundtypes
 use mod_equib
@@ -14,8 +14,7 @@ implicit none
         INTEGER :: count, Iint, i, j, ion_no1, ion_no2, ion_no3, ion_no4, ion_no5, ion_no6 
         integer, intent(in) :: listlength
         TYPE(line), dimension(listlength) :: linelist, linelist_orig 
-        CHARACTER :: switch_ext !switch for extinction laws
-        CHARACTER*80 :: filename
+        CHARACTER :: switch_ext !switch for extinction laws 
         type(resultarray), dimension(1) :: iteration_result
         double precision, dimension(6), intent(in) :: diagnostic_array
 

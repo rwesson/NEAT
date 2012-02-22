@@ -58,7 +58,6 @@ program neat
 
         !binning
 
-        double precision :: mode
         double precision, dimension(3) :: uncertainty_array
 
         !CEL array
@@ -241,7 +240,7 @@ program neat
         !now check number of iterations.  If 1, line list is fine as is.  If more than one, randomize the fluxes
 
         if(runs == 1)then !calculates abundances without uncertainties
-                call abundances(linelist, switch_ext, listlength, filename, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array)
+                call abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array)
 
                 !generate outputs
 
@@ -402,7 +401,7 @@ program neat
 
                         call randomizer(linelist, listlength, R)
                         R=3.1 ! no randomisation
-                        call abundances(linelist, switch_ext, listlength, filename, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array)
+                        call abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array)
                         linelist = linelist_original
                         all_results(i)=iteration_result(1)
                 END DO
@@ -692,7 +691,7 @@ print *
                 DO I=841,897
                         CLOSE(unit=I)
                 END DO
-! get median +- pseudo gaussian 34.1% and mode
+! get median +- pseudo gaussian 34.1% 
                 allocate (quantity_result(runs))
 !cHb
                 print *,"Extinction"
