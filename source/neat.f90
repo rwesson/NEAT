@@ -29,11 +29,6 @@ program neat
         CHARACTER :: switch_ext !switch for extinction laws
         INTEGER :: I, runs, Narg !runs = number of runs for randomiser
 
-        !time variables
-
-        character*8 :: date
-        character*10 :: time
-
         !input options
 
         CHARACTER*2048, DIMENSION(:), allocatable :: options
@@ -176,13 +171,12 @@ program neat
 
         !first, read in the line list
 
-        print *,"Initialising"
-        print *,"------------"
+        print *,"NEAT, the Nebular Empirical Analysis Tool"
+        print *,"-----------------------------------------"
 
-        call DATE_AND_TIME(date,time)
-        print *
-        print *,"Start time:   ",time(1:2),":",time(3:4),":",time(5:10)," on ",date(7:8),"/",date(5:6),"/",date(1:4)
-        print *,"Command line: ",trim(commandline)
+        print * 
+        print *,gettime(),": starting code"
+        print *,gettime(),": command line: ",trim(commandline)
 
         deallocate(options)
 
@@ -208,29 +202,29 @@ program neat
         END DO
         CLOSE(199)
 
-        110 PRINT "(A9,I4,A15,I4,A9)", "Read in ", I," lines (out of ",listlength," in file)"
+        110 PRINT "(X,A9,A11,I4,A15,I4,A9)", gettime(),": read in ", I," lines (out of ",listlength," in file)"
 
         if (I .ne. listlength) then
-                print *,"Line list reading failed"
+                print *,gettime(),": line list reading failed"
                 print *,"This can happen if it doesn't have three columns"
                 stop
         endif
 
         if(linelist(1)%wavelength == 0)then
-                PRINT*, "Cheese shop error: no inputs"
+                PRINT*, gettime(),": cheese shop error - no inputs"
                 STOP
         endif
 
         if (switch_ext == "S") then
-                print *,"Using Howarth (1983) galactic law"
+                print *,gettime(), ": using Howarth (1983) galactic law"
         elseif (switch_ext == "H") then
-                print *,"Using Howarth (1983) LMC law"
+                print *,gettime(), ": using Howarth (1983) LMC law"
         elseif (switch_ext == "C") then
-                print *,"Using CCM (1989) galactic law"
+                print *,gettime(), ": using CCM (1989) galactic law"
         elseif (switch_ext == "P") then
-                print *,"Using Prevot et al. (1984) SMC law"
+                print *,gettime(), ": using Prevot et al. (1984) SMC law"
         elseif (switch_ext == "F") then
-                print *,"Using Fitzpatrick (1990) galactic law"
+                print *,gettime(), ": using Fitzpatrick (1990) galactic law"
         endif
 
 ! read the CEL data
@@ -393,10 +387,10 @@ program neat
                 !main loop
 
                 print *
-                print "(X,A,F6.3,A)","Starting calculations.  This should take around ",(dble(runs)*0.25)/60," minutes on a single processor"
-                print *,"Completed ",0,"%"
+                print "(X,A9,X,A)",gettime(), ": starting Monte Carlo calculations"
+                print *,gettime(), ": completed ",0,"%"
                 DO I=1,runs 
-                         if ( (10.0*dble(i)/dble(runs)) == int(10*i/runs) ) print *,"Completed ",100*i/runs,"%"
+                         if ( (10.0*dble(i)/dble(runs)) == int(10*i/runs) ) print *,gettime(),": completed ",100*i/runs,"%"
 !                        print*, "iteration ", i, "of", runs 
 
                         call randomizer(linelist, listlength, R)
@@ -407,7 +401,7 @@ program neat
                 END DO
 
                 ! now process outputs
-                print *, "Processing results..."
+                print *, gettime(), ": processing results"
 
                 OPEN(841, FILE=trim(filename)//"_NC_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
                 OPEN(842, FILE=trim(filename)//"_Cii_abund_CEL", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
@@ -593,7 +587,7 @@ program neat
                 call qsort(all_results%O_Ar3O3)
                 call qsort(all_results%O_S3O3)
 
-print *, "Sorted arrays.  Now writing to files"
+print *, gettime(), ": sorted arrays.  Now writing to files"
 print *
 
                 do i=1,runs
@@ -1062,12 +1056,11 @@ print *
                 print 715,"adf(Ne/H):    ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
         else
-                print*, "I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."
+                print*, gettime(), ": I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."
         endif
 
-        call DATE_AND_TIME(date,time)
         print *
-        print *,"End time:   ",time(1:2),":",time(3:4),":",time(5:10)," on ",date(7:8),"/",date(5:6),"/",date(1:4)
+        print *,gettime(),": Finished."
 
 contains
 
@@ -1257,5 +1250,15 @@ else !all results are identical
 endif
 
 end subroutine get_uncertainties
+
+character*10 function gettime()
+
+character*10 :: time
+
+  call DATE_AND_TIME(TIME=time)
+  gettime = time(1:2)//":"//time(3:4)//":"//time(5:6) 
+  return
+
+end function gettime
 
 end program
