@@ -238,142 +238,151 @@ program neat
 
                 !generate outputs
 
+                print *,gettime(),": writing results to file ",trim(filename),".results"
+                OPEN(650, FILE=trim(filename)//".results", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+
                 700 FORMAT(X,A20,F5.3) !extinction format
                 701 FORMAT(X,A20,I5) !diagnostics format
                 702 FORMAT(X,A20,ES14.3) !abundances format
                 703 FORMAT(X,A20,F5.2) !strong line format
                 704 FORMAT(X,A20,F5.2) !adf format
 
-                print *
-                print *,"Extinction"
-                print *,"=========="
-                print *
-                write (*,700) "mean_cHb: ",iteration_result(1)%mean_cHb
-                print *
-                print *,"Diagnostics"
-                print *,"==========="
-                print *
-                write (*,701) "OII_density: ",INT(iteration_result(1)%OII_density)
-                write (*,701) "SII_density: ",INT(iteration_result(1)%SII_density)
-                write (*,701) "low_density: ",INT(iteration_result(1)%low_density)
-                print *
-                write (*,701) "OII_temp: ",INT(iteration_result(1)%OII_temp)
-                write (*,701) "NII_temp: ",INT(iteration_result(1)%NII_temp)
-                write (*,701) "SII_temp: ",INT(iteration_result(1)%SII_temp)
-                write (*,701) "OI_temp: ",INT(iteration_result(1)%OI_temp)
-                write (*,701) "CI_temp: ",INT(iteration_result(1)%CI_temp)
-                write (*,701) "low_temp: ",INT(iteration_result(1)%low_temp)
-                print *
-                write (*,701) "ClIII_density: ",INT(iteration_result(1)%ClIII_density)
-                write (*,701) "ArIV_density: ",INT(iteration_result(1)%ArIV_density)
-                write (*,701) "CIII_density: ",INT(iteration_result(1)%CIII_density)
-                write (*,701) "OIII_IR_density: ",INT(iteration_result(1)%OIII_IR_density)
-                write (*,701) "SIII_IR_density: ",INT(iteration_result(1)%SIII_IR_density)
-                write (*,701) "ArIII_IR_density: ",INT(iteration_result(1)%ArIII_IR_density)
-                write (*,701) "NeIII_IR_density: ",INT(iteration_result(1)%NeIII_IR_density)
-                write (*,701) "med_density: ",INT(iteration_result(1)%med_density)
-                print *
-                write (*,701) "OIII_temp: ",INT(iteration_result(1)%OIII_temp)
-                write (*,701) "OIII_IR_temp: ",INT(iteration_result(1)%OIII_IR_temp)
-                write (*,701) "NeIII_temp: ",INT(iteration_result(1)%NeIII_temp)
-                write (*,701) "NeIII_IR_temp: ",INT(iteration_result(1)%NeIII_IR_temp)
-                write (*,701) "ArIII_temp: ",INT(iteration_result(1)%ArIII_temp)
-                write (*,701) "SIII_temp: ",INT(iteration_result(1)%SIII_temp)
-                write (*,701) "med_temp: ",INT(iteration_result(1)%med_temp)
-                print *
-                write (*,701) "NeIV_density: ",INT(iteration_result(1)%NeIV_density)
-                write (*,701) "high_density: ",INT(iteration_result(1)%high_density)
-                print *
-                write (*,701) "ArV_temp: ",INT(iteration_result(1)%ArV_temp)
-                write (*,701) "NeV_temp: ",INT(iteration_result(1)%NeV_temp)
-                write (*,701) "high_temp: ",INT(iteration_result(1)%high_temp)
-                print *
-                print *,"Abundances"
-                print *,"=========="
-                print *
-                print *,"Collisionally excited lines"
-                print *,"-------------------"
-                print *
-                write (*,702) "NC_abund_CEL: ",iteration_result(1)%NC_abund_CEL
-                write (*,702) "cii_abund_CEL: ",iteration_result(1)%cii_abund_CEL
-                write (*,702) "ciii_abund_CEL: ",iteration_result(1)%ciii_abund_CEL
-                write (*,702) "civ_abund_CEL: ",iteration_result(1)%civ_abund_CEL
-                write (*,704) "C_icf_CEL: ", iteration_result(1)%C_icf_CEL
-                write (*,702) "C_abund_CEL: ",iteration_result(1)%C_abund_CEL
-                write (*,702) "Nii_abund_CEL: ",iteration_result(1)%Nii_abund_CEL
-                write (*,702) "Niii_abund_CEL: ",iteration_result(1)%Niii_abund_CEL
-                write (*,702) "Niv_abund_CEL: ",iteration_result(1)%Niv_abund_CEL
-                write (*,702) "Nv_abund_CEL: ",iteration_result(1)%Nv_abund_CEL
-                write (*,704) "N_icf_CEL: ", iteration_result(1)%N_icf_CEL
-                write (*,702) "N_abund_CEL: ",iteration_result(1)%N_abund_CEL
-                write (*,702) "NO_abund_CEL: ",iteration_result(1)%NO_abund_CEL
-                write (*,702) "Oii_abund_CEL: ",iteration_result(1)%Oii_abund_CEL
-                write (*,702) "Oiii_abund_CEL: ",iteration_result(1)%Oiii_abund_CEL
-                write (*,702) "Oiv_abund_CEL: ",iteration_result(1)%Oiv_abund_CEL
-                write (*,704) "O_icf_CEL: ", iteration_result(1)%O_icf_CEL
-                write (*,702) "O_abund_CEL: ",iteration_result(1)%O_abund_CEL
-                write (*,702) "Neii_abund_CEL: ",iteration_result(1)%Neii_abund_CEL
-                write (*,702) "Neiii_abund_CEL: ",iteration_result(1)%Neiii_abund_CEL
-                write (*,702) "Neiv_abund_CEL: ",iteration_result(1)%Neiv_abund_CEL
-                write (*,702) "Nev_abund_CEL: ",iteration_result(1)%Nev_abund_CEL
-                write (*,704) "Ne_icf_CEL: ", iteration_result(1)%Ne_icf_CEL
-                write (*,702) "Ne_abund_CEL: ",iteration_result(1)%Ne_abund_CEL
-                write (*,702) "Ariii_abund_CEL: ",iteration_result(1)%Ariii_abund_CEL
-                write (*,702) "Ariv_abund_CEL: ",iteration_result(1)%Ariv_abund_CEL
-                write (*,702) "Arv_abund_CEL: ",iteration_result(1)%Arv_abund_CEL
-                write (*,704) "Ar_icf_CEL: ", iteration_result(1)%Ar_icf_CEL
-                write (*,702) "Ar_abund_CEL: ",iteration_result(1)%Ar_abund_CEL
-                write (*,702) "Sii_abund_CEL: ",iteration_result(1)%Sii_abund_CEL
-                write (*,702) "Siii_abund_CEL: ",iteration_result(1)%Siii_abund_CEL
-                write (*,704) "S_icf_CEL: ", iteration_result(1)%S_icf_CEL
-                write (*,702) "S_abund_CEL: ",iteration_result(1)%S_abund_CEL
-                write (*,702) "Cliii_abund_CEL: ",iteration_result(1)%Cliii_abund_CEL
-                write (*,704) "Cl_icf_CEL: ", iteration_result(1)%Cl_icf_CEL
-                write (*,702) "Cl_abund_CEL: ",iteration_result(1)%Cl_abund_CEL
-                print *
-                print *,"Recombination lines"
-                print *,"-------------------"
-                print *
-                write (*,702) "Hei_abund_ORL: ",iteration_result(1)%Hei_abund_ORL
-                write (*,702) "Heii_abund_ORL: ",iteration_result(1)%Heii_abund_ORL
-                write (*,702) "He_abund_ORL: ",iteration_result(1)%He_abund_ORL
-                write (*,702) "Cii_abund_ORL: ",iteration_result(1)%Cii_abund_ORL
-                write (*,702) "Ciii_abund_ORL: ",iteration_result(1)%Ciii_abund_ORL
-                write (*,704) "C_icf_ORL: ", iteration_result(1)%C_icf_ORL
-                write (*,702) "C_abund_ORL: ",iteration_result(1)%C_abund_ORL
-                write (*,702) "Nii_abund_ORL: ",iteration_result(1)%Nii_abund_ORL
-                write (*,702) "Niii_abund_ORL: ",iteration_result(1)%Niii_abund_ORL
-                write (*,704) "N_icf_ORL: ", iteration_result(1)%N_icf_ORL
-                write (*,702) "N_abund_ORL: ",iteration_result(1)%N_abund_ORL
-                write (*,702) "Oii_abund_ORL: ",iteration_result(1)%Oii_abund_ORL
-                write (*,704) "O_icf_ORL: ", iteration_result(1)%O_icf_ORL
-                write (*,702) "O_abund_ORL: ",iteration_result(1)%O_abund_ORL
-                write (*,702) "Neii_abund_ORL: ",iteration_result(1)%Neii_abund_ORL
-                write (*,704) "Ne_icf_ORL: ", iteration_result(1)%Ne_icf_ORL
-                write (*,702) "Ne_abund_ORL: ",iteration_result(1)%Ne_abund_ORL
-                print *
-                print *,"Strong line methods"
-                print *,"-------------------"
-                print *
-                write (*,703) "O_R23_upper: ",iteration_result(1)%O_R23_upper
-                write (*,703) "O_R23_lower: ",iteration_result(1)%O_R23_lower
-                write (*,703) "O_N2: ",iteration_result(1)%O_N2
-                write (*,703) "O_O3N2: ",iteration_result(1)%O_O3N2
-                write (*,703) "O_Ar3O3: ",iteration_result(1)%O_Ar3O3
-                write (*,703) "O_S3O3: ",iteration_result(1)%O_S3O3
-                print *
-                print *,"Abundance discrepancy factors"
-                print *,"-----------------------------"
-                print *
-                write (*,704) "adf_O: ",iteration_result(1)%adf_O
-                write (*,704) "adf_O2plus: ",iteration_result(1)%adf_O2plus
-                write (*,704) "adf_N: ",iteration_result(1)%adf_N
-                write (*,704) "adf_N2plus: ",iteration_result(1)%adf_N2plus
-                write (*,704) "adf_C: ",iteration_result(1)%adf_C
-                write (*,704) "adf_C2plus: ",iteration_result(1)%adf_C2plus
-                write (*,704) "adf_Ne: ",iteration_result(1)%adf_Ne
-                write (*,704) "adf_Ne2plus : ",iteration_result(1)%adf_Ne2plus
+                write (650,*) "NEAT (nebular empirical analysis tool)"
+                write (650,*) "======================================"
+                write (650,*)
+                write (650,*) "Analysis of file ",trim(filename)
+                write (650,*)
 
+                write (650,*),"Extinction"
+                write (650,*),"=========="
+                write (650,*)
+                write (650,700) "mean_cHb: ",iteration_result(1)%mean_cHb
+                write (650,*)
+                write (650,*),"Diagnostics"
+                write (650,*),"==========="
+                write (650,*)
+                write (650,701) "OII_density: ",INT(iteration_result(1)%OII_density)
+                write (650,701) "SII_density: ",INT(iteration_result(1)%SII_density)
+                write (650,701) "low_density: ",INT(iteration_result(1)%low_density)
+                write (650,*)
+                write (650,701) "OII_temp: ",INT(iteration_result(1)%OII_temp)
+                write (650,701) "NII_temp: ",INT(iteration_result(1)%NII_temp)
+                write (650,701) "SII_temp: ",INT(iteration_result(1)%SII_temp)
+                write (650,701) "OI_temp: ",INT(iteration_result(1)%OI_temp)
+                write (650,701) "CI_temp: ",INT(iteration_result(1)%CI_temp)
+                write (650,701) "low_temp: ",INT(iteration_result(1)%low_temp)
+                write (650,*)
+                write (650,701) "ClIII_density: ",INT(iteration_result(1)%ClIII_density)
+                write (650,701) "ArIV_density: ",INT(iteration_result(1)%ArIV_density)
+                write (650,701) "CIII_density: ",INT(iteration_result(1)%CIII_density)
+                write (650,701) "OIII_IR_density: ",INT(iteration_result(1)%OIII_IR_density)
+                write (650,701) "SIII_IR_density: ",INT(iteration_result(1)%SIII_IR_density)
+                write (650,701) "ArIII_IR_density: ",INT(iteration_result(1)%ArIII_IR_density)
+                write (650,701) "NeIII_IR_density: ",INT(iteration_result(1)%NeIII_IR_density)
+                write (650,701) "med_density: ",INT(iteration_result(1)%med_density)
+                write (650,*)
+                write (650,701) "OIII_temp: ",INT(iteration_result(1)%OIII_temp)
+                write (650,701) "OIII_IR_temp: ",INT(iteration_result(1)%OIII_IR_temp)
+                write (650,701) "NeIII_temp: ",INT(iteration_result(1)%NeIII_temp)
+                write (650,701) "NeIII_IR_temp: ",INT(iteration_result(1)%NeIII_IR_temp)
+                write (650,701) "ArIII_temp: ",INT(iteration_result(1)%ArIII_temp)
+                write (650,701) "SIII_temp: ",INT(iteration_result(1)%SIII_temp)
+                write (650,701) "med_temp: ",INT(iteration_result(1)%med_temp)
+                write (650,*)
+                write (650,701) "NeIV_density: ",INT(iteration_result(1)%NeIV_density)
+                write (650,701) "high_density: ",INT(iteration_result(1)%high_density)
+                write (650,*)
+                write (650,701) "ArV_temp: ",INT(iteration_result(1)%ArV_temp)
+                write (650,701) "NeV_temp: ",INT(iteration_result(1)%NeV_temp)
+                write (650,701) "high_temp: ",INT(iteration_result(1)%high_temp)
+                write (650,*)
+                write (650,*),"Abundances"
+                write (650,*),"=========="
+                write (650,*)
+                write (650,*),"Collisionally excited lines"
+                write (650,*),"-------------------"
+                write (650,*)
+                write (650,702) "NC_abund_CEL: ",iteration_result(1)%NC_abund_CEL
+                write (650,702) "cii_abund_CEL: ",iteration_result(1)%cii_abund_CEL
+                write (650,702) "ciii_abund_CEL: ",iteration_result(1)%ciii_abund_CEL
+                write (650,702) "civ_abund_CEL: ",iteration_result(1)%civ_abund_CEL
+                write (650,704) "C_icf_CEL: ", iteration_result(1)%C_icf_CEL
+                write (650,702) "C_abund_CEL: ",iteration_result(1)%C_abund_CEL
+                write (650,702) "Nii_abund_CEL: ",iteration_result(1)%Nii_abund_CEL
+                write (650,702) "Niii_abund_CEL: ",iteration_result(1)%Niii_abund_CEL
+                write (650,702) "Niv_abund_CEL: ",iteration_result(1)%Niv_abund_CEL
+                write (650,702) "Nv_abund_CEL: ",iteration_result(1)%Nv_abund_CEL
+                write (650,704) "N_icf_CEL: ", iteration_result(1)%N_icf_CEL
+                write (650,702) "N_abund_CEL: ",iteration_result(1)%N_abund_CEL
+                write (650,702) "NO_abund_CEL: ",iteration_result(1)%NO_abund_CEL
+                write (650,702) "Oii_abund_CEL: ",iteration_result(1)%Oii_abund_CEL
+                write (650,702) "Oiii_abund_CEL: ",iteration_result(1)%Oiii_abund_CEL
+                write (650,702) "Oiv_abund_CEL: ",iteration_result(1)%Oiv_abund_CEL
+                write (650,704) "O_icf_CEL: ", iteration_result(1)%O_icf_CEL
+                write (650,702) "O_abund_CEL: ",iteration_result(1)%O_abund_CEL
+                write (650,702) "Neii_abund_CEL: ",iteration_result(1)%Neii_abund_CEL
+                write (650,702) "Neiii_abund_CEL: ",iteration_result(1)%Neiii_abund_CEL
+                write (650,702) "Neiv_abund_CEL: ",iteration_result(1)%Neiv_abund_CEL
+                write (650,702) "Nev_abund_CEL: ",iteration_result(1)%Nev_abund_CEL
+                write (650,704) "Ne_icf_CEL: ", iteration_result(1)%Ne_icf_CEL
+                write (650,702) "Ne_abund_CEL: ",iteration_result(1)%Ne_abund_CEL
+                write (650,702) "Ariii_abund_CEL: ",iteration_result(1)%Ariii_abund_CEL
+                write (650,702) "Ariv_abund_CEL: ",iteration_result(1)%Ariv_abund_CEL
+                write (650,702) "Arv_abund_CEL: ",iteration_result(1)%Arv_abund_CEL
+                write (650,704) "Ar_icf_CEL: ", iteration_result(1)%Ar_icf_CEL
+                write (650,702) "Ar_abund_CEL: ",iteration_result(1)%Ar_abund_CEL
+                write (650,702) "Sii_abund_CEL: ",iteration_result(1)%Sii_abund_CEL
+                write (650,702) "Siii_abund_CEL: ",iteration_result(1)%Siii_abund_CEL
+                write (650,704) "S_icf_CEL: ", iteration_result(1)%S_icf_CEL
+                write (650,702) "S_abund_CEL: ",iteration_result(1)%S_abund_CEL
+                write (650,702) "Cliii_abund_CEL: ",iteration_result(1)%Cliii_abund_CEL
+                write (650,704) "Cl_icf_CEL: ", iteration_result(1)%Cl_icf_CEL
+                write (650,702) "Cl_abund_CEL: ",iteration_result(1)%Cl_abund_CEL
+                write (650,*)
+                write (650,*),"Recombination lines"
+                write (650,*),"-------------------"
+                write (650,*)
+                write (650,702) "Hei_abund_ORL: ",iteration_result(1)%Hei_abund_ORL
+                write (650,702) "Heii_abund_ORL: ",iteration_result(1)%Heii_abund_ORL
+                write (650,702) "He_abund_ORL: ",iteration_result(1)%He_abund_ORL
+                write (650,702) "Cii_abund_ORL: ",iteration_result(1)%Cii_abund_ORL
+                write (650,702) "Ciii_abund_ORL: ",iteration_result(1)%Ciii_abund_ORL
+                write (650,704) "C_icf_ORL: ", iteration_result(1)%C_icf_ORL
+                write (650,702) "C_abund_ORL: ",iteration_result(1)%C_abund_ORL
+                write (650,702) "Nii_abund_ORL: ",iteration_result(1)%Nii_abund_ORL
+                write (650,702) "Niii_abund_ORL: ",iteration_result(1)%Niii_abund_ORL
+                write (650,704) "N_icf_ORL: ", iteration_result(1)%N_icf_ORL
+                write (650,702) "N_abund_ORL: ",iteration_result(1)%N_abund_ORL
+                write (650,702) "Oii_abund_ORL: ",iteration_result(1)%Oii_abund_ORL
+                write (650,704) "O_icf_ORL: ", iteration_result(1)%O_icf_ORL
+                write (650,702) "O_abund_ORL: ",iteration_result(1)%O_abund_ORL
+                write (650,702) "Neii_abund_ORL: ",iteration_result(1)%Neii_abund_ORL
+                write (650,704) "Ne_icf_ORL: ", iteration_result(1)%Ne_icf_ORL
+                write (650,702) "Ne_abund_ORL: ",iteration_result(1)%Ne_abund_ORL
+                write (650,*)
+                write (650,*),"Strong line methods"
+                write (650,*),"-------------------"
+                write (650,*)
+                write (650,703) "O_R23_upper: ",iteration_result(1)%O_R23_upper
+                write (650,703) "O_R23_lower: ",iteration_result(1)%O_R23_lower
+                write (650,703) "O_N2: ",iteration_result(1)%O_N2
+                write (650,703) "O_O3N2: ",iteration_result(1)%O_O3N2
+                write (650,703) "O_Ar3O3: ",iteration_result(1)%O_Ar3O3
+                write (650,703) "O_S3O3: ",iteration_result(1)%O_S3O3
+                write (650,*)
+                write (650,*),"Abundance discrepancy factors"
+                write (650,*),"-----------------------------"
+                write (650,*)
+                write (650,704) "adf_O: ",iteration_result(1)%adf_O
+                write (650,704) "adf_O2plus: ",iteration_result(1)%adf_O2plus
+                write (650,704) "adf_N: ",iteration_result(1)%adf_N
+                write (650,704) "adf_N2plus: ",iteration_result(1)%adf_N2plus
+                write (650,704) "adf_C: ",iteration_result(1)%adf_C
+                write (650,704) "adf_C2plus: ",iteration_result(1)%adf_C2plus
+                write (650,704) "adf_Ne: ",iteration_result(1)%adf_Ne
+                write (650,704) "adf_Ne2plus : ",iteration_result(1)%adf_Ne2plus
+
+                close (650)
 
         else if(runs > 1)then
 
@@ -587,8 +596,7 @@ program neat
                 call qsort(all_results%O_Ar3O3)
                 call qsort(all_results%O_S3O3)
 
-print *, gettime(), ": sorted arrays.  Now writing to files"
-print *
+print *, gettime(), ": results processed.  Now writing to files"
 
                 do i=1,runs
                     write(unit = 841,FMT=*) all_results(i)%NC_abund_CEL
@@ -687,373 +695,384 @@ print *
                 END DO
 ! get median +- pseudo gaussian 34.1% 
                 allocate (quantity_result(runs))
+
+                open (650,FILE=trim(filename)//".results", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+
+                write (650,*) "NEAT (nebular empirical analysis tool)"
+                write (650,*) "======================================"
+                write (650,*)
+                write (650,*) "Analysis of file ",trim(filename)
+                write (650,*)
+
 !cHb
-                print *,"Extinction"
-                print *,"=========="
-                print *
+                write (650,*) "Extinction"
+                write (650,*) "=========="
+                write (650,*)
                 quantity_result = all_results%mean_cHb
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print "(X,A,F5.3,A,F5.3,A,F5.3)","c(Hb):  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,"(X,A,F5.3,A,F5.3,A,F5.3)") "c(Hb):  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
-print *
-print *,"Diagnostics"
-print *,"==========="
-print *
+write (650,*)
+write (650,*) "Diagnostics"
+write (650,*) "==========="
+write (650,*)
 711 format (X,3(A,I5)) ! diagnostic format
 
 !low densities
 
                 quantity_result = all_results%oii_density
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"[OII] density: ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "[OII] density: ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%SII_density
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"[SII] density:  ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "[SII] density:  ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%low_density
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"low density  : ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "low density  : ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
 !low temperatures
-print *
+write (650,*)
 
                 quantity_result = all_results%oii_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"[OII] temperature: ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "[OII] temperature: ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%SII_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"[SII] temperature:  ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "[SII] temperature:  ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%NII_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"[NII] temperature: ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "[NII] temperature: ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%OI_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"[OI] temperature:  ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "[OI] temperature:  ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%CI_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"[CI] temperature:   ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "[CI] temperature:   ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%low_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"low temperature  : ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "low temperature  : ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
 !medium density
-print *
+write (650,*)
 
                 quantity_result = all_results%cliii_density
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"[ClIII] density:    ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "[ClIII] density:    ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%ArIV_density
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"[ArIV] density:      ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "[ArIV] density:      ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%CIII_density
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"[CIII] density:     ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "[CIII] density:     ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%OIII_IR_density
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"[OIII] IR density:  ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "[OIII] IR density:  ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%SIII_IR_density
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"[SIII] IRdensity:    ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "[SIII] IRdensity:    ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%ArIII_IR_density
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"[ArIII] IR density: ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "[ArIII] IR density: ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%NeIII_IR_density
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"[NeIII] IR density: ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "[NeIII] IR density: ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%med_density
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"medium density:      ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "medium density:      ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
 !medium temperature
-print *
+write (650,*)
 
                 quantity_result = all_results%OIII_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"[OIII] temperature:      ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "[OIII] temperature:      ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%OIII_IR_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"[OIII] IR temperature:   ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "[OIII] IR temperature:   ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%NeIII_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"[NeIII] temperature:     ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "[NeIII] temperature:     ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%NeIII_IR_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"[NeIII] IR temperature: ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "[NeIII] IR temperature: ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%ArIII_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"[ArIII] temperature:    ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "[ArIII] temperature:    ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%SIII_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"[SIII] temperature:      ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "[SIII] temperature:      ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%med_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"medium temperature:     ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "medium temperature:     ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
 !high density
-print *
+write (650,*)
 
                 quantity_result = all_results%neiv_density
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"[NeIV] density:  ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "[NeIV] density:  ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%high_density
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"high density:     ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "high density:     ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
 !high temperature
 
                 quantity_result = all_results%ArV_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"[ArV] temperature: ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "[ArV] temperature: ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%NeV_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"[NeV] temperature: ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "[NeV] temperature: ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
                 quantity_result = all_results%high_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 711,"High temperature:   ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                write (650,711) "High temperature:   ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
 
 !CEL abundances
-print *
-print *,"Abundances (collisionally excited lines)"
-print *,"========================================"
-print *
+write (650,*)
+write (650,*) "Abundances (collisionally excited lines)"
+write (650,*) "========================================"
+write (650,*)
 
 713 format (X,3(A,ES10.2)) ! abundances formats
 
 
                 quantity_result = all_results%NC_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"[CI] abundance: ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "[CI] abundance: ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%cii_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"[CII] abundance:  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "[CII] abundance:  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%ciii_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"[CIII] abundance:   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "[CIII] abundance:   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%civ_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"[CIV] abundance  : ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "[CIV] abundance  : ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%C_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"C/H abundance: ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "C/H abundance: ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%nii_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"[NII] abundance:  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "[NII] abundance:  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%niii_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"[NIII] abundance:   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "[NIII] abundance:   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%niv_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"[NIV] abundance  : ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "[NIV] abundance  : ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%nv_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"[NV] abundance: ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "[NV] abundance: ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%N_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"N/H abundance:  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "N/H abundance:  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%NO_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"[OI] abundance:   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "[OI] abundance:   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%Oii_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"[OII] abundance  : ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "[OII] abundance  : ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%Oiii_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"[OIII] abundance: ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "[OIII] abundance: ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%Oiv_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"[OIV] abundance:  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "[OIV] abundance:  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%O_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"O/H abundance:   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "O/H abundance:   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
 !                quantity_result = all_results%NeII_abund_CEL
 !                call get_uncertainties(quantity_result, uncertainty_array)
-!                print 713,"[NeII] abundance  : ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+!                write (650,713) "[NeII] abundance  : ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 !
                 quantity_result = all_results%NeIII_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"[NeIII] abundance: ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "[NeIII] abundance: ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%NeIV_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"[NeIV] abundance:  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "[NeIV] abundance:  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%NeV_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"[NeV] abundance:   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "[NeV] abundance:   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%Ne_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"Ne/H abundance  : ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "Ne/H abundance  : ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%ArIII_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"[ArIII] abundance: ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "[ArIII] abundance: ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%ArIV_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"[ArIV] abundance:  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "[ArIV] abundance:  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%ArV_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"[ArV] abundance:   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "[ArV] abundance:   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%Ar_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"Ar/H abundance  : ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "Ar/H abundance  : ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%SII_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"[SII] abundance: ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "[SII] abundance: ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%SIII_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"[SIII] abundance:  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "[SIII] abundance:  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%S_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"S/H abundance:   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "S/H abundance:   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%ClIII_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"[ClIII] abundance  : ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "[ClIII] abundance  : ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%Cl_abund_CEL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"Cl/H abundance: ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "Cl/H abundance: ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
 !RL abundances
-print *
-print *,"Abundances (recombination lines)"
-print *,"================================"
-print *
+write (650,*)
+write (650,*) "Abundances (recombination lines)"
+write (650,*) "================================"
+write (650,*)
 
                 quantity_result = all_results%He_abund_ORL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"He/H abundance:  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "He/H abundance:  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%C_abund_ORL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"C/H abundance:    ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "C/H abundance:    ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%N_abund_ORL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"N/H abundance:  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "N/H abundance:  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%O_abund_ORL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"O/H abundance:   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "O/H abundance:   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%Ne_abund_ORL
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"Ne/H abundance: ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "Ne/H abundance: ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
 !strong line abundances
-print *
-print *,"Abundances (strong line methods)"
-print *,"================================"
-print *
+write (650,*)
+write (650,*) "Abundances (strong line methods)"
+write (650,*) "================================"
+write (650,*)
 
                 quantity_result = all_results%O_R23_upper
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"O/H (R23 upper): ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "O/H (R23 upper): ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%O_R23_lower
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"O/H (R23 lower):  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "O/H (R23 lower):  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%O_N2
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"O/H (N2):       ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "O/H (N2):       ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%O_O3N2
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"O/H (O3N2):      ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "O/H (O3N2):      ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%O_Ar3O3
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"O/H (Ar3O3):    ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "O/H (Ar3O3):    ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%O_S3O3
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 713,"O/H (S3O3):     ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,713) "O/H (S3O3):     ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
 !adfs
-print *
-print *,"Abundance discrepancy factors"
-print *,"============================="
-print *
+write (650,*)
+write (650,*) "Abundance discrepancy factors"
+write (650,*) "============================="
+write (650,*)
 
 715 format (X,3(A,F5.2))
 
 
                 quantity_result = all_results%adf_o2plus
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 715,"adf(O2+/H):   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,715) "adf(O2+/H):   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%adf_o
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 715,"adf(O/H+):     ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,715) "adf(O/H+):     ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%adf_n2plus
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 715,"adf(N2+/H):   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,715) "adf(N2+/H):   ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%adf_n
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 715,"adf(N/H):      ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,715) "adf(N/H):      ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%adf_c2plus
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 715,"adf(C2+/H+):  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,715) "adf(C2+/H+):  ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%adf_c
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 715,"adf(C/H):     ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,715) "adf(C/H):     ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%adf_ne2plus
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 715,"adf(Ne2+/H+): ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,715) "adf(Ne2+/H+): ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%adf_ne
                 call get_uncertainties(quantity_result, uncertainty_array)
-                print 715,"adf(Ne/H):    ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,715) "adf(Ne/H):    ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+
+                close (650)
 
         else
                 print*, gettime(), ": I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."
