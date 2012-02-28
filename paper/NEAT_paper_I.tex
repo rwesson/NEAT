@@ -371,7 +371,11 @@ This approach does not assume any particular distribution of probabilities, but 
 \section{The nature of actual uncertainties}
 \label{natureofuncertainties}
 
-In this section we discuss the nature of the uncertainties revealed by the Monte Carlo technique.  We find that three distinct behaviours emerge, depending on the overall depth of the line list being analysed.  In some cases, where all lines being analysed are well detected, the final uncertainties may closely resemble Gaussian distributions.  However, in the nebulae that we have analysed, the final distributions are better described by log-normal distributions than by Gaussian.  In a minority of cases, very unusual uncertainty distributions emerge which cannot be sensibly fitted by analytic functions.  The origin of such distributions arises in some cases from the methodology adopted.  For example, if temperature diagnostic lines are weakly detected, then in some fraction of {\sc neat} iterations the temperature may be undefined, and thus taken as the default of 10\,000\,K.  In other iterations it may have a determined value different from 10\,000\,K.  The temperature distribution then becomes double peaked, and this propagates into CEL abundances, although it has little effect on RL abundances.  In situations like these, one can say that the true uncertainty distribution is broader even than {\sc neat} suggests, and must realistically encompass both values of the double peaked distribution.
+In this section we discuss the nature of the uncertainties revealed by the Monte Carlo technique.  We find that three distinct behaviours emerge for the uncertainties on abundances, depending on the overall depth of the line list being analysed.  In some cases, where all lines being analysed are well detected, the final uncertainties are close to symmetric and can be well approximated by Gaussian distributions.  However, in the nebulae that we have analysed, the final distributions are better described by log-normal distributions than by Gaussian.
+
+In a minority of cases, very unusual uncertainty distributions emerge which cannot be sensibly fitted by analytic functions.  The origin of such distributions arises in some cases from the methodology adopted.  For example, if temperature diagnostic lines are weakly detected, then in some fraction of {\sc neat} iterations the temperature may be undefined, and thus taken as the default of 10\,000\,K.  In other iterations it may have a determined value different from 10\,000\,K.  The temperature distribution then becomes double peaked, and this propagates into CEL abundances, although it has little effect on RL abundances.  In situations like these, one can say that the true uncertainty distribution is broader even than {\sc neat} suggests, and must realistically encompass both values of the double peaked distribution.
+
+At intermediate stages, different behaviour may be observed.  In particular, we find that for temperatures derived from collisionally excited lines, the uncertainty distribution is sometimes well characterised by an exponential-normal distribution; that is, the probability of e$^T$ is normally distributed.  In every case that we examined, though, the convolution of this distribution with the processes involved in calculating abundances resulted in a final abundance uncertainty distribution that was either normal or log-normal.
 
 We show a selection of illustrative examples in Figure~\ref{Typical_uncertainties_images}, and we plot Gaussian and log-normal fits to the distributions shown where possible.  In Table~\ref{Typical_uncertainties_table} we give the parameters of Gaussian and log-normal fits to the plotted distributions.  The RMS of the residuals is shown and can be used to determine which option is a better fit to the data.
 
@@ -381,25 +385,31 @@ We show a selection of illustrative examples in Figure~\ref{Typical_uncertaintie
 Nebula & Quantity & \multicolumn{3}{c}{Gaussian} & \multicolumn{3}{c}{Log-normal} & Reference \\
        &          & $\mu$ & $\sigma$ & RMS of residuals & $\mu$ & $\sigma$ & RMS of residuals\\
 \hline
-NGC 6543 & He/H     & 0.117 & 0.003 & 15.5 & -0.930 & 0.023 & 14.7 & (1) \\
-Orion    & He/H     & 0.096 & 0.004 & 14.0 & -1.019 & 0.041 & 13.5 & (2) \\
-BAT99-11 & He/H     & 0.086 & 0.014 & 23.8 & -1.073 & 0.159 & 14.7 & (3) \\
+%NGC 6543 & He/H     & 0.117 & 0.003 & 15.5 & -0.930 & 0.023 & 14.7 & (1) \\
+Orion    & He/H     & 0.096             & 0.004 & 14.0 & -1.019 & 0.041 & 13.5 & (1) \\
+BAT99-11 & He/H     & 0.086             & 0.014 & 23.8 & -1.073 & 0.159 & 14.7 & (2) \\
+NGC\,6803 & T([O~{\sc iii}]) & 9410 & 65 & 18.4 & 12231.8 & 795.0 & 15.5 & (3) \\
+Nebula & Quantity & \multicolumn{3}{c}{Gaussian} & \multicolumn{3}{c}{Exponential-normal} & Reference \\
+       &          & $\mu$ & $\sigma$ & RMS of residuals & $\mu$ & $\sigma$ & RMS of residuals\\
+NGC\,6803 & T([O~{\sc iii}]) & 9410 & 65 & 18.4 & 12231.8 & 795.0 & 15.5 & (3)\\
 %Sp 4-1   & O/H (RL) & 
-NGC 2022 & He/H     & 0.096 & 0.014 & 18.6 & -1.025 & 0.150 & 11.9 & (4) \\
+%NGC 2022 & He/H     & 0.096 & 0.014 & 18.6 & -1.025 & 0.150 & 11.9 & (4) \\
 \hline
 \end{tabular}
-\caption{Analytic fits to observed uncertainty distributions in a few representative cases.  Log-normal distributions emerge much more frequently than Gaussian or unquantifiable distributions.  The line lists analysed are from (1) Wesson \& Liu (2004), (2) Esteban et al. (2004), (3) Stock, Barlow \& Wesson (2011), (4) \citet{2005A&A...436..953P}.}%, (5) Wesson, Liu \& Barlow (2005).}
+\caption{Analytic fits to the uncertainty distributions shown in Figure~\ref{Typical_uncertainties_images}.  Log-normal distributions emerge much more frequently than Gaussian or unquantifiable distributions.  The line lists analysed are from (1) Esteban et al. (2004), (2) Stock, Barlow \& Wesson (2011), (3) Wesson, Liu \& Barlow (2005).  The exponential-normal parameters for NGC\,6803 are those resulting from fitting the uncertainty distribution with a function in which exp(T$_e$/1000) was normally distributed.}
 \label{Typical_uncertainties_table}
 \end{table*}
 
 \begin{figure*}
-\includegraphics[width=0.48\textwidth]{figures/plot_binned_ngc6543_He_abund_ORL.png}
+%\includegraphics[width=0.48\textwidth]{figures/plot_binned_ngc6543_He_abund_ORL.png}
 \includegraphics[width=0.48\textwidth]{figures/plot_binned_orion_esteban2004_He_abund_ORL.png}
 \includegraphics[width=0.48\textwidth]{figures/plot_binned_B11_neat_He_abund_ORL.png}
-\includegraphics[width=0.48\textwidth]{figures/plot_binned_NGC2022_He_abund_ORL.png}
+\includegraphics[width=0.48\textwidth]{figures/binned_Cn3-1_Ar_abund_CEL.png}
+\includegraphics[width=0.48\textwidth]{figures/binned_NGC6803_[OIII]_temp.png}
+%\includegraphics[width=0.48\textwidth]{figures/plot_binned_NGC2022_He_abund_ORL.png}
 \includegraphics[width=0.48\textwidth]{figures/plot_binned_Sp4-1_O_abund_CEL.png}
 \includegraphics[width=0.48\textwidth]{figures/plot_binned_DdDm1-3_S_abund_CEL.png}
-\caption{Some representative examples of realistic probability distributions which emerge in a typical analysis.  These results are from analysis of NGC 6543 (top left), the Orion Nebula (top right), WR nebula BAT99-11 (middle left), NGC 2022 (middle right), Sp 4-1 (bottom left) and DdDm 1 (bottom right).}
+\caption{Some representative examples of probability distributions emerging from this analysis.  These results are from analysis of the Orion Nebula (top left), WR nebula BAT99-11 (top right), Cn\,3-1 (middle left), NGC\,6803 (middle right), Sp 4-1 (bottom left) and DdDm 1 (bottom right).}
 \label{Typical_uncertainties_images}
 \end{figure*}
 
@@ -453,9 +463,9 @@ In other shallower spectra, it may often be the case that the auroral lines [N~{
 
 Figure~\ref{h1013_RP_effect} shows that significant systematic uncertainties are produces when the RP effect on temperature diagnostic lines is ignored.  When the effect is neglected, we determine an [O~{\sc iii}] temperature of 7480$\pm$610\,K, in very close agreement with the value of 7370$\pm$630\,K reported by \citet{2009ApJ...700..654E}.  However, when we account for the RP effect, we find a value of 6840$\pm$390\,K.  Similarly for abundances, considering O$^{2+}$/H$^+$, we find that by neglecting the RP effect we obtain a value of 7.95$\pm$0.15 (on a logarithmic scale where N(H)=12), close to the value of 8.05$\pm$0.12 obtained by \citet{2009ApJ...700..654E}.  Accounting for the effect yields a value of 8.16$\pm$0.12.
 
-The reduction in uncertainty when accounting for the RP effect arises in two distinct ways; firstly, as can be seen in Figure~\ref{h1013_RP_effect}, the probability distribution for the [O~{\sc iii}] temperature when the RP effect is not accounted for is neither normal nor log-normal but is skewed to the left.  When the input uncertainty distribution is correctly characterised as a skewed-to-the-right log-normal distribution, the convolution of this distribution with the processes that give rise to a left-skewed distribution result in a final distribution which is narrower than when the input distribution is assumed to be normal.
+The reduction in uncertainty when accounting for the RP effect arises in two distinct ways; firstly, as can be seen in Figure~\ref{h1013_RP_effect}, the probability distribution for the [O~{\sc iii}] temperature when the RP effect is not accounted for is neither normal nor log-normal but is instead better described by an exponential-normal distribution.  When the input uncertainty distribution is correctly characterised as a log-normal distribution, the convolution of this distribution with the processes which give rise to the exponential-normal distribution of temperature probabilities results in a final distribution which is narrower than when the input distribution is assumed to be normal.
 
-The second effect is that when abudances from many weak lines are being combined to derive an abundance, accounting for the RP effect results in a modest reduction in the scatter of the derived abundances, and a corresponding reduction in the overall uncertainty on the combined abundance.% XXXX check this is really true!!
+The second effect is that when abundances from many weak lines are being combined to derive an abundance, accounting for the RP effect results in a modest reduction in the scatter of the derived abundances, and a corresponding reduction in the overall uncertainty on the combined abundance.
 
 We re-emphasise, therefore, that neglecting this effect results in incorrect abundances.  Accounting for it removes a source of systematic uncertainty, and reduces the statistical uncertainty of the abundances determined.
 
