@@ -187,18 +187,19 @@
         TINC=0
         INT=1
         if (LOOP .eq. 1) then
-        densi=0
-        dinc=1
-        ind=7
+          densi=10
+          dinc=2500
+          ind=20
         elseif (LOOP .eq. 2) then
-        densi= LOG10(valtest(2)) - 1
-        dinc=0.1
-        ind=31
+          densi= valtest(2)-2500 
+          dinc=250
+          ind=20
         else
-        densi= LOG10(valtest(2)) - 0.1
-        dinc=0.02
-        ind=16
+          densi= valtest(2)-250
+          dinc=20
+          ind=25
         endif
+        if (densi .lt. 0) densi=10
         allocate(results(3,IND))
       endif 
                                                                !Start of Te loop
@@ -208,9 +209,9 @@
 
         DO JJD = 1, IND
           DENS=DENSI+(JJD-1)*DINC
-          IF(DENSI.LT.30.D0) THEN
-            DENS=10.D0**DENS
-          ENDIF
+!          IF(DENSI.LT.30.D0) THEN
+!            DENS=10.D0**DENS
+!          ENDIF
           IF (TEMP.LE.0.D0.OR.DENS.LE.0.D0) THEN
             WRITE (6,6100)
                 print *,"Temp = ", TEMP, ", Dens = ", DENS
