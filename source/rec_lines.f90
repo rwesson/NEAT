@@ -124,7 +124,7 @@
       subroutine oii_rec_lines(te,ne,abund,oiiRLs)
 
       IMPLICIT NONE
-      DOUBLE PRECISION :: aeff, Em_Hb, &
+      DOUBLE PRECISION :: aeff, aeff_hb, Em_Hb, &
      & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund, &
      & logem
       DOUBLE PRECISION :: a, b, c, d, an(4)
@@ -134,54 +134,7 @@
 
       TYPE(oiiRL), DIMENSION(415) :: oiiRLs
 
-! first, calculate H recombination coefficient
-
-      AE2 = -9.06524E+00 -2.69954E+00 * log10(te) + 8.80123E-01 * &
-      &log10(te) ** 2 -1.57946E-01 * log10(te) ** 3 + &
-      &9.25920E-03 * log10(te) ** 4
-      AE3 = -8.13757E+00 -3.57392E+00 * log10(te) + 1.19331E+00 * &
-      &log10(te) ** 2 -2.08362E-01 * log10(te) ** 3 + &
-      &1.23303E-02 * log10(te) ** 4
-      AE4 = -6.87230E+00 -4.72312E+00 * log10(te) + 1.58890E+00 * &
-      &log10(te) ** 2 -2.69447E-01 * log10(te) ** 3 + &
-      &1.58955E-02 * log10(te) ** 4
-      AE5 = -5.15059E+00 -6.24549E+00 * log10(te) + 2.09801E+00 * &
-      &log10(te) ** 2 -3.45649E-01 * log10(te) ** 3 + &
-      &2.01962E-02 * log10(te) ** 4
-      AE6 = -2.35923E+00 -8.75565E+00 * log10(te) + 2.95600E+00 * &
-      &log10(te) ** 2 -4.77584E-01 * log10(te) ** 3 + &
-      &2.78852E-02 * log10(te) ** 4
-      AE7 =  1.55373E+00 -1.21894E+01 * log10(te) + 4.10096E+00 * &
-      &log10(te) ** 2 -6.49318E-01 * log10(te) ** 3 + &
-      &3.76487E-02 * log10(te) ** 4
-      AE8 =  6.59883E+00 -1.64030E+01 * log10(te) + 5.43844E+00 * &
-      &log10(te) ** 2 -8.40253E-01 * log10(te) ** 3 + &
-      &4.79786E-02 * log10(te) ** 4
-
-      if (log10(ne) .lt. 2) then
-            aeff = ae2
-      elseif (log10(ne) .GE. 2 .AND. log10(ne) .LT. 3) then
-            AEFF = AE2 + (AE3 - AE2) * (log10(ne) - 2)
-      elseif (log10(ne) .GE. 3 .AND. log10(ne) .LT. 4) then
-            AEFF = AE3 + (AE4 - AE3) * (log10(ne) - 3)
-      elseif (log10(ne) .GE. 4 .AND. log10(ne) .LT. 5) then
-            AEFF = AE4 + (AE5 - AE4) * (log10(ne) - 4)
-      elseif (log10(ne) .GE. 5 .AND. log10(ne) .LT. 6) then
-            AEFF = AE5 + (AE6 - AE5) * (log10(ne) - 5)
-      elseif (log10(ne) .GE. 6 .AND. log10(ne) .LT. 7) then
-            AEFF = AE6 + (AE7 - AE6) * (log10(ne) - 6)
-      elseif (log10(ne) .GE. 7 .AND. log10(ne) .LT. 8) then
-            AEFF = AE7 + (AE8 - AE7) * (log10(ne) - 7)
-      else
-            AEFF = AE8
-      endif
-
-      LogEm = AEFF - 11.38871 ! = log10(hc/lambda in cgs)
-      aeff = 10**aeff
-      em_hb = 10**logem
-
-!!      print *,"Te      Ne       Aeff"
-!!      print "(F8.0,1X,ES8.2,1X,ES9.3)",te,ne, aeff
+      call get_aeff_hb(te,ne, aeff_hb, em_hb)
 
 ! read in OII data
 
@@ -678,21 +631,6 @@
         oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
       enddo 
 
-!      print *,"Predictions for"
-!      print *,"Temperature    Density     O2+/H+"
-!      print "(1X,F6.0, 8X,F6.0, 7X,ES8.2)",te*10000,ne,abund
-!      print *,""
-!      print *,"Wavelength Multiplet I(Hb=100)"
-
-!      do i = 1,415
-!      if (oiiRLs(i)%Int .ge. 0.001) then !.and. &
-!      &(oiiRLs(i)%Mult .eq." V1    " .or. &
-!      & oiiRLs(i)%Mult .eq. " V89    ")) then
-!            print "(F7.2,4X,A7,3X,F7.3)",oiiRLs(i)%Wave,&
-!            &oiiRLs(i)%Mult,oiiRLs(i)%Int
-!      endif
-!      enddo
-
       te = te * 10000
 
       end subroutine oii_rec_lines
@@ -700,7 +638,7 @@
       subroutine nii_rec_lines(te, ne, abund, niiRLs)
 
       IMPLICIT NONE
-      DOUBLE PRECISION :: aeff, Em_Hb, &
+      DOUBLE PRECISION :: aeff, aeff_hb, Em_Hb, &
      & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund, &
      & logem, Br_term, z
       DOUBLE PRECISION :: a, b, c, d
@@ -710,54 +648,7 @@
 
       TYPE(niiRL), DIMENSION(99) :: niiRLs
 
-! first, calculate H recombination coefficient
-
-      AE2 = -9.06524E+00 -2.69954E+00 * log10(te) + 8.80123E-01 * &
-      &log10(te) ** 2 -1.57946E-01 * log10(te) ** 3 + &
-      &9.25920E-03 * log10(te) ** 4
-      AE3 = -8.13757E+00 -3.57392E+00 * log10(te) + 1.19331E+00 * &
-      &log10(te) ** 2 -2.08362E-01 * log10(te) ** 3 + &
-      &1.23303E-02 * log10(te) ** 4
-      AE4 = -6.87230E+00 -4.72312E+00 * log10(te) + 1.58890E+00 * &
-      &log10(te) ** 2 -2.69447E-01 * log10(te) ** 3 + &
-      &1.58955E-02 * log10(te) ** 4
-      AE5 = -5.15059E+00 -6.24549E+00 * log10(te) + 2.09801E+00 * &
-      &log10(te) ** 2 -3.45649E-01 * log10(te) ** 3 + &
-      &2.01962E-02 * log10(te) ** 4
-      AE6 = -2.35923E+00 -8.75565E+00 * log10(te) + 2.95600E+00 * &
-      &log10(te) ** 2 -4.77584E-01 * log10(te) ** 3 + &
-      &2.78852E-02 * log10(te) ** 4
-      AE7 =  1.55373E+00 -1.21894E+01 * log10(te) + 4.10096E+00 * &
-      &log10(te) ** 2 -6.49318E-01 * log10(te) ** 3 + &
-      &3.76487E-02 * log10(te) ** 4
-      AE8 =  6.59883E+00 -1.64030E+01 * log10(te) + 5.43844E+00 * &
-      &log10(te) ** 2 -8.40253E-01 * log10(te) ** 3 + &
-      &4.79786E-02 * log10(te) ** 4
-
-      if (log10(ne) .lt. 2) then
-            aeff = ae2
-      elseif (log10(ne) .GE. 2 .AND. log10(ne) .LT. 3) then
-            AEFF = AE2 + (AE3 - AE2) * (log10(ne) - 2)
-      elseif (log10(ne) .GE. 3 .AND. log10(ne) .LT. 4) then
-            AEFF = AE3 + (AE4 - AE3) * (log10(ne) - 3)
-      elseif (log10(ne) .GE. 4 .AND. log10(ne) .LT. 5) then
-            AEFF = AE4 + (AE5 - AE4) * (log10(ne) - 4)
-      elseif (log10(ne) .GE. 5 .AND. log10(ne) .LT. 6) then
-            AEFF = AE5 + (AE6 - AE5) * (log10(ne) - 5)
-      elseif (log10(ne) .GE. 6 .AND. log10(ne) .LT. 7) then
-            AEFF = AE6 + (AE7 - AE6) * (log10(ne) - 6)
-      elseif (log10(ne) .GE. 7 .AND. log10(ne) .LT. 8) then
-            AEFF = AE7 + (AE8 - AE7) * (log10(ne) - 7)
-      else
-            AEFF = AE8
-      endif
-
-      LogEm = AEFF - 11.38871 ! = log10(hc/lambda in cgs)
-      aeff = 10**aeff
-      em_hb = 10**logem
-
-!!      print *,"Te      Ne       Aeff"
-!!      print "(F8.0,1X,ES8.2,1X,ES9.3)",te,ne, aeff
+      call get_aeff_hb(te,ne, aeff_hb, em_hb)
 
 ! read in NII data
 
@@ -1136,12 +1027,6 @@
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
 
-!      print *,"Predictions for"
-!      print *,"Temperature    Density     O2+/H+"
-!      print "(1X,F6.0, 8X,F6.0, 7X,ES8.2)",te*10000,ne,abund
-!      print *,""
-!      print *,"Wavelength Multiplet I(Hb=100)"
-
       te = te * 10000
 
       end subroutine nii_rec_lines
@@ -1158,53 +1043,9 @@
 
       TYPE(ciiRL), DIMENSION(57) :: ciiRLs
 
-! first, calculate H recombination coefficient
+      call get_aeff_hb(te,ne, aeff_hb, em_hb)
 
-      AE2 = -9.06524E+00 -2.69954E+00 * log10(te) + 8.80123E-01 * &
-      &log10(te) ** 2 -1.57946E-01 * log10(te) ** 3 + &
-      &9.25920E-03 * log10(te) ** 4
-      AE3 = -8.13757E+00 -3.57392E+00 * log10(te) + 1.19331E+00 * &
-      &log10(te) ** 2 -2.08362E-01 * log10(te) ** 3 + &
-      &1.23303E-02 * log10(te) ** 4
-      AE4 = -6.87230E+00 -4.72312E+00 * log10(te) + 1.58890E+00 * &
-      &log10(te) ** 2 -2.69447E-01 * log10(te) ** 3 + &
-      &1.58955E-02 * log10(te) ** 4
-      AE5 = -5.15059E+00 -6.24549E+00 * log10(te) + 2.09801E+00 * &
-      &log10(te) ** 2 -3.45649E-01 * log10(te) ** 3 + &
-      &2.01962E-02 * log10(te) ** 4
-      AE6 = -2.35923E+00 -8.75565E+00 * log10(te) + 2.95600E+00 * &
-      &log10(te) ** 2 -4.77584E-01 * log10(te) ** 3 + &
-      &2.78852E-02 * log10(te) ** 4
-      AE7 =  1.55373E+00 -1.21894E+01 * log10(te) + 4.10096E+00 * &
-      &log10(te) ** 2 -6.49318E-01 * log10(te) ** 3 + &
-      &3.76487E-02 * log10(te) ** 4
-      AE8 =  6.59883E+00 -1.64030E+01 * log10(te) + 5.43844E+00 * &
-      &log10(te) ** 2 -8.40253E-01 * log10(te) ** 3 + &
-      &4.79786E-02 * log10(te) ** 4
-
-      if (log10(ne) .lt. 2) then
-            aeff_hb = ae2
-      elseif (log10(ne) .GE. 2 .AND. log10(ne) .LT. 3) then
-            aeff_hb = AE2 + (AE3 - AE2) * (log10(ne) - 2)
-      elseif (log10(ne) .GE. 3 .AND. log10(ne) .LT. 4) then
-            aeff_hb = AE3 + (AE4 - AE3) * (log10(ne) - 3)
-      elseif (log10(ne) .GE. 4 .AND. log10(ne) .LT. 5) then
-            aeff_hb = AE4 + (AE5 - AE4) * (log10(ne) - 4)
-      elseif (log10(ne) .GE. 5 .AND. log10(ne) .LT. 6) then
-            aeff_hb = AE5 + (AE6 - AE5) * (log10(ne) - 5)
-      elseif (log10(ne) .GE. 6 .AND. log10(ne) .LT. 7) then
-            aeff_hb = AE6 + (AE7 - AE6) * (log10(ne) - 6)
-      elseif (log10(ne) .GE. 7 .AND. log10(ne) .LT. 8) then
-            aeff_hb = AE7 + (AE8 - AE7) * (log10(ne) - 7)
-      else
-            aeff_hb = AE8
-      endif
-
-      LogEm = aeff_hb - 11.38871 ! = log10(hc/lambda in cgs)
-      aeff_hb = 10**aeff_hb
-      em_hb = 10**logem
-
-! read in NII data
+! read in CII data
 
        301 FORMAT (F7.2, 1X, F6.4, 1X, F7.4, 1X, F7.4, 1X, F7.4, 1X, F7.4) 
        OPEN(201, file="Atomic-data/Rcii.dat", status='old')
@@ -1216,22 +1057,13 @@
 
       te = te/10000
 
-!calcaulte alphas and intensities, write out
-
-!      print *,"Predictions for"
-!      print *,"Temperature    Density     C2+/H+"
-!      print "(1X,F6.0, 8X,F6.0, 7X,ES8.2)",te*10000,ne,abund
-!      print *,""
-!      print *,"Wavelength   I(Hb=100)"
-
       do i = 1,57
         ciiRLs(i)%aeff = 1e-14 * (ciiRLs(i)%a*(te**ciiRLs(i)%f)) * (1 &
         &+ (ciiRLs(i)%b*(1-te)) &
         &+ (ciiRLs(i)%c * ((1-te)**2) ) &
         &+ (ciiRLs(i)%d * ((1-te)**3) ) &
         &) 
-        ciiRLs(i)%Int = 100 * (ciiRLs(i)%aeff/aeff_hb) * (4861.33/ciiRLs(i)%Wave) * abund
-!        print "(F8.2,4X,F7.3)",ciiRLs(i)%Wave,ciiRLs(i)%Int
+        ciiRLs(i)%Int = 100 * (ciiRLs(i)%aeff/aeff_hb) * (4861.33/ciiRLs(i)%Wave) * abund 
       enddo
 
       te = te * 10000
@@ -1250,53 +1082,7 @@
 
       TYPE(neiiRL), DIMENSION(38) :: neiiRLs
 
-! first, calculate H recombination coefficient
-
-      AE2 = -9.06524E+00 -2.69954E+00 * log10(te) + 8.80123E-01 * &
-      &log10(te) ** 2 -1.57946E-01 * log10(te) ** 3 + &
-      &9.25920E-03 * log10(te) ** 4
-      AE3 = -8.13757E+00 -3.57392E+00 * log10(te) + 1.19331E+00 * &
-      &log10(te) ** 2 -2.08362E-01 * log10(te) ** 3 + &
-      &1.23303E-02 * log10(te) ** 4
-      AE4 = -6.87230E+00 -4.72312E+00 * log10(te) + 1.58890E+00 * &
-      &log10(te) ** 2 -2.69447E-01 * log10(te) ** 3 + &
-      &1.58955E-02 * log10(te) ** 4
-      AE5 = -5.15059E+00 -6.24549E+00 * log10(te) + 2.09801E+00 * &
-      &log10(te) ** 2 -3.45649E-01 * log10(te) ** 3 + &
-      &2.01962E-02 * log10(te) ** 4
-      AE6 = -2.35923E+00 -8.75565E+00 * log10(te) + 2.95600E+00 * &
-      &log10(te) ** 2 -4.77584E-01 * log10(te) ** 3 + &
-      &2.78852E-02 * log10(te) ** 4
-      AE7 =  1.55373E+00 -1.21894E+01 * log10(te) + 4.10096E+00 * &
-      &log10(te) ** 2 -6.49318E-01 * log10(te) ** 3 + &
-      &3.76487E-02 * log10(te) ** 4
-      AE8 =  6.59883E+00 -1.64030E+01 * log10(te) + 5.43844E+00 * &
-      &log10(te) ** 2 -8.40253E-01 * log10(te) ** 3 + &
-      &4.79786E-02 * log10(te) ** 4
-
-      if (log10(ne) .lt. 2) then
-            aeff_hb = ae2
-      elseif (log10(ne) .GE. 2 .AND. log10(ne) .LT. 3) then
-            aeff_hb = AE2 + (AE3 - AE2) * (log10(ne) - 2)
-      elseif (log10(ne) .GE. 3 .AND. log10(ne) .LT. 4) then
-            aeff_hb = AE3 + (AE4 - AE3) * (log10(ne) - 3)
-      elseif (log10(ne) .GE. 4 .AND. log10(ne) .LT. 5) then
-            aeff_hb = AE4 + (AE5 - AE4) * (log10(ne) - 4)
-      elseif (log10(ne) .GE. 5 .AND. log10(ne) .LT. 6) then
-            aeff_hb = AE5 + (AE6 - AE5) * (log10(ne) - 5)
-      elseif (log10(ne) .GE. 6 .AND. log10(ne) .LT. 7) then
-            aeff_hb = AE6 + (AE7 - AE6) * (log10(ne) - 6)
-      elseif (log10(ne) .GE. 7 .AND. log10(ne) .LT. 8) then
-            aeff_hb = AE7 + (AE8 - AE7) * (log10(ne) - 7)
-      else
-            aeff_hb = AE8
-      endif
-
-      LogEm = aeff_hb - 11.38871 ! = log10(hc/lambda in cgs)
-      aeff_hb = 10**aeff_hb
-      em_hb = 10**logem
-
-! read in NII data
+! read in NeII data
 
        301 FORMAT (F7.2, 1X, F6.3, 1X, F6.3, 1X, F6.3, 1X, F6.3, 1X, F7.4, 1X, F6.3) 
        OPEN(201, file="Atomic-data/Rneii.dat", status='old')
@@ -1308,14 +1094,6 @@
 
       te = te/10000
 
-!calcaulte alphas and intensities, write out
-
-!      print *,"Predictions for"
-!      print *,"Temperature    Density     Ne2+/H+"
-!      print "(1X,F6.0, 8X,F6.0, 7X,ES8.2)",te*10000,ne,abund
-!      print *,""
-!      print *,"Wavelength   I(Hb=100)"
-
       do i = 1,38
         neiiRLs(i)%aeff = neiiRLs(i)%Br * 1e-14 * &
         &(neiiRLs(i)%a*(te**neiiRLs(i)%f)) * (1 &
@@ -1323,8 +1101,7 @@
         &+ (neiiRLs(i)%c * ((1-te)**2) ) &
         &+ (neiiRLs(i)%d * ((1-te)**3) ) &
         &)
-        neiiRLs(i)%Int = 100 * (neiiRLs(i)%aeff/aeff_hb) * (4861.33/neiiRLs(i)%Wave) * abund
-!        print "(F8.2,4X,F7.3)",neiiRLs(i)%Wave,neiiRLs(i)%Int
+        neiiRLs(i)%Int = 100 * (neiiRLs(i)%aeff/aeff_hb) * (4861.33/neiiRLs(i)%Wave) * abund 
       enddo
 
       te = te * 10000
@@ -1342,7 +1119,39 @@
 
       TYPE(xiiiRL), DIMENSION(6) :: xiiiRLs
 
-! first, calculate H recombination coefficient
+! read in XIII data
+
+       301 FORMAT (A3,1X,F7.2, 1X, F5.3, 1X, F6.3, 1X, F5.3, 1X, F5.3, 1X, F5.4)
+       OPEN(201, file="Atomic-data/Rxiii.dat", status='old')
+       DO i = 1,6
+         READ(201,301) xiiiRLs(i)%ion, xiiiRLs(i)%Wave, xiiiRLs(i)%a, &
+         & xiiiRLs(i)%b, xiiiRLs(i)%c, xiiiRLs(i)%d, xiiiRLs(i)%Br
+       END DO
+       CLOSE(201)
+
+      te = te/90000 !ionic charge=3 so divide by 9
+
+      do i = 1,4
+        xiiiRLs(i)%aeff = xiiiRLs(i)%Br * 1e-13 * 3 * &
+      & (xiiiRLs(i)%a*(te**xiiiRLs(i)%b)) / &
+      & (1 + (xiiiRLs(i)%c * (te**xiiiRLs(i)%d))) 
+        xiiiRLs(i)%Int = 100 * (xiiiRLs(i)%aeff/aeff_hb) * (4861.33/xiiiRLs(i)%Wave) * abund 
+      enddo
+
+      do i = 5,6
+        xiiiRLs(i)%aeff = xiiiRLs(i)%Br * 1e-13 * 3 * &
+      & (xiiiRLs(i)%a*(te**xiiiRLs(i)%b)) / &
+      & (1 + (xiiiRLs(i)%c * (te**xiiiRLs(i)%d)))
+        xiiiRLs(i)%Int = 100 * (xiiiRLs(i)%aeff/aeff_hb) * (4861.33/xiiiRLs(i)%Wave) * abund 
+      enddo
+
+      te = te * 90000
+
+      end subroutine xiii_rec_lines
+
+      subroutine get_aeff_hb(te, ne, aeff_hb, em_hb)
+
+      double precision :: Te, Ne, AE2, AE3, AE4, AE5, AE6, AE7, AE8, aeff_hb, Em_Hb, logem
 
       AE2 = -9.06524E+00 -2.69954E+00 * log10(te) + 8.80123E-01 * &
       &log10(te) ** 2 -1.57946E-01 * log10(te) ** 3 + &
@@ -1388,49 +1197,6 @@
       aeff_hb = 10**aeff_hb
       em_hb = 10**logem
 
-! read in NII data
-
-       301 FORMAT (A3,1X,F7.2, 1X, F5.3, 1X, F6.3, 1X, F5.3, 1X, F5.3, 1X, F5.4)
-       OPEN(201, file="Atomic-data/Rxiii.dat", status='old')
-       DO i = 1,6
-         READ(201,301) xiiiRLs(i)%ion, xiiiRLs(i)%Wave, xiiiRLs(i)%a, &
-         & xiiiRLs(i)%b, xiiiRLs(i)%c, xiiiRLs(i)%d, xiiiRLs(i)%Br
-       END DO
-       CLOSE(201)
-
-      te = te/90000 !ionic charge=3 so divide by 9
-
-!calcaulte alphas and intensities, write out
-
-!      print *,"Predictions for"
-!      print *,"Temperature    Density     X3+/H+"
-!      print "(1X,F6.0, 8X,F6.0, 7X,ES8.2)",te*90000,ne,abund
-!      print *,""
-!      print *," C3+"
-!      print *,"Wavelength   I(Hb=100)"
-
-      do i = 1,4
-        xiiiRLs(i)%aeff = xiiiRLs(i)%Br * 1e-13 * 3 * &
-      & (xiiiRLs(i)%a*(te**xiiiRLs(i)%b)) / &
-      & (1 + (xiiiRLs(i)%c * (te**xiiiRLs(i)%d))) 
-        xiiiRLs(i)%Int = 100 * (xiiiRLs(i)%aeff/aeff_hb) * (4861.33/xiiiRLs(i)%Wave) * abund
-!        print "(F8.2,4X,F7.3)",xiiiRLs(i)%Wave,xiiiRLs(i)%Int
-      enddo
-
-!      print *,""
-!      print *,"N3+"
-!      print *,"Wavelength   I(Hb=100)"
-
-      do i = 5,6
-        xiiiRLs(i)%aeff = xiiiRLs(i)%Br * 1e-13 * 3 * &
-      & (xiiiRLs(i)%a*(te**xiiiRLs(i)%b)) / &
-      & (1 + (xiiiRLs(i)%c * (te**xiiiRLs(i)%d)))
-        xiiiRLs(i)%Int = 100 * (xiiiRLs(i)%aeff/aeff_hb) * (4861.33/xiiiRLs(i)%Wave) * abund
-!        print "(F8.2,4X,F7.3)",xiiiRLs(i)%Wave,xiiiRLs(i)%Int
-      enddo
-
-      te = te * 90000
-
-      end subroutine xiii_rec_lines
+      end subroutine get_aeff_hb
 
       end module mod_recombination_lines
