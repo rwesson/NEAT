@@ -238,8 +238,8 @@ program neat
 
                 !generate outputs
 
-                print *,gettime(),": writing results to file ",trim(filename),".results"
-                OPEN(650, FILE=trim(filename)//".results", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                print *,gettime(),": writing results to file ",trim(filename),"_results"
+                OPEN(650, FILE=trim(filename)//"_results", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
 
                 700 FORMAT(X,A20,F5.3) !extinction format
                 701 FORMAT(X,A20,I5) !diagnostics format
@@ -696,7 +696,7 @@ print *, gettime(), ": results processed.  Now writing to files"
 ! get median +- pseudo gaussian 34.1% 
                 allocate (quantity_result(runs))
 
-                open (650,FILE=trim(filename)//".results", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                open (650,FILE=trim(filename)//"_results", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
 
                 write (650,*) "NEAT (nebular empirical analysis tool)"
                 write (650,*) "======================================"
