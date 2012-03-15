@@ -168,40 +168,44 @@
                                                !ratio is to be calculated
 
       !*****LOOP STARTS HERE*************************
-      DO LOOP = 1, 3
+      DO LOOP = 1, 9
       if (diagtype .eq. "t" .or. diagtype .eq. "T") then
-        TINC=(10000)/(10**(LOOP))
+
         if (LOOP .eq. 1) then
-                TEMPI=5000
-                INT=16
-        else
-                INT=21
-                TEMPI= valtest(1) - TINC*10
+                TEMPI=5000 
+        else 
+                TEMPI= valtest(1)
         endif
+
+        INT=4
+        TINC=(15000.)/((INT-1)**(LOOP))
+
         densi=fixedq
         dinc=0
         ind=1
+
         ALLOCATE(RESULTS(3,INT))
+
       else
+
+        if (LOOP .eq. 1) then
+          densi=0
+        else
+          densi=valtest(2)
+        endif
+
+        IND=4
+        DINC=(100000.)/((INT-1)**(LOOP))
+
         TempI=fixedq
         TINC=0
         INT=1
-        if (LOOP .eq. 1) then
-          densi=10
-          dinc=2500
-          ind=20
-        elseif (LOOP .eq. 2) then
-          densi= valtest(2)-2500 
-          dinc=250
-          ind=20
-        else
-          densi= valtest(2)-250
-          dinc=20
-          ind=25
-        endif
-        if (densi .lt. 0) densi=10
+        
         allocate(results(3,IND))
       endif 
+
+      if (densi .le. 0) densi=1
+
                                                                !Start of Te loop
       DO JT = 1, INT
         TEMP=TEMPI+(JT-1)*TINC 
@@ -376,11 +380,11 @@
           if (diagtype .eq. "t" .or. diagtype .eq. "T") then
             RESULTS(1, JT) = TEMP
             RESULTS(2, JT) = DENS
-            RESultS(3, JT) = abs(FRAT-inratio)
+            RESultS(3, JT) = FRAT-inratio
           else
             RESULTS(1, JJD) = TEMP
             RESULTS(2, JJD) = DENS
-            RESultS(3, JJD) = abs(FRAT-inratio)
+            RESultS(3, JJD) = FRAT-inratio
           endif                                   !End of the Ne loop
         ENDDO
 
@@ -412,40 +416,15 @@
         INT = ind
       endif
 
-        ! sort to find lowest values
-        DO I=1,INT
-                DO J=1, INT-I
-                        if (results(3,J) .gt. results(3, J+1)) then
-                                valtest(:) = results(:,J)
-                                results(:,J) = results(:,J+1)
-                                results(:,J+1) = valtest(:)
-                                !J = J+1
-                        else
-                                !J = J+1
-                        endif
-                end do
-                !I = I+1
-        end do
+        ! loop through array and find out where the sign changes.
 
-        !pull out lowest value
-        if (LOOP .eq. 3) then
-        !pull out lowest value for result
-                valtest(:) = results(:,1)
-        else !check which of two lowest values is lower temp/dens to feed back to start of loop
-                if (diagtype .eq. "D" .or. diagtype .eq. "d") then
-                        if (results(2,1) .gt. results(2,2)) then
-                                valtest(:) = results(:,2)
-                        else
-                                valtest(:) = results(:,1)
-                        endif
-                else
-                        if (results(1,1) .gt. results(1,2)) then
-                                valtest(:) = results(:,2)
-                        else
-                                valtest(:) = results(:,1)
-                        endif
+        DO I=1,INT
+                if (sign(results(3,I),results(3,1)) .ne. results(3,I)) then !when this condition is fulfilled, the values in the array are now a different sign to the first value in the array
+                        valtest(:) = (results(:,I-1)) ! return the value before the sign change so that the next loop starts at a sensible value
+                        exit
                 endif
-        endif
+        enddo
+
         !LOOP = LOOP + 1
         DEALLOCATE(RESULTS) !thanks Bruce!
       END DO
@@ -600,9 +579,10 @@
                                                                !Start of Ne loop
         DO JJD = 1, IND
           DENS=DENSI+(JJD-1)*DINC
-          IF(DENSI.LT.30.D0) THEN
-            DENS=10.D0**DENS
-          ENDIF
+!          IF(DENSI.LT.30.D0) THEN !commented out as using linear
+!          densities only now
+!            DENS=10.D0**DENS
+!          ENDIF
           IF (TEMP.LE.0.D0.OR.DENS.LE.0.D0) THEN
             WRITE (6,6100)
             STOP
