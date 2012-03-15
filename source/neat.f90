@@ -716,7 +716,7 @@ write (650,*)
 write (650,*) "Diagnostics"
 write (650,*) "==========="
 write (650,*)
-711 format (X,3(A,I5)) ! diagnostic format
+711 format (X,3(A,I6)) ! diagnostic format
 
 !low densities
 
