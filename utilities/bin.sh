@@ -30,7 +30,7 @@ do
   fi
 done
 
-for filename in $prefix*abund* $prefix*icf* $prefix*adf*
+for filename in $prefix*abund* $prefix*icf* $prefix*adf* *cHb
 do 
  step=`more $filename | sort -g | awk ' NR==500 { low=$1 } NR==9500 { high=$1 } END { print (high-low)/20 } '` 
   export step 
