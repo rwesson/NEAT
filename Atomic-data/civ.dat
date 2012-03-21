@@ -1,0 +1,111 @@
+ 29
+** Atomic data from version 5.2 of the CHIANTI database **
+%energy levels: Fuhr, J.R., Kelleher, D.E., Martin, W.C., Musgrove, A., Sugar, J., Wiese, W.L.,
+        Dalton, G.R., Dragoset, R.A., Mohr, P.J., Olsen, K., Reader, J., Saloman, E.B., Sansonetti, C.J.,
+        Wiersma, G., "NIST Atomic Spectra Database" Ver. 2.0, March 1999, NIST Physical Reference Data.
+% Theoretical energy levels: Badnell, N.R., Pindzola, M.S., 2000, J.Phys.B, 33, 1013
+%produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
+%
+% E. Landi Jun 2001
+%observed energy levels: Fuhr, J.R., et al., "NIST Atomic Spectra Database" Ver. 2.0, 
+    March 1999, NIST Physical Reference Data.
+%oscillator strengths: Martin, I., Karwowski, J., Diercksen, G.H.F., Barrientos, C., 1993, A&AS, 100, 595.
+%oscillator strengths: W.L. Wiese, M.W. Smith, B.M. Glennon, Atomic Transition Probabilities, 
+    Vol I, NSRDS-NBS 4, 1966.
+%produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
+%
+% E.Landi Jun 2001
+
+%filename: c_4.splups
+%oscillator strengths: Martin, I., Karwowski, J., Diercksen, G.H.F., Barrientos, C., 1993, A&AS, 100, 595
+%oscillator strengths: W.L. Wiese, M.W. Smith, B.M. Glennon, Atomic Transition Probabilities,
+    Vol I, NSRDS-NBS 4, 1966
+%collision strengths: Badnell, N.R., Pindzola, M.S., 2000, J.Phys.B, 33, 1013
+%comment: the original effective collision strengths are provided in LS coupling. These 
+    have been transformed into intermediate coupling effective collision strengths 
+    according to the statistical weights
+%comment: the original data are given in the temperature range 4.2 < Log T < 6.5.
+%produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
+%
+% Enrico Landi Jun 2001
+ 3 23 0
+  1  1s2.2s 2S1/2
+  2  1s2.2p 2P1/2
+  3  1s2.2p 2P3/2
+     100.0
+     158.5
+     251.2
+     398.1
+     631.0
+    1000.0
+    1584.9
+    2511.9
+    3981.1
+    6309.6
+   10000.0
+   15848.9
+   25118.9
+   39810.7
+   63095.8
+  100000.0
+  158489.2
+  251188.7
+  398107.1
+  630957.6
+ 1000000.0
+ 1584892.5
+ 2511887.0
+0
+  1  2   2.83e+00
+  0  0   2.83e+00
+  0  0   2.83e+00
+  0  0   2.83e+00
+  0  0   2.83e+00
+  0  0   2.83e+00
+  0  0   2.84e+00
+  0  0   2.84e+00
+  0  0   2.84e+00
+  0  0   2.84e+00
+  0  0   2.85e+00
+  0  0   2.87e+00
+  0  0   2.91e+00
+  0  0   2.99e+00
+  0  0   3.10e+00
+  0  0   3.20e+00
+  0  0   3.39e+00
+  0  0   3.65e+00
+  0  0   3.95e+00
+  0  0   4.33e+00
+  0  0   4.79e+00
+  0  0   5.32e+00
+  0  0   5.88e+00
+  1  3   5.60e+00
+  0  0   5.60e+00
+  0  0   5.60e+00
+  0  0   5.60e+00
+  0  0   5.61e+00
+  0  0   5.61e+00
+  0  0   5.61e+00
+  0  0   5.62e+00
+  0  0   5.63e+00
+  0  0   5.65e+00
+  0  0   5.68e+00
+  0  0   5.73e+00
+  0  0   5.82e+00
+  0  0   5.96e+00
+  0  0   6.17e+00
+  0  0   6.43e+00
+  0  0   6.79e+00
+  0  0   7.30e+00
+  0  0   7.91e+00
+  0  0   8.66e+00
+  0  0   9.57e+00
+  0  0   1.06e+01
+  0  0   1.18e+01
+ 0 0 0
+  1  2   2.630e+08
+  1  3   2.650e+08
+  2  3   0.000e+00
+  1  2        0.0
+  2  2    64484.0
+  3  4    64591.7

@@ -1,0 +1,137 @@
+ 32
+** Atomic data from version 5.2 of the CHIANTI database **
+%observed energy levels (1-24): Martin, W.C., Zalubas, R., 1983, J. Phys. Chem. Ref. Data, 12, 323.
+%Innershell observed energy levels: Fuhr, J.R., et al., "NIST Atomic Spectra Database" Ver. 2.0, 
+   March 1999, NIST Physical Reference Data
+%Theoretical energy levels (1-24): Zhang,H.L., Sampson,D.H., Fontes,C.J., ADNDT, 44, 31.
+%Innershell theoretical energy levels: Goett, S.J., Sampson, D.H., 1983, ADNDT, 29, 535
+% produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
+%
+% E. Landi - July 1999
+%observed energy levels: Martin, W.C. Zalubas, R., 1983, J.Phys.Chem.Ref.Data, 12, 323
+%Theoretical energy levels: Zhang,H.L., Sampson,D.H., Fontes,C.J., 1990, ADNDT, 44, 31
+%Innershell energy levels: Martin, W.C., Sugar, J., Musgrove, A., Dalton, G.R., 1995,
+   NIST Database for Atomic Spectroscopy, Version 1.0, NIST Standard Reference Database 61
+%Innershell theoretical energy levels: Goett, S.J., Sampson, D.H., 1983, ADNDT, 29, 535
+%oscillator strengths:  H.L.Zhang, D.H.Sampson, C.J.Fontes, 1990, ADNDT, 44, 31
+%oscillator strengths:  Martin, I., Karwowski, J., Diercksen, G.H.F., Barrientos, C., 1993, A&AS, 100, 595
+%Innershell radiative data: Goett, S.J., Sampson, D.H., 1983, ADNDT, 29, 535
+%Comment: Other radiative data were calculated using SUPERSTRUCTURE with a 23 configuration model
+%A values (autoionizing): Vainshtein, L.A., Safronova, U.I., 1978, ADNDT, 21, 49
+   and 1980, ADNDT, 25, 311 - updated by U.I. Safronova, 1999
+% produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
+% 
+%  E. Landi and K.P. Dere - Nov 1999
+
+%filename: si_12.splups
+%oscillator strengths: H.L.Zhang, D.H.Sampson, C.J.Fontes, 1990, ADNDT, 44, 31
+%oscillator strengths innershell transitions: Goett, S.J., Sampson, D.H., 1983, ADNDT, 29, 535
+%collision strengths: Zhang, Sampson, Fontes, 1990, ADNDT, 44, 31
+%collision strengths innershell transitions: Goett, S.J., Sampson, D.H., 1983, ADNDT, 29, 535
+% produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
+%
+% E.Landi and K.P.Dere, July 1999
+ 3 23 0
+  1  1s2.2s 2S1/2
+  2  1s2.2p 2P1/2
+  3  1s2.2p 2P3/2
+     100.0
+     158.5
+     251.2
+     398.1
+     631.0
+    1000.0
+    1584.9
+    2511.9
+    3981.1
+    6309.6
+   10000.0
+   15848.9
+   25118.9
+   39810.7
+   63095.8
+  100000.0
+  158489.2
+  251188.7
+  398107.1
+  630957.6
+ 1000000.0
+ 1584892.5
+ 2511887.0
+0
+  1  2   5.54e-01
+  0  0   5.54e-01
+  0  0   5.54e-01
+  0  0   5.54e-01
+  0  0   5.54e-01
+  0  0   5.54e-01
+  0  0   5.54e-01
+  0  0   5.55e-01
+  0  0   5.55e-01
+  0  0   5.55e-01
+  0  0   5.55e-01
+  0  0   5.56e-01
+  0  0   5.57e-01
+  0  0   5.58e-01
+  0  0   5.60e-01
+  0  0   5.63e-01
+  0  0   5.66e-01
+  0  0   5.72e-01
+  0  0   5.81e-01
+  0  0   5.96e-01
+  0  0   6.19e-01
+  0  0   6.55e-01
+  0  0   7.04e-01
+  1  3   1.10e+00
+  0  0   1.10e+00
+  0  0   1.10e+00
+  0  0   1.10e+00
+  0  0   1.10e+00
+  0  0   1.10e+00
+  0  0   1.10e+00
+  0  0   1.10e+00
+  0  0   1.10e+00
+  0  0   1.10e+00
+  0  0   1.10e+00
+  0  0   1.10e+00
+  0  0   1.10e+00
+  0  0   1.11e+00
+  0  0   1.11e+00
+  0  0   1.11e+00
+  0  0   1.12e+00
+  0  0   1.13e+00
+  0  0   1.15e+00
+  0  0   1.19e+00
+  0  0   1.24e+00
+  0  0   1.31e+00
+  0  0   1.41e+00
+  2  3   1.31e-01
+  0  0   1.31e-01
+  0  0   1.31e-01
+  0  0   1.31e-01
+  0  0   1.31e-01
+  0  0   1.31e-01
+  0  0   1.31e-01
+  0  0   1.31e-01
+  0  0   1.31e-01
+  0  0   1.31e-01
+  0  0   1.31e-01
+  0  0   1.31e-01
+  0  0   1.30e-01
+  0  0   1.30e-01
+  0  0   1.29e-01
+  0  0   1.29e-01
+  0  0   1.27e-01
+  0  0   1.25e-01
+  0  0   1.22e-01
+  0  0   1.18e-01
+  0  0   1.12e-01
+  0  0   1.06e-01
+  0  0   9.86e-02
+ 0 0 0
+  1  2   8.564e+08
+  1  3   9.750e+08
+  2  3   0.000e+00
+  1  2        0.0
+  2  2   192062.0
+  3  4   200238.0

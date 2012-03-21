@@ -1,0 +1,3 @@
+Atomic data for use in NEAT, and other nebular analysis applications.
+
+The three subdirectories contain atomic data from the CHIANTI project version 5.2, CHIANTI 6.0, and an assortment of data compiled over many years by many people at UCL from a variety of sources.  The main directory contains mostly CHIANTI 5.2 files, supplemented by files from the assorted directory for ions not available in CHIANTI, and also using older data for OII and SIII, due to errors in the CHIANTI data for those two ions.  The main directory also contains recombination data for the most commonly observed recombination lines.
