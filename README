@@ -3,7 +3,7 @@ Overview
 
 NEAT is a program for calculating chemical abundances in photoionised nebulae.  It can propagate uncertainties and compensate for measurement biases affecting weak lines.
 
-The code requires atomic data files to work, and these are available separately in the Atomic-data repository.
+The code includes the necessary atomic data files, but you might also wish to use some different atomic data sets which are available separately in the Atomic-data repository.
 
 http://github.com/rwesson/Atomic-data
 

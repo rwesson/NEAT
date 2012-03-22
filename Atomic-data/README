@@ -1,3 +1,21 @@
-Atomic data for use in NEAT, and other nebular analysis applications.
+Atomic data for use in NEAT.  This is a subset of the data available from our atomic data repository at https://github.com/rwesson/Atomic-data.  The data are from the following sources:
 
-The three subdirectories contain atomic data from the CHIANTI project version 5.2, CHIANTI 6.0, and an assortment of data compiled over many years by many people at UCL from a variety of sources.  The main directory contains mostly CHIANTI 5.2 files, supplemented by files from the assorted directory for ions not available in CHIANTI, and also using older data for OII and SIII, due to errors in the CHIANTI data for those two ions.  The main directory also contains recombination data for the most commonly observed recombination lines.
+OII collisional data:
+Transition probabilities from Zeippen (1982MNRAS.198..111Z) and collision strengths from Pradhan (1976MNRAS.177...31P).
+
+SIII collisional data:
+Transition probabilities from Mendoza and Zeippen (1982MNRAS.199.1025M) and collision strengths from Mendoza (1983IAUS..103..143M).
+
+All other collisional data:
+CHIANTI 5.2 (Dere et al. (2006ApJS..162..261L))
+
+Recombination data:
+
+C2+                  : Davey et al. (2000AAS..142...85D)
+C3+                  : Pequignot et al. (1991AA...251..680P)
+N2+                  : Escalante & Victor (1990ApJS...73..513E)
+N3+                  : Pequignot et al. (1991AA...251..680P)
+O2+ (3s--3p)         : Storey et al. (1994AA...282..999S)
+O2+ (3p--3d, 3d--4f) : Liu et al. (1995MNRAS.272..369L)
+Ne2+ (3s--3p)        : Kisielius et al. (1998AAS..133..257K)
+Ne2+ (3d-4f)         : Storey (unpublished)
