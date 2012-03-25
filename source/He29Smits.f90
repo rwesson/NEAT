@@ -5,19 +5,13 @@
      & IHeI6678,abheii,abheiii,Hetotabund,Abb4471,Abb4686,Abb6678,Abb5876)
 
       IMPLICIT NONE
-      REAL GAMM4861_v,GAMM4686_v,GAMM4471_v,GAMM5876_v,GAMM6678_v,      &
-     & A4686,A4471,A5876,A6678,TEh2,NEh2,D,                             &
-     & C4471,C5876,C6678,GAMM6683,IHeII4686,                            &
+      REAL A4686,A4471,A5876,A6678,TEh2,NEh2,D,                         &
+     & C4471,C5876,C6678,IHeII4686,                                     &
      & IHeI4471,IHeI5876,IHeI6678,                                      &
-     & IHeII6683,AB4686,AB4471,AB5876,AB6678,ABHeII,ABHeIII,hetotabund 
+     & AB4686,AB4471,AB5876,AB6678,ABHeII,ABHeIII,hetotabund 
       double precision, dimension(3) :: weights
-      integer flag1,flag2
-      character*10 tech, nech, i4686ch,i4471ch,i5876ch,i6678ch
 
       double precision :: Abb4471, Abb4686, Abb6678, Abb5876
-
-      INTEGER IODATA
-      CHARACTER*20 ODATA
 
       A4686=10.**(GAMM4861(TEh2,NEh2)-GAMM4686(TEh2,NEh2))
       A4471=10.**(GAMM4861(TEh2,NEh2)-GAMM4471(TEh2,NEh2))

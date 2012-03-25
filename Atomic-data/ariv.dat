@@ -1,0 +1,325 @@
+ 48
+** Atomic data from version 5.2 of the CHIANTI database **
+%experimental energy levels: Fuhr, J.R., Kelleher, D.E., Martin, W.C., Musgrove, A., Sugar, J., Wiese, W.L.,
+        Dalton, G.R., Dragoset, R.A., Mohr, P.J., Olsen, K., Reader, J., Saloman, E.B., Sansonetti, C.J.,
+        Wiersma, G., "NIST Atomic Spectra Database" Ver. 2.0, March 1999, NIST Physical Reference Data.
+% Theoretical energy levels: Ramsbottom et al 1997, MNRAS, 284, 754
+%produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
+%
+% E.Landi - Aug 2001
+%experimental energy levels: Fuhr, J.R., et al., "NIST Atomic Spectra Database" Ver. 2.0, 
+      March 1999, NIST Physical Reference Data.
+% Theoretical energy levels: Ramsbottom et al 1997, MNRAS, 284, 754
+% Radiative data: SUPERSTRUCTURE calculation, including 25 configurations.
+% Comment: the configurations included in the SUPERSTRUCTURE calculation are:
+
+           3s2.3p3, 3s2.3p2.3d, 3s2.3p.3d2, 3s2.3d3
+           3s.3p4, 3s.3p3.3d, 3s.3p2.3d2, 3s.3p.3d3
+           3p2.3d3, 3p3.3d2, 3p4.3d, 3p5
+           3s2.3p3.4l with l=s,p,d,f
+           3s.3p3.4l  with l=s,p,d,f
+           3p4.4l     with l=s,p,d,f
+
+           Radiative data have been calculated using experimental energy values.
+
+%produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
+% 
+% Enrico Landi - Aug 2001
+
+%filename: ar_4.splups
+%Oscillator strengths: SUPERSTRUCTURE calculation, including 25 configurations.
+%Effective collision strengths ground configuration: Ramsbottom et al 1997, MNRAS, 284, 754
+%Effective collision strengths other configurations: Ramsbottom & Bell, 1997, 66, 65
+% Comment: the configurations included in the SUPERSTRUCTURE calculation are:
+
+           3s2.3p3, 3s2.3p2.3d, 3s2.3p.3d2, 3s2.3d3
+           3s.3p4, 3s.3p3.3d, 3s.3p2.3d2, 3s.3p.3d3
+           3p2.3d3, 3p3.3d2, 3p4.3d, 3p5
+           3s2.3p3.4l with l=s,p,d,f
+           3s.3p3.4l  with l=s,p,d,f
+           3p4.4l     with l=s,p,d,f
+
+           Radiative data have been calculated using experimental energy values.
+
+%Comment: the collisional data are provided in the temperature range 3.0 < Log T < 6.0
+%Comment: correction (June 2003): added collisional transitions including levels 17 and 25.
+          They slightly affect the population balance at electron densities > 10^12 cm^-3.
+% produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
+%
+% Enrico Landi - Jun 2003
+ 5 23 0
+  1  3s2.3p3 4S3/2
+  2  3s2.3p3 2D3/2
+  3  3s2.3p3 2D5/2
+  4  3s2.3p3 2P1/2
+  5  3s2.3p3 2P3/2
+     100.0
+     158.5
+     251.2
+     398.1
+     631.0
+    1000.0
+    1584.9
+    2511.9
+    3981.1
+    6309.6
+   10000.0
+   15848.9
+   25118.9
+   39810.7
+   63095.8
+  100000.0
+  158489.2
+  251188.7
+  398107.1
+  630957.6
+ 1000000.0
+ 1584892.5
+ 2511887.0
+0
+  1  2   7.89e-01
+  0  0   7.89e-01
+  0  0   7.88e-01
+  0  0   7.88e-01
+  0  0   7.86e-01
+  0  0   7.84e-01
+  0  0   7.81e-01
+  0  0   7.77e-01
+  0  0   7.71e-01
+  0  0   7.64e-01
+  0  0   7.61e-01
+  0  0   7.69e-01
+  0  0   7.92e-01
+  0  0   8.29e-01
+  0  0   8.64e-01
+  0  0   8.49e-01
+  0  0   7.76e-01
+  0  0   6.95e-01
+  0  0   5.80e-01
+  0  0   4.52e-01
+  0  0   3.47e-01
+  0  0   2.72e-01
+  0  0   2.22e-01
+  1  3   1.19e+00
+  0  0   1.19e+00
+  0  0   1.19e+00
+  0  0   1.19e+00
+  0  0   1.19e+00
+  0  0   1.18e+00
+  0  0   1.18e+00
+  0  0   1.17e+00
+  0  0   1.16e+00
+  0  0   1.14e+00
+  0  0   1.14e+00
+  0  0   1.15e+00
+  0  0   1.19e+00
+  0  0   1.24e+00
+  0  0   1.30e+00
+  0  0   1.27e+00
+  0  0   1.18e+00
+  0  0   1.06e+00
+  0  0   8.63e-01
+  0  0   6.72e-01
+  0  0   5.25e-01
+  0  0   4.23e-01
+  0  0   3.56e-01
+  1  4   8.01e-01
+  0  0   7.94e-01
+  0  0   7.83e-01
+  0  0   7.66e-01
+  0  0   7.39e-01
+  0  0   6.99e-01
+  0  0   6.38e-01
+  0  0   5.55e-01
+  0  0   4.59e-01
+  0  0   3.94e-01
+  0  0   3.94e-01
+  0  0   4.17e-01
+  0  0   4.49e-01
+  0  0   4.85e-01
+  0  0   4.99e-01
+  0  0   4.86e-01
+  0  0   4.44e-01
+  0  0   3.61e-01
+  0  0   2.70e-01
+  0  0   1.99e-01
+  0  0   1.49e-01
+  0  0   1.15e-01
+  0  0   9.39e-02
+  1  5   1.60e+00
+  0  0   1.59e+00
+  0  0   1.57e+00
+  0  0   1.53e+00
+  0  0   1.48e+00
+  0  0   1.40e+00
+  0  0   1.28e+00
+  0  0   1.11e+00
+  0  0   9.18e-01
+  0  0   7.88e-01
+  0  0   7.88e-01
+  0  0   8.33e-01
+  0  0   8.97e-01
+  0  0   9.69e-01
+  0  0   9.97e-01
+  0  0   9.70e-01
+  0  0   8.83e-01
+  0  0   7.14e-01
+  0  0   5.33e-01
+  0  0   3.89e-01
+  0  0   2.88e-01
+  0  0   2.22e-01
+  0  0   1.78e-01
+  2  3   7.08e+00
+  0  0   7.09e+00
+  0  0   7.09e+00
+  0  0   7.09e+00
+  0  0   7.09e+00
+  0  0   7.10e+00
+  0  0   7.10e+00
+  0  0   7.11e+00
+  0  0   7.12e+00
+  0  0   7.11e+00
+  0  0   7.04e+00
+  0  0   6.83e+00
+  0  0   6.46e+00
+  0  0   6.06e+00
+  0  0   5.91e+00
+  0  0   5.80e+00
+  0  0   5.51e+00
+  0  0   5.16e+00
+  0  0   4.37e+00
+  0  0   3.38e+00
+  0  0   2.56e+00
+  0  0   1.97e+00
+  0  0   1.58e+00
+  2  4   1.69e+00
+  0  0   1.69e+00
+  0  0   1.68e+00
+  0  0   1.68e+00
+  0  0   1.67e+00
+  0  0   1.66e+00
+  0  0   1.64e+00
+  0  0   1.61e+00
+  0  0   1.57e+00
+  0  0   1.53e+00
+  0  0   1.51e+00
+  0  0   1.52e+00
+  0  0   1.56e+00
+  0  0   1.64e+00
+  0  0   1.79e+00
+  0  0   1.95e+00
+  0  0   2.05e+00
+  0  0   2.03e+00
+  0  0   1.85e+00
+  0  0   1.63e+00
+  0  0   1.44e+00
+  0  0   1.31e+00
+  0  0   1.23e+00
+  2  5   2.15e+00
+  0  0   2.15e+00
+  0  0   2.15e+00
+  0  0   2.15e+00
+  0  0   2.14e+00
+  0  0   2.14e+00
+  0  0   2.14e+00
+  0  0   2.14e+00
+  0  0   2.13e+00
+  0  0   2.13e+00
+  0  0   2.13e+00
+  0  0   2.16e+00
+  0  0   2.21e+00
+  0  0   2.30e+00
+  0  0   2.47e+00
+  0  0   2.64e+00
+  0  0   2.67e+00
+  0  0   2.62e+00
+  0  0   2.36e+00
+  0  0   2.02e+00
+  0  0   1.72e+00
+  0  0   1.51e+00
+  0  0   1.36e+00
+  3  4   1.52e+00
+  0  0   1.52e+00
+  0  0   1.52e+00
+  0  0   1.52e+00
+  0  0   1.52e+00
+  0  0   1.52e+00
+  0  0   1.52e+00
+  0  0   1.51e+00
+  0  0   1.51e+00
+  0  0   1.52e+00
+  0  0   1.53e+00
+  0  0   1.55e+00
+  0  0   1.58e+00
+  0  0   1.65e+00
+  0  0   1.77e+00
+  0  0   1.88e+00
+  0  0   1.94e+00
+  0  0   1.88e+00
+  0  0   1.66e+00
+  0  0   1.42e+00
+  0  0   1.22e+00
+  0  0   1.08e+00
+  0  0   9.85e-01
+  3  5   4.24e+00
+  0  0   4.23e+00
+  0  0   4.23e+00
+  0  0   4.22e+00
+  0  0   4.21e+00
+  0  0   4.19e+00
+  0  0   4.16e+00
+  0  0   4.11e+00
+  0  0   4.05e+00
+  0  0   3.97e+00
+  0  0   3.93e+00
+  0  0   3.97e+00
+  0  0   4.08e+00
+  0  0   4.27e+00
+  0  0   4.63e+00
+  0  0   5.00e+00
+  0  0   5.14e+00
+  0  0   5.05e+00
+  0  0   4.60e+00
+  0  0   3.99e+00
+  0  0   3.46e+00
+  0  0   3.08e+00
+  0  0   2.83e+00
+  4  5   9.18e-01
+  0  0   9.25e-01
+  0  0   9.36e-01
+  0  0   9.54e-01
+  0  0   9.82e-01
+  0  0   1.03e+00
+  0  0   1.09e+00
+  0  0   1.20e+00
+  0  0   1.37e+00
+  0  0   1.63e+00
+  0  0   2.04e+00
+  0  0   2.53e+00
+  0  0   2.83e+00
+  0  0   2.97e+00
+  0  0   3.01e+00
+  0  0   2.92e+00
+  0  0   2.71e+00
+  0  0   2.41e+00
+  0  0   1.93e+00
+  0  0   1.45e+00
+  0  0   1.07e+00
+  0  0   8.00e-01
+  0  0   6.24e-01
+ 0 0 0
+  1  2   2.277e-02
+  1  3   1.906e-03
+  1  4   8.702e-01
+  1  5   2.134e+00
+  2  3   2.287e-05
+  2  4   6.660e-01
+  2  5   8.915e-01
+  3  4   1.179e-01
+  3  5   6.559e-01
+  4  5   4.937e-05
+  1  4        0.0
+  2  4    21090.4
+  3  6    21219.3
+  4  2    34855.5
+  5  4    35032.6

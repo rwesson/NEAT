@@ -16,11 +16,10 @@ subroutine read_ilines(ILs, Iint)
                 ALLOCATE (ILs(Iread))
                 ILs%intensity=0.D0 !otherwise it seems you can get random very small numbers in the array.
                 DO WHILE (Iint .le. Iread)!(.true.)
-                        READ(201,301,end=401) ILs(Iint)%name, ILs(Iint)%ion, ILs(Iint)%wavelength, ILs(Iint)%transition ,ILs(Iint)%zone!end condition breaks loop.  
+                        READ(201,301) ILs(Iint)%name, ILs(Iint)%ion, ILs(Iint)%wavelength, ILs(Iint)%transition ,ILs(Iint)%zone!end condition breaks loop.  
                         Iint = Iint + 1
                 END DO
-                Iint = Iint - 1 !count ends up one too high
-                401 PRINT "(A19,I3,A6)", " Read in CEL list, ",Iint," lines"
+                Iint = Iint - 1 !count ends up one too high 
         CLOSE(201)
 end subroutine        
 
@@ -78,8 +77,7 @@ subroutine get_H(H_BS, linelist, listlength)
         TYPE(line), DIMENSION(:) :: linelist 
         double precision, dimension(38) :: balmerlines
         INTEGER :: i, j, listlength
-        REAL*8 :: HW = 0.00000000
-        CHARACTER*10 :: blank 
+        REAL*8 :: HW = 0.00000000 
         !another ugly kludge, but it works.
 
         balmerlines = (/ 6562.77D0, 4861.33D0, 4340.47D0, 4101.74D0, 3970.07D0, 3889.05D0, 3835.38D0, 3797.90D0, 3770.63D0, 3750.15D0, 3734.37D0, 3721.94D0, 3711.97D0, 3703.85D0, 3697.15D0, 3691.55D0, 3686.83D0, 3682.81D0, 3679.35D0, 3676.36D0, 3673.76D0, 3671.48D0, 3669.46D0, 3667.68D0, 3666.10D0, 3664.68D0, 3663.40D0, 3662.26D0, 3661.22D0, 3660.28D0, 3659.42D0, 3658.64D0, 3657.92D0, 3657.27D0, 3656.66D0, 3656.11D0, 3655.59D0, 3655.12D0 /)

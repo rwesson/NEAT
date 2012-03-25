@@ -124,97 +124,17 @@
       subroutine oii_rec_lines(te,ne,abund,oiiRLs)
 
       IMPLICIT NONE
-      DOUBLE PRECISION :: g2, Br, Wave, aeff, aeff_Hb, Em, Em_Hb, Int,  &
-     & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund, logte, logne,  &
+      DOUBLE PRECISION :: aeff, aeff_hb, Em_Hb, &
+     & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund, &
      & logem
       DOUBLE PRECISION :: a, b, c, d, an(4)
 
       INTEGER :: i
 
-  !    TYPE oiiRL
-  !          CHARACTER*1 :: Hyb
-  !          CHARACTER*1 :: n_E1
-  !          CHARACTER*1 :: n_E1GA
-  !          CHARACTER*1 :: n_E2
-  !          CHARACTER*1 :: n_E2GA
-  !          CHARACTER*1 :: n_g1
-  !          CHARACTER*1 :: n_g2
-  !         CHARACTER*1 :: Rem1
-  !          CHARACTER*1 :: Rem2
-  !         CHARACTER*1 :: Rem3
-  !          CHARACTER*1 :: Rem4
-  !          CHARACTER*3 :: q_gf1
-  !          CHARACTER*3 :: q_gf2
-  !          CHARACTER*7 :: Mult
-  !          CHARACTER*9 :: Term1
-  !          CHARACTER*9 :: Term2
-  !          INTEGER :: g1
-  !          INTEGER :: g2
-  !          INTEGER :: ION
-  !          DOUBLE PRECISION :: Wave
-  !          DOUBLE PRECISION :: E1
-  !          DOUBLE PRECISION :: E2
-  !          DOUBLE PRECISION :: Em
-  !          DOUBLE PRECISION :: Int
-  !          DOUBLE PRECISION :: Br_A
-  !          DOUBLE PRECISION :: Br_B
-  !          DOUBLE PRECISION :: Br_C
-  !          DOUBLE PRECISION :: gf1
-  !          DOUBLE PRECISION :: gf2
-  !          DOUBLE PRECISION :: Obs
-  !          DOUBLE PRECISION :: abundance
-  !    END TYPE
 
       TYPE(oiiRL), DIMENSION(415) :: oiiRLs
 
-! first, calculate H recombination coefficient
-
-      AE2 = -9.06524E+00 -2.69954E+00 * log10(te) + 8.80123E-01 * &
-      &log10(te) ** 2 -1.57946E-01 * log10(te) ** 3 + &
-      &9.25920E-03 * log10(te) ** 4
-      AE3 = -8.13757E+00 -3.57392E+00 * log10(te) + 1.19331E+00 * &
-      &log10(te) ** 2 -2.08362E-01 * log10(te) ** 3 + &
-      &1.23303E-02 * log10(te) ** 4
-      AE4 = -6.87230E+00 -4.72312E+00 * log10(te) + 1.58890E+00 * &
-      &log10(te) ** 2 -2.69447E-01 * log10(te) ** 3 + &
-      &1.58955E-02 * log10(te) ** 4
-      AE5 = -5.15059E+00 -6.24549E+00 * log10(te) + 2.09801E+00 * &
-      &log10(te) ** 2 -3.45649E-01 * log10(te) ** 3 + &
-      &2.01962E-02 * log10(te) ** 4
-      AE6 = -2.35923E+00 -8.75565E+00 * log10(te) + 2.95600E+00 * &
-      &log10(te) ** 2 -4.77584E-01 * log10(te) ** 3 + &
-      &2.78852E-02 * log10(te) ** 4
-      AE7 =  1.55373E+00 -1.21894E+01 * log10(te) + 4.10096E+00 * &
-      &log10(te) ** 2 -6.49318E-01 * log10(te) ** 3 + &
-      &3.76487E-02 * log10(te) ** 4
-      AE8 =  6.59883E+00 -1.64030E+01 * log10(te) + 5.43844E+00 * &
-      &log10(te) ** 2 -8.40253E-01 * log10(te) ** 3 + &
-      &4.79786E-02 * log10(te) ** 4
-
-      if (log10(ne) .lt. 2) then
-            aeff = ae2
-      elseif (log10(ne) .GE. 2 .AND. log10(ne) .LT. 3) then
-            AEFF = AE2 + (AE3 - AE2) * (log10(ne) - 2)
-      elseif (log10(ne) .GE. 3 .AND. log10(ne) .LT. 4) then
-            AEFF = AE3 + (AE4 - AE3) * (log10(ne) - 3)
-      elseif (log10(ne) .GE. 4 .AND. log10(ne) .LT. 5) then
-            AEFF = AE4 + (AE5 - AE4) * (log10(ne) - 4)
-      elseif (log10(ne) .GE. 5 .AND. log10(ne) .LT. 6) then
-            AEFF = AE5 + (AE6 - AE5) * (log10(ne) - 5)
-      elseif (log10(ne) .GE. 6 .AND. log10(ne) .LT. 7) then
-            AEFF = AE6 + (AE7 - AE6) * (log10(ne) - 6)
-      elseif (log10(ne) .GE. 7 .AND. log10(ne) .LT. 8) then
-            AEFF = AE7 + (AE8 - AE7) * (log10(ne) - 7)
-      else
-            AEFF = AE8
-      endif
-
-      LogEm = AEFF - 11.38871 ! = log10(hc/lambda in cgs)
-      aeff = 10**aeff
-      em_hb = 10**logem
-
-!!      print *,"Te      Ne       Aeff"
-!!      print "(F8.0,1X,ES8.2,1X,ES9.3)",te,ne, aeff
+      call get_aeff_hb(te,ne, aeff_hb, em_hb)
 
 ! read in OII data
 
@@ -711,21 +631,6 @@
         oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
       enddo 
 
-!      print *,"Predictions for"
-!      print *,"Temperature    Density     O2+/H+"
-!      print "(1X,F6.0, 8X,F6.0, 7X,ES8.2)",te*10000,ne,abund
-!      print *,""
-!      print *,"Wavelength Multiplet I(Hb=100)"
-
-!      do i = 1,415
-!      if (oiiRLs(i)%Int .ge. 0.001) then !.and. &
-!      &(oiiRLs(i)%Mult .eq." V1    " .or. &
-!      & oiiRLs(i)%Mult .eq. " V89    ")) then
-!            print "(F7.2,4X,A7,3X,F7.3)",oiiRLs(i)%Wave,&
-!            &oiiRLs(i)%Mult,oiiRLs(i)%Int
-!      endif
-!      enddo
-
       te = te * 10000
 
       end subroutine oii_rec_lines
@@ -733,95 +638,17 @@
       subroutine nii_rec_lines(te, ne, abund, niiRLs)
 
       IMPLICIT NONE
-      DOUBLE PRECISION :: g2, Br, Wave, aeff, aeff_Hb, Em, Em_Hb, Int,  &
-     & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund, logte, logne,  &
-     & logem, Br_term, z, J2_u
-      DOUBLE PRECISION :: a, b, c, d, an(4)
+      DOUBLE PRECISION :: aeff, aeff_hb, Em_Hb, &
+     & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund, &
+     & logem, Br_term, z
+      DOUBLE PRECISION :: a, b, c, d
 
       INTEGER :: ii, i
 
-      !TYPE niiRL
-      !      CHARACTER*1 :: Hyb
-      !      CHARACTER*1 :: n_E1
-      !      CHARACTER*1 :: n_E1GA
-      !      CHARACTER*1 :: n_E2
-      !      CHARACTER*1 :: n_E2GA
-      !      CHARACTER*1 :: n_g1
-      !      CHARACTER*1 :: n_g2
-      !      CHARACTER*1 :: Rem1
-      !      CHARACTER*1 :: Rem2
-      !      CHARACTER*1 :: Rem3
-      !      CHARACTER*1 :: Rem4
-      !      CHARACTER*3 :: q_gf1
-      !      CHARACTER*3 :: q_gf2
-      !      CHARACTER*7 :: Mult
-      !      CHARACTER*9 :: Term1
-      !      CHARACTER*9 :: Term2
-      !      INTEGER :: g1
-      !      INTEGER :: g2
-      !      INTEGER :: ION
-      !      DOUBLE PRECISION :: Wave
-      !      DOUBLE PRECISION :: E1
-      !      DOUBLE PRECISION :: E2
-      !      DOUBLE PRECISION :: Em
-      !      DOUBLE PRECISION :: Int
-      !      DOUBLE PRECISION :: Br_LS 
-      !      DOUBLE PRECISION :: gf1
-      !      DOUBLE PRECISION :: gf2
-      !      DOUBLE PRECISION :: Obs
-      !      DOUBLE PRECISION :: abundance
-      !END TYPE
 
       TYPE(niiRL), DIMENSION(99) :: niiRLs
 
-! first, calculate H recombination coefficient
-
-      AE2 = -9.06524E+00 -2.69954E+00 * log10(te) + 8.80123E-01 * &
-      &log10(te) ** 2 -1.57946E-01 * log10(te) ** 3 + &
-      &9.25920E-03 * log10(te) ** 4
-      AE3 = -8.13757E+00 -3.57392E+00 * log10(te) + 1.19331E+00 * &
-      &log10(te) ** 2 -2.08362E-01 * log10(te) ** 3 + &
-      &1.23303E-02 * log10(te) ** 4
-      AE4 = -6.87230E+00 -4.72312E+00 * log10(te) + 1.58890E+00 * &
-      &log10(te) ** 2 -2.69447E-01 * log10(te) ** 3 + &
-      &1.58955E-02 * log10(te) ** 4
-      AE5 = -5.15059E+00 -6.24549E+00 * log10(te) + 2.09801E+00 * &
-      &log10(te) ** 2 -3.45649E-01 * log10(te) ** 3 + &
-      &2.01962E-02 * log10(te) ** 4
-      AE6 = -2.35923E+00 -8.75565E+00 * log10(te) + 2.95600E+00 * &
-      &log10(te) ** 2 -4.77584E-01 * log10(te) ** 3 + &
-      &2.78852E-02 * log10(te) ** 4
-      AE7 =  1.55373E+00 -1.21894E+01 * log10(te) + 4.10096E+00 * &
-      &log10(te) ** 2 -6.49318E-01 * log10(te) ** 3 + &
-      &3.76487E-02 * log10(te) ** 4
-      AE8 =  6.59883E+00 -1.64030E+01 * log10(te) + 5.43844E+00 * &
-      &log10(te) ** 2 -8.40253E-01 * log10(te) ** 3 + &
-      &4.79786E-02 * log10(te) ** 4
-
-      if (log10(ne) .lt. 2) then
-            aeff = ae2
-      elseif (log10(ne) .GE. 2 .AND. log10(ne) .LT. 3) then
-            AEFF = AE2 + (AE3 - AE2) * (log10(ne) - 2)
-      elseif (log10(ne) .GE. 3 .AND. log10(ne) .LT. 4) then
-            AEFF = AE3 + (AE4 - AE3) * (log10(ne) - 3)
-      elseif (log10(ne) .GE. 4 .AND. log10(ne) .LT. 5) then
-            AEFF = AE4 + (AE5 - AE4) * (log10(ne) - 4)
-      elseif (log10(ne) .GE. 5 .AND. log10(ne) .LT. 6) then
-            AEFF = AE5 + (AE6 - AE5) * (log10(ne) - 5)
-      elseif (log10(ne) .GE. 6 .AND. log10(ne) .LT. 7) then
-            AEFF = AE6 + (AE7 - AE6) * (log10(ne) - 6)
-      elseif (log10(ne) .GE. 7 .AND. log10(ne) .LT. 8) then
-            AEFF = AE7 + (AE8 - AE7) * (log10(ne) - 7)
-      else
-            AEFF = AE8
-      endif
-
-      LogEm = AEFF - 11.38871 ! = log10(hc/lambda in cgs)
-      aeff = 10**aeff
-      em_hb = 10**logem
-
-!!      print *,"Te      Ne       Aeff"
-!!      print "(F8.0,1X,ES8.2,1X,ES9.3)",te,ne, aeff
+      call get_aeff_hb(te,ne, aeff_hb, em_hb)
 
 ! read in NII data
 
@@ -843,8 +670,8 @@
 
       te = te/10000
 
-      ! 2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p E1 3P* - 3D  M03  transitions 
-      !i = 0002     !case A
+!       2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p E1 3P* - 3D  M03  transitions 
+!      i = 0002     !case A
       i = 0003     !case B
       a = -12.7289
       b = -0.689816
@@ -855,9 +682,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund 
       enddo 
-      !
-      ! 2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 3P* - 3S     M04 transitions
-      !i = 0004     !case A
+!      
+!       2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 3P* - 3S     M04 transitions
+!      i = 0004     !case A
       i = 0005     !case B
       a = -13.8161
       b = -0.778606
@@ -868,9 +695,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 3P* - 3P     M05 transitions
-      !i = 0006     !case A
+!      
+!       2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 3P* - 3P     M05 transitions
+!      i = 0006     !case A
       i = 0007     !case B
       a = -13.0765
       b = -0.734594
@@ -881,10 +708,10 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 1P* - 1P     M08 transitions
+!      
+!       2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 1P* - 1P     M08 transitions
       i = 0008     !case A
-      !i = 0009     !case B
+!      i = 0009     !case B
       a = -14.1211
       b = -0.608107
       c = 0.0362301
@@ -894,10 +721,10 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 1P* - 1D     M12 transitions
+!      
+!       2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 1P* - 1D     M12 transitions
       i = 0010     !case A
-      !i = 0011     !case B
+!      i = 0011     !case B
       a = -13.7473
       b = -0.509595
       c = 0.0255685
@@ -907,10 +734,10 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 1P* - 1S     M13 transitions
+!      
+!       2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 1P* - 1S     M13 transitions
       i = 0012     !case A
-      !i = 0013     !case B
+!      i = 0013     !case B
       a = -14.3753
       b = -0.515547
       c = 0.0100966
@@ -920,10 +747,10 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 1P - 1D*     M15 transitions
+!      
+!       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 1P - 1D*     M15 transitions
       i = 0014     !case A
-      !i = 0015     !case B
+!      i = 0015     !case B
       a = -14.3932
       b = -0.887946
       c = -0.0525855
@@ -933,10 +760,10 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 1P - 1P*     M17 transitions
+!      
+!       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 1P - 1P*     M17 transitions
       i = 0016     !case A
-      !i = 0017     !case B
+!      i = 0017     !case B
       a = -15.0052
       b = -0.89811
       c = -0.0581789
@@ -946,9 +773,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3D - 3F*     M19 transitions
-      !i = 0018     !case A
+!      
+!       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3D - 3F*     M19 transitions
+!      i = 0018     !case A
       i = 0019     !case B
       a = -12.6183
       b = -0.840727
@@ -959,9 +786,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3D - 3D*     M20 transitions
-      !i = 0020     !case A
+!      
+!       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3D - 3D*     M20 transitions
+!      i = 0020     !case A
       i = 0021     !case B
       a = -13.3184
       b = -0.884034
@@ -972,9 +799,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3D - 3P*     M21 transitions
-      !i = 0022     !case A
+!      
+!       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3D - 3P*     M21 transitions
+!      i = 0022     !case A
       i = 0023     !case B
       a = -14.5113
       b = -0.87792
@@ -985,9 +812,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3p - 2s2.2p.(2P*).4s 3D - 3P*     M22 transitions
-      !i = 0024     !case A
+!      
+!       2s2.2p.(2P*).3p - 2s2.2p.(2P*).4s 3D - 3P*     M22 transitions
+!      i = 0024     !case A
       i = 0025     !case B
       a = -14.1305
       b = -0.487037
@@ -998,9 +825,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3S - 3P*     M24 transitions
-      !i = 0026     !case A
+!      
+!       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3S - 3P*     M24 transitions
+!      i = 0026     !case A
       i = 0027     !case B
       a = -13.3527
       b = -0.878224
@@ -1011,9 +838,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3p - 2s2.2p.(2P*).4s 3S - 3P*     M26 transitions
-      !i = 0028     !case A
+!      
+!       2s2.2p.(2P*).3p - 2s2.2p.(2P*).4s 3S - 3P*     M26 transitions
+!      i = 0028     !case A
       i = 0029     !case B
       a = -14.9628
       b = -0.486746
@@ -1024,9 +851,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3P - 3D*     M28 transitions
-      !i = 0030     !case A
+!      
+!       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3P - 3D*     M28 transitions
+!      i = 0030     !case A
       i = 0031     !case B
       a = -13.0871
       b = -0.883624
@@ -1037,9 +864,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3P - 3P*     M29 transitions
-      !i = 0032     !case A
+!      
+!       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3P - 3P*     M29 transitions
+!      i = 0032     !case A
       i = 0033     !case B
       a = -13.5581
       b = -0.878488
@@ -1050,9 +877,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3p - 2s2.2p.(2P*).4s 3P - 3P*     M30 transitions
-      !i = 0034     !case A
+!      
+!       2s2.2p.(2P*).3p - 2s2.2p.(2P*).4s 3P - 3P*     M30 transitions
+!      i = 0034     !case A
       i = 0035     !case B
       a = -14.3521
       b = -0.487527
@@ -1063,10 +890,10 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 1D - 1F*     M31 transitions
+!      
+!       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 1D - 1F*     M31 transitions
       i = 0036     !case A
-      !i = 0037     !case B
+!      i = 0037     !case B
       a = -15.0026
       b = -0.923093
       c = -0.0588371
@@ -1076,9 +903,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3d - 2s2.2p.(2P*).4p 3F* - 3D     M36 transitions
-      !i = 0038     !case A
+!      
+!       2s2.2p.(2P*).3d - 2s2.2p.(2P*).4p 3F* - 3D     M36 transitions
+!      i = 0038     !case A
       i = 0039     !case B
       a = -13.8636
       b = -0.569144
@@ -1089,9 +916,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3d - 2s2.2p.(2P*<3/2>).4f 3F* - 3G M39 transitions
-      !i = 0040     !case A
+!      
+!       2s2.2p.(2P*).3d - 2s2.2p.(2P*<3/2>).4f 3F* - 3G M39 transitions
+!      i = 0040     !case A
       i = 0041     !case B
       a = -13.035
       b = -1.12035
@@ -1102,10 +929,10 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 2s2.2p.(2P*).3d - 2s2.2p.(2P*<3/2>).4f 1F* - 1G M58 transitions
+!      
+!       2s2.2p.(2P*).3d - 2s2.2p.(2P*<3/2>).4f 1F* - 1G M58 transitions
       i = 0042     !case A
-      !i = 0043     !case B
+!      i = 0043     !case B
       a = -13.5484
       b = -1.11909
       c = -0.105123
@@ -1115,9 +942,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 3d 3D* - 4f 3F 4242 M48 transitions
-      !i = 0044     !case A
+!      
+!       3d 3D* - 4f 3F 4242 M48 transitions
+!      i = 0044     !case A
       i = 0045     !case B
       a = -13.2548
       b = -1.12902
@@ -1128,9 +955,9 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 3d 3P* - 4f 3D 4435 M55 transitions
-      !i = 0046     !case A
+!      
+!       3d 3P* - 4f 3D 4435 M55 transitions
+!      i = 0046     !case A
       i = 0047     !case B
       a = -13.5656
       b = -1.11989
@@ -1141,10 +968,10 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 3d 1D* - 4f 1F 4176 M43 (RMT M42) transitions
+!      
+!       3d 1D* - 4f 1F 4176 M43 (RMT M42) transitions
       i = 0048     !case A
-      !i = 0049     !case B
+!      i = 0049     !case B
       a = -13.7426
       b = -1.13351
       c = -0.111146
@@ -1154,10 +981,10 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 3d 1P* - 4f 1D 4677 M61 (RMT M62) transitions
+!      
+!       3d 1P* - 4f 1D 4677 M61 (RMT M62) transitions
       i = 0049     !case A
-      !i = 0051     !case B
+!      i = 0051     !case B
       a = -13.7373
       b = -1.12695
       c = -0.108158
@@ -1168,43 +995,37 @@
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
 !
-      ! 3d 3F* - 4f 1G 4026 M39b transitions
-      !case A (PPB):
+!       3d 3F* - 4f 1G 4026 M39b transitions
+!      case A (PPB):
       a = 0.108
       b = -0.754
       c = 2.587
       d = 0.719
       z = 2.
       Br_term = 0.350
-      !
+!      
       aeff = 1.e-13 * z * a  * (te/z**2) ** (b)
       aeff = aeff / (1. + c * (te/z**2) ** (d)) * Br_term
       do ii = 98,98
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-      !
-      ! 3d 1F* - 4f 3G 4552 M58a transitions
-      !case A (PPB):
+!      
+!       3d 1F* - 4f 3G 4552 M58a transitions
+!      case A (PPB):
       a = 0.326
       b = -0.754
       c = 2.587
       d = 0.719
       z = 2.
       Br_term = 0.074
-      !
+!      
       aeff = 1.e-13 * z * a  * (te/z**2) ** (b)
       aeff = aeff / (1. + c * (te/z**2) ** (d)) * Br_term
       do ii = 99,99
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-
-!      print *,"Predictions for"
-!      print *,"Temperature    Density     O2+/H+"
-!      print "(1X,F6.0, 8X,F6.0, 7X,ES8.2)",te*10000,ne,abund
-!      print *,""
-!      print *,"Wavelength Multiplet I(Hb=100)"
 
       te = te * 10000
 
@@ -1213,75 +1034,18 @@
       subroutine cii_rec_lines(te, ne, abund, ciiRLs)
 
       IMPLICIT NONE
-      DOUBLE PRECISION :: g2, Br, Wave, aeff, aeff_Hb, Em, Em_Hb, Int,  &
-     & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund, logte, logne,  &
-     & logem, Br_term, z, J2_u
-      DOUBLE PRECISION :: a, b, c, d
+      DOUBLE PRECISION :: aeff_Hb, Em_Hb, &
+     & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund, &
+     & logem
 
-      INTEGER :: ii, i
+      INTEGER :: i
 
-   !   TYPE ciiRL 
-   !         DOUBLE PRECISION :: Wave
-   !         DOUBLE PRECISION :: a
-   !         DOUBLE PRECISION :: b
-   !         DOUBLE PRECISION :: c
-   !         DOUBLE PRECISION :: d
-   !         DOUBLE PRECISION :: f 
-   !         DOUBLE PRECISION :: aeff
-   !         DOUBLE PRECISION :: Int
-   !         DOUBLE PRECISION :: Obs
-   !         DOUBLE PRECISION :: abundance
-   !   END TYPE
 
       TYPE(ciiRL), DIMENSION(57) :: ciiRLs
 
-! first, calculate H recombination coefficient
+      call get_aeff_hb(te,ne, aeff_hb, em_hb)
 
-      AE2 = -9.06524E+00 -2.69954E+00 * log10(te) + 8.80123E-01 * &
-      &log10(te) ** 2 -1.57946E-01 * log10(te) ** 3 + &
-      &9.25920E-03 * log10(te) ** 4
-      AE3 = -8.13757E+00 -3.57392E+00 * log10(te) + 1.19331E+00 * &
-      &log10(te) ** 2 -2.08362E-01 * log10(te) ** 3 + &
-      &1.23303E-02 * log10(te) ** 4
-      AE4 = -6.87230E+00 -4.72312E+00 * log10(te) + 1.58890E+00 * &
-      &log10(te) ** 2 -2.69447E-01 * log10(te) ** 3 + &
-      &1.58955E-02 * log10(te) ** 4
-      AE5 = -5.15059E+00 -6.24549E+00 * log10(te) + 2.09801E+00 * &
-      &log10(te) ** 2 -3.45649E-01 * log10(te) ** 3 + &
-      &2.01962E-02 * log10(te) ** 4
-      AE6 = -2.35923E+00 -8.75565E+00 * log10(te) + 2.95600E+00 * &
-      &log10(te) ** 2 -4.77584E-01 * log10(te) ** 3 + &
-      &2.78852E-02 * log10(te) ** 4
-      AE7 =  1.55373E+00 -1.21894E+01 * log10(te) + 4.10096E+00 * &
-      &log10(te) ** 2 -6.49318E-01 * log10(te) ** 3 + &
-      &3.76487E-02 * log10(te) ** 4
-      AE8 =  6.59883E+00 -1.64030E+01 * log10(te) + 5.43844E+00 * &
-      &log10(te) ** 2 -8.40253E-01 * log10(te) ** 3 + &
-      &4.79786E-02 * log10(te) ** 4
-
-      if (log10(ne) .lt. 2) then
-            aeff_hb = ae2
-      elseif (log10(ne) .GE. 2 .AND. log10(ne) .LT. 3) then
-            aeff_hb = AE2 + (AE3 - AE2) * (log10(ne) - 2)
-      elseif (log10(ne) .GE. 3 .AND. log10(ne) .LT. 4) then
-            aeff_hb = AE3 + (AE4 - AE3) * (log10(ne) - 3)
-      elseif (log10(ne) .GE. 4 .AND. log10(ne) .LT. 5) then
-            aeff_hb = AE4 + (AE5 - AE4) * (log10(ne) - 4)
-      elseif (log10(ne) .GE. 5 .AND. log10(ne) .LT. 6) then
-            aeff_hb = AE5 + (AE6 - AE5) * (log10(ne) - 5)
-      elseif (log10(ne) .GE. 6 .AND. log10(ne) .LT. 7) then
-            aeff_hb = AE6 + (AE7 - AE6) * (log10(ne) - 6)
-      elseif (log10(ne) .GE. 7 .AND. log10(ne) .LT. 8) then
-            aeff_hb = AE7 + (AE8 - AE7) * (log10(ne) - 7)
-      else
-            aeff_hb = AE8
-      endif
-
-      LogEm = aeff_hb - 11.38871 ! = log10(hc/lambda in cgs)
-      aeff_hb = 10**aeff_hb
-      em_hb = 10**logem
-
-! read in NII data
+! read in CII data
 
        301 FORMAT (F7.2, 1X, F6.4, 1X, F7.4, 1X, F7.4, 1X, F7.4, 1X, F7.4) 
        OPEN(201, file="Atomic-data/Rcii.dat", status='old')
@@ -1293,22 +1057,13 @@
 
       te = te/10000
 
-!calcaulte alphas and intensities, write out
-
-!      print *,"Predictions for"
-!      print *,"Temperature    Density     C2+/H+"
-!      print "(1X,F6.0, 8X,F6.0, 7X,ES8.2)",te*10000,ne,abund
-!      print *,""
-!      print *,"Wavelength   I(Hb=100)"
-
       do i = 1,57
         ciiRLs(i)%aeff = 1e-14 * (ciiRLs(i)%a*(te**ciiRLs(i)%f)) * (1 &
         &+ (ciiRLs(i)%b*(1-te)) &
         &+ (ciiRLs(i)%c * ((1-te)**2) ) &
         &+ (ciiRLs(i)%d * ((1-te)**3) ) &
         &) 
-        ciiRLs(i)%Int = 100 * (ciiRLs(i)%aeff/aeff_hb) * (4861.33/ciiRLs(i)%Wave) * abund
-!        print "(F8.2,4X,F7.3)",ciiRLs(i)%Wave,ciiRLs(i)%Int
+        ciiRLs(i)%Int = 100 * (ciiRLs(i)%aeff/aeff_hb) * (4861.33/ciiRLs(i)%Wave) * abund 
       enddo
 
       te = te * 10000
@@ -1318,76 +1073,16 @@
       subroutine neii_rec_lines(te, ne, abund, neiiRLs)
 
       IMPLICIT NONE
-      DOUBLE PRECISION :: g2, Br, Wave, aeff, aeff_Hb, Em, Em_Hb, Int,  &
-     & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund, logte, logne,  &
+      DOUBLE PRECISION :: aeff_Hb, Em_Hb,                         &
+     & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund,                &
      & logem
-      DOUBLE PRECISION :: a, b, c, d, f
 
-      INTEGER :: ii, i
+      INTEGER :: i
 
-  !    TYPE neiiRL 
-  !          DOUBLE PRECISION :: Wave
-  !          DOUBLE PRECISION :: a
-  !          DOUBLE PRECISION :: b
-  !          DOUBLE PRECISION :: c
-  !          DOUBLE PRECISION :: d
-  !          DOUBLE PRECISION :: f 
-  !          DOUBLE PRECISION :: Br
-  !          DOUBLE PRECISION :: aeff
-  !          DOUBLE PRECISION :: Int
-  !          DOUBLE PRECISION :: Obs
-  !          DOUBLE PRECISION :: abundance
-  !    END TYPE
 
       TYPE(neiiRL), DIMENSION(38) :: neiiRLs
 
-! first, calculate H recombination coefficient
-
-      AE2 = -9.06524E+00 -2.69954E+00 * log10(te) + 8.80123E-01 * &
-      &log10(te) ** 2 -1.57946E-01 * log10(te) ** 3 + &
-      &9.25920E-03 * log10(te) ** 4
-      AE3 = -8.13757E+00 -3.57392E+00 * log10(te) + 1.19331E+00 * &
-      &log10(te) ** 2 -2.08362E-01 * log10(te) ** 3 + &
-      &1.23303E-02 * log10(te) ** 4
-      AE4 = -6.87230E+00 -4.72312E+00 * log10(te) + 1.58890E+00 * &
-      &log10(te) ** 2 -2.69447E-01 * log10(te) ** 3 + &
-      &1.58955E-02 * log10(te) ** 4
-      AE5 = -5.15059E+00 -6.24549E+00 * log10(te) + 2.09801E+00 * &
-      &log10(te) ** 2 -3.45649E-01 * log10(te) ** 3 + &
-      &2.01962E-02 * log10(te) ** 4
-      AE6 = -2.35923E+00 -8.75565E+00 * log10(te) + 2.95600E+00 * &
-      &log10(te) ** 2 -4.77584E-01 * log10(te) ** 3 + &
-      &2.78852E-02 * log10(te) ** 4
-      AE7 =  1.55373E+00 -1.21894E+01 * log10(te) + 4.10096E+00 * &
-      &log10(te) ** 2 -6.49318E-01 * log10(te) ** 3 + &
-      &3.76487E-02 * log10(te) ** 4
-      AE8 =  6.59883E+00 -1.64030E+01 * log10(te) + 5.43844E+00 * &
-      &log10(te) ** 2 -8.40253E-01 * log10(te) ** 3 + &
-      &4.79786E-02 * log10(te) ** 4
-
-      if (log10(ne) .lt. 2) then
-            aeff_hb = ae2
-      elseif (log10(ne) .GE. 2 .AND. log10(ne) .LT. 3) then
-            aeff_hb = AE2 + (AE3 - AE2) * (log10(ne) - 2)
-      elseif (log10(ne) .GE. 3 .AND. log10(ne) .LT. 4) then
-            aeff_hb = AE3 + (AE4 - AE3) * (log10(ne) - 3)
-      elseif (log10(ne) .GE. 4 .AND. log10(ne) .LT. 5) then
-            aeff_hb = AE4 + (AE5 - AE4) * (log10(ne) - 4)
-      elseif (log10(ne) .GE. 5 .AND. log10(ne) .LT. 6) then
-            aeff_hb = AE5 + (AE6 - AE5) * (log10(ne) - 5)
-      elseif (log10(ne) .GE. 6 .AND. log10(ne) .LT. 7) then
-            aeff_hb = AE6 + (AE7 - AE6) * (log10(ne) - 6)
-      elseif (log10(ne) .GE. 7 .AND. log10(ne) .LT. 8) then
-            aeff_hb = AE7 + (AE8 - AE7) * (log10(ne) - 7)
-      else
-            aeff_hb = AE8
-      endif
-
-      LogEm = aeff_hb - 11.38871 ! = log10(hc/lambda in cgs)
-      aeff_hb = 10**aeff_hb
-      em_hb = 10**logem
-
-! read in NII data
+! read in NeII data
 
        301 FORMAT (F7.2, 1X, F6.3, 1X, F6.3, 1X, F6.3, 1X, F6.3, 1X, F7.4, 1X, F6.3) 
        OPEN(201, file="Atomic-data/Rneii.dat", status='old')
@@ -1399,14 +1094,6 @@
 
       te = te/10000
 
-!calcaulte alphas and intensities, write out
-
-!      print *,"Predictions for"
-!      print *,"Temperature    Density     Ne2+/H+"
-!      print "(1X,F6.0, 8X,F6.0, 7X,ES8.2)",te*10000,ne,abund
-!      print *,""
-!      print *,"Wavelength   I(Hb=100)"
-
       do i = 1,38
         neiiRLs(i)%aeff = neiiRLs(i)%Br * 1e-14 * &
         &(neiiRLs(i)%a*(te**neiiRLs(i)%f)) * (1 &
@@ -1414,8 +1101,7 @@
         &+ (neiiRLs(i)%c * ((1-te)**2) ) &
         &+ (neiiRLs(i)%d * ((1-te)**3) ) &
         &)
-        neiiRLs(i)%Int = 100 * (neiiRLs(i)%aeff/aeff_hb) * (4861.33/neiiRLs(i)%Wave) * abund
-!        print "(F8.2,4X,F7.3)",neiiRLs(i)%Wave,neiiRLs(i)%Int
+        neiiRLs(i)%Int = 100 * (neiiRLs(i)%aeff/aeff_hb) * (4861.33/neiiRLs(i)%Wave) * abund 
       enddo
 
       te = te * 10000
@@ -1425,30 +1111,47 @@
       subroutine xiii_rec_lines(te, ne, abund, xiiiRLs)
 
       IMPLICIT NONE
-      DOUBLE PRECISION :: g2, Br, Wave, aeff, aeff_Hb, Em, Em_Hb, Int,  &
-     & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund, logte, logne,  &
+      DOUBLE PRECISION :: aeff_Hb, Em_Hb, &
+     & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund, &
      & logem
-      DOUBLE PRECISION :: a, b, c, d
 
-      INTEGER :: ii, i
-
- !     TYPE xiiiRL 
-  !          CHARACTER*3      :: Ion
-   !         DOUBLE PRECISION :: Wave
-    !        DOUBLE PRECISION :: a
-     !       DOUBLE PRECISION :: b
-      !      DOUBLE PRECISION :: c
-       !     DOUBLE PRECISION :: d 
-        !    DOUBLE PRECISION :: Br
-         !   DOUBLE PRECISION :: aeff
-          !  DOUBLE PRECISION :: Int
-           ! DOUBLE PRECISION :: Obs
-            !DOUBLE PRECISION :: abundance
-      !END TYPE
+      INTEGER :: i
 
       TYPE(xiiiRL), DIMENSION(6) :: xiiiRLs
 
-! first, calculate H recombination coefficient
+! read in XIII data
+
+       301 FORMAT (A3,1X,F7.2, 1X, F5.3, 1X, F6.3, 1X, F5.3, 1X, F5.3, 1X, F5.4)
+       OPEN(201, file="Atomic-data/Rxiii.dat", status='old')
+       DO i = 1,6
+         READ(201,301) xiiiRLs(i)%ion, xiiiRLs(i)%Wave, xiiiRLs(i)%a, &
+         & xiiiRLs(i)%b, xiiiRLs(i)%c, xiiiRLs(i)%d, xiiiRLs(i)%Br
+       END DO
+       CLOSE(201)
+
+      te = te/90000 !ionic charge=3 so divide by 9
+
+      do i = 1,4
+        xiiiRLs(i)%aeff = xiiiRLs(i)%Br * 1e-13 * 3 * &
+      & (xiiiRLs(i)%a*(te**xiiiRLs(i)%b)) / &
+      & (1 + (xiiiRLs(i)%c * (te**xiiiRLs(i)%d))) 
+        xiiiRLs(i)%Int = 100 * (xiiiRLs(i)%aeff/aeff_hb) * (4861.33/xiiiRLs(i)%Wave) * abund 
+      enddo
+
+      do i = 5,6
+        xiiiRLs(i)%aeff = xiiiRLs(i)%Br * 1e-13 * 3 * &
+      & (xiiiRLs(i)%a*(te**xiiiRLs(i)%b)) / &
+      & (1 + (xiiiRLs(i)%c * (te**xiiiRLs(i)%d)))
+        xiiiRLs(i)%Int = 100 * (xiiiRLs(i)%aeff/aeff_hb) * (4861.33/xiiiRLs(i)%Wave) * abund 
+      enddo
+
+      te = te * 90000
+
+      end subroutine xiii_rec_lines
+
+      subroutine get_aeff_hb(te, ne, aeff_hb, em_hb)
+
+      double precision :: Te, Ne, AE2, AE3, AE4, AE5, AE6, AE7, AE8, aeff_hb, Em_Hb, logem
 
       AE2 = -9.06524E+00 -2.69954E+00 * log10(te) + 8.80123E-01 * &
       &log10(te) ** 2 -1.57946E-01 * log10(te) ** 3 + &
@@ -1494,49 +1197,6 @@
       aeff_hb = 10**aeff_hb
       em_hb = 10**logem
 
-! read in NII data
-
-       301 FORMAT (A3,1X,F7.2, 1X, F5.3, 1X, F6.3, 1X, F5.3, 1X, F5.3, 1X, F5.4)
-       OPEN(201, file="Atomic-data/Rxiii.dat", status='old')
-       DO i = 1,6
-         READ(201,301) xiiiRLs(i)%ion, xiiiRLs(i)%Wave, xiiiRLs(i)%a, &
-         & xiiiRLs(i)%b, xiiiRLs(i)%c, xiiiRLs(i)%d, xiiiRLs(i)%Br
-       END DO
-       CLOSE(201)
-
-      te = te/90000 !ionic charge=3 so divide by 9
-
-!calcaulte alphas and intensities, write out
-
-!      print *,"Predictions for"
-!      print *,"Temperature    Density     X3+/H+"
-!      print "(1X,F6.0, 8X,F6.0, 7X,ES8.2)",te*90000,ne,abund
-!      print *,""
-!      print *," C3+"
-!      print *,"Wavelength   I(Hb=100)"
-
-      do i = 1,4
-        xiiiRLs(i)%aeff = xiiiRLs(i)%Br * 1e-13 * 3 * &
-      & (xiiiRLs(i)%a*(te**xiiiRLs(i)%b)) / &
-      & (1 + (xiiiRLs(i)%c * (te**xiiiRLs(i)%d))) 
-        xiiiRLs(i)%Int = 100 * (xiiiRLs(i)%aeff/aeff_hb) * (4861.33/xiiiRLs(i)%Wave) * abund
-!        print "(F8.2,4X,F7.3)",xiiiRLs(i)%Wave,xiiiRLs(i)%Int
-      enddo
-
-!      print *,""
-!      print *,"N3+"
-!      print *,"Wavelength   I(Hb=100)"
-
-      do i = 5,6
-        xiiiRLs(i)%aeff = xiiiRLs(i)%Br * 1e-13 * 3 * &
-      & (xiiiRLs(i)%a*(te**xiiiRLs(i)%b)) / &
-      & (1 + (xiiiRLs(i)%c * (te**xiiiRLs(i)%d)))
-        xiiiRLs(i)%Int = 100 * (xiiiRLs(i)%aeff/aeff_hb) * (4861.33/xiiiRLs(i)%Wave) * abund
-!        print "(F8.2,4X,F7.3)",xiiiRLs(i)%Wave,xiiiRLs(i)%Int
-      enddo
-
-      te = te * 90000
-
-      end subroutine xiii_rec_lines
+      end subroutine get_aeff_hb
 
       end module mod_recombination_lines

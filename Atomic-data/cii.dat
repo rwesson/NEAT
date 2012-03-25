@@ -1,0 +1,307 @@
+ 30
+** Atomic data from version 5.2 of the CHIANTI database **
+%energy levels:  Moore, C. E., Tables of Spectra of Hydrogen, Carbon,
+  Nitrogen, and Oxygen Atoms and Ions, J. W. Gallagher ed., CRC Press, 1993.
+% Theoretical energy levels: Zhang, H.L., Graziani, M., Pradhan, A.K., 1994, A&A, 283, 319.
+%comment:  energy levels renumbered 
+%produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration 
+%
+% K.P.Dere 1994
+%observed energy levels: Kelly, R.L., 1987, J.Phys.Chem.Ref.Data 16, Suppl. 1.
+%observed energy levels: Martin, W.C., Sugar, J., Musgrove, A., Dalton, G.R., 1995, 
+   NIST Database for Atomic Spectroscopy, Version 1.0, NIST Standard Reference Database 61.
+%comment: energy levels renumbered 
+%oscillator strengths:  Dankwort, W., Trefftz, E., 1978, A&A, 65, 93.
+%oscillator strengths:  Lennon, D.J., Dufton, P.L., Hibbert, A., Kingston, A.E., 1985, ApJ, 294, 200.      
+%oscillator strengths:  Nussbaumer, H., and Storey, P. J., 1981, A&A, 96, 91.                           
+%oscillator strengths and A values:  Wiese W.L., Fuhr J.R., 1995, NIST Database
+ for Atomic Spectroscopy, Version 1.0, NIST Standard Reference Database 61.
+%produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration CHIANTI
+%
+%  K.P.Dere and E.Landi 2003
+
+%filename: c_2.splups
+%oscillator strengths: Dankwort, W., Trefftz, E., 1978, A&A, 65, 93
+%oscillator strengths: Lennon, D.J., Dufton, P.L., Hibbert, A., Kingston, A.E., 1985, ApJ, 294, 200
+%oscillator strengths: Nussbaumer, H., Storey, P.J., 1981, A&A, 96, 91
+%effective collision strengths: Blum, R.D., Pradhan, A.K., 1992, ApJS, 80, 425
+%comment: effective collision strengths were given in the 3.0 < Log T < 4.6 temperature range
+%produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
+%
+%  K.P. Dere  -  1994
+ 5 23 0
+  1  2s2.2p 2P1/2
+  2  2s2.2p 2P3/2
+  3  2s.2p2 4P1/2
+  4  2s.2p2 4P3/2
+  5  2s.2p2 4P5/2
+     100.0
+     158.5
+     251.2
+     398.1
+     631.0
+    1000.0
+    1584.9
+    2511.9
+    3981.1
+    6309.6
+   10000.0
+   15848.9
+   25118.9
+   39810.7
+   63095.8
+  100000.0
+  158489.2
+  251188.7
+  398107.1
+  630957.6
+ 1000000.0
+ 1584892.5
+ 2511887.0
+0
+  1  2   1.52e+00
+  0  0   1.52e+00
+  0  0   1.53e+00
+  0  0   1.54e+00
+  0  0   1.55e+00
+  0  0   1.58e+00
+  0  0   1.61e+00
+  0  0   1.68e+00
+  0  0   1.80e+00
+  0  0   1.98e+00
+  0  0   2.16e+00
+  0  0   2.25e+00
+  0  0   2.28e+00
+  0  0   2.26e+00
+  0  0   2.23e+00
+  0  0   2.20e+00
+  0  0   2.18e+00
+  0  0   2.17e+00
+  0  0   2.16e+00
+  0  0   2.15e+00
+  0  0   2.15e+00
+  0  0   2.14e+00
+  0  0   2.14e+00
+  1  3   2.74e-01
+  0  0   2.73e-01
+  0  0   2.72e-01
+  0  0   2.70e-01
+  0  0   2.68e-01
+  0  0   2.64e-01
+  0  0   2.59e-01
+  0  0   2.52e-01
+  0  0   2.46e-01
+  0  0   2.42e-01
+  0  0   2.43e-01
+  0  0   2.46e-01
+  0  0   2.46e-01
+  0  0   2.43e-01
+  0  0   2.37e-01
+  0  0   2.32e-01
+  0  0   2.27e-01
+  0  0   2.24e-01
+  0  0   2.22e-01
+  0  0   2.21e-01
+  0  0   2.20e-01
+  0  0   2.19e-01
+  0  0   2.19e-01
+  1  4   4.05e-01
+  0  0   4.04e-01
+  0  0   4.03e-01
+  0  0   4.02e-01
+  0  0   3.99e-01
+  0  0   3.95e-01
+  0  0   3.88e-01
+  0  0   3.77e-01
+  0  0   3.64e-01
+  0  0   3.57e-01
+  0  0   3.63e-01
+  0  0   3.71e-01
+  0  0   3.69e-01
+  0  0   3.62e-01
+  0  0   3.54e-01
+  0  0   3.49e-01
+  0  0   3.45e-01
+  0  0   3.42e-01
+  0  0   3.41e-01
+  0  0   3.39e-01
+  0  0   3.39e-01
+  0  0   3.38e-01
+  0  0   3.38e-01
+  1  5   2.46e-01
+  0  0   2.46e-01
+  0  0   2.46e-01
+  0  0   2.46e-01
+  0  0   2.45e-01
+  0  0   2.44e-01
+  0  0   2.42e-01
+  0  0   2.37e-01
+  0  0   2.30e-01
+  0  0   2.28e-01
+  0  0   2.36e-01
+  0  0   2.44e-01
+  0  0   2.44e-01
+  0  0   2.41e-01
+  0  0   2.37e-01
+  0  0   2.33e-01
+  0  0   2.31e-01
+  0  0   2.29e-01
+  0  0   2.28e-01
+  0  0   2.28e-01
+  0  0   2.27e-01
+  0  0   2.27e-01
+  0  0   2.27e-01
+  2  3   1.94e-01
+  0  0   1.93e-01
+  0  0   1.92e-01
+  0  0   1.91e-01
+  0  0   1.89e-01
+  0  0   1.87e-01
+  0  0   1.83e-01
+  0  0   1.78e-01
+  0  0   1.74e-01
+  0  0   1.74e-01
+  0  0   1.78e-01
+  0  0   1.82e-01
+  0  0   1.84e-01
+  0  0   1.82e-01
+  0  0   1.78e-01
+  0  0   1.74e-01
+  0  0   1.70e-01
+  0  0   1.68e-01
+  0  0   1.67e-01
+  0  0   1.66e-01
+  0  0   1.65e-01
+  0  0   1.64e-01
+  0  0   1.64e-01
+  2  4   5.10e-01
+  0  0   5.10e-01
+  0  0   5.10e-01
+  0  0   5.10e-01
+  0  0   5.09e-01
+  0  0   5.08e-01
+  0  0   5.04e-01
+  0  0   4.93e-01
+  0  0   4.76e-01
+  0  0   4.67e-01
+  0  0   4.79e-01
+  0  0   4.92e-01
+  0  0   4.91e-01
+  0  0   4.81e-01
+  0  0   4.72e-01
+  0  0   4.64e-01
+  0  0   4.59e-01
+  0  0   4.55e-01
+  0  0   4.53e-01
+  0  0   4.51e-01
+  0  0   4.50e-01
+  0  0   4.50e-01
+  0  0   4.49e-01
+  2  5   1.13e+00
+  0  0   1.12e+00
+  0  0   1.12e+00
+  0  0   1.12e+00
+  0  0   1.12e+00
+  0  0   1.11e+00
+  0  0   1.09e+00
+  0  0   1.07e+00
+  0  0   1.03e+00
+  0  0   1.01e+00
+  0  0   1.03e+00
+  0  0   1.05e+00
+  0  0   1.04e+00
+  0  0   1.03e+00
+  0  0   1.01e+00
+  0  0   9.92e-01
+  0  0   9.82e-01
+  0  0   9.75e-01
+  0  0   9.71e-01
+  0  0   9.68e-01
+  0  0   9.66e-01
+  0  0   9.65e-01
+  0  0   9.64e-01
+  3  4   6.35e-01
+  0  0   6.34e-01
+  0  0   6.32e-01
+  0  0   6.29e-01
+  0  0   6.24e-01
+  0  0   6.18e-01
+  0  0   6.12e-01
+  0  0   6.11e-01
+  0  0   6.31e-01
+  0  0   7.01e-01
+  0  0   8.29e-01
+  0  0   9.81e-01
+  0  0   1.12e+00
+  0  0   1.23e+00
+  0  0   1.30e+00
+  0  0   1.35e+00
+  0  0   1.38e+00
+  0  0   1.40e+00
+  0  0   1.41e+00
+  0  0   1.42e+00
+  0  0   1.43e+00
+  0  0   1.43e+00
+  0  0   1.43e+00
+  3  5   6.65e-01
+  0  0   6.65e-01
+  0  0   6.65e-01
+  0  0   6.64e-01
+  0  0   6.65e-01
+  0  0   6.65e-01
+  0  0   6.68e-01
+  0  0   6.77e-01
+  0  0   7.03e-01
+  0  0   7.65e-01
+  0  0   8.57e-01
+  0  0   9.38e-01
+  0  0   9.83e-01
+  0  0   1.00e-00
+  0  0   1.00e+00
+  0  0   9.96e-01
+  0  0   9.91e-01
+  0  0   9.87e-01
+  0  0   9.84e-01
+  0  0   9.82e-01
+  0  0   9.81e-01
+  0  0   9.80e-01
+  0  0   9.80e-01
+  4  5   1.53e+00
+  0  0   1.53e+00
+  0  0   1.53e+00
+  0  0   1.53e+00
+  0  0   1.52e+00
+  0  0   1.52e+00
+  0  0   1.51e+00
+  0  0   1.52e+00
+  0  0   1.58e+00
+  0  0   1.74e+00
+  0  0   1.99e+00
+  0  0   2.26e+00
+  0  0   2.47e+00
+  0  0   2.61e+00
+  0  0   2.69e+00
+  0  0   2.74e+00
+  0  0   2.77e+00
+  0  0   2.79e+00
+  0  0   2.81e+00
+  0  0   2.81e+00
+  0  0   2.82e+00
+  0  0   2.82e+00
+  0  0   2.83e+00
+ 0 0 0
+  1  2   2.290e-06
+  1  3   5.530e+01
+  1  4   1.710e+00
+  1  5   0.000e+00
+  2  3   6.550e+01
+  2  4   5.240e+00
+  2  5   4.320e+01
+  3  4   0.000e+00
+  3  5   0.000e+00
+  4  5   0.000e+00
+  1  2        0.0
+  2  4       63.4
+  3  2    43003.3
+  4  4    43025.3
+  5  6    43053.6

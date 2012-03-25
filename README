@@ -1,3 +1,24 @@
-Not much here yet, but one vital thing is that the code won't work without the atomic data, available separately in the Atomic-data repository.
+Overview
+========
+
+NEAT is a program for calculating chemical abundances in photoionised nebulae.  It can propagate uncertainties and compensate for measurement biases affecting weak lines.
+
+The code includes the necessary atomic data files, but you might also wish to use some different atomic data sets which are available separately in the Atomic-data repository.
 
 http://github.com/rwesson/Atomic-data
+
+Installation
+============
+
+It should be possible to compile the code simply by typing 
+
+  make
+
+in the directory the files are in.  Our makefile assumes that you have gfortran installed.  Other compilers should work as well but may require some tweaks to the code.
+
+Manual
+======
+
+Full documentation is available on the NEAT website:
+
+http://www.sc.eso.org/~rwesson/codes/neat/

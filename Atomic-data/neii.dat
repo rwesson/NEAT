@@ -1,0 +1,78 @@
+ 23
+** Atomic data from version 5.2 of the CHIANTI database **
+%observed energy levels: Kelly, R. L., 1987, J.Phys.Chem.Ref.Data 16, Suppl. 1.     
+%theoretical energy levels: Bhatia, private communications
+% produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
+%
+% K.P.Dere 1994
+%observed energy levels: Martin, W.C., Sugar, J., Musgrove, A., Dalton, G.R., 1995, 
+   NIST Standard Reference Database 61, NIST Database for Atomic Spectroscopy, Version 1.0
+%transition probabilities (1-2): Martin, W.C., Sugar, J., Musgrove, A., Dalton, G.R., 1995, 
+   NIST Standard Reference Database 61, NIST Database for Atomic Spectroscopy, Version 1.0
+%transition probabilities: Blackford, H.M.S., Hibbert, A., 1994, ADNDT, 58, 101.
+%comment:  A(1-3) of Blackford and Hibbert seems to be incorrect
+% produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
+%
+%  K.P.Dere 1995
+
+%file:  ne_2.splups
+%oscillator strengths: Blackford, H.M.S., Hibbert, A., 1994, ADNDT, 58, 101
+%effective collision strengths: Saraph, H.E., Tully, J.A., 1994, A&AS, 107, 29
+%comment effective collision strengths were provided in the temperature range 3.0 < Log T < 5.0
+%produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
+%
+% K.P. Dere - 1995
+ 2 23 0
+  1  2s2.2p5 2P3/2
+  2  2s2.2p5 2P1/2
+     100.0
+     158.5
+     251.2
+     398.1
+     631.0
+    1000.0
+    1584.9
+    2511.9
+    3981.1
+    6309.6
+   10000.0
+   15848.9
+   25118.9
+   39810.7
+   63095.8
+  100000.0
+  158489.2
+  251188.7
+  398107.1
+  630957.6
+ 1000000.0
+ 1584892.5
+ 2511887.0
+0
+  1  2   2.72e-01
+  0  0   2.72e-01
+  0  0   2.72e-01
+  0  0   2.72e-01
+  0  0   2.72e-01
+  0  0   2.72e-01
+  0  0   2.73e-01
+  0  0   2.73e-01
+  0  0   2.75e-01
+  0  0   2.78e-01
+  0  0   2.84e-01
+  0  0   2.92e-01
+  0  0   3.01e-01
+  0  0   3.20e-01
+  0  0   3.48e-01
+  0  0   3.76e-01
+  0  0   3.98e-01
+  0  0   4.15e-01
+  0  0   4.26e-01
+  0  0   4.33e-01
+  0  0   4.38e-01
+  0  0   4.41e-01
+  0  0   4.43e-01
+ 0 0 0
+  1  2   8.590e-03
+  1  4        0.0
+  2  2      780.3
