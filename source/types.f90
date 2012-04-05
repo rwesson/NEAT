@@ -141,3 +141,23 @@ TYPE resultarray
 end type
 
 end module mod_resultarrays
+
+module mod_atomicdata
+
+type atomic_data
+
+	integer :: NTEMPS 
+	integer :: NLEVS
+	integer :: irats
+	character*10 :: ion
+	real*8,allocatable :: temps(:) 
+	real*8,allocatable :: roott(:)
+	character*20,allocatable :: labels(:) 
+	real*8,allocatable :: G(:)
+	real*8,allocatable :: waveno(:)
+	real*8,allocatable :: A_coeffs(:,:)
+	real*8,allocatable :: col_str(:,:,:)
+
+end type
+
+end module mod_atomicdata

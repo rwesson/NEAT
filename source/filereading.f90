@@ -137,3 +137,97 @@ end subroutine
 !extinction laws now in mod_extinction
 
 end module mod_abundmaths 
+
+module mod_atomic_read
+
+
+contains
+subroutine read_atomic_data(ion)
+use mod_atomicdata
+	type(atomic_data) :: ion
+	integer :: I,J,K,NCOMS,ID(2),JD(2),KP1,NLEV1
+	character*1 :: comments(78)
+	real*8 :: GX,WN,AX,QX
+	
+	OPEN(unit=1, status = 'OLD', file = 'Atomic-data/'//ion%ion(1(INDEX( &
+& 		ION%ion,' ') - 1))//'.dat',ACTION='READ')
+
+!read # of comment lines and skip them
+	READ(1,*)NCOMS
+	do I = 1,NCOMS
+		read(1,1003) comments
+	end do
+	
+!read # levels and temps, then allocate arrays
+	read(1,*) ion%NLEVS,ion%NTEMPS 
+	
+	allocate(ion%labels(ion%nlevs))
+	allocate(ion%temps(ion%ntemps))
+	allocate(ion%roott(ion%ntemps))
+	allocate(ion%G(ion%nlevs))
+	allocate(ion%waveno(ion%nlevs))
+	allocate(ion%col_str(ion%ntemps,ion%nlevs,ion%nlevs))
+	allocate(ion%A_coeffs(ion%nlevs,ion%nlevs))
+	
+	ion%col_str = 0d0
+	ion%A_coeffs = 0d0
+	ion%G = 0d0
+	ion%waveno= 0d0
+	
+	!read levels and temperatures
+	do I = 1,ion%NLEVS
+	read(1,1002) ion%labels(I)
+	enddo
+	
+	do I = 1,ion%NTEMPS
+	read(1,*) ion%temps(I)
+	enddo
+	
+	!read collision strengths
+        QX=1
+        K = 1
+        DO WHILE (QX .gt. 0)
+                READ(1,*) ID(2), JD(2), QX
+                IF (QX.eq.0.D0) exit
+                if (ID(2) .eq. 0) then
+                   ID(2) = ID(1)
+                   K = K + 1
+                else
+                   ID(1) = ID(2)
+                   K = 1
+                endif
+                if (JD(2) .eq. 0) then
+                   JD(2) = JD(1)
+                else
+                   JD(1) = JD(2)
+                endif
+                if (QX .ne. 0.D0) then
+                I = ID(2) 
+                J = JD(2) 
+                ion%col_str(K,I,J) = QX
+                endif
+        enddo
+
+    NLEV1 = ion%NLEVS-1
+      DO K = 1,NLEV1
+        KP1 = K + 1 
+          DO L = KP1, ion%NLEVS
+            READ (1,*) I, J, AX  !read transition probabilities
+            ion%A_coeffs(J,I) = AX 
+          ENDDO 
+
+    ENDDO 
+
+	DO I=1,NLEVS
+ 	 	READ(1,*) N, GX, WN !read wavenumbers
+        ion%G(N) = GX
+        ion%waveno(N) = WN
+    enddo
+	
+    CLOSE(UNIT=1)
+	
+1002 FORMAT(A20)
+1003 FORMAT(78A1)
+end subroutine read_atomic_data
+	
+end module mod_atomic_read
