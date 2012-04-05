@@ -243,6 +243,7 @@ program neat
 
                 700 FORMAT(X,A20,F5.3) !extinction format
                 701 FORMAT(X,A20,I5) !diagnostics format
+                705 FORMAT(X,A20,I5,5X,F8.3) !diagnostics and ratio format
                 702 FORMAT(X,A20,ES14.3) !abundances format
                 703 FORMAT(X,A20,F5.2) !strong line format
                 704 FORMAT(X,A20,F5.2) !adf format
@@ -261,39 +262,39 @@ program neat
                 write (650,*),"Diagnostics"
                 write (650,*),"==========="
                 write (650,*)
-                write (650,701) "OII_density :      ",INT(iteration_result(1)%OII_density)
-                write (650,701) "SII_density :      ",INT(iteration_result(1)%SII_density)
+                write (650,705) "OII_density :      ",INT(iteration_result(1)%OII_density), iteration_result(1)%OII_density_ratio
+                write (650,705) "SII_density :      ",INT(iteration_result(1)%SII_density), iteration_result(1)%SII_density_ratio
                 write (650,701) "low_density :      ",INT(iteration_result(1)%low_density)
                 write (650,*)
-                write (650,701) "OII_temp :         ",INT(iteration_result(1)%OII_temp)
-                write (650,701) "NII_temp :         ",INT(iteration_result(1)%NII_temp)
-                write (650,701) "SII_temp :         ",INT(iteration_result(1)%SII_temp)
-                write (650,701) "OI_temp :          ",INT(iteration_result(1)%OI_temp)
-                write (650,701) "CI_temp :          ",INT(iteration_result(1)%CI_temp)
+                write (650,705) "OII_temp :         ",INT(iteration_result(1)%OII_temp), iteration_result(1)%OII_temp_ratio
+                write (650,705) "NII_temp :         ",INT(iteration_result(1)%NII_temp), iteration_result(1)%NII_temp_ratio
+                write (650,705) "SII_temp :         ",INT(iteration_result(1)%SII_temp), iteration_result(1)%SII_temp_ratio
+                write (650,705) "OI_temp :          ",INT(iteration_result(1)%OI_temp), iteration_result(1)%OI_temp_ratio
+                write (650,705) "CI_temp :          ",INT(iteration_result(1)%CI_temp), iteration_result(1)%CI_temp_ratio
                 write (650,701) "low_temp :         ",INT(iteration_result(1)%low_temp)
                 write (650,*)
-                write (650,701) "ClIII_density :    ",INT(iteration_result(1)%ClIII_density)
-                write (650,701) "ArIV_density :     ",INT(iteration_result(1)%ArIV_density)
-                write (650,701) "CIII_density :     ",INT(iteration_result(1)%CIII_density)
-                write (650,701) "OIII_IR_density :  ",INT(iteration_result(1)%OIII_IR_density)
-                write (650,701) "SIII_IR_density :  ",INT(iteration_result(1)%SIII_IR_density)
-                write (650,701) "ArIII_IR_density : ",INT(iteration_result(1)%ArIII_IR_density)
-                write (650,701) "NeIII_IR_density : ",INT(iteration_result(1)%NeIII_IR_density)
+                write (650,705) "ClIII_density :    ",INT(iteration_result(1)%ClIII_density), iteration_result(1)%ClIII_density_ratio
+                write (650,705) "ArIV_density :     ",INT(iteration_result(1)%ArIV_density), iteration_result(1)%ArIV_density_ratio
+                write (650,705) "CIII_density :     ",INT(iteration_result(1)%CIII_density), iteration_result(1)%CIII_density_ratio
+                write (650,705) "OIII_IR_density :  ",INT(iteration_result(1)%OIII_IR_density), iteration_result(1)%OIII_IR_density_ratio
+                write (650,705) "SIII_IR_density :  ",INT(iteration_result(1)%SIII_IR_density), iteration_result(1)%SIII_IR_density_ratio
+                write (650,705) "ArIII_IR_density : ",INT(iteration_result(1)%ArIII_IR_density), iteration_result(1)%ArIII_IR_density_ratio
+                write (650,705) "NeIII_IR_density : ",INT(iteration_result(1)%NeIII_IR_density), iteration_result(1)%NeIII_IR_density_ratio
                 write (650,701) "med_density :      ",INT(iteration_result(1)%med_density)
                 write (650,*)
-                write (650,701) "OIII_temp :        ",INT(iteration_result(1)%OIII_temp)
-                write (650,701) "OIII_IR_temp :     ",INT(iteration_result(1)%OIII_IR_temp)
-                write (650,701) "NeIII_temp :       ",INT(iteration_result(1)%NeIII_temp)
-                write (650,701) "NeIII_IR_temp :    ",INT(iteration_result(1)%NeIII_IR_temp)
-                write (650,701) "ArIII_temp :       ",INT(iteration_result(1)%ArIII_temp)
-                write (650,701) "SIII_temp :        ",INT(iteration_result(1)%SIII_temp)
+                write (650,705) "OIII_temp :        ",INT(iteration_result(1)%OIII_temp), iteration_result(1)%OIII_temp_ratio
+                write (650,705) "OIII_IR_temp :     ",INT(iteration_result(1)%OIII_IR_temp), iteration_result(1)%OIII_IR_temp_ratio
+                write (650,705) "NeIII_temp :       ",INT(iteration_result(1)%NeIII_temp), iteration_result(1)%NeIII_temp_ratio
+                write (650,705) "NeIII_IR_temp :    ",INT(iteration_result(1)%NeIII_IR_temp), iteration_result(1)%NeIII_IR_temp_ratio
+                write (650,705) "ArIII_temp :       ",INT(iteration_result(1)%ArIII_temp), iteration_result(1)%ArIII_temp_ratio
+                write (650,705) "SIII_temp :        ",INT(iteration_result(1)%SIII_temp), iteration_result(1)%SIII_temp_ratio
                 write (650,701) "med_temp :         ",INT(iteration_result(1)%med_temp)
                 write (650,*)
-                write (650,701) "NeIV_density :     ",INT(iteration_result(1)%NeIV_density)
+                write (650,705) "NeIV_density :     ",INT(iteration_result(1)%NeIV_density), iteration_result(1)%NeIV_density_ratio
                 write (650,701) "high_density :     ",INT(iteration_result(1)%high_density)
                 write (650,*)
-                write (650,701) "ArV_temp :         ",INT(iteration_result(1)%ArV_temp)
-                write (650,701) "NeV_temp :         ",INT(iteration_result(1)%NeV_temp)
+                write (650,705) "ArV_temp :         ",INT(iteration_result(1)%ArV_temp), iteration_result(1)%ArV_temp_ratio
+                write (650,705) "NeV_temp :         ",INT(iteration_result(1)%NeV_temp), iteration_result(1)%NeV_temp_ratio
                 write (650,701) "high_temp :        ",INT(iteration_result(1)%high_temp)
                 write (650,*)
                 write (650,*),"Abundances"
@@ -501,6 +502,29 @@ program neat
                 OPEN(927, FILE=trim(filename)//"_O_O3N2", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
                 OPEN(928, FILE=trim(filename)//"_O_Ar3O3", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
                 OPEN(929, FILE=trim(filename)//"_O_S3O3", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(930, FILE=trim(filename)//"_OII_density_ratio", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(931, FILE=trim(filename)//"_SII_density_ratio", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(932, FILE=trim(filename)//"_NII_temp_ratio", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(933, FILE=trim(filename)//"_OII_temp_ratio", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(934, FILE=trim(filename)//"_SII_temp_ratio", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(935, FILE=trim(filename)//"_CI_temp_ratio", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(936, FILE=trim(filename)//"_OI_temp_ratio", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(937, FILE=trim(filename)//"_ClIII_density_ratio", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(938, FILE=trim(filename)//"_ArIV_density_ratio", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(939, FILE=trim(filename)//"_CIII_density_ratio", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(940, FILE=trim(filename)//"_OIII_IR_density_ratio", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(941, FILE=trim(filename)//"_ArIII_IR_density_ratio", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(942, FILE=trim(filename)//"_SIII_IR_density_ratio", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(943, FILE=trim(filename)//"_NeIII_IR_density_ratio", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(944, FILE=trim(filename)//"_OIII_temp_ratio", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(945, FILE=trim(filename)//"_NeIII_temp_ratio", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(946, FILE=trim(filename)//"_ArIII_temp_ratio", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(947, FILE=trim(filename)//"_SIII_temp_ratio", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(948, FILE=trim(filename)//"_OIII_IR_temp_ratio", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(949, FILE=trim(filename)//"_NeIII_IR_temp_ratio", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(950, FILE=trim(filename)//"_NeIV_density_ratio", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(951, FILE=trim(filename)//"_ArV_temp_ratio", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(952, FILE=trim(filename)//"_NeV_temp_ratio", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
 
 !XXXX add Cl/H, Niii, cii, ciii, ArIII IR dens, NeIII IR dens, strong line, ICF files
 
@@ -595,6 +619,29 @@ program neat
                 call qsort(all_results%O_o3n2)
                 call qsort(all_results%O_Ar3O3)
                 call qsort(all_results%O_S3O3)
+                call qsort(all_results%OII_density_ratio)
+                call qsort(all_results%SII_density_ratio)
+                call qsort(all_results%NII_temp_ratio)
+                call qsort(all_results%OII_temp_ratio)
+                call qsort(all_results%SII_temp_ratio)
+                call qsort(all_results%CI_temp_ratio)
+                call qsort(all_results%OI_temp_ratio)
+                call qsort(all_results%ClIII_density_ratio)
+                call qsort(all_results%ArIV_density_ratio)
+                call qsort(all_results%CIII_density_ratio)
+                call qsort(all_results%OIII_IR_density_ratio)
+                call qsort(all_results%ArIII_IR_density_ratio)
+                call qsort(all_results%SIII_IR_density_ratio)
+                call qsort(all_results%NeIII_IR_density_ratio)
+                call qsort(all_results%OIII_temp_ratio)
+                call qsort(all_results%NeIII_temp_ratio)
+                call qsort(all_results%ArIII_temp_ratio)
+                call qsort(all_results%SIII_temp_ratio)
+                call qsort(all_results%OIII_IR_temp_ratio)
+                call qsort(all_results%NeIII_IR_temp_ratio)
+                call qsort(all_results%NeIV_density_ratio)
+                call qsort(all_results%ArV_temp_ratio)
+                call qsort(all_results%NeV_temp_ratio)
 
 print *, gettime(), ": results processed.  Now writing to files"
 
@@ -688,9 +735,32 @@ print *, gettime(), ": results processed.  Now writing to files"
                     write(unit = 927,FMT=*) all_results(i)%O_O3N2
                     write(unit = 928,FMT=*) all_results(i)%O_Ar3O3
                     write(unit = 929,FMT=*) all_results(i)%O_S3O3 
+                    write(unit = 930,FMT=*) all_results(i)%OII_density_ratio 
+                    write(unit = 931,FMT=*) all_results(i)%SII_density_ratio
+                    write(unit = 932,FMT=*) all_results(i)%NII_temp_ratio
+                    write(unit = 933,FMT=*) all_results(i)%OII_temp_ratio
+                    write(unit = 934,FMT=*) all_results(i)%SII_temp_ratio
+                    write(unit = 935,FMT=*) all_results(i)%CI_temp_ratio
+                    write(unit = 936,FMT=*) all_results(i)%OI_temp_ratio
+                    write(unit = 937,FMT=*) all_results(i)%ClIII_density_ratio
+                    write(unit = 938,FMT=*) all_results(i)%ArIV_density_ratio
+                    write(unit = 939,FMT=*) all_results(i)%CIII_density_ratio
+                    write(unit = 940,FMT=*) all_results(i)%OIII_IR_density_ratio
+                    write(unit = 941,FMT=*) all_results(i)%ArIII_IR_density_ratio
+                    write(unit = 942,FMT=*) all_results(i)%SIII_IR_density_ratio
+                    write(unit = 943,FMT=*) all_results(i)%NeIII_IR_density_ratio
+                    write(unit = 944,FMT=*) all_results(i)%OIII_temp_ratio
+                    write(unit = 945,FMT=*) all_results(i)%NeIII_temp_ratio
+                    write(unit = 946,FMT=*) all_results(i)%ArIII_temp_ratio
+                    write(unit = 947,FMT=*) all_results(i)%SIII_temp_ratio
+                    write(unit = 948,FMT=*) all_results(i)%OIII_IR_temp_ratio
+                    write(unit = 949,FMT=*) all_results(i)%NeIII_IR_temp_ratio
+                    write(unit = 950,FMT=*) all_results(i)%NeIV_density_ratio
+                    write(unit = 951,FMT=*) all_results(i)%ArV_temp_ratio
+                    write(unit = 952,FMT=*) all_results(i)%NeV_temp_ratio
                 end do
 
-                DO I=841,929
+                DO I=841,952
                         CLOSE(unit=I)
                 END DO
 ! get median +- pseudo gaussian 34.1% 
@@ -716,17 +786,25 @@ write (650,*)
 write (650,*) "Diagnostics"
 write (650,*) "==========="
 write (650,*)
-711 format (X,3(A,I6)) ! diagnostic format
-
+711 format (X,3(A,I8)) ! diagnostic format
+715 format (X,3(A,G8.3)) ! diagnostic ratio format
 !low densities
 
                 quantity_result = all_results%oii_density
                 call get_uncertainties(quantity_result, uncertainty_array)
                 write (650,711) "[OII] density :         ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                quantity_result = all_results%oii_density_ratio
+                call get_uncertainties(quantity_result, uncertainty_array)
+                write (650,715) "Ratio :                  ",uncertainty_array(2),"+",uncertainty_array(3),"-",uncertainty_array(1)
 
                 quantity_result = all_results%SII_density
                 call get_uncertainties(quantity_result, uncertainty_array)
                 write (650,711) "[SII] density :         ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                quantity_result = all_results%sii_density_ratio
+                call get_uncertainties(quantity_result, uncertainty_array)
+                write (650,715) "Ratio :                  ",uncertainty_array(2),"+",uncertainty_array(3),"-",uncertainty_array(1)
+
+write (650,*)
 
                 quantity_result = all_results%low_density
                 call get_uncertainties(quantity_result, uncertainty_array)
@@ -738,22 +816,39 @@ write (650,*)
                 quantity_result = all_results%oii_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
                 write (650,711) "[OII] temperature :     ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                quantity_result = all_results%oii_temp_ratio
+                call get_uncertainties(quantity_result, uncertainty_array)
+                write (650,715) "Ratio :                  ",uncertainty_array(2),"+",uncertainty_array(3),"-",uncertainty_array(1)
 
                 quantity_result = all_results%SII_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
                 write (650,711) "[SII] temperature :     ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                quantity_result = all_results%sii_temp_ratio
+                call get_uncertainties(quantity_result, uncertainty_array)
+                write (650,715) "Ratio :                  ",uncertainty_array(2),"+",uncertainty_array(3),"-",uncertainty_array(1)
 
                 quantity_result = all_results%NII_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
                 write (650,711) "[NII] temperature :     ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                quantity_result = all_results%nii_temp_ratio
+                call get_uncertainties(quantity_result, uncertainty_array)
+                write (650,715) "Ratio :                  ",uncertainty_array(2),"+",uncertainty_array(3),"-",uncertainty_array(1)
 
                 quantity_result = all_results%OI_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
                 write (650,711) "[OI] temperature :      ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                quantity_result = all_results%oi_temp_ratio
+                call get_uncertainties(quantity_result, uncertainty_array)
+                write (650,715) "Ratio :                  ",uncertainty_array(2),"+",uncertainty_array(3),"-",uncertainty_array(1)
 
                 quantity_result = all_results%CI_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
                 write (650,711) "[CI] temperature :      ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                quantity_result = all_results%ci_temp_ratio
+                call get_uncertainties(quantity_result, uncertainty_array)
+                write (650,715) "Ratio :                  ",uncertainty_array(2),"+",uncertainty_array(3),"-",uncertainty_array(1)
+
+write (650,*)
 
                 quantity_result = all_results%low_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
@@ -765,30 +860,53 @@ write (650,*)
                 quantity_result = all_results%cliii_density
                 call get_uncertainties(quantity_result, uncertainty_array)
                 write (650,711) "[ClIII] density :       ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                quantity_result = all_results%cliii_density_ratio
+                call get_uncertainties(quantity_result, uncertainty_array)
+                write (650,715) "Ratio :                  ",uncertainty_array(2),"+",uncertainty_array(3),"-",uncertainty_array(1)
 
                 quantity_result = all_results%ArIV_density
                 call get_uncertainties(quantity_result, uncertainty_array)
                 write (650,711) "[ArIV] density :        ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                quantity_result = all_results%Ariv_density_ratio
+                call get_uncertainties(quantity_result, uncertainty_array)
+                write (650,715) "Ratio :                  ",uncertainty_array(2),"+",uncertainty_array(3),"-",uncertainty_array(1)
 
                 quantity_result = all_results%CIII_density
                 call get_uncertainties(quantity_result, uncertainty_array)
                 write (650,711) "[CIII] density :        ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                quantity_result = all_results%ciii_density_ratio
+                call get_uncertainties(quantity_result, uncertainty_array)
+                write (650,715) "Ratio :                  ",uncertainty_array(2),"+",uncertainty_array(3),"-",uncertainty_array(1)
 
                 quantity_result = all_results%OIII_IR_density
                 call get_uncertainties(quantity_result, uncertainty_array)
                 write (650,711) "[OIII] IR density :     ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                quantity_result = all_results%oiii_ir_density_ratio
+                call get_uncertainties(quantity_result, uncertainty_array)
+                write (650,715) "Ratio :                  ",uncertainty_array(2),"+",uncertainty_array(3),"-",uncertainty_array(1)
 
                 quantity_result = all_results%SIII_IR_density
                 call get_uncertainties(quantity_result, uncertainty_array)
                 write (650,711) "[SIII] IRdensity :      ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                quantity_result = all_results%siii_ir_density_ratio
+                call get_uncertainties(quantity_result, uncertainty_array)
+                write (650,715) "Ratio :                  ",uncertainty_array(2),"+",uncertainty_array(3),"-",uncertainty_array(1)
 
                 quantity_result = all_results%ArIII_IR_density
                 call get_uncertainties(quantity_result, uncertainty_array)
                 write (650,711) "[ArIII] IR density :    ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                quantity_result = all_results%ariii_ir_density_ratio
+                call get_uncertainties(quantity_result, uncertainty_array)
+                write (650,715) "Ratio :                  ",uncertainty_array(2),"+",uncertainty_array(3),"-",uncertainty_array(1)
 
                 quantity_result = all_results%NeIII_IR_density
                 call get_uncertainties(quantity_result, uncertainty_array)
                 write (650,711) "[NeIII] IR density :    ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                quantity_result = all_results%neiii_ir_density_ratio
+                call get_uncertainties(quantity_result, uncertainty_array)
+                write (650,715) "Ratio :                  ",uncertainty_array(2),"+",uncertainty_array(3),"-",uncertainty_array(1)
+
+write (650,*)
 
                 quantity_result = all_results%med_density
                 call get_uncertainties(quantity_result, uncertainty_array)
@@ -800,26 +918,46 @@ write (650,*)
                 quantity_result = all_results%OIII_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
                 write (650,711) "[OIII] temperature :    ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                quantity_result = all_results%oiii_temp_ratio
+                call get_uncertainties(quantity_result, uncertainty_array)
+                write (650,715) "Ratio :                  ",uncertainty_array(2),"+",uncertainty_array(3),"-",uncertainty_array(1)
 
                 quantity_result = all_results%OIII_IR_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
                 write (650,711) "[OIII] IR temperature : ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                quantity_result = all_results%oiii_ir_temp_ratio
+                call get_uncertainties(quantity_result, uncertainty_array)
+                write (650,715) "Ratio :                  ",uncertainty_array(2),"+",uncertainty_array(3),"-",uncertainty_array(1)
 
                 quantity_result = all_results%NeIII_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
                 write (650,711) "[NeIII] temperature :   ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                quantity_result = all_results%neiii_temp_ratio
+                call get_uncertainties(quantity_result, uncertainty_array)
+                write (650,715) "Ratio :                  ",uncertainty_array(2),"+",uncertainty_array(3),"-",uncertainty_array(1)
 
                 quantity_result = all_results%NeIII_IR_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
                 write (650,711) "[NeIII] IR temperature :",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                quantity_result = all_results%neiii_ir_temp_ratio
+                call get_uncertainties(quantity_result, uncertainty_array)
+                write (650,715) "Ratio :                  ",uncertainty_array(2),"+",uncertainty_array(3),"-",uncertainty_array(1)
 
                 quantity_result = all_results%ArIII_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
                 write (650,711) "[ArIII] temperature :   ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                quantity_result = all_results%ariii_temp_ratio
+                call get_uncertainties(quantity_result, uncertainty_array)
+                write (650,715) "Ratio :                  ",uncertainty_array(2),"+",uncertainty_array(3),"-",uncertainty_array(1)
 
                 quantity_result = all_results%SIII_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
                 write (650,711) "[SIII] temperature :    ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                quantity_result = all_results%siii_temp_ratio
+                call get_uncertainties(quantity_result, uncertainty_array)
+                write (650,715) "Ratio :                  ",uncertainty_array(2),"+",uncertainty_array(3),"-",uncertainty_array(1)
+
+write (650,*)
 
                 quantity_result = all_results%med_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
@@ -831,6 +969,11 @@ write (650,*)
                 quantity_result = all_results%neiv_density
                 call get_uncertainties(quantity_result, uncertainty_array)
                 write (650,711) "[NeIV] density :        ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                quantity_result = all_results%neiv_density_ratio
+                call get_uncertainties(quantity_result, uncertainty_array)
+                write (650,715) "Ratio :                  ",uncertainty_array(2),"+",uncertainty_array(3),"-",uncertainty_array(1)
+
+write (650,*)
 
                 quantity_result = all_results%high_density
                 call get_uncertainties(quantity_result, uncertainty_array)
@@ -841,10 +984,18 @@ write (650,*)
                 quantity_result = all_results%ArV_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
                 write (650,711) "[ArV] temperature :     ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                quantity_result = all_results%arv_temp_ratio
+                call get_uncertainties(quantity_result, uncertainty_array)
+                write (650,715) "Ratio :                  ",uncertainty_array(2),"+",uncertainty_array(3),"-",uncertainty_array(1)
 
                 quantity_result = all_results%NeV_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
                 write (650,711) "[NeV] temperature :     ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1)) 
+                quantity_result = all_results%nev_temp_ratio
+                call get_uncertainties(quantity_result, uncertainty_array)
+                write (650,715) "Ratio :                  ",uncertainty_array(2),"+",uncertainty_array(3),"-",uncertainty_array(1)
+
+write (650,*)
 
                 quantity_result = all_results%high_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
@@ -1037,40 +1188,40 @@ write (650,*) "Abundance discrepancy factors"
 write (650,*) "============================="
 write (650,*)
 
-715 format (X,3(A,F5.2))
+714 format (X,3(A,F5.2))
 
 
                 quantity_result = all_results%adf_o2plus
                 call get_uncertainties(quantity_result, uncertainty_array)
-                write (650,715) "adf(O2+/H) :            ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,714) "adf(O2+/H) :            ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%adf_o
                 call get_uncertainties(quantity_result, uncertainty_array)
-                write (650,715) "adf(O/H+) :             ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,714) "adf(O/H+) :             ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%adf_n2plus
                 call get_uncertainties(quantity_result, uncertainty_array)
-                write (650,715) "adf(N2+/H) :            ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,714) "adf(N2+/H) :            ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%adf_n
                 call get_uncertainties(quantity_result, uncertainty_array)
-                write (650,715) "adf(N/H) :              ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,714) "adf(N/H) :              ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%adf_c2plus
                 call get_uncertainties(quantity_result, uncertainty_array)
-                write (650,715) "adf(C2+/H+) :           ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,714) "adf(C2+/H+) :           ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%adf_c
                 call get_uncertainties(quantity_result, uncertainty_array)
-                write (650,715) "adf(C/H) :              ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,714) "adf(C/H) :              ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%adf_ne2plus
                 call get_uncertainties(quantity_result, uncertainty_array)
-                write (650,715) "adf(Ne2+/H+) :          ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,714) "adf(Ne2+/H+) :          ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 quantity_result = all_results%adf_ne
                 call get_uncertainties(quantity_result, uncertainty_array)
-                write (650,715) "adf(Ne/H) :             ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
+                write (650,714) "adf(Ne/H) :             ",uncertainty_array(2)," +",uncertainty_array(3),"-",uncertainty_array(1) 
 
                 close (650)
 

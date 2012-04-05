@@ -533,52 +533,53 @@ implicit none
          endif
 
       enddo
-!done calculating, now write out.
-
+!done calculating, now write results and ratios to arrays.
 
 !edited diagnostic section to reflect above changes which stopped high/low limit densities/temperatures being included in averages. High limit cases set to 0.1 so that we know that it was in the high limit and not the low limit. DJS
 
-
+iteration_result(1)%OII_density_ratio = oiiNratio
 iteration_result(1)%OII_density = oiidens
+iteration_result(1)%SII_density_ratio = siiNratio
 iteration_result(1)%SII_density = siidens
+
 iteration_result(1)%low_density = lowdens
 if(niitemp > 0.2)then
         iteration_result(1)%NII_temp = niitemp
 else if(INT(niitemp) == -1)then
         iteration_result(1)%NII_temp = 20000
-else
 endif
+iteration_result(1)%NII_temp_ratio = niiTratio
 
 if(oiitemp >0.2)then
         iteration_result(1)%OII_temp = oiitemp
 else if(INT(oiitemp) == -1)then
         iteration_result(1)%OII_temp = 20000
-else
 endif
+iteration_result(1)%OII_temp_ratio = oiiTratio
 
 if(siitemp >0.2 )then 
         iteration_result(1)%SII_temp = siitemp
 else if(INT(siitemp) == -1)then 
         iteration_result(1)%SII_temp = 20000
-else
 endif
+iteration_result(1)%SII_temp_ratio = siiTratio
 
 if(oitemp >0.2 )then 
         iteration_result(1)%OI_temp = oitemp
 else if(INT(oitemp) == -1)then 
         iteration_result(1)%OI_temp = 20000
-else
 endif
+iteration_result(1)%OI_temp_ratio = oiTratio
 
 if(citemp >0.2 )then 
         iteration_result(1)%CI_temp = citemp
 else if(INT(citemp) == -1)then 
         iteration_result(1)%CI_temp = 20000
-else
 endif
-
+iteration_result(1)%CI_temp_ratio = ciTratio
 
 iteration_result(1)%low_temp = lowtemp
+
 iteration_result(1)%ClIII_density = cliiidens
 iteration_result(1)%ArIV_density = arivdens
 iteration_result(1)%CIII_density = ciiidens
@@ -586,45 +587,58 @@ iteration_result(1)%OIII_IR_density = oiiiIRdens
 iteration_result(1)%ArIII_IR_density = ariiiIRdens
 iteration_result(1)%SIII_IR_density = siiiIRdens
 iteration_result(1)%NeIII_IR_density = neiiiIRdens
+
+iteration_result(1)%ClIII_density_ratio = cliiiNratio
+iteration_result(1)%ArIV_density_ratio = arivNratio
+iteration_result(1)%CIII_density_ratio = ciiiNratio
+iteration_result(1)%OIII_IR_density_ratio = oiiiIRNratio
+iteration_result(1)%ArIII_IR_density_ratio = ariiiIRNratio
+iteration_result(1)%SIII_IR_density_ratio = siiiIRNratio
+iteration_result(1)%NeIII_IR_density_ratio = neiiiIRNratio
+
+
 iteration_result(1)%med_density = meddens
 if(oiiitemp >0.2)then 
         iteration_result(1)%OIII_temp = oiiitemp
 else if(INT(oiiitemp) == -1)then 
         iteration_result(1)%OIII_temp = 20000
-else
 endif
+iteration_result(1)%OIII_temp_ratio = oiiiTratio
 
 if(neiiitemp>0.2)then 
         iteration_result(1)%NeIII_temp = neiiitemp
 else if(INT(neiiitemp) == -1)then 
         iteration_result(1)%NeIII_temp = 20000
-else
 endif
+iteration_result(1)%NeIII_temp_ratio = neiiiTratio
 
 if(ariiitemp>0.2)then 
         iteration_result(1)%ArIII_temp = ariiitemp
 else if(INT(ariiitemp) == -1)then 
         iteration_result(1)%ArIII_temp = 20000
-else
 endif
+iteration_result(1)%ArIII_temp_ratio = AriiiTratio
 
 if(siiitemp > 0.2)then 
         iteration_result(1)%SIII_temp = siiitemp
 else if(int(siiitemp) == -1)then 
         iteration_result(1)%SIII_temp = 20000
 endif
+iteration_result(1)%SIII_temp_ratio = siiiTratio
 
 if(oiiiIRtemp > 0.2)then 
         iteration_result(1)%OIII_IR_temp = oiiiIRtemp
 else if(int(oiiiIRtemp) == -1)then 
         iteration_result(1)%OIII_IR_temp = 20000
 endif
+iteration_result(1)%OIII_IR_temp_ratio = oiiiIRTratio
 
 if(neiiiIRtemp > 0.2)then 
         iteration_result(1)%NeIII_IR_temp = neiiiIRtemp
 else if(int(neiiiIRtemp) == -1)then 
         iteration_result(1)%NeIII_IR_temp = 20000
 endif
+iteration_result(1)%NeIII_IR_temp_ratio = NeiiiTratio
 
 iteration_result(1)%med_temp = medtemp
 iteration_result(1)%NeIV_density = neivdens
@@ -632,6 +646,10 @@ iteration_result(1)%high_density = highdens
 iteration_result(1)%ArV_temp = arvtemp
 iteration_result(1)%NeV_temp = nevtemp
 iteration_result(1)%high_temp = hightemp
+
+iteration_result(1)%NeIV_density_ratio = neivNratio
+iteration_result(1)%ArV_temp_ratio = arvTratio
+iteration_result(1)%NeV_temp_ratio = nevTratio
 
 ! Helium abundances
 
