@@ -25,6 +25,9 @@ program neat
         use mod_extinction
         use mod_quicksort
         use mod_abundIO
+		use mod_atomicdata
+		use mod_atomic_read
+		!use mod_common_data
 
         CHARACTER :: switch_ext !switch for extinction laws
         INTEGER :: I, runs, Narg !runs = number of runs for randomiser
@@ -46,7 +49,14 @@ program neat
         double precision, dimension(:), allocatable :: quantity_result 
         double precision :: binvalue
 
-        !extinction
+        !atomic data
+		
+		character*10 :: ionlist(40) !list of ion names
+		integer :: iion !# of ions in Ilines
+		integer :: maxlevs,maxtemps
+		type(atomic_data),allocatable :: atomicdata(:)
+		
+		!extinction
 
         logical :: calculate_extinction=.true.
         DOUBLE PRECISION :: temp1,temp2,temp3, meanextinction, R
@@ -70,7 +80,7 @@ program neat
         Narg = IARGC() !count input arguments
 
         if (Narg .eq. 0) then
-           print *,"Syntax: ./abundances.exe [option1 value1] [option2 value2] .. [optionx valuex]"
+           print *,"Syntax: ./neat.exe [option1 value1] [option2 value2] .. [optionx valuex]"
            print *,"Available options:" 
            print *,"  -i / --input"
            print *,"       Input file"
@@ -229,8 +239,23 @@ program neat
 
 ! read the CEL data
 
-        call read_ilines(ILs, Iint)
+        call read_ilines(ILs, Iint,iion,ionlist)
 
+		!CELs read, can now read in atomic data
+		
+		allocate(atomicdata(iion))
+		DO I=1,iion
+		    atomicdata(I)%ion = ionlist(I)
+		    call read_atomic_data(atomicdata(I))
+		ENDDO
+		
+		!find maximum #levels and temperatures - pass to equib to reduce footprint
+		
+		do i=1,iion
+		    if(atomicdata(i)%nlevs .gt. maxlevs) maxlevs = atomicdata(i)%nlevs
+		    if(atomicdata(i)%ntemps .gt. maxtemps) maxtemps = atomicdata(i)%ntemps
+		enddo
+		
         !now check number of iterations.  If 1, line list is fine as is.  If more than one, randomize the fluxes
 
         if(runs == 1)then !calculates abundances without uncertainties

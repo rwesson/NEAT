@@ -4,9 +4,10 @@ implicit none!
 
 contains
 
-subroutine read_ilines(ILs, Iint)        
+subroutine read_ilines(ILs, Iint,iion,ionlist)        
         TYPE(line), DIMENSION(:), allocatable :: ILs
-        INTEGER :: Iint, Iread
+        INTEGER :: Iint, Iread,iion
+		character*10 :: ionlist(40)
 
         Iint = 1
 
@@ -17,6 +18,10 @@ subroutine read_ilines(ILs, Iint)
                 ILs%intensity=0.D0 !otherwise it seems you can get random very small numbers in the array.
                 DO WHILE (Iint .le. Iread)!(.true.)
                         READ(201,301) ILs(Iint)%name, ILs(Iint)%ion, ILs(Iint)%wavelength, ILs(Iint)%transition ,ILs(Iint)%zone!end condition breaks loop.  
+						if(ILs(Iint)%ion .ne. ILs(Iint - 1)%ion) then
+						    Iion = iion + 1
+							Ionlist(iion) = ILs(Iint)%ion(1:10)
+						endif
                         Iint = Iint + 1
                 END DO
                 Iint = Iint - 1 !count ends up one too high 
@@ -147,10 +152,13 @@ use mod_atomicdata
 	type(atomic_data) :: ion
 	integer :: I,J,K,NCOMS,ID(2),JD(2),KP1,NLEV1
 	character*1 :: comments(78)
+	character*10 :: ionname, filename
 	real*8 :: GX,WN,AX,QX
 	
-	OPEN(unit=1, status = 'OLD', file = 'Atomic-data/'//ion%ion(1(INDEX( &
-& 		ION%ion,' ') - 1))//'.dat',ACTION='READ')
+	
+    filename = 'Atomic-data/'//ionname(1:(INDEX(IONNAME,' ') - 1))//'.dat'
+    ionname = ion%ion
+    OPEN(unit=1, status = 'OLD', file=filename,ACTION='READ')
 
 !read # of comment lines and skip them
 	READ(1,*)NCOMS
