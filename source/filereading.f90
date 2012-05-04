@@ -17,8 +17,11 @@ subroutine read_ilines(ILs, Iint,iion,ionlist)
                 ALLOCATE (ILs(Iread))
                 ILs%intensity=0.D0 !otherwise it seems you can get random very small numbers in the array.
                 DO WHILE (Iint .le. Iread)!(.true.)
-                        READ(201,301) ILs(Iint)%name, ILs(Iint)%ion, ILs(Iint)%wavelength, ILs(Iint)%transition ,ILs(Iint)%zone!end condition breaks loop.  
-						if(ILs(Iint)%ion .ne. ILs(Iint - 1)%ion) then
+                        READ(201,301) ILs(Iint)%name, ILs(Iint)%ion, ILs(Iint)%wavelength, ILs(Iint)%transition ,ILs(Iint)%zone!end condition breaks loop. 
+						if(Iint .eq. 1) then
+						    Iion = 1
+							Ionlist(iion) = ILs(Iint)%ion(1:10)
+						elseif(ILs(Iint)%ion .ne. ILs(Iint - 1)%ion) then
 						    Iion = iion + 1
 							Ionlist(iion) = ILs(Iint)%ion(1:10)
 						endif
@@ -150,14 +153,17 @@ contains
 subroutine read_atomic_data(ion)
 use mod_atomicdata
 	type(atomic_data) :: ion
-	integer :: I,J,K,NCOMS,ID(2),JD(2),KP1,NLEV1
+	integer :: I,J,K,NCOMS,ID(2),JD(2),KP1,NLEV1,ionl,dummy
 	character*1 :: comments(78)
-	character*10 :: ionname, filename
+	character*10 :: ionname
+	character*25 :: filename
 	real*8 :: GX,WN,AX,QX
 	
-	
-    filename = 'Atomic-data/'//ionname(1:(INDEX(IONNAME,' ') - 1))//'.dat'
+    id = 0
+	jd = 0
     ionname = ion%ion
+	ionl = index(ionname,' ') - 1
+	filename = 'Atomic-data/'//ionname(1:IONL)//'.dat'
     OPEN(unit=1, status = 'OLD', file=filename,ACTION='READ')
 
 !read # of comment lines and skip them
@@ -168,7 +174,7 @@ use mod_atomicdata
 	
 !read # levels and temps, then allocate arrays
 	read(1,*) ion%NLEVS,ion%NTEMPS 
-	
+	print*,ion%ion,ion%nlevs,ion%ntemps
 	allocate(ion%labels(ion%nlevs))
 	allocate(ion%temps(ion%ntemps))
 	allocate(ion%roott(ion%ntemps))
@@ -190,6 +196,8 @@ use mod_atomicdata
 	do I = 1,ion%NTEMPS
 	read(1,*) ion%temps(I)
 	enddo
+	
+	read(1,*) dummy
 	
 	!read collision strengths
         QX=1
@@ -226,7 +234,7 @@ use mod_atomicdata
 
     ENDDO 
 
-	DO I=1,NLEVS
+	DO I=1,ion%NLEVS
  	 	READ(1,*) N, GX, WN !read wavenumbers
         ion%G(N) = GX
         ion%waveno(N) = WN

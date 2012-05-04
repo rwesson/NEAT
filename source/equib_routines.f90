@@ -418,7 +418,7 @@
 
         ! loop through array and find out where the sign changes.
 
-        DO I=1,INT
+        DO I=1,INT !test is bugged,  not sure why? ps.
                 if (sign(results(3,I),results(3,1)) .ne. results(3,I)) then !when this condition is fulfilled, the values in the array are now a different sign to the first value in the array
                         valtest(:) = (results(:,I-1)) ! return the value before the sign change so that the next loop starts at a sensible value
                         exit
