@@ -315,7 +315,7 @@ implicit none
         arivDens = 0
 
 
-      medtemp = 10000.0
+      medtemp = lowtemp
 
       do i = 1,2
 
