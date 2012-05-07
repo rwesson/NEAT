@@ -144,46 +144,45 @@ module mod_atomic_read
 contains
 subroutine read_atomic_data(ion)
 use mod_atomicdata
-	type(atomic_data) :: ion
-	integer :: I,J,K,NCOMS,ID(2),JD(2),KP1,NLEV1
-	character*1 :: comments(78)
-	real*8 :: GX,WN,AX,QX
-	
-	OPEN(unit=1, status = 'OLD', file = 'Atomic-data/'//ion%ion(1(INDEX( &
-& 		ION%ion,' ') - 1))//'.dat',ACTION='READ')
+        type(atomic_data) :: ion
+        integer :: I,J,K,NCOMS,ID(2),JD(2),KP1,NLEV1
+        character*1 :: comments(78)
+        real*8 :: GX,WN,AX,QX
+        
+!        OPEN(unit=1, file = 'Atomic-data/'//ion%ion((INDEX(ION%ion,' ') - 1))//'.dat',ACTION='READ')
 
 !read # of comment lines and skip them
-	READ(1,*)NCOMS
-	do I = 1,NCOMS
-		read(1,1003) comments
-	end do
-	
+        READ(1,*)NCOMS
+        do I = 1,NCOMS
+                read(1,1003) comments
+        end do
+        
 !read # levels and temps, then allocate arrays
-	read(1,*) ion%NLEVS,ion%NTEMPS 
-	
-	allocate(ion%labels(ion%nlevs))
-	allocate(ion%temps(ion%ntemps))
-	allocate(ion%roott(ion%ntemps))
-	allocate(ion%G(ion%nlevs))
-	allocate(ion%waveno(ion%nlevs))
-	allocate(ion%col_str(ion%ntemps,ion%nlevs,ion%nlevs))
-	allocate(ion%A_coeffs(ion%nlevs,ion%nlevs))
-	
-	ion%col_str = 0d0
-	ion%A_coeffs = 0d0
-	ion%G = 0d0
-	ion%waveno= 0d0
-	
-	!read levels and temperatures
-	do I = 1,ion%NLEVS
-	read(1,1002) ion%labels(I)
-	enddo
-	
-	do I = 1,ion%NTEMPS
-	read(1,*) ion%temps(I)
-	enddo
-	
-	!read collision strengths
+        read(1,*) ion%NLEVS,ion%NTEMPS 
+        
+        allocate(ion%labels(ion%nlevs))
+        allocate(ion%temps(ion%ntemps))
+        allocate(ion%roott(ion%ntemps))
+        allocate(ion%G(ion%nlevs))
+        allocate(ion%waveno(ion%nlevs))
+        allocate(ion%col_str(ion%ntemps,ion%nlevs,ion%nlevs))
+        allocate(ion%A_coeffs(ion%nlevs,ion%nlevs))
+        
+        ion%col_str = 0d0
+        ion%A_coeffs = 0d0
+        ion%G = 0d0
+        ion%waveno= 0d0
+        
+        !read levels and temperatures
+        do I = 1,ion%NLEVS
+        read(1,1002) ion%labels(I)
+        enddo
+        
+        do I = 1,ion%NTEMPS
+        read(1,*) ion%temps(I)
+        enddo
+        
+        !read collision strengths
         QX=1
         K = 1
         DO WHILE (QX .gt. 0)
@@ -218,16 +217,16 @@ use mod_atomicdata
 
     ENDDO 
 
-	DO I=1,NLEVS
- 	 	READ(1,*) N, GX, WN !read wavenumbers
+        DO I=1,NLEVS
+                  READ(1,*) N, GX, WN !read wavenumbers
         ion%G(N) = GX
         ion%waveno(N) = WN
     enddo
-	
+        
     CLOSE(UNIT=1)
-	
+        
 1002 FORMAT(A20)
 1003 FORMAT(78A1)
 end subroutine read_atomic_data
-	
+        
 end module mod_atomic_read
