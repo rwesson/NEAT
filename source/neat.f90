@@ -177,6 +177,7 @@ program neat
         print * 
         print *,gettime(),": starting code"
         print *,gettime(),": command line: ",trim(commandline)
+        if (runs .lt. 5000) print *,gettime(),": number of iterations is low.  At least 5000 is recommended for good sampling of probability distributions"
 
         deallocate(options)
 
