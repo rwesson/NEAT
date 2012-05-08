@@ -152,7 +152,6 @@ module mod_atomic_read
 contains
 subroutine read_atomic_data(ion)
 use mod_atomicdata
-<<<<<<< HEAD
 	type(atomic_data) :: ion
 	integer :: I,J,K,NCOMS,ID(2),JD(2),KP1,NLEV1,ionl,dummy
 	character*1 :: comments(78)
