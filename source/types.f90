@@ -115,6 +115,29 @@ TYPE resultarray
         double precision :: adf_C2plus
         double precision :: adf_Ne
         double precision :: adf_Ne2plus
+        double precision :: OII_density_ratio
+        double precision :: SII_density_ratio
+        double precision :: NII_temp_ratio
+        double precision :: OII_temp_ratio
+        double precision :: SII_temp_ratio 
+        double precision :: CI_temp_ratio
+        double precision :: OI_temp_ratio 
+        double precision :: ClIII_density_ratio
+        double precision :: ArIV_density_ratio
+        double precision :: CIII_density_ratio
+        double precision :: OIII_IR_density_ratio
+        double precision :: ArIII_IR_density_ratio
+        double precision :: SIII_IR_density_ratio
+        double precision :: NeIII_IR_density_ratio
+        double precision :: OIII_temp_ratio
+        double precision :: NeIII_temp_ratio
+        double precision :: ArIII_temp_ratio
+        double precision :: SIII_temp_ratio
+        double precision :: OIII_IR_temp_ratio
+        double precision :: NeIII_IR_temp_ratio
+        double precision :: NeIV_density_ratio
+        double precision :: ArV_temp_ratio
+        double precision :: NeV_temp_ratio
 end type
 
 end module mod_resultarrays
