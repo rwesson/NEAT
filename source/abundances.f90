@@ -1,5 +1,5 @@
 
-subroutine abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array)
+subroutine abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array,iion,atomicdata,maxlevs,maxtemps)
 use mod_abundmaths
 use mod_abundtypes
 use mod_equib
@@ -8,6 +8,7 @@ use mod_helium
 use mod_recombination_lines
 use mod_extinction
 use mod_resultarrays
+use mod_atomicdata
 
 implicit none
 
@@ -37,6 +38,12 @@ implicit none
         TYPE(line), DIMENSION(38) :: H_BS
         TYPE(line), DIMENSION(4) :: He_lines
 
+		!atomic data
+		character*10 :: ionlist(40) !list of ion names
+		integer :: iion !# of ions in Ilines
+		integer :: maxlevs,maxtemps
+		type(atomic_data) :: atomicdata(iion)
+		
 ! recombination line variables
 
         TYPE RLabund
