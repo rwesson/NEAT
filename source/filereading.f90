@@ -162,6 +162,7 @@ use mod_atomicdata
     id = 0
 	jd = 0
     ionname = ion%ion
+	print*,'Reading atomic data ion',ionname
 	ionl = index(ionname,' ') - 1
 	filename = 'Atomic-data/'//ionname(1:IONL)//'.dat'
     OPEN(unit=1, status = 'OLD', file=filename,ACTION='READ')
@@ -197,9 +198,12 @@ use mod_atomicdata
         read(1,*) ion%temps(I)
         enddo
         
+		read(1,*) dummy
+		
         !read collision strengths
         QX=1
         K = 1
+!		print*,'Reading collision strengths'
         DO WHILE (QX .gt. 0)
                 READ(1,*) ID(2), JD(2), QX
                 IF (QX.eq.0.D0) exit
@@ -218,6 +222,7 @@ use mod_atomicdata
                 if (QX .ne. 0.D0) then
                 I = ID(2) 
                 J = JD(2) 
+!				print*,k,i,j
                 ion%col_str(K,I,J) = QX
                 endif
         enddo

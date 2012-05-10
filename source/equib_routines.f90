@@ -34,13 +34,14 @@
       module mod_equib
       contains
 
-      subroutine get_diagnostic(ion,levu,levl,inratio,diagtype,fixedq,result)
+      subroutine get_diagnostic(ion,levu,levl,inratio,diagtype,fixedq,result,ndim2,ndim1)
       IMPLICIT NONE
-      INTEGER NDIM1, NDIM2, NDIM1T3, MAXND
+	  
+      INTEGER NDIM1, NDIM2, NDIM1T3, MAXND,maxlevs,maxtemps
                                                       !Maximum no of Te & levels
-      PARAMETER (NDIM1=35, NDIM2=150)
+      !PARAMETER (NDIM1=maxtemps, NDIM2=maxlevs)!35, NDIM2=150)
                                              !NDIM1T3 should be at least 3*NDIM1
-      PARAMETER (NDIM1T3 = 105)
+      !PARAMETER (NDIM1T3 = 3*NDIM1)!105)
                                                    !Maximum no. of Ne increments
       PARAMETER (MAXND=100)
       INTEGER GX, G(NDIM2), ID(2), JD(2),                               &
@@ -72,13 +73,14 @@
       REAL*8, DIMENSION(:,:), ALLOCATABLE :: RESULTS
       REAL*8 valtest(3)
 
+	  ndim1t3=3*ndim1
       g=0
       itrana=0
       itranb=0
       itranc=0
 
-      READ(levu,*) ((ITRANA(LL,KK),LL=1,2),KK=1,150)
-      READ(levl,*) ((ITRANB(LL,KK),LL=1,2),KK=1,150)
+      READ(levu,*) ((ITRANA(LL,KK),LL=1,2),KK=1,ndim2)!150)
+      READ(levl,*) ((ITRANB(LL,KK),LL=1,2),KK=1,ndim2)!150)
 
       IONL = INDEX(ION,' ') - 1
       OPEN(UNIT=1,STATUS='OLD',                                         &
@@ -447,13 +449,15 @@
 
       END subroutine get_diagnostic
 
-      subroutine get_abundance(ion,levels,tempi,densi,iobs,abund)
+      subroutine get_abundance(ion,levels,tempi,densi,iobs,abund,ndim2,ndim1)
       IMPLICIT NONE
+	  
+	  !INTEGER maxlevs,maxtemps
       INTEGER NDIM1, NDIM2, NDIM1T3, MAXND
                                                       !Maximum no of Te & levels
-      PARAMETER (NDIM1=35, NDIM2=150)
+      !PARAMETER (NDIM1=maxtemps, NDIM2=maxlevs)!35, NDIM2=150)
                                              !NDIM1T3 should be at least 3*NDIM1
-      PARAMETER (NDIM1T3 = 105)
+      !PARAMETER (NDIM1T3 = 3*NDIM1)!105)
                                                    !Maximum no. of Ne increments
       PARAMETER (MAXND=100)
       INTEGER GX, G(NDIM2), ID(2), JD(2),                               &
@@ -479,12 +483,13 @@
       CHARACTER*20 levels
       real*8 iobs, abund
 !
+      ndim1t3=3*ndim1
       g=0
       itrana=0
       itranb=0
       itranc=0
 
-      read(levels,*) ((ITRANC(LL,KK),LL=1,2),KK=1,150)
+      read(levels,*) ((ITRANC(LL,KK),LL=1,2),KK=1,ndim2)!150)
 
       tinc=0
       dinc=0
