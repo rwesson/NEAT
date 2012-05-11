@@ -444,7 +444,7 @@ implicit none
          elseif (diagnostic_array(5) .gt. 0.0) then
            medtemp = diagnostic_array(5)
          else
-           medtemp = 10000.0
+           medtemp = lowtemp
          endif
 
         !dereddening again 
