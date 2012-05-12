@@ -34,7 +34,8 @@
       module mod_equib
       contains
 
-      subroutine get_diagnostic(ion,levu,levl,inratio,diagtype,fixedq,result,ndim2,ndim1)
+      subroutine get_diagnostic(ion,levu,levl,inratio,diagtype,fixedq,result,ndim2,ndim1,atomicdata,iion)
+      use mod_atomicdata
       IMPLICIT NONE
 	  
       INTEGER NDIM1, NDIM2, NDIM1T3, MAXND,maxlevs,maxtemps
@@ -46,6 +47,8 @@
       PARAMETER (MAXND=100)
       INTEGER GX, G(NDIM2), ID(2), JD(2),                               &
      &  ITRANA(2,NDIM2),ITRANB(2,NDIM2),ITRANC(2,NDIM2),LOOP
+      type(atomic_data),dimension(:),intent(in) :: atomicdata
+      integer iion,nion
       REAL*8 N(NDIM2)
       REAL*8 & !TDRAT(2,MAXND)
      & TNIJ(NDIM2,NDIM2), FINTIJ(NDIM2,NDIM2),    &
@@ -72,99 +75,120 @@
       CHARACTER*1 diagtype
       REAL*8, DIMENSION(:,:), ALLOCATABLE :: RESULTS
       REAL*8 valtest(3)
+      integer test
 
 	  ndim1t3=3*ndim1
       g=0
       itrana=0
       itranb=0
       itranc=0
+      valtest=0
 
       READ(levu,*) ((ITRANA(LL,KK),LL=1,2),KK=1,ndim2)!150)
       READ(levl,*) ((ITRANB(LL,KK),LL=1,2),KK=1,ndim2)!150)
 
-      IONL = INDEX(ION,' ') - 1
-      OPEN(UNIT=1,STATUS='OLD',                                         &
-     & FILE='Atomic-data/'//ION(1:IONL)//'.dat') 
+	  
+!Transfer atomic data to local variables
+      do i = 1,iion
+         if(atomicdata(i)%ion .eq. ion) nion=i
+      enddo
+!	  print*,nion,atomicdata(nion)%ion,ion
+      nlev=atomicdata(nion)%nlevs
+      ntemp=atomicdata(nion)%ntemps
+	  T(1:ntemp)= log10(atomicdata(nion)%Temps(1:ntemp))
+      ROOTT(1:ntemp)=atomicdata(nion)%rootT(1:ntemp)
+      Label(1:nlev)=atomicdata(nion)%labels(1:nlev)
+      QOM(1:ntemp,1:nlev,1:nlev)=atomicdata(nion)%col_str(1:ntemp,1:nlev,1:nlev)
+      A(1:nlev,1:nlev)=atomicdata(nion)%A_coeffs(1:nlev,1:nlev)
+      E(1:nlev)=atomicdata(nion)%Waveno(1:nlev)
+      G(1:nlev)=atomicdata(nion)%G(1:nlev)
+      irats=0
+	  
+	  
+	  
+!      IONL = INDEX(ION,' ') - 1
+!      OPEN(UNIT=1,STATUS='OLD',                                         &
+!     & FILE='Atomic-data/'//ION(1:IONL)//'.dat') 
                                                       !Read in no. comment lines
-      READ(1,*) NLINES
-      DO I = 1, NLINES
+!      READ(1,*) NLINES
+!      DO I = 1, NLINES
                                                                        !Comments
-        READ(1,1003) LTEXT 
-      ENDDO
+!        READ(1,1003) LTEXT 
+!      ENDDO
                                           !Read no. of levels (max=NDIM2) NLEV,
-      READ (1,*) NLEV, NTEMP
+!      READ (1,*) NLEV, NTEMP
                                           !no. of Te (max=NDIM1) NTEMP and the
-      DO I = 1, NLEV
+!      DO I = 1, NLEV
                                           !input format (cf Readme)
-         READ (1,1002) LABEL(I)
-      ENDDO
+!         READ (1,1002) LABEL(I)
+!      ENDDO
 !     be
       ibig=0 
                                             !Read in Te's where coll. strengths are tabulated
-      DO I = 1, NTEMP 
-           READ (1,*) T(I)
-           T(I) = LOG10 (T(I))
-           ROOTT(I) = SQRT(T(I))
-      ENDDO
+!      DO I = 1, NTEMP 
+!           READ (1,*) T(I)
+!           T(I) = LOG10 (T(I))
+!           ROOTT(I) = SQRT(T(I))
+!      ENDDO
 
 
 
                              !If IRATS=0, what tabulated are collision strengths
-      READ(1,*) IRATS
+!      READ(1,*) IRATS
 !                            !Else Coll. rates = tabulated values * 10 ** IRATS
-      IF(IBIG.EQ.0) THEN
-   10   READ (1,*) ID(2), JD(2), QX
-        IF (QX.EQ.0.D0) GOTO 20
-        IF (ID(2).EQ.0) THEN
-          ID(2) = ID(1)
-          K = K + 1
-        ELSE
-          ID(1) = ID(2)
-          K = 1
-        ENDIF
-        IF (JD(2).EQ.0) THEN
-          JD(2) = JD(1)
-        ELSE
-          JD(1) = JD(2)
-        ENDIF
-        I = ID(2)
-        J = JD(2)
-        QOM(K,I,J) = QX
-        GO TO 10
-      ENDIF
-   20 IF(IBIG.EQ.1.OR.IBIG.EQ.2) THEN
-        READ(1,*) NTRA
-        DO IN = 1, NTRA
-          READ(1,*) I,J,(QOM(ITEMP,I,J),ITEMP=1,NTEMP)
-        ENDDO
-      ENDIF
+!      IF(IBIG.EQ.0) THEN
+!   10   READ (1,*) ID(2), JD(2), QX
+!        IF (QX.EQ.0.D0) GOTO 20
+!        IF (ID(2).EQ.0) THEN
+!          ID(2) = ID(1)
+!          K = K + 1
+!        ELSE
+!          ID(1) = ID(2)
+!          K = 1
+!        ENDIF
+!        IF (JD(2).EQ.0) THEN
+!          JD(2) = JD(1)
+!        ELSE
+!          JD(1) = JD(2)
+!        ENDIF
+!        I = ID(2)
+!        J = JD(2)
+!        QOM(K,I,J) = QX
+!        GO TO 10
+!      ENDIF
+!   20 IF(IBIG.EQ.1.OR.IBIG.EQ.2) THEN
+!        READ(1,*) NTRA
+!        DO IN = 1, NTRA
+!          READ(1,*) I,J,(QOM(ITEMP,I,J),ITEMP=1,NTEMP)
+!        ENDDO
+!      ENDIF
                                                   !Read transition probabilities
       NLEV1 = NLEV - 1
-      IF (IBIG.EQ.1) THEN
-       READ(1,7000) ((I,J,A(J,I),L=K+1,NLEV),K=1,NLEV1)
-      ELSE
-      DO K = 1, NLEV1
-        KP1 = K + 1
-          DO L = KP1, NLEV
-            READ (1,*) I, J, AX
-            A(J,I) = AX
-          ENDDO
-      ENDDO
-      ENDIF
+!      IF (IBIG.EQ.1) THEN
+!       READ(1,7000) ((I,J,A(J,I),L=K+1,NLEV),K=1,NLEV1)
+!      ELSE
+!      DO K = 1, NLEV1
+!        KP1 = K + 1
+!          DO L = KP1, NLEV
+!            READ (1,*) I, J, AX
+!            A(J,I) = AX
+!          ENDDO
+!      ENDDO
+!      ENDIF
                                  !Read statistical weights, energy levels (cm-1)
-      DO J = 1, NLEV
-        READ (1,*) I, GX, EX
-        G(I) = GX
-        E(I) = EX
-      ENDDO
-      CLOSE (UNIT=1)
+!      DO J = 1, NLEV
+!        READ (1,*) I, GX, EX
+!        G(I) = GX
+!        E(I) = EX
+!      ENDDO
+!      CLOSE (UNIT=1)
                                 !Get levels for ratio 
                                                            !150 large enough 
       ITRANC = 0
 
 !newbit
 
-
+!print*,ion,diagtype,fixedq,int
 ! set up T and D loops depending on input.
                                                !Read in Te and Ne where the line 
                                                !ratio is to be calculated
@@ -197,7 +221,7 @@
         endif
 
         IND=4
-        DINC=(100000.)/((INT-1)**(LOOP))
+        DINC=(100000.)/((IND-1)**(LOOP))
 
         TempI=fixedq
         TINC=0
@@ -207,6 +231,7 @@
       endif 
 
       if (densi .le. 0) densi=1
+	  if (tempi .lt. 5000) tempi=5000
 
                                                                !Start of Te loop
       DO JT = 1, INT
@@ -220,7 +245,7 @@
 !          ENDIF
           IF (TEMP.LE.0.D0.OR.DENS.LE.0.D0) THEN
             WRITE (6,6100)
-                print *,"Temp = ", TEMP, ", Dens = ", DENS
+                print *,"Temp = ", TEMP, ", Dens = ", DENS, ", Ion = ",ion,diagtype
             STOP
           ENDIF
           DLOGD = LOG10 (DENS)
@@ -413,19 +438,44 @@
       ENDDO
 ! here, find the value in RESULTS which is closest to zero
 ! sort values in results to find two lowest values
-
+!print*,results
+!print*," "
       if (diagtype .eq. "D" .or. diagtype .eq. "d") then
         INT = ind
       endif
 
         ! loop through array and find out where the sign changes.
 
-        DO I=1,INT !test is bugged, not sure why? ps.
+        DO I=2,INT 
+            test=0
                 if (sign(results(3,I),results(3,1)) .ne. results(3,I)) then !when this condition is fulfilled, the values in the array are now a different sign to the first value in the array
                         valtest(:) = (results(:,I-1)) ! return the value before the sign change so that the next loop starts at a sensible value
+                        test=1
                         exit
                 endif
         enddo
+
+        if(test .eq. 0 .and. loop .lt. 9) then !test fails if no change of sign
+                             !this kicks in then, and checks if it should be upper or lower limit
+            if(abs(results(3,1)) .lt. abs(results(3,INT))) then
+                valtest(:)=results(:,1)
+            elseif(abs(results(3,INT)) .lt. abs(results(3,1))) then
+                valtest(:)=results(:,INT-1)
+            else
+                print*,"Valtest failed"
+                STOP
+            endif
+        elseif(test .eq. 0 .and. loop .eq. 9) then !test fails if no change of sign
+                             !this kicks in then, and checks if it should be upper or lower limit
+            if(abs(results(3,1)) .lt. abs(results(3,INT))) then
+                valtest(:)=results(:,1)
+            elseif(abs(results(3,INT)) .lt. abs(results(3,1))) then
+                valtest(:)=results(:,INT)
+            else
+                print*,"Valtest failed"
+                STOP
+            endif
+        endif
 
         !LOOP = LOOP + 1
         DEALLOCATE(RESULTS) !thanks Bruce!
@@ -449,7 +499,8 @@
 
       END subroutine get_diagnostic
 
-      subroutine get_abundance(ion,levels,tempi,densi,iobs,abund,ndim2,ndim1)
+      subroutine get_abundance(ion,levels,tempi,densi,iobs,abund,ndim2,ndim1,atomicdata,iion)
+      use mod_atomicdata
       IMPLICIT NONE
 	  
 	  !INTEGER maxlevs,maxtemps
@@ -462,6 +513,8 @@
       PARAMETER (MAXND=100)
       INTEGER GX, G(NDIM2), ID(2), JD(2),                               &
      &  ITRANA(2,NDIM2),ITRANB(2,NDIM2),ITRANC(2,NDIM2)
+      type(atomic_data),dimension(:),intent(in) :: atomicdata
+      integer :: nion,iion
       REAL*8 N(NDIM2)
       REAL*8 TDRAT(2,MAXND), TNIJ(NDIM2,NDIM2), FINTIJ(NDIM2,NDIM2),    &
      & WAVA(NDIM2), WAVB(NDIM2), WAVC(NDIM2), CS(NDIM2,NDIM2),          &
@@ -496,81 +549,96 @@
       int=1
       ind=1
 
+      do i = 1,iion
+         if(atomicdata(i)%ion .eq. ion(1:10)) nion=i
+      enddo
+!	  print*,nion,atomicdata(nion)%ion,ion	  
+      nlev=atomicdata(nion)%nlevs
+      ntemp=atomicdata(nion)%ntemps
+	  T(1:ntemp)=log10(atomicdata(nion)%Temps(1:ntemp))
+      ROOTT(1:ntemp)=atomicdata(nion)%rootT(1:ntemp)
+      Label(1:nlev)=atomicdata(nion)%labels(1:nlev)
+      QOM(1:ntemp,1:nlev,1:nlev)=atomicdata(nion)%col_str(1:ntemp,1:nlev,1:nlev)
+      A(1:nlev,1:nlev)=atomicdata(nion)%A_coeffs(1:nlev,1:nlev)
+      E(1:nlev)=atomicdata(nion)%Waveno(1:nlev)
+      G(1:nlev)=atomicdata(nion)%G(1:nlev)
+      irats=0
+	  
                                                         !Interrogate for input 
-      IONL = INDEX(ION,' ') - 1
-      OPEN(UNIT=1,STATUS='OLD',                                         &
-     & FILE='Atomic-data/'//ION(1:IONL)//'.dat')
-!     + NAME='atomic_data/'//ION(1:IONL)//'.dat')
+!      IONL = INDEX(ION,' ') - 1
+!      OPEN(UNIT=1,STATUS='OLD',                                         &
+!     & FILE='Atomic-data/'//ION(1:IONL)//'.dat')
+!!     + NAME='atomic_data/'//ION(1:IONL)//'.dat')
                                                       !Read in no. comment lines
-      READ(1,*) NLINES
-      DO I = 1, NLINES
+!      READ(1,*) NLINES
+!      DO I = 1, NLINES
                                                                        !comments
-        READ(1,1003) LTEXT 
-      ENDDO
+!        READ(1,1003) LTEXT 
+!      ENDDO
                                           !Read no. of levels (max=NDIM2) NLEV,
-      READ (1,*) NLEV, NTEMP
+!      READ (1,*) NLEV, NTEMP
                                           !no. of Te (max=NDIM1) NTEMP and the
-      DO I = 1, NLEV
+!      DO I = 1, NLEV
                                           !input format (cf Readme)
-         READ (1,1002) LABEL(I)
-      ENDDO
+!         READ (1,1002) LABEL(I)
+!      ENDDO
 !     be
       ibig=0
 !Read in Te's where coll. strengths are tabulated
-      DO I = 1, NTEMP 
-           READ (1,*) T(I)
-           T(I) = LOG10 (T(I))
-           ROOTT(I) = SQRT(T(I))
-      ENDDO
+!      DO I = 1, NTEMP 
+!           READ (1,*) T(I)
+!           T(I) = LOG10 (T(I))
+!           ROOTT(I) = SQRT(T(I))
+!      ENDDO
                              !If IRATS=0, what tabulated are collision strengths
-      READ(1,*) IRATS
+!      READ(1,*) IRATS
 !                            !Else Coll. rates = tabulated values * 10 ** IRATS
-      IF(IBIG.EQ.0) THEN
-   10   READ (1,*) ID(2), JD(2), QX
-        IF (QX.EQ.0.D0) GOTO 20
-        IF (ID(2).EQ.0) THEN
-          ID(2) = ID(1)
-          K = K + 1
-        ELSE
-          ID(1) = ID(2)
-          K = 1
-        ENDIF
-        IF (JD(2).EQ.0) THEN
-          JD(2) = JD(1)
-        ELSE
-          JD(1) = JD(2)
-        ENDIF
-        I = ID(2)
-        J = JD(2)
-        QOM(K,I,J) = QX
-        GO TO 10
-      ENDIF
-   20 IF(IBIG.EQ.1.OR.IBIG.EQ.2) THEN
-        READ(1,*) NTRA
-        DO IN = 1, NTRA
-          READ(1,*) I,J,(QOM(ITEMP,I,J),ITEMP=1,NTEMP)
-        ENDDO
-      ENDIF
+!      IF(IBIG.EQ.0) THEN
+!   10   READ (1,*) ID(2), JD(2), QX
+!        IF (QX.EQ.0.D0) GOTO 20
+!        IF (ID(2).EQ.0) THEN
+!          ID(2) = ID(1)
+!          K = K + 1
+!        ELSE
+!          ID(1) = ID(2)
+!          K = 1
+!        ENDIF
+!        IF (JD(2).EQ.0) THEN
+!          JD(2) = JD(1)
+!        ELSE
+!          JD(1) = JD(2)
+!        ENDIF
+!        I = ID(2)
+!        J = JD(2)
+!        QOM(K,I,J) = QX
+!        GO TO 10
+!      ENDIF
+!   20 IF(IBIG.EQ.1.OR.IBIG.EQ.2) THEN
+!        READ(1,*) NTRA
+!        DO IN = 1, NTRA
+!          READ(1,*) I,J,(QOM(ITEMP,I,J),ITEMP=1,NTEMP)
+!        ENDDO
+!      ENDIF
                                                   !Read transition probabilities
       NLEV1 = NLEV - 1
-      IF (IBIG.EQ.1) THEN
-       READ(1,7000) ((I,J,A(J,I),L=K+1,NLEV),K=1,NLEV1)
-      ELSE
-      DO K = 1, NLEV1
-        KP1 = K + 1
-          DO L = KP1, NLEV
-            READ (1,*) I, J, AX
-            A(J,I) = AX
-          ENDDO
-      ENDDO
-      ENDIF
+!      IF (IBIG.EQ.1) THEN
+!       READ(1,7000) ((I,J,A(J,I),L=K+1,NLEV),K=1,NLEV1)
+!      ELSE
+!      DO K = 1, NLEV1
+!        KP1 = K + 1
+!          DO L = KP1, NLEV
+!            READ (1,*) I, J, AX
+!            A(J,I) = AX
+!          ENDDO
+!      ENDDO
+!      ENDIF
                                  !Read statistical weights, energy levels (cm-1)
-      DO J = 1, NLEV
-        READ (1,*) I, GX, EX
-        G(I) = GX
-        E(I) = EX
-      ENDDO
-      CLOSE (UNIT=1)
+!      DO J = 1, NLEV
+!        READ (1,*) I, GX, EX
+!        G(I) = GX
+!        E(I) = EX
+!      ENDDO
+!      CLOSE (UNIT=1)
                                 !Get levels for ratio 
                                                            !150 large enough
 

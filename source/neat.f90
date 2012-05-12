@@ -25,8 +25,9 @@ program neat
         use mod_extinction
         use mod_quicksort
         use mod_abundIO
-		use mod_atomicdata
-		use mod_atomic_read
+        use mod_atomicdata
+        use mod_atomic_read
+        use mod_recombination_lines
 		!use mod_common_data
 
         CHARACTER :: switch_ext !switch for extinction laws
@@ -242,6 +243,8 @@ program neat
 
         call read_ilines(ILs, Iint,iion,ionlist)
 
+        print *,gettime(), ": Reading atomic data"
+		
 		!CELs read, can now read in atomic data
 		
 		allocate(atomicdata(iion))
@@ -250,13 +253,16 @@ program neat
 		    call read_atomic_data(atomicdata(I))
 		ENDDO
 		
+        !read ORL data
+        call read_orl_data
+		
 		!find maximum #levels and temperatures - pass to equib to reduce footprint
 		
 		do i=1,iion
 		    if(atomicdata(i)%nlevs .gt. maxlevs) maxlevs = atomicdata(i)%nlevs
 		    if(atomicdata(i)%ntemps .gt. maxtemps) maxtemps = atomicdata(i)%ntemps
 		enddo
-		print*,maxlevs,maxtemps
+!        print*,maxlevs,maxtemps
         !now check number of iterations.  If 1, line list is fine as is.  If more than one, randomize the fluxes
 
         if(runs == 1)then !calculates abundances without uncertainties
