@@ -162,7 +162,7 @@ use mod_atomicdata
     id = 0
 	jd = 0
     ionname = ion%ion
-	print*,'Reading atomic data ion',ionname
+!	print*,'Reading atomic data ion',ionname
 	ionl = index(ionname,' ') - 1
 	filename = 'Atomic-data/'//ionname(1:IONL)//'.dat'
     OPEN(unit=1, status = 'OLD', file=filename,ACTION='READ')
