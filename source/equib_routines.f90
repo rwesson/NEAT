@@ -1014,8 +1014,6 @@
           HMH(NPM,K)=HMH(NPM,K)-3*C(2,J)
         ENDDO
       ENDIF
-      DO I=1,NPM
-      ENDDO
                                  !Solve matrix equation with results in the form
       DO I=1,NPT
                                  !YPP=HMH*Y. matrix g has been LU decomposed
@@ -1058,8 +1056,6 @@
           HMH(NPT,K)=HMH(NPT,K)+3*C(2,J)/AN1
         ENDDO
       ENDIF
-      DO I=1,NPT
-      ENDDO
       RETURN
       END subroutine hgen
 !
