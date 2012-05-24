@@ -199,8 +199,7 @@
 
       IMPLICIT NONE
       DOUBLE PRECISION :: aeff, aeff_hb, Em_Hb, &
-     & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund, &
-     & logem
+     & Te, Ne, abund
       DOUBLE PRECISION :: a, b, c, d, an(4)
 
       INTEGER :: i
@@ -713,8 +712,8 @@
 
       IMPLICIT NONE
       DOUBLE PRECISION :: aeff, aeff_hb, Em_Hb, &
-     & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund, &
-     & logem, Br_term, z
+     & Te, Ne, abund, &
+     & Br_term, z
       DOUBLE PRECISION :: a, b, c, d
 
       INTEGER :: ii, i
@@ -1109,8 +1108,7 @@
 
       IMPLICIT NONE
       DOUBLE PRECISION :: aeff_Hb, Em_Hb, &
-     & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund, &
-     & logem
+     & Te, Ne, abund
 
       INTEGER :: i
 
@@ -1148,13 +1146,14 @@
 
       IMPLICIT NONE
       DOUBLE PRECISION :: aeff_Hb, Em_Hb,                         &
-     & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund,                &
-     & logem
+     &  Te, Ne, abund
 
       INTEGER :: i
 
 
       TYPE(neiiRL), DIMENSION(38) :: neiiRLs
+
+      call get_aeff_hb(te,ne, aeff_hb, em_hb)
 
 !! read in NeII data
 !
@@ -1186,12 +1185,13 @@
 
       IMPLICIT NONE
       DOUBLE PRECISION :: aeff_Hb, Em_Hb, &
-     & ae2, ae3, ae4, ae5, ae6, ae7, ae8, Te, Ne, abund, &
-     & logem
+     & Te, Ne, abund
 
       INTEGER :: i
 
       TYPE(xiiiRL), DIMENSION(6) :: xiiiRLs
+
+      call get_aeff_hb(te,ne, aeff_hb, em_hb)
 
 !! read in XIII data
 !

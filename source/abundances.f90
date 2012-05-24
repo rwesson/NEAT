@@ -57,6 +57,17 @@ implicit none
 ! strong line variables
         DOUBLE PRECISION :: X23,O_R23upper, O_R23lower, N2,O_N2, O3N2, O_O3N2, Ar3O3, O_Ar3O3, S3O3, O_S3O3, x23temp1, x23temp2, x23temp3, x23temp4
 
+        ! initialise some variables to zero
+
+        oiiRLabund = 0.d0
+        niiRLabund = 0.d0
+        CELicfCl = 0.d0
+        CELicfS = 0.d0
+        CELicfAr = 0.d0
+        CELicfNe = 0.d0
+        CELicfN = 0.d0
+        CELicfO = 0.d0
+
         linelist_orig = linelist
 
         H_BS%intensity = 0
@@ -662,6 +673,10 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
         call get_helium(REAL(medtemp),REAL(meddens),REAL(He_lines(1)%int_dered),REAL(He_lines(2)%int_dered),REAL(He_lines(3)%int_dered),REAL(He_lines(4)%int_dered),heiabund,heiiabund,Hetotabund, A4471, A4686, A6678, A5876)
 
+        w1=0
+        w2=0
+        w3=0
+        w4=0
         if( (A4471 > 0 .or. A5876 > 0 ) .or. A6678 > 0)then
 
                 if(He_lines(2)%intensity > 0) w1 = 1/((He_lines(2)%int_err / He_lines(2)%intensity)**2)
@@ -676,11 +691,6 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
                 heiabund = 0.0
         endif
-
-        w1=0
-        w2=0
-        w3=0
-        w4=0
 
 
 ! get abundances for all CELs

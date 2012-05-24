@@ -57,6 +57,7 @@ integer function get_ion(ionname, iontable, Iint)
                 endif
         end do
 
+        get_ion = 0
         PRINT*, "Nudge Nudge, wink, wink error. Ion not found, say no more.", ionname
 
 end function

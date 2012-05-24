@@ -83,15 +83,21 @@
       itranb=0
       itranc=0
       valtest=0
+      test=0
 
       READ(levu,*) ((ITRANA(LL,KK),LL=1,2),KK=1,ndim2)!150)
       READ(levl,*) ((ITRANB(LL,KK),LL=1,2),KK=1,ndim2)!150)
 
 
 !Transfer atomic data to local variables
+      nion = 0
       do i = 1,iion
          if(atomicdata(i)%ion .eq. ion) nion=i
       enddo
+      if (nion .eq. 0) then
+          print *,"I'm afraid. I'm afraid, Dave."
+          nion = 1
+      endif
 !          print*,nion,atomicdata(nion)%ion,ion
       nlev=atomicdata(nion)%nlevs
       ntemp=atomicdata(nion)%ntemps
@@ -490,11 +496,8 @@
 
       RETURN
 
- 1002 FORMAT(A20)
- 1003 FORMAT(78A1)
  6100 FORMAT (' PROCESSING COMPLETED'/                                  &
      & ' GOODBYE!!'///)
- 7000 FORMAT (4(2I4,2X,1PE10.3))
 
 
       END subroutine get_diagnostic
@@ -549,9 +552,14 @@
       int=1
       ind=1
 
+      nion = 0
       do i = 1,iion
          if(atomicdata(i)%ion .eq. ion(1:10)) nion=i
       enddo
+      if (nion .eq. 0) then
+          print *, "Dave, my mind is going. I can feel it."
+          nion = 1
+      endif
 !          print*,nion,atomicdata(nion)%ion,ion
       nlev=atomicdata(nion)%nlevs
       ntemp=atomicdata(nion)%ntemps
@@ -838,12 +846,8 @@
 
       RETURN
 
- 1002 FORMAT(A20)
- 1003 FORMAT(78A1)
-
  6100 FORMAT (' PROCESSING COMPLETED'/                                  &
      & ' GOODBYE!!'///)
- 7000 FORMAT (4(2I4,2X,1PE10.3))
 
       END subroutine get_abundance
 
