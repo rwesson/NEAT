@@ -121,9 +121,9 @@
       TYPE(xiiiRL), DIMENSION(6) :: xiiiRLs
 
       contains
-	  
+
       subroutine read_orl_data
-        
+
         IMPLICIT NONE
         integer :: i
         ! read in OII data
@@ -140,11 +140,11 @@
      &oiiRLs(i)%Mult, oiiRLs(i)%E1, oiiRLs(i)%n_E1, oiiRLs(i)%n_E1GA,   &
      &oiiRLs(i)%g1, oiiRLs(i)%n_g1, oiiRLs(i)%Term1, oiiRLs(i)%E2,      &
      &oiiRLs(i)%n_E2, oiiRLs(i)%n_E2GA, oiiRLs(i)%g2, oiiRLs(i)%n_g2,   &
-     &oiiRLs(i)%Term2, oiiRLs(i)%Br_A, oiiRLs(i)%Br_B, oiiRLs(i)%Br_C 
-            END DO 
+     &oiiRLs(i)%Term2, oiiRLs(i)%Br_A, oiiRLs(i)%Br_B, oiiRLs(i)%Br_C
+            END DO
       CLOSE(201)
-        
-		! read in NII data
+
+                ! read in NII data
 
             302 FORMAT (I5, 1X, F9.4, 1X, A1, A1, A1, A1, A1, 1X, F7.4, &
      & 1X, A3, 1X, F7.4, 1X, A3, 1X, A7, 3X, F11.4, A1, A1, 1X, I2, &
@@ -161,10 +161,10 @@
      &niiRLs(i)%Term2, niiRLs(i)%Br_LS
             END DO
       CLOSE(201)
-	
+
 ! read in CII data
 
-       303 FORMAT (F7.2, 1X, F6.4, 1X, F7.4, 1X, F7.4, 1X, F7.4, 1X, F7.4) 
+       303 FORMAT (F7.2, 1X, F6.4, 1X, F7.4, 1X, F7.4, 1X, F7.4, 1X, F7.4)
        OPEN(201, file="Atomic-data/Rcii.dat", status='old')
        DO i = 1,57
          READ(201,303) ciiRLs(i)%Wave, ciiRLs(i)%a, ciiRLs(i)%b, &
@@ -172,17 +172,17 @@
        END DO
        CLOSE(201)
 
-	   ! read in NeII data
+           ! read in NeII data
 
-       304 FORMAT (F7.2, 1X, F6.3, 1X, F6.3, 1X, F6.3, 1X, F6.3, 1X, F7.4, 1X, F6.3) 
+       304 FORMAT (F7.2, 1X, F6.3, 1X, F6.3, 1X, F6.3, 1X, F6.3, 1X, F7.4, 1X, F6.3)
        OPEN(201, file="Atomic-data/Rneii.dat", status='old')
        DO i = 1,38
          READ(201,304) neiiRLs(i)%Wave, neiiRLs(i)%a, neiiRLs(i)%b, &
          & neiiRLs(i)%c, neiiRLs(i)%d, neiiRLs(i)%f, neiiRLs(i)%Br
        END DO
        CLOSE(201)
-	
-	! read in XIII data
+
+        ! read in XIII data
 
        305 FORMAT (A3,1X,F7.2, 1X, F5.3, 1X, F6.3, 1X, F5.3, 1X, F5.3, 1X, F5.4)
        OPEN(201, file="Atomic-data/Rxiii.dat", status='old')
@@ -192,9 +192,9 @@
        END DO
        CLOSE(201)
 
-	
+
       end subroutine
-	  
+
       subroutine oii_rec_lines(te,ne,abund,oiiRLs)
 
       IMPLICIT NONE
@@ -224,8 +224,8 @@
 !     &oiiRLs(i)%Mult, oiiRLs(i)%E1, oiiRLs(i)%n_E1, oiiRLs(i)%n_E1GA,   &
 !     &oiiRLs(i)%g1, oiiRLs(i)%n_g1, oiiRLs(i)%Term1, oiiRLs(i)%E2,      &
 !     &oiiRLs(i)%n_E2, oiiRLs(i)%n_E2GA, oiiRLs(i)%g2, oiiRLs(i)%n_g2,   &
-!     &oiiRLs(i)%Term2, oiiRLs(i)%Br_A, oiiRLs(i)%Br_B, oiiRLs(i)%Br_C 
-!            END DO 
+!     &oiiRLs(i)%Term2, oiiRLs(i)%Br_A, oiiRLs(i)%Br_B, oiiRLs(i)%Br_C
+!            END DO
 !      CLOSE(201)
 
 ! 4f-3d transitions
@@ -261,10 +261,10 @@
         aeff = 1.e-14 * a * te ** (b + c * log(te))
       endif
 
-      do i = 1,183 
+      do i = 1,183
         oiiRLs(i)%Em = aeff * 1.98648E-08 /oiiRLs(i)%Wave * &
         & oiiRLs(i)%g2 * oiiRLs(i)%Br_B
-        oiiRLs(i)%Int = 100. * oiiRLs(i)%Em / Em_hb * abund 
+        oiiRLs(i)%Int = 100. * oiiRLs(i)%Em / Em_hb * abund
       enddo
 
 ! 3d-3p ^4F transitions (Case A=B=C for a,b,c,d; Br diff. slightly, adopt Case B)
@@ -285,7 +285,7 @@
               a = an(4)
       endif
 !
-      aeff = 1.e-14*a*te ** (b) 
+      aeff = 1.e-14*a*te ** (b)
       aeff = aeff*(1. + c*(1. - te) + d*(1. - te) ** 2)
 !
 ! New eff. recomb. data for 1000 < T < 5000 K, Ne = 100/cm3
@@ -303,7 +303,7 @@
         oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
       enddo
 !
-! 3d-3p ^4D, ^4P transitions 
+! 3d-3p ^4D, ^4P transitions
       a =  0.745
       b =  -0.74621
       c =  0.15710
@@ -323,7 +323,7 @@
               a = an(4)
       endif
 !
-      aeff = 1.e-14*a*te ** (b) 
+      aeff = 1.e-14*a*te ** (b)
       aeff = aeff*(1. + c*(1. - te) + d*(1. - te) ** 2)
 !
 ! New eff. recomb. data for 1000 < T < 5000 K, Ne = 100/cm3
@@ -341,7 +341,7 @@
         oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
       enddo
 !
-! 3d-3p ^2F transitions 
+! 3d-3p ^2F transitions
       a =  0.745
       b =  -0.74621
       c =  0.15710
@@ -361,7 +361,7 @@
               a = an(4)
       endif
 !
-      aeff = 1.e-14*a*te ** (b) 
+      aeff = 1.e-14*a*te ** (b)
       aeff = aeff*(1. + c*(1. - te) + d*(1. - te) ** 2)
 !
 ! New eff. recomb. data for 1000 < T < 5000 K, Ne = 100/cm3
@@ -379,7 +379,7 @@
         oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
       enddo
 !
-! 3d-3p ^2D transitions 
+! 3d-3p ^2D transitions
       a =  0.601
       b =  -0.79533
       c =  0.15314
@@ -398,7 +398,7 @@
               a = an(4)
       endif
 !
-      aeff = 1.e-14*a*te ** (b) 
+      aeff = 1.e-14*a*te ** (b)
       aeff = aeff*(1. + c*(1. - te) + d*(1. - te) ** 2)
 !
 ! New eff. recomb. data for 1000 < T < 5000 K, Ne = 100/cm3
@@ -416,7 +416,7 @@
         oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
       enddo
 !
-! 3d-3p ^2P transitions 
+! 3d-3p ^2P transitions
       a =  0.524
       b =  -0.78448
       c =  0.13681
@@ -435,7 +435,7 @@
               a = an(4)
       endif
 !
-      aeff = 1.e-14*a*te ** (b) 
+      aeff = 1.e-14*a*te ** (b)
       aeff = aeff*(1. + c*(1. - te) + d*(1. - te) ** 2)
 !
 ! New eff. recomb. data for 1000 < T < 5000 K, Ne = 100/cm3
@@ -453,7 +453,7 @@
         oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
       enddo
 !
-! 3p-3s ^4D - ^4P transitions 
+! 3p-3s ^4D - ^4P transitions
 !      an = (/34.7,34.9,35.1,35.0/) !a for logNe = 2,4,5,6 Case A
 !      a =  36.2
 !      b =  -0.749
@@ -476,7 +476,7 @@
               a = an(4)
       endif
 !
-      aeff = 1.e-14*a*te ** (b) 
+      aeff = 1.e-14*a*te ** (b)
       aeff = aeff*(1. + c*(1. - te) + d*(1. - te) ** 2)
 !
 ! New eff. recomb. data for 1000 < T < 5000 K, Ne = 100/cm3
@@ -495,7 +495,7 @@
         oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
       enddo
 !
-! 3p-3s ^4P - ^4P transitions 
+! 3p-3s ^4P - ^4P transitions
 !      an = (/10.4,10.4,10.5,10.4/) !a for logNe = 2,4,5,6 Case A
 !      a =  10.4
 !      b =  -0.721
@@ -518,7 +518,7 @@
               a = an(4)
       endif
 !
-      aeff = 1.e-14*a*te ** (b) 
+      aeff = 1.e-14*a*te ** (b)
       aeff = aeff*(1. + c*(1. - te) + d*(1. - te) ** 2)
 !
 ! New eff. recomb. data for 1000 < T < 5000 K, Ne = 100/cm3
@@ -537,7 +537,7 @@
         oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
       enddo
 !
-! 3p-3s ^4S - ^4P transitions 
+! 3p-3s ^4S - ^4P transitions
 !      an = (/0.90,0.90,0.90,1.00/) !a for logNe = 2,4,5,6 Case A
 !      a =  0.90
 !      b =  -0.485
@@ -560,7 +560,7 @@
               a = an(4)
       endif
 !
-      aeff = 1.e-14*a*te ** (b) 
+      aeff = 1.e-14*a*te ** (b)
       aeff = aeff*(1. + c*(1. - te) + d*(1. - te) ** 2)
 !
 ! New eff. recomb. data for 1000 < T < 5000 K, Ne = 100/cm3
@@ -579,7 +579,7 @@
         oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
       enddo
 !
-! 3p-3s ^2D - ^2P transitions 
+! 3p-3s ^2D - ^2P transitions
       an = (/2.40,2.40,2.50,2.60/) !a for logNe = 2,4,5,6 Case A
       a =  2.40
       b =  -0.550
@@ -602,7 +602,7 @@
               a = an(4)
       endif
 !
-      aeff = 1.e-14*a*te ** (b) 
+      aeff = 1.e-14*a*te ** (b)
       aeff = aeff*(1. + c*(1. - te) + d*(1. - te) ** 2)
 !
 ! New eff. recomb. data for 1000 < T < 5000 K, Ne = 100/cm3
@@ -621,7 +621,7 @@
         oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
       enddo
 !
-! 3p-3s ^2P - ^2P transitions 
+! 3p-3s ^2P - ^2P transitions
       an = (/1.10,1.20,1.20,1.20/) !a for logNe = 2,4,5,6 Case A
       a =  1.20
       b =  -0.523
@@ -644,7 +644,7 @@
               a = an(4)
       endif
 !
-      aeff = 1.e-14*a*te ** (b) 
+      aeff = 1.e-14*a*te ** (b)
       aeff = aeff*(1. + c*(1. - te) + d*(1. - te) ** 2)
 !
 ! New eff. recomb. data for 1000 < T < 5000 K, Ne = 100/cm3
@@ -663,7 +663,7 @@
         oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
       enddo
 !
-! 3p-3s ^2S - ^2P transitions 
+! 3p-3s ^2S - ^2P transitions
       an = (/0.40,0.40,0.40,0.40/) !a for logNe = 2,4,5,6 Case A
       a =  0.40
       b =  -0.461
@@ -686,7 +686,7 @@
               a = an(4)
       endif
 !
-      aeff = 1.e-14*a*te ** (b) 
+      aeff = 1.e-14*a*te ** (b)
       aeff = aeff*(1. + c*(1. - te) + d*(1. - te) ** 2)
 !
 ! New eff. recomb. data for 1000 < T < 5000 K, Ne = 100/cm3
@@ -703,7 +703,7 @@
         oiiRLs(i)%Em = aeff*1.98648E-08 / oiiRLs(i)%Wave*&
       & oiiRLs(i)%g2*oiiRLs(i)%Br_A
         oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
-      enddo 
+      enddo
 
       te = te * 10000
 
@@ -744,19 +744,19 @@
 
       te = te/10000
 
-!       2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p E1 3P* - 3D  M03  transitions 
+!       2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p E1 3P* - 3D  M03  transitions
 !      i = 0002     !case A
       i = 0003     !case B
       a = -12.7289
       b = -0.689816
       c = 0.022005
 !
-      aeff = 10. ** (a + b * log10(te) + c * log10(te) ** 2) 
-      do ii = 1,6 
+      aeff = 10. ** (a + b * log10(te) + c * log10(te) ** 2)
+      do ii = 1,6
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
-        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund 
-      enddo 
-!      
+        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
+      enddo
+!
 !       2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 3P* - 3S     M04 transitions
 !      i = 0004     !case A
       i = 0005     !case B
@@ -765,11 +765,11 @@
       c = -0.028944
 !
       aeff = 10. ** (a + b * log10(te) + c * log10(te) ** 2)
-      do ii = 7,9 
+      do ii = 7,9
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-!      
+!
 !       2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 3P* - 3P     M05 transitions
 !      i = 0006     !case A
       i = 0007     !case B
@@ -782,7 +782,7 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-!      
+!
 !       2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 1P* - 1P     M08 transitions
       i = 0008     !case A
 !      i = 0009     !case B
@@ -795,7 +795,7 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-!      
+!
 !       2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 1P* - 1D     M12 transitions
       i = 0010     !case A
 !      i = 0011     !case B
@@ -808,7 +808,7 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-!      
+!
 !       2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 1P* - 1S     M13 transitions
       i = 0012     !case A
 !      i = 0013     !case B
@@ -821,7 +821,7 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-!      
+!
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 1P - 1D*     M15 transitions
       i = 0014     !case A
 !      i = 0015     !case B
@@ -834,7 +834,7 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-!      
+!
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 1P - 1P*     M17 transitions
       i = 0016     !case A
 !      i = 0017     !case B
@@ -847,7 +847,7 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-!      
+!
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3D - 3F*     M19 transitions
 !      i = 0018     !case A
       i = 0019     !case B
@@ -860,7 +860,7 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-!      
+!
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3D - 3D*     M20 transitions
 !      i = 0020     !case A
       i = 0021     !case B
@@ -873,7 +873,7 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-!      
+!
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3D - 3P*     M21 transitions
 !      i = 0022     !case A
       i = 0023     !case B
@@ -886,7 +886,7 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-!      
+!
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).4s 3D - 3P*     M22 transitions
 !      i = 0024     !case A
       i = 0025     !case B
@@ -899,7 +899,7 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-!      
+!
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3S - 3P*     M24 transitions
 !      i = 0026     !case A
       i = 0027     !case B
@@ -912,7 +912,7 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-!      
+!
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).4s 3S - 3P*     M26 transitions
 !      i = 0028     !case A
       i = 0029     !case B
@@ -925,7 +925,7 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-!      
+!
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3P - 3D*     M28 transitions
 !      i = 0030     !case A
       i = 0031     !case B
@@ -938,7 +938,7 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-!      
+!
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3P - 3P*     M29 transitions
 !      i = 0032     !case A
       i = 0033     !case B
@@ -951,7 +951,7 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-!      
+!
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).4s 3P - 3P*     M30 transitions
 !      i = 0034     !case A
       i = 0035     !case B
@@ -964,7 +964,7 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-!      
+!
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 1D - 1F*     M31 transitions
       i = 0036     !case A
 !      i = 0037     !case B
@@ -977,7 +977,7 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-!      
+!
 !       2s2.2p.(2P*).3d - 2s2.2p.(2P*).4p 3F* - 3D     M36 transitions
 !      i = 0038     !case A
       i = 0039     !case B
@@ -990,7 +990,7 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-!      
+!
 !       2s2.2p.(2P*).3d - 2s2.2p.(2P*<3/2>).4f 3F* - 3G M39 transitions
 !      i = 0040     !case A
       i = 0041     !case B
@@ -1003,7 +1003,7 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-!      
+!
 !       2s2.2p.(2P*).3d - 2s2.2p.(2P*<3/2>).4f 1F* - 1G M58 transitions
       i = 0042     !case A
 !      i = 0043     !case B
@@ -1016,7 +1016,7 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-!      
+!
 !       3d 3D* - 4f 3F 4242 M48 transitions
 !      i = 0044     !case A
       i = 0045     !case B
@@ -1029,7 +1029,7 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-!      
+!
 !       3d 3P* - 4f 3D 4435 M55 transitions
 !      i = 0046     !case A
       i = 0047     !case B
@@ -1042,7 +1042,7 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-!      
+!
 !       3d 1D* - 4f 1F 4176 M43 (RMT M42) transitions
       i = 0048     !case A
 !      i = 0049     !case B
@@ -1055,7 +1055,7 @@
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-!      
+!
 !       3d 1P* - 4f 1D 4677 M61 (RMT M62) transitions
       i = 0049     !case A
 !      i = 0051     !case B
@@ -1077,14 +1077,14 @@
       d = 0.719
       z = 2.
       Br_term = 0.350
-!      
+!
       aeff = 1.e-13 * z * a  * (te/z**2) ** (b)
       aeff = aeff / (1. + c * (te/z**2) ** (d)) * Br_term
       do ii = 98,98
         niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
         niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
       enddo
-!      
+!
 !       3d 1F* - 4f 3G 4552 M58a transitions
 !      case A (PPB):
       a = 0.326
@@ -1093,7 +1093,7 @@
       d = 0.719
       z = 2.
       Br_term = 0.074
-!      
+!
       aeff = 1.e-13 * z * a  * (te/z**2) ** (b)
       aeff = aeff / (1. + c * (te/z**2) ** (d)) * Br_term
       do ii = 99,99
@@ -1121,7 +1121,7 @@
 
 !! read in CII data
 !
-!       301 FORMAT (F7.2, 1X, F6.4, 1X, F7.4, 1X, F7.4, 1X, F7.4, 1X, F7.4) 
+!       301 FORMAT (F7.2, 1X, F6.4, 1X, F7.4, 1X, F7.4, 1X, F7.4, 1X, F7.4)
 !       OPEN(201, file="Atomic-data/Rcii.dat", status='old')
 !       DO i = 1,57
 !         READ(201,301) ciiRLs(i)%Wave, ciiRLs(i)%a, ciiRLs(i)%b, &
@@ -1136,8 +1136,8 @@
         &+ (ciiRLs(i)%b*(1-te)) &
         &+ (ciiRLs(i)%c * ((1-te)**2) ) &
         &+ (ciiRLs(i)%d * ((1-te)**3) ) &
-        &) 
-        ciiRLs(i)%Int = 100 * (ciiRLs(i)%aeff/aeff_hb) * (4861.33/ciiRLs(i)%Wave) * abund 
+        &)
+        ciiRLs(i)%Int = 100 * (ciiRLs(i)%aeff/aeff_hb) * (4861.33/ciiRLs(i)%Wave) * abund
       enddo
 
       te = te * 10000
@@ -1158,7 +1158,7 @@
 
 !! read in NeII data
 !
-!       301 FORMAT (F7.2, 1X, F6.3, 1X, F6.3, 1X, F6.3, 1X, F6.3, 1X, F7.4, 1X, F6.3) 
+!       301 FORMAT (F7.2, 1X, F6.3, 1X, F6.3, 1X, F6.3, 1X, F6.3, 1X, F7.4, 1X, F6.3)
 !       OPEN(201, file="Atomic-data/Rneii.dat", status='old')
 !       DO i = 1,38
 !         READ(201,301) neiiRLs(i)%Wave, neiiRLs(i)%a, neiiRLs(i)%b, &
@@ -1175,7 +1175,7 @@
         &+ (neiiRLs(i)%c * ((1-te)**2) ) &
         &+ (neiiRLs(i)%d * ((1-te)**3) ) &
         &)
-        neiiRLs(i)%Int = 100 * (neiiRLs(i)%aeff/aeff_hb) * (4861.33/neiiRLs(i)%Wave) * abund 
+        neiiRLs(i)%Int = 100 * (neiiRLs(i)%aeff/aeff_hb) * (4861.33/neiiRLs(i)%Wave) * abund
       enddo
 
       te = te * 10000
@@ -1208,15 +1208,15 @@
       do i = 1,4
         xiiiRLs(i)%aeff = xiiiRLs(i)%Br * 1e-13 * 3 * &
       & (xiiiRLs(i)%a*(te**xiiiRLs(i)%b)) / &
-      & (1 + (xiiiRLs(i)%c * (te**xiiiRLs(i)%d))) 
-        xiiiRLs(i)%Int = 100 * (xiiiRLs(i)%aeff/aeff_hb) * (4861.33/xiiiRLs(i)%Wave) * abund 
+      & (1 + (xiiiRLs(i)%c * (te**xiiiRLs(i)%d)))
+        xiiiRLs(i)%Int = 100 * (xiiiRLs(i)%aeff/aeff_hb) * (4861.33/xiiiRLs(i)%Wave) * abund
       enddo
 
       do i = 5,6
         xiiiRLs(i)%aeff = xiiiRLs(i)%Br * 1e-13 * 3 * &
       & (xiiiRLs(i)%a*(te**xiiiRLs(i)%b)) / &
       & (1 + (xiiiRLs(i)%c * (te**xiiiRLs(i)%d)))
-        xiiiRLs(i)%Int = 100 * (xiiiRLs(i)%aeff/aeff_hb) * (4861.33/xiiiRLs(i)%Wave) * abund 
+        xiiiRLs(i)%Int = 100 * (xiiiRLs(i)%aeff/aeff_hb) * (4861.33/xiiiRLs(i)%Wave) * abund
       enddo
 
       te = te * 90000

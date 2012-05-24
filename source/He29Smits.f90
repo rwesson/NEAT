@@ -8,7 +8,7 @@
       REAL A4686,A4471,A5876,A6678,TEh2,NEh2,D,                         &
      & C4471,C5876,C6678,IHeII4686,                                     &
      & IHeI4471,IHeI5876,IHeI6678,                                      &
-     & AB4686,AB4471,AB5876,AB6678,ABHeII,ABHeIII,hetotabund 
+     & AB4686,AB4471,AB5876,AB6678,ABHeII,ABHeIII,hetotabund
       double precision, dimension(3) :: weights
 
       double precision :: Abb4471, Abb4686, Abb6678, Abb5876

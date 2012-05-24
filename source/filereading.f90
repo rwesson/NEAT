@@ -4,10 +4,10 @@ implicit none!
 
 contains
 
-subroutine read_ilines(ILs, Iint,iion,ionlist)        
+subroutine read_ilines(ILs, Iint,iion,ionlist)
         TYPE(line), DIMENSION(:), allocatable :: ILs
         INTEGER :: Iint, Iread,iion
-		character*10 :: ionlist(40)
+        character*10 :: ionlist(40)
 
         Iint = 1
 
@@ -17,19 +17,19 @@ subroutine read_ilines(ILs, Iint,iion,ionlist)
                 ALLOCATE (ILs(Iread))
                 ILs%intensity=0.D0 !otherwise it seems you can get random very small numbers in the array.
                 DO WHILE (Iint .le. Iread)!(.true.)
-                        READ(201,301) ILs(Iint)%name, ILs(Iint)%ion, ILs(Iint)%wavelength, ILs(Iint)%transition ,ILs(Iint)%zone!end condition breaks loop. 
-						if(Iint .eq. 1) then
-						    Iion = 1
-							Ionlist(iion) = ILs(Iint)%ion(1:10)
-						elseif(ILs(Iint)%ion .ne. ILs(Iint - 1)%ion) then
-						    Iion = iion + 1
-							Ionlist(iion) = ILs(Iint)%ion(1:10)
-						endif
+                        READ(201,301) ILs(Iint)%name, ILs(Iint)%ion, ILs(Iint)%wavelength, ILs(Iint)%transition ,ILs(Iint)%zone!end condition breaks loop.
+                        if(Iint .eq. 1) then
+                            Iion = 1
+                            Ionlist(iion) = ILs(Iint)%ion(1:10)
+                        elseif(ILs(Iint)%ion .ne. ILs(Iint - 1)%ion) then
+                            Iion = iion + 1
+                            Ionlist(iion) = ILs(Iint)%ion(1:10)
+                        endif
                         Iint = Iint + 1
                 END DO
-                Iint = Iint - 1 !count ends up one too high 
+                Iint = Iint - 1 !count ends up one too high
         CLOSE(201)
-end subroutine        
+end subroutine
 
 end module
 
@@ -43,7 +43,7 @@ contains
 
 integer function get_ion(ionname, iontable, Iint)
         CHARACTER*11 :: ionname
-        TYPE(line), DIMENSION(:) :: iontable 
+        TYPE(line), DIMENSION(:) :: iontable
         INTEGER :: i
         INTEGER, INTENT(IN) :: Iint
 
@@ -59,33 +59,33 @@ integer function get_ion(ionname, iontable, Iint)
 
         PRINT*, "Nudge Nudge, wink, wink error. Ion not found, say no more.", ionname
 
-end function        
+end function
 
 
 subroutine element_assign(ILs, linelist, Iint, listlength)
         TYPE(line), DIMENSION(:), INTENT(OUT) :: ILs
-        TYPE(line), DIMENSION(:) :: linelist 
+        TYPE(line), DIMENSION(:) :: linelist
         INTEGER, INTENT(IN) :: Iint, listlength
         INTEGER :: i, j
 
         do i = 1, Iint
                 do j = 1, listlength
-                        if(linelist(j)%wavelength == ILs(i)%wavelength)then 
+                        if(linelist(j)%wavelength == ILs(i)%wavelength)then
                                 ILs(i)%intensity = linelist(j)%intensity
                                 ILs(i)%int_err   = linelist(j)%int_err
                                 cycle
-                        endif        
-                end do 
+                        endif
+                end do
         end do
 
 end subroutine
 
 subroutine get_H(H_BS, linelist, listlength)
         TYPE(line), DIMENSION(38), INTENT(OUT) :: H_BS
-        TYPE(line), DIMENSION(:) :: linelist 
+        TYPE(line), DIMENSION(:) :: linelist
         double precision, dimension(38) :: balmerlines
         INTEGER :: i, j, listlength
-        REAL*8 :: HW = 0.00000000 
+        REAL*8 :: HW = 0.00000000
         !another ugly kludge, but it works.
 
         balmerlines = (/ 6562.77D0, 4861.33D0, 4340.47D0, 4101.74D0, 3970.07D0, 3889.05D0, 3835.38D0, 3797.90D0, 3770.63D0, 3750.15D0, 3734.37D0, 3721.94D0, 3711.97D0, 3703.85D0, 3697.15D0, 3691.55D0, 3686.83D0, 3682.81D0, 3679.35D0, 3676.36D0, 3673.76D0, 3671.48D0, 3669.46D0, 3667.68D0, 3666.10D0, 3664.68D0, 3663.40D0, 3662.26D0, 3661.22D0, 3660.28D0, 3659.42D0, 3658.64D0, 3657.92D0, 3657.27D0, 3656.66D0, 3656.11D0, 3655.59D0, 3655.12D0 /)
@@ -98,7 +98,7 @@ subroutine get_H(H_BS, linelist, listlength)
                                 H_BS(i)%name = "Hbalmer    "
                                 H_BS(i)%wavelength = linelist(j)%wavelength
                                 H_BS(i)%intensity = linelist(j)%intensity
-                                H_BS(i)%int_err = linelist(j)%int_err 
+                                H_BS(i)%int_err = linelist(j)%int_err
                         endif
                 end do
         end do
@@ -111,11 +111,11 @@ subroutine get_He(He_lines, linelist,listlength)
         INTEGER :: i, j, listlength
         REAL*8 :: HW
         CHARACTER*10 :: blank
-        !another ugly kludge, but it works.  
+        !another ugly kludge, but it works.
         do i = 1, 4
                 if(i == 1)then
-                        blank = "HeII4686   " 
-                        HW = 4685.68D0 
+                        blank = "HeII4686   "
+                        HW = 4685.68D0
                 elseif(i == 2)then
                         blank = "HeI4471    "
                         HW = 4471.50D0
@@ -133,7 +133,7 @@ subroutine get_He(He_lines, linelist,listlength)
                 He_lines(i)%intensity = 0.0
                 He_lines(i)%int_err = 0.0
                 do j = 1, listlength
-                        if(linelist(j)%wavelength == HW) then 
+                        if(linelist(j)%wavelength == HW) then
                                 He_lines(i)%intensity = linelist(j)%intensity
                                 He_lines(i)%int_err = linelist(j)%int_err
                         endif
@@ -144,7 +144,7 @@ end subroutine
 
 !extinction laws now in mod_extinction
 
-end module mod_abundmaths 
+end module mod_abundmaths
 
 module mod_atomic_read
 
@@ -152,19 +152,19 @@ module mod_atomic_read
 contains
 subroutine read_atomic_data(ion)
 use mod_atomicdata
-	type(atomic_data) :: ion
-	integer :: I,J,K,NCOMS,ID(2),JD(2),KP1,NLEV1,ionl,dummy
-	character*1 :: comments(78)
-	character*10 :: ionname
-	character*25 :: filename
-	real*8 :: GX,WN,AX,QX
-	
+    type(atomic_data) :: ion
+    integer :: I,J,K,NCOMS,ID(2),JD(2),KP1,NLEV1,ionl,dummy
+    character*1 :: comments(78)
+    character*10 :: ionname
+    character*25 :: filename
+    real*8 :: GX,WN,AX,QX
+
     id = 0
-	jd = 0
+    jd = 0
     ionname = ion%ion
-!	print*,'Reading atomic data ion',ionname
-	ionl = index(ionname,' ') - 1
-	filename = 'Atomic-data/'//ionname(1:IONL)//'.dat'
+!    print*,'Reading atomic data ion',ionname
+    ionl = index(ionname,' ') - 1
+    filename = 'Atomic-data/'//ionname(1:IONL)//'.dat'
     OPEN(unit=1, status = 'OLD', file=filename,ACTION='READ')
 
 !read # of comment lines and skip them
@@ -172,10 +172,10 @@ use mod_atomicdata
         do I = 1,NCOMS
                 read(1,1003) comments
         end do
-        
+
 !read # levels and temps, then allocate arrays
-        read(1,*) ion%NLEVS,ion%NTEMPS 
-        
+        read(1,*) ion%NLEVS,ion%NTEMPS
+
         allocate(ion%labels(ion%nlevs))
         allocate(ion%temps(ion%ntemps))
         allocate(ion%roott(ion%ntemps))
@@ -183,27 +183,27 @@ use mod_atomicdata
         allocate(ion%waveno(ion%nlevs))
         allocate(ion%col_str(ion%ntemps,ion%nlevs,ion%nlevs))
         allocate(ion%A_coeffs(ion%nlevs,ion%nlevs))
-        
+
         ion%col_str = 0d0
         ion%A_coeffs = 0d0
         ion%G = 0d0
         ion%waveno= 0d0
-        
+
         !read levels and temperatures
         do I = 1,ion%NLEVS
         read(1,1002) ion%labels(I)
         enddo
-        
+
         do I = 1,ion%NTEMPS
         read(1,*) ion%temps(I)
         enddo
-        
-		read(1,*) dummy
-		
+
+        read(1,*) dummy
+
         !read collision strengths
         QX=1
         K = 1
-!		print*,'Reading collision strengths'
+!        print*,'Reading collision strengths'
         DO WHILE (QX .gt. 0)
                 READ(1,*) ID(2), JD(2), QX
                 IF (QX.eq.0.D0) exit
@@ -220,33 +220,33 @@ use mod_atomicdata
                    JD(1) = JD(2)
                 endif
                 if (QX .ne. 0.D0) then
-                I = ID(2) 
-                J = JD(2) 
-!				print*,k,i,j
+                I = ID(2)
+                J = JD(2)
+!                print*,k,i,j
                 ion%col_str(K,I,J) = QX
                 endif
         enddo
 
     NLEV1 = ion%NLEVS-1
       DO K = 1,NLEV1
-        KP1 = K + 1 
+        KP1 = K + 1
           DO L = KP1, ion%NLEVS
             READ (1,*) I, J, AX  !read transition probabilities
-            ion%A_coeffs(J,I) = AX 
-          ENDDO 
+            ion%A_coeffs(J,I) = AX
+          ENDDO
 
-    ENDDO 
+    ENDDO
 
-	DO I=1,ion%NLEVS
- 	 	READ(1,*) N, GX, WN !read wavenumbers
+    DO I=1,ion%NLEVS
+          READ(1,*) N, GX, WN !read wavenumbers
         ion%G(N) = GX
         ion%waveno(N) = WN
     enddo
-        
+
     CLOSE(UNIT=1)
-        
+
 1002 FORMAT(A20)
 1003 FORMAT(78A1)
 end subroutine read_atomic_data
-        
+
 end module mod_atomic_read
