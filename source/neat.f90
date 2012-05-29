@@ -192,7 +192,7 @@ program neat
 
         deallocate(options)
 
-        I = 1
+        I = 0
         OPEN(199, file=filename, iostat=IO, status='old')
                 DO WHILE (IO >= 0)
                         READ(199,*,end=111) null
@@ -214,9 +214,9 @@ program neat
         END DO
         CLOSE(199)
 
-        110 PRINT "(X,A9,A11,I4,A15,I4,A9)", gettime(),": read in ", I," lines (out of ",listlength," in file)"
+        110 PRINT "(X,A9,A11,I4,A15,I4,A9)", gettime(),": read in ", I - 1," lines (out of ",listlength," in file)"
 
-        if (I .ne. listlength) then
+        if (I - 1 .ne. listlength) then
                 print *,gettime(),": line list reading failed"
                 print *,"This can happen if it doesn't have three columns"
                 stop
@@ -258,7 +258,9 @@ program neat
 
         !find maximum #levels and temperatures - pass to equib to reduce footprint
 
-        do i=1,iion
+        maxlevs = atomicdata(1)%nlevs
+        maxtemps = atomicdata(1)%ntemps
+        do i=2,iion
             if(atomicdata(i)%nlevs .gt. maxlevs) maxlevs = atomicdata(i)%nlevs
             if(atomicdata(i)%ntemps .gt. maxtemps) maxtemps = atomicdata(i)%ntemps
         enddo
