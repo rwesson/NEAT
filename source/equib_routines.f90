@@ -37,7 +37,7 @@
       subroutine get_diagnostic(ion,levu,levl,inratio,diagtype,fixedq,result,ndim2,ndim1,atomicdata,iion)
       use mod_atomicdata
       IMPLICIT NONE
-	  
+
       INTEGER NDIM1, NDIM2, NDIM1T3, MAXND,maxlevs,maxtemps
                                                       !Maximum no of Te & levels
       !PARAMETER (NDIM1=maxtemps, NDIM2=maxlevs)!35, NDIM2=150)
@@ -77,25 +77,31 @@
       REAL*8 valtest(3)
       integer test
 
-	  ndim1t3=3*ndim1
+          ndim1t3=3*ndim1
       g=0
       itrana=0
       itranb=0
       itranc=0
       valtest=0
+      test=0
 
       READ(levu,*) ((ITRANA(LL,KK),LL=1,2),KK=1,ndim2)!150)
       READ(levl,*) ((ITRANB(LL,KK),LL=1,2),KK=1,ndim2)!150)
 
-	  
+
 !Transfer atomic data to local variables
+      nion = 0
       do i = 1,iion
          if(atomicdata(i)%ion .eq. ion) nion=i
       enddo
-!	  print*,nion,atomicdata(nion)%ion,ion
+      if (nion .eq. 0) then
+          print *,"I'm afraid. I'm afraid, Dave."
+          nion = 1
+      endif
+!          print*,nion,atomicdata(nion)%ion,ion
       nlev=atomicdata(nion)%nlevs
       ntemp=atomicdata(nion)%ntemps
-	  T(1:ntemp)= log10(atomicdata(nion)%Temps(1:ntemp))
+          T(1:ntemp)= log10(atomicdata(nion)%Temps(1:ntemp))
       ROOTT(1:ntemp)=atomicdata(nion)%rootT(1:ntemp)
       Label(1:nlev)=atomicdata(nion)%labels(1:nlev)
       QOM(1:ntemp,1:nlev,1:nlev)=atomicdata(nion)%col_str(1:ntemp,1:nlev,1:nlev)
@@ -103,17 +109,17 @@
       E(1:nlev)=atomicdata(nion)%Waveno(1:nlev)
       G(1:nlev)=atomicdata(nion)%G(1:nlev)
       irats=0
-	  
-	  
-	  
+
+
+
 !      IONL = INDEX(ION,' ') - 1
 !      OPEN(UNIT=1,STATUS='OLD',                                         &
-!     & FILE='Atomic-data/'//ION(1:IONL)//'.dat') 
+!     & FILE='Atomic-data/'//ION(1:IONL)//'.dat')
                                                       !Read in no. comment lines
 !      READ(1,*) NLINES
 !      DO I = 1, NLINES
                                                                        !Comments
-!        READ(1,1003) LTEXT 
+!        READ(1,1003) LTEXT
 !      ENDDO
                                           !Read no. of levels (max=NDIM2) NLEV,
 !      READ (1,*) NLEV, NTEMP
@@ -123,9 +129,9 @@
 !         READ (1,1002) LABEL(I)
 !      ENDDO
 !     be
-      ibig=0 
+      ibig=0
                                             !Read in Te's where coll. strengths are tabulated
-!      DO I = 1, NTEMP 
+!      DO I = 1, NTEMP
 !           READ (1,*) T(I)
 !           T(I) = LOG10 (T(I))
 !           ROOTT(I) = SQRT(T(I))
@@ -182,15 +188,15 @@
 !        E(I) = EX
 !      ENDDO
 !      CLOSE (UNIT=1)
-                                !Get levels for ratio 
-                                                           !150 large enough 
+                                !Get levels for ratio
+                                                           !150 large enough
       ITRANC = 0
 
 !newbit
 
 !print*,ion,diagtype,fixedq,int
 ! set up T and D loops depending on input.
-                                               !Read in Te and Ne where the line 
+                                               !Read in Te and Ne where the line
                                                !ratio is to be calculated
 
       !*****LOOP STARTS HERE*************************
@@ -198,8 +204,8 @@
       if (diagtype .eq. "t" .or. diagtype .eq. "T") then
 
         if (LOOP .eq. 1) then
-                TEMPI=5000 
-        else 
+                TEMPI=5000
+        else
                 TEMPI= valtest(1)
         endif
 
@@ -226,16 +232,16 @@
         TempI=fixedq
         TINC=0
         INT=1
-        
+
         allocate(results(3,IND))
-      endif 
+      endif
 
       if (densi .le. 0) densi=1
-	  if (tempi .lt. 5000) tempi=5000
+          if (tempi .lt. 5000) tempi=5000
 
                                                                !Start of Te loop
       DO JT = 1, INT
-        TEMP=TEMPI+(JT-1)*TINC 
+        TEMP=TEMPI+(JT-1)*TINC
                                                                !Start of Ne loop
 
         DO JJD = 1, IND
@@ -350,7 +356,7 @@
             N(I) = N(I) / SUMN
           ENDDO
           N(1) = 1.D0 / SUMN
-                                                                  !Output data 
+                                                                  !Output data
           TTT=TEMP*1.0D-4
           TTP=TTT**(-0.87D0)
                                        !Eff. recombination coef. of Hb
@@ -365,7 +371,7 @@
                  RLINT = RLINT *N(J)
                  TNIJ(I,J)=RLINT
                  FINT=N(J)*A(J,I)*4861.D0/(DENS*AHB*WAV)
-                 FINTIJ(I,J)=FINT 
+                 FINTIJ(I,J)=FINT
                ENDIF
             ENDDO
           ENDDO
@@ -446,7 +452,7 @@
 
         ! loop through array and find out where the sign changes.
 
-        DO I=2,INT 
+        DO I=2,INT
             test=0
                 if (sign(results(3,I),results(3,1)) .ne. results(3,I)) then !when this condition is fulfilled, the values in the array are now a different sign to the first value in the array
                         valtest(:) = (results(:,I-1)) ! return the value before the sign change so that the next loop starts at a sensible value
@@ -490,11 +496,8 @@
 
       RETURN
 
- 1002 FORMAT(A20)
- 1003 FORMAT(78A1) 
  6100 FORMAT (' PROCESSING COMPLETED'/                                  &
      & ' GOODBYE!!'///)
- 7000 FORMAT (4(2I4,2X,1PE10.3))
 
 
       END subroutine get_diagnostic
@@ -502,8 +505,8 @@
       subroutine get_abundance(ion,levels,tempi,densi,iobs,abund,ndim2,ndim1,atomicdata,iion)
       use mod_atomicdata
       IMPLICIT NONE
-	  
-	  !INTEGER maxlevs,maxtemps
+
+          !INTEGER maxlevs,maxtemps
       INTEGER NDIM1, NDIM2, NDIM1T3, MAXND
                                                       !Maximum no of Te & levels
       !PARAMETER (NDIM1=maxtemps, NDIM2=maxlevs)!35, NDIM2=150)
@@ -549,13 +552,18 @@
       int=1
       ind=1
 
+      nion = 0
       do i = 1,iion
          if(atomicdata(i)%ion .eq. ion(1:10)) nion=i
       enddo
-!	  print*,nion,atomicdata(nion)%ion,ion	  
+      if (nion .eq. 0) then
+          print *, "Dave, my mind is going. I can feel it."
+          nion = 1
+      endif
+!          print*,nion,atomicdata(nion)%ion,ion
       nlev=atomicdata(nion)%nlevs
       ntemp=atomicdata(nion)%ntemps
-	  T(1:ntemp)=log10(atomicdata(nion)%Temps(1:ntemp))
+          T(1:ntemp)=log10(atomicdata(nion)%Temps(1:ntemp))
       ROOTT(1:ntemp)=atomicdata(nion)%rootT(1:ntemp)
       Label(1:nlev)=atomicdata(nion)%labels(1:nlev)
       QOM(1:ntemp,1:nlev,1:nlev)=atomicdata(nion)%col_str(1:ntemp,1:nlev,1:nlev)
@@ -563,8 +571,8 @@
       E(1:nlev)=atomicdata(nion)%Waveno(1:nlev)
       G(1:nlev)=atomicdata(nion)%G(1:nlev)
       irats=0
-	  
-                                                        !Interrogate for input 
+
+                                                        !Interrogate for input
 !      IONL = INDEX(ION,' ') - 1
 !      OPEN(UNIT=1,STATUS='OLD',                                         &
 !     & FILE='Atomic-data/'//ION(1:IONL)//'.dat')
@@ -573,7 +581,7 @@
 !      READ(1,*) NLINES
 !      DO I = 1, NLINES
                                                                        !comments
-!        READ(1,1003) LTEXT 
+!        READ(1,1003) LTEXT
 !      ENDDO
                                           !Read no. of levels (max=NDIM2) NLEV,
 !      READ (1,*) NLEV, NTEMP
@@ -585,7 +593,7 @@
 !     be
       ibig=0
 !Read in Te's where coll. strengths are tabulated
-!      DO I = 1, NTEMP 
+!      DO I = 1, NTEMP
 !           READ (1,*) T(I)
 !           T(I) = LOG10 (T(I))
 !           ROOTT(I) = SQRT(T(I))
@@ -639,10 +647,10 @@
 !        E(I) = EX
 !      ENDDO
 !      CLOSE (UNIT=1)
-                                !Get levels for ratio 
+                                !Get levels for ratio
                                                            !150 large enough
 
-                                               !Read in Te and Ne where the line 
+                                               !Read in Te and Ne where the line
                                                !ratio is to be calculated
 
                                                                !Start of Te loop
@@ -761,7 +769,7 @@
             N(I) = N(I) / SUMN
           ENDDO
           N(1) = 1.D0 / SUMN
-                                                                  !Output data 
+                                                                  !Output data
           TTT=TEMP*1.0D-4
           TTP=TTT**(-0.87D0)
                                        !Eff. recombination coef. of Hb
@@ -776,7 +784,7 @@
                  RLINT = RLINT *N(J)
                  TNIJ(I,J)=RLINT
                  FINT=N(J)*A(J,I)*4861.D0/(DENS*AHB*WAV)
-                 FINTIJ(I,J)=FINT 
+                 FINTIJ(I,J)=FINT
                ENDIF
             ENDDO
           ENDDO
@@ -811,8 +819,8 @@
           FRAT=SUMA/SUMB
           SUMC = 1./SUMC
           TDRAT(1,JJD)=DENS
-          TDRAT(2,JJD)=FRAT 
-          abund = sumc*iobs/100 
+          TDRAT(2,JJD)=FRAT
+          abund = sumc*iobs/100
                                                        !End of the Ne loop
         ENDDO
         DO IA = 1, IAPR
@@ -832,18 +840,14 @@
           I2=ITRANC(2,IC)
           DEE=E(I2)-E(I1)
           WAVC(IC)=1.D8/DEE
-        ENDDO 
+        ENDDO
                                                          !End of the Te loop
       ENDDO
 
       RETURN
 
- 1002 FORMAT(A20)
- 1003 FORMAT(78A1)
-
  6100 FORMAT (' PROCESSING COMPLETED'/                                  &
      & ' GOODBYE!!'///)
- 7000 FORMAT (4(2I4,2X,1PE10.3))
 
       END subroutine get_abundance
 
@@ -1010,8 +1014,6 @@
           HMH(NPM,K)=HMH(NPM,K)-3*C(2,J)
         ENDDO
       ENDIF
-      DO I=1,NPM
-      ENDDO
                                  !Solve matrix equation with results in the form
       DO I=1,NPT
                                  !YPP=HMH*Y. matrix g has been LU decomposed
@@ -1054,8 +1056,6 @@
           HMH(NPT,K)=HMH(NPT,K)+3*C(2,J)/AN1
         ENDDO
       ENDIF
-      DO I=1,NPT
-      ENDDO
       RETURN
       END subroutine hgen
 !
@@ -1120,10 +1120,10 @@
       REAL*8 XX(NDIM),YY(NDIM), HMH(NDIM,NDIM), D(NDIM),                &
      & X, Y, TT
       IF(X.LT.XX(1)) THEN
-        Y=YY(1) 
+        Y=YY(1)
       ENDIF
       IF(X.GT.XX(NPT)) THEN
-        Y=YY(NPT) 
+        Y=YY(NPT)
       ENDIF
       TT=0.
       DO J=1,NPT
@@ -1165,5 +1165,5 @@
       ENDDO
 
       END subroutine cfd
-  
+
       end module mod_equib

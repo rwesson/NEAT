@@ -13,10 +13,10 @@ CONTAINS
   Subroutine Abort(Routine, Msg)
 ! *
 ! ***************************************************
-  
+
     Character (len=*), Intent (in), Optional :: Routine
     Character (len=*), Intent (in) :: Msg
-    
+
     If (Present(Routine)) Then
        Write(stderr, *)'  Abort: IN ', Trim(Routine),': ',Msg
     Else
@@ -24,7 +24,7 @@ CONTAINS
     End If
 
     Stop
-    
+
     Return
   End Subroutine Abort
 
@@ -33,10 +33,10 @@ CONTAINS
   Subroutine Perror(Routine, Msg)
 ! *
 ! ***************************************************
-  
+
     Character (len=*), Intent (in), Optional :: Routine
     Character (len=*), Intent (in) :: Msg
-    
+
     If (Present(Routine)) Then
        Write(stderr, *)'  Error: IN ', Trim(Routine),': ',Msg
     Else
@@ -53,7 +53,7 @@ MODULE mod_numtypes
 ! *
 ! ***************************************************
 ! *
-! * Define the numerical Types Single precision, 
+! * Define the numerical Types Single precision,
 ! * Double Precision, and Complex double precision
 ! * to make the code portable.
 ! *
@@ -91,7 +91,7 @@ End MODULE mod_numtypes
 ! along with this program; if not, write to the Free Software
 ! Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
 ! USA
-! 
+!
 
 ! ***************************************************
 ! *
@@ -144,11 +144,11 @@ CONTAINS
   Integer Function Locate_IN(X, Xo, Iin)
 ! *
 ! ***********************************
-! * From an ascendent ordered set 
+! * From an ascendent ordered set
 ! * of points X(:), locate will return
-! * an integer K, such that 
-! * X(K) < Xo < X(K+1). If 0 is returned, 
-! * then Xo is smaller than all X(:). If 
+! * an integer K, such that
+! * X(K) < Xo < X(K+1). If 0 is returned,
+! * then Xo is smaller than all X(:). If
 ! * Size(X) is returned then is bigger
 ! * than all X(:). Iin (optional) is an
 ! * initial guess of the position.
@@ -192,11 +192,11 @@ CONTAINS
   Integer Function Locate_SP(X, Xo, Iin)
 ! *
 ! ***********************************
-! * From an ascendent ordered set 
+! * From an ascendent ordered set
 ! * of points X(:), locate will return
-! * an integer K, such that 
-! * X(K) < Xo < X(K+1). If 0 is returned, 
-! * then Xo is smaller than all X(:). If 
+! * an integer K, such that
+! * X(K) < Xo < X(K+1). If 0 is returned,
+! * then Xo is smaller than all X(:). If
 ! * Size(X) is returned then is bigger
 ! * than all X(:). Integer version.
 ! ***********************************
@@ -238,11 +238,11 @@ CONTAINS
   Integer Function Locate_DP(X, Xo, Iin)
 ! *
 ! ***********************************
-! * From an ascendent ordered set 
+! * From an ascendent ordered set
 ! * of points X(:), locate will return
-! * an integer K, such that 
-! * X(K) < Xo < X(K+1). If 0 is returned, 
-! * then Xo is smaller than all X(:). If 
+! * an integer K, such that
+! * X(K) < Xo < X(K+1). If 0 is returned,
+! * then Xo is smaller than all X(:). If
 ! * Size(X) is returned then is bigger
 ! * than all X(:). Integer version.
 ! ***********************************
@@ -285,21 +285,21 @@ CONTAINS
 ! *
 ! ***********************************
 ! * Sort Array X(:) in ascendent order.
-! * If present Ipt, a pointer with the 
-! * changes is returned in Ipt. Integer 
+! * If present Ipt, a pointer with the
+! * changes is returned in Ipt. Integer
 ! * version.
 ! ***********************************
 
     Integer, Intent (inout) :: X(:)
     Integer, Intent (out), Optional :: Ipt(:)
-    
+
     Integer :: Rtmp
     Integer :: I, J
 
 
     If (Present(Ipt)) Then
        Forall (I=1:Size(X)) Ipt(I) = I
-       
+
        Do I = 2, Size(X)
           Rtmp = X(I)
           Do J = I-1, 1, -1
@@ -336,21 +336,21 @@ CONTAINS
 ! *
 ! ***********************************
 ! * Sort Array X(:) in ascendent order.
-! * If present Ipt, a pointer with the 
-! * changes is returned in Ipt. Integer 
+! * If present Ipt, a pointer with the
+! * changes is returned in Ipt. Integer
 ! * version.
 ! ***********************************
 
     Real (kind=SP), Intent (inout) :: X(:)
     Integer, Intent (out), Optional :: Ipt(:)
-    
+
     Real (kind=SP) :: Rtmp
     Integer :: I, J
 
 
     If (Present(Ipt)) Then
        Forall (I=1:Size(X)) Ipt(I) = I
-       
+
        Do I = 2, Size(X)
           Rtmp = X(I)
           Do J = I-1, 1, -1
@@ -386,21 +386,21 @@ CONTAINS
 ! *
 ! ***********************************
 ! * Sort Array X(:) in ascendent order.
-! * If present Ipt, a pointer with the 
-! * changes is returned in Ipt. Integer 
+! * If present Ipt, a pointer with the
+! * changes is returned in Ipt. Integer
 ! * version.
 ! ***********************************
 
     Real (kind=DP), Intent (inout) :: X(:)
     Integer, Intent (out), Optional :: Ipt(:)
-    
+
     Real (kind=DP) :: Rtmp
     Integer :: I, J
 
 
     If (Present(Ipt)) Then
        Forall (I=1:Size(X)) Ipt(I) = I
-       
+
        Do I = 2, Size(X)
           Rtmp = X(I)
           Do J = I-1, 1, -1
@@ -435,7 +435,7 @@ CONTAINS
   Subroutine Swap_SP(X, I, J)
 ! *
 ! ***********************************
-! * Swaps elements I and J of array X(:). 
+! * Swaps elements I and J of array X(:).
 ! ***********************************
 
     Real (kind=SP), Intent (inout) :: X(:)
@@ -455,7 +455,7 @@ CONTAINS
   Subroutine Swap_DP(X, I, J)
 ! *
 ! ***********************************
-! * Swaps elements I and J of array X(:). 
+! * Swaps elements I and J of array X(:).
 ! ***********************************
 
     Real (kind=DP), Intent (inout) :: X(:)
@@ -475,7 +475,7 @@ CONTAINS
   Subroutine Swap_IN(X, I, J)
 ! *
 ! ***********************************
-! * Swaps elements I and J of array X(:). 
+! * Swaps elements I and J of array X(:).
 ! ***********************************
 
     Integer, Intent (inout) :: X(:)
@@ -495,8 +495,8 @@ CONTAINS
   Subroutine NewQsort_SP(X, Ipt)
 ! *
 ! ***********************************
-! * Sort Array X(:) in ascendent order 
-! * If present Ipt, a pointer with the 
+! * Sort Array X(:) in ascendent order
+! * If present Ipt, a pointer with the
 ! * changes is returned in Ipt. SP version
 ! ***********************************
 
@@ -510,11 +510,11 @@ CONTAINS
 
     Real (kind=SP), Intent (inout) :: X(:)
     Integer, Intent (out), Optional :: Ipt(:)
-    
+
     Integer :: I, Ipvn, Ileft, Iright, ISpos, ISmax
     Type (Limits), Allocatable :: Stack(:)
-    
-    
+
+
     Allocate(Stack(2*Size(X)))
 
     Stack(:)%Ileft = 0
@@ -526,7 +526,7 @@ CONTAINS
        Ismax = 1
        Stack(ISpos)%Ileft  = 1
        Stack(ISpos)%Iright = Size(X)
-       
+
        Do While (Stack(ISpos)%Ileft /= 0)
 
           Ileft = Stack(ISPos)%Ileft
@@ -537,7 +537,7 @@ CONTAINS
           Else
              Ipvn = ChoosePiv(X, Ileft, Iright)
              Ipvn = Partition(X, Ileft, Iright, Ipvn, Ipt)
-             
+
              Stack(ISmax+1)%Ileft = Ileft
              Stack(ISmax+1) %Iright = Ipvn-1
              Stack(ISmax+2)%Ileft = Ipvn + 1
@@ -554,7 +554,7 @@ CONTAINS
        Ismax = 1
        Stack(ISpos)%Ileft  = 1
        Stack(ISpos)%Iright = Size(X)
-       
+
        Do While (Stack(ISpos)%Ileft /= 0)
 !          Write(*,*)Ispos, ISmax
 
@@ -566,7 +566,7 @@ CONTAINS
           Else
              Ipvn = ChoosePiv(X, Ileft, Iright)
              Ipvn = Partition(X, Ileft, Iright, Ipvn)
-             
+
              Stack(ISmax+1)%Ileft = Ileft
              Stack(ISmax+1) %Iright = Ipvn-1
              Stack(ISmax+2)%Ileft = Ipvn + 1
@@ -581,7 +581,7 @@ CONTAINS
     Deallocate(Stack)
 
     Return
-    
+
   CONTAINS
 
     ! ***********************************
@@ -590,20 +590,20 @@ CONTAINS
     ! * Choose a Pivot element from XX(Ileft:Iright)
     ! * for Qsort.
     ! ***********************************
-      
+
       Real (kind=SP), Intent (in) :: XX(:)
       Integer, Intent (in) :: IIleft, IIright
-      
+
       Real (kind=SP) :: XXcp(3)
       Integer :: IIpt(3), IImd
-      
+
       IImd = Int((IIleft+IIright)/2)
       XXcp(1) = XX(IIleft)
       XXcp(2) = XX(IIright)
       XXcp(3) = XX(IImd)
-      
+
       CALL Insrt(XXcp, IIpt)
-      
+
       Select Case (IIpt(2))
       Case (1)
          IIpv = IIleft
@@ -623,10 +623,10 @@ CONTAINS
       Real (kind=SP), Intent (inout) :: XX(:)
       Integer, Intent (inout) :: IIpt(:)
       Integer, Intent (in) :: IIl, IIr
-      
+
       Real (kind=SP) :: RRtmp
       Integer :: II, JJ, IItmp
-      
+
 
       Do II = IIl+1, IIr
          RRtmp = XX(II)
@@ -640,7 +640,7 @@ CONTAINS
          End Do
          XX(JJ+1) = RRtmp
       End Do
-      
+
       Return
     End Subroutine InsrtLC
 
@@ -652,8 +652,8 @@ CONTAINS
   Subroutine NewQsort_DP(X, Ipt)
 ! *
 ! ***********************************
-! * Sort Array X(:) in ascendent order 
-! * If present Ipt, a pointer with the 
+! * Sort Array X(:) in ascendent order
+! * If present Ipt, a pointer with the
 ! * changes is returned in Ipt. DP version
 ! ***********************************
 
@@ -667,11 +667,11 @@ CONTAINS
 
     Real (kind=DP), Intent (inout) :: X(:)
     Integer, Intent (out), Optional :: Ipt(:)
-    
+
     Integer :: I, Ipvn, Ileft, Iright, ISpos, ISmax
     Type (Limits), Allocatable :: Stack(:)
-    
-    
+
+
     Allocate(Stack(2*Size(X)))
 
 
@@ -685,7 +685,7 @@ CONTAINS
        Ismax = 1
        Stack(ISpos)%Ileft  = 1
        Stack(ISpos)%Iright = Size(X)
-       
+
        Do While (Stack(ISpos)%Ileft /= 0)
 
           Ileft = Stack(ISPos)%Ileft
@@ -696,7 +696,7 @@ CONTAINS
           Else
              Ipvn = ChoosePiv(X, Ileft, Iright)
              Ipvn = Partition(X, Ileft, Iright, Ipvn, Ipt)
-             
+
              Stack(ISmax+1)%Ileft = Ileft
              Stack(ISmax+1) %Iright = Ipvn-1
              Stack(ISmax+2)%Ileft = Ipvn + 1
@@ -713,7 +713,7 @@ CONTAINS
        Ismax = 1
        Stack(ISpos)%Ileft  = 1
        Stack(ISpos)%Iright = Size(X)
-       
+
        Do While (Stack(ISpos)%Ileft /= 0)
 !          Write(*,*)Ispos, ISmax
 
@@ -725,7 +725,7 @@ CONTAINS
           Else
              Ipvn = ChoosePiv(X, Ileft, Iright)
              Ipvn = Partition(X, Ileft, Iright, Ipvn)
-             
+
              Stack(ISmax+1)%Ileft = Ileft
              Stack(ISmax+1) %Iright = Ipvn-1
              Stack(ISmax+2)%Ileft = Ipvn + 1
@@ -740,7 +740,7 @@ CONTAINS
     Deallocate(Stack)
 
     Return
-    
+
   CONTAINS
 
     ! ***********************************
@@ -749,20 +749,20 @@ CONTAINS
     ! * Choose a Pivot element from XX(Ileft:Iright)
     ! * for Qsort.
     ! ***********************************
-      
+
       Real (kind=DP), Intent (in) :: XX(:)
       Integer, Intent (in) :: IIleft, IIright
-      
+
       Real (kind=DP) :: XXcp(3)
       Integer :: IIpt(3), IImd
-      
+
       IImd = Int((IIleft+IIright)/2)
       XXcp(1) = XX(IIleft)
       XXcp(2) = XX(IIright)
       XXcp(3) = XX(IImd)
-      
+
       CALL Insrt(XXcp, IIpt)
-      
+
       Select Case (IIpt(2))
       Case (1)
          IIpv = IIleft
@@ -782,10 +782,10 @@ CONTAINS
       Real (kind=DP), Intent (inout) :: XX(:)
       Integer, Intent (inout) :: IIpt(:)
       Integer, Intent (in) :: IIl, IIr
-      
+
       Real (kind=DP) :: RRtmp
       Integer :: II, JJ, IItmp
-      
+
 
       Do II = IIl+1, IIr
          RRtmp = XX(II)
@@ -799,7 +799,7 @@ CONTAINS
          End Do
          XX(JJ+1) = RRtmp
       End Do
-      
+
       Return
     End Subroutine InsrtLC
 
@@ -811,8 +811,8 @@ CONTAINS
   Subroutine NewQsort_IN(X, Ipt)
 ! *
 ! ***********************************
-! * Sort Array X(:) in ascendent order 
-! * If present Ipt, a pointer with the 
+! * Sort Array X(:) in ascendent order
+! * If present Ipt, a pointer with the
 ! * changes is returned in Ipt. DP version
 ! ***********************************
 
@@ -826,11 +826,11 @@ CONTAINS
 
     Integer, Intent (inout) :: X(:)
     Integer, Intent (out), Optional :: Ipt(:)
-    
+
     Integer :: I, Ipvn, Ileft, Iright, ISpos, ISmax
     Type (Limits), Allocatable :: Stack(:)
-    
-    
+
+
     Allocate(Stack(2*Size(X)))
 
 
@@ -844,7 +844,7 @@ CONTAINS
        Ismax = 1
        Stack(ISpos)%Ileft  = 1
        Stack(ISpos)%Iright = Size(X)
-       
+
        Do While (Stack(ISpos)%Ileft /= 0)
 
           Ileft = Stack(ISPos)%Ileft
@@ -855,7 +855,7 @@ CONTAINS
           Else
              Ipvn = ChoosePiv(X, Ileft, Iright)
              Ipvn = Partition(X, Ileft, Iright, Ipvn, Ipt)
-             
+
              Stack(ISmax+1)%Ileft = Ileft
              Stack(ISmax+1) %Iright = Ipvn-1
              Stack(ISmax+2)%Ileft = Ipvn + 1
@@ -872,7 +872,7 @@ CONTAINS
        Ismax = 1
        Stack(ISpos)%Ileft  = 1
        Stack(ISpos)%Iright = Size(X)
-       
+
        Do While (Stack(ISpos)%Ileft /= 0)
 !          Write(*,*)Ispos, ISmax
 
@@ -884,7 +884,7 @@ CONTAINS
           Else
              Ipvn = ChoosePiv(X, Ileft, Iright)
              Ipvn = Partition(X, Ileft, Iright, Ipvn)
-             
+
              Stack(ISmax+1)%Ileft = Ileft
              Stack(ISmax+1) %Iright = Ipvn-1
              Stack(ISmax+2)%Ileft = Ipvn + 1
@@ -899,7 +899,7 @@ CONTAINS
     Deallocate(Stack)
 
     Return
-    
+
   CONTAINS
 
     ! ***********************************
@@ -908,20 +908,20 @@ CONTAINS
     ! * Choose a Pivot element from XX(Ileft:Iright)
     ! * for Qsort.
     ! ***********************************
-      
+
       Integer, Intent (in) :: XX(:)
       Integer, Intent (in) :: IIleft, IIright
-      
+
       Real (kind=DP) :: XXcp(3)
       Integer :: IIpt(3), IImd
-      
+
       IImd = Int((IIleft+IIright)/2)
       XXcp(1) = XX(IIleft)
       XXcp(2) = XX(IIright)
       XXcp(3) = XX(IImd)
-      
+
       CALL Insrt(XXcp, IIpt)
-      
+
       Select Case (IIpt(2))
       Case (1)
          IIpv = IIleft
@@ -941,10 +941,10 @@ CONTAINS
       Integer, Intent (inout) :: XX(:)
       Integer, Intent (inout) :: IIpt(:)
       Integer, Intent (in) :: IIl, IIr
-      
+
       Integer :: RRtmp
       Integer :: II, JJ, IItmp
-      
+
 
       Do II = IIl+1, IIr
          RRtmp = XX(II)
@@ -958,7 +958,7 @@ CONTAINS
          End Do
          XX(JJ+1) = RRtmp
       End Do
-      
+
       Return
     End Subroutine InsrtLC
 
@@ -973,7 +973,7 @@ CONTAINS
 ! * This routine arranges the array X
 ! * between the index values Ileft and Iright
 ! * positioning elements smallers than
-! * X(Ipv) at the left and the others 
+! * X(Ipv) at the left and the others
 ! * at the right.
 ! * Internal routine used by Qsort.
 ! ***********************************
@@ -981,7 +981,7 @@ CONTAINS
     Real (kind=SP), Intent (inout) :: X(:)
     Integer, Intent (in) :: Ileft, Iright, Ipv
     Integer, Intent (inout), Optional :: Ipt(:)
-    
+
     Real (kind=SP) :: Rpv
     Integer :: I
 
@@ -1021,7 +1021,7 @@ CONTAINS
 ! * This routine arranges the array X
 ! * between the index values Ileft and Iright
 ! * positioning elements smallers than
-! * X(Ipv) at the left and the others 
+! * X(Ipv) at the left and the others
 ! * at the right.
 ! * Internal routine used by Qsort.
 ! ***********************************
@@ -1029,7 +1029,7 @@ CONTAINS
     Real (kind=DP), Intent (inout) :: X(:)
     Integer, Intent (in) :: Ileft, Iright, Ipv
     Integer, Intent (inout), Optional :: Ipt(:)
-    
+
     Real (kind=DP) :: Rpv
     Integer :: I
 
@@ -1069,7 +1069,7 @@ CONTAINS
 ! * This routine arranges the array X
 ! * between the index values Ileft and Iright
 ! * positioning elements smallers than
-! * X(Ipv) at the left and the others 
+! * X(Ipv) at the left and the others
 ! * at the right.
 ! * Internal routine used by Qsort.
 ! ***********************************
@@ -1077,7 +1077,7 @@ CONTAINS
     Integer, Intent (inout) :: X(:)
     Integer, Intent (in) :: Ileft, Iright, Ipv
     Integer, Intent (inout), Optional :: Ipt(:)
-    
+
     Integer :: Rpv
     Integer :: I
 
