@@ -12,10 +12,10 @@ use mod_atomicdata
 
 implicit none
 
-        INTEGER :: count, Iint, i, j, ion_no1, ion_no2, ion_no3, ion_no4, ion_no5, ion_no6 
+        INTEGER :: count, Iint, i, j, ion_no1, ion_no2, ion_no3, ion_no4, ion_no5, ion_no6
         integer, intent(in) :: listlength
-        TYPE(line), dimension(listlength) :: linelist, linelist_orig 
-        CHARACTER :: switch_ext !switch for extinction laws 
+        TYPE(line), dimension(listlength) :: linelist, linelist_orig
+        CHARACTER :: switch_ext !switch for extinction laws
         type(resultarray), dimension(1) :: iteration_result
         double precision, dimension(6), intent(in) :: diagnostic_array
 
@@ -38,12 +38,12 @@ implicit none
         TYPE(line), DIMENSION(38) :: H_BS
         TYPE(line), DIMENSION(4) :: He_lines
 
-		!atomic data
-		character*10 :: ionlist(40) !list of ion names
-		integer :: iion !# of ions in Ilines
-		integer :: maxlevs,maxtemps
-		type(atomic_data) :: atomicdata(iion)
-		
+        !atomic data
+        character*10 :: ionlist(40) !list of ion names
+        integer :: iion !# of ions in Ilines
+        integer :: maxlevs,maxtemps
+        type(atomic_data) :: atomicdata(iion)
+
 ! recombination line variables
 
         TYPE RLabund
@@ -56,6 +56,17 @@ implicit none
 
 ! strong line variables
         DOUBLE PRECISION :: X23,O_R23upper, O_R23lower, N2,O_N2, O3N2, O_O3N2, Ar3O3, O_Ar3O3, S3O3, O_S3O3, x23temp1, x23temp2, x23temp3, x23temp4
+
+        ! initialise some variables to zero
+
+        oiiRLabund = 0.d0
+        niiRLabund = 0.d0
+        CELicfCl = 0.d0
+        CELicfS = 0.d0
+        CELicfAr = 0.d0
+        CELicfNe = 0.d0
+        CELicfN = 0.d0
+        CELicfO = 0.d0
 
         linelist_orig = linelist
 
@@ -71,9 +82,9 @@ implicit none
         !dereddening
 
         ILs%abundance = 0
-        ILs%int_dered = 0 
+        ILs%int_dered = 0
         H_BS%abundance = 0
-        H_BS%int_dered = 0 
+        H_BS%int_dered = 0
         He_lines%abundance = 0
         He_lines%int_dered = 0
 
@@ -92,14 +103,14 @@ implicit none
                         H_BS(i)%intensity = H_BS(i)%intensity*normalise
                 end do
                 do i = 1,4 !normalise helium
-                        He_lines(i)%intensity = He_lines(i)%intensity * normalise 
+                        He_lines(i)%intensity = He_lines(i)%intensity * normalise
                 end do
         endif
 
         if (calculate_extinction) then
                 CALL calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction, switch_ext, DBLE(10000.),DBLE(1000.), R)
 
-                if (meanextinction .lt. 0.0) then 
+                if (meanextinction .lt. 0.0) then
                    meanextinction = 0.0
                 endif
 
@@ -109,22 +120,22 @@ implicit none
         if (switch_ext == "S") then
                 CALL deredden(ILs, Iint, meanextinction)
                 CALL deredden(H_BS, 4, meanextinction)
-                call deredden(He_lines, 4, meanextinction) 
+                call deredden(He_lines, 4, meanextinction)
                 CALL deredden(linelist, listlength, meanextinction)
         elseif (switch_ext == "H") then
                 CALL deredden_LMC(ILs, Iint, meanextinction)
                 CALL deredden_LMC(H_BS, 4, meanextinction)
-                call deredden_LMC(He_lines, 4, meanextinction) 
+                call deredden_LMC(He_lines, 4, meanextinction)
                 CALL deredden_LMC(linelist, listlength, meanextinction)
         elseif (switch_ext == "C") then
                 CALL deredden_CCM(ILs, Iint, meanextinction, R)
                 CALL deredden_CCM(H_BS, 4, meanextinction, R)
-                call deredden_CCM(He_lines, 4, meanextinction, R) 
+                call deredden_CCM(He_lines, 4, meanextinction, R)
                 CALL deredden_CCM(linelist, listlength, meanextinction, R)
         elseif (switch_ext == "P") then
                 CALL deredden_SMC(ILs, Iint, meanextinction)
                 CALL deredden_SMC(H_BS, 4, meanextinction)
-                call deredden_SMC(He_lines, 4, meanextinction) 
+                call deredden_SMC(He_lines, 4, meanextinction)
                 CALL deredden_SMC(linelist, listlength, meanextinction)
         elseif (switch_ext == "F") then
                 CALL deredden_Fitz(ILs, Iint, meanextinction)
@@ -151,13 +162,13 @@ implicit none
         CALL get_Tdiag("nii6548    ","nii6584    ","nii5754    ", ILs, DBLE(4.054), DBLE(1.3274), niiTratio)        ! N II
         CALL get_Tdiag("oiii5007   ","oiii4959   ","oiii4363   ", ILs, DBLE(1.3356), DBLE(3.98), oiiiTratio)        ! O III
         CALL get_Tdiag("neiii3868  ","neiii3967  ","neiii3342  ", ILs, DBLE(1.3013), DBLE(4.319), neiiiTratio)        ! Ne III
-        CALL get_Tdiag("neiii3868  ","neiii3967  ","neiii15p5um", ILs, DBLE(1.3013), DBLE(4.319), neiiiIRTratio)! Ne III ir 
+        CALL get_Tdiag("neiii3868  ","neiii3967  ","neiii15p5um", ILs, DBLE(1.3013), DBLE(4.319), neiiiIRTratio)! Ne III ir
         CALL get_Tdiag("nev3426    ","nev3345    ","nev2975    ", ILs, DBLE(1.3571), DBLE(3.800), nevTratio)        !!ne v
         CALL get_Tdiag("siii9069   ","siii9531   ","siii6312   ", ILs, DBLE(3.47), DBLE(1.403), siiiTratio)        !s iii
         CALL get_Tdiag("ariii7135  ","ariii7751  ","ariii5192  ",ILs, DBLE(1.24), DBLE(5.174), ariiiTratio)        !ar iii
         CALL get_Tdiag("arv6435    ","arv7005    ","arv4625    ",ILs, DBLE(3.125), DBLE(1.471), arvTratio)        !ar v
         CALL get_Tdiag("ci9850     ","ci9824     ","ci8727     ",ILs, DBLE(1.337), DBLE(3.965), ciTratio)      !C I
-        CALL get_Tdiag("oi6364     ","oi6300     ","oi5577     ",ILs, DBLE(4.127), DBLE(1.320), oiTratio)      !O I 
+        CALL get_Tdiag("oi6364     ","oi6300     ","oi5577     ",ILs, DBLE(4.127), DBLE(1.320), oiTratio)      !O I
         CALL get_Tdiag("oiii4959   ","oiii5007   ","oiii52um   ", ILS, DBLE(1.3356), DBLE(3.98), oiiiIRTratio) ! OIII ir
         !Fixed, DJS
 
@@ -197,7 +208,7 @@ implicit none
 
 
        else
-                       oiiTratio=0.0 
+                       oiiTratio=0.0
        endif
 
 ! S II
@@ -447,20 +458,20 @@ implicit none
            medtemp = lowtemp
          endif
 
-        !dereddening again 
+        !dereddening again
 
         if (calculate_extinction) then
 
-          ILs%int_dered = 0 
-          H_BS%int_dered = 0 
+          ILs%int_dered = 0
+          H_BS%int_dered = 0
           He_lines%int_dered = 0
 
 
         !update extinction. DS 22/10/11
-          meanextinction=0        
+          meanextinction=0
           CALL calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction, switch_ext, medtemp, lowdens, R)
 
-          if (meanextinction .lt. 0.0) then 
+          if (meanextinction .lt. 0.0) then
              meanextinction = 0.0
           endif
 
@@ -468,22 +479,22 @@ implicit none
           if (switch_ext == "S") then
                   CALL deredden(ILs, Iint, meanextinction)
                   CALL deredden(H_BS, 4, meanextinction)
-                  call deredden(He_lines, 4, meanextinction) 
+                  call deredden(He_lines, 4, meanextinction)
                   CALL deredden(linelist, listlength, meanextinction)
           elseif (switch_ext == "H") then
                   CALL deredden_LMC(ILs, Iint, meanextinction)
                   CALL deredden_LMC(H_BS, 4, meanextinction)
-                  call deredden_LMC(He_lines, 4, meanextinction) 
+                  call deredden_LMC(He_lines, 4, meanextinction)
                   CALL deredden_LMC(linelist, listlength, meanextinction)
           elseif (switch_ext == "C") then
                   CALL deredden_CCM(ILs, Iint, meanextinction, R)
                   CALL deredden_CCM(H_BS, 4, meanextinction, R)
-                  call deredden_CCM(He_lines, 4, meanextinction, R) 
+                  call deredden_CCM(He_lines, 4, meanextinction, R)
                   CALL deredden_CCM(linelist, listlength, meanextinction, R)
           elseif (switch_ext == "P") then
                   CALL deredden_SMC(ILs, Iint, meanextinction)
                   CALL deredden_SMC(H_BS, 4, meanextinction)
-                  call deredden_SMC(He_lines, 4, meanextinction) 
+                  call deredden_SMC(He_lines, 4, meanextinction)
                   CALL deredden_SMC(linelist, listlength, meanextinction)
           elseif (switch_ext == "F") then
                   CALL deredden_Fitz(ILs, Iint, meanextinction)
@@ -505,7 +516,7 @@ implicit none
 
          if (neivNratio .gt. 0 .and. neivNratio .lt. 1e10) then
            call get_diagnostic("neiv      ","1,2/                ","1,3/                ",neivNratio,"D",hightemp, neivDens,maxlevs,maxtemps,atomicdata,iion)
-           highdens = neivdens 
+           highdens = neivdens
          else
            neivDens = 0.0
            highdens = meddens
@@ -564,23 +575,23 @@ else if(INT(oiitemp) == -1)then
 endif
 iteration_result(1)%OII_temp_ratio = oiiTratio
 
-if(siitemp >0.2 )then 
+if(siitemp >0.2 )then
         iteration_result(1)%SII_temp = siitemp
-else if(INT(siitemp) == -1)then 
+else if(INT(siitemp) == -1)then
         iteration_result(1)%SII_temp = 20000
 endif
 iteration_result(1)%SII_temp_ratio = siiTratio
 
-if(oitemp >0.2 )then 
+if(oitemp >0.2 )then
         iteration_result(1)%OI_temp = oitemp
-else if(INT(oitemp) == -1)then 
+else if(INT(oitemp) == -1)then
         iteration_result(1)%OI_temp = 20000
 endif
 iteration_result(1)%OI_temp_ratio = oiTratio
 
-if(citemp >0.2 )then 
+if(citemp >0.2 )then
         iteration_result(1)%CI_temp = citemp
-else if(INT(citemp) == -1)then 
+else if(INT(citemp) == -1)then
         iteration_result(1)%CI_temp = 20000
 endif
 iteration_result(1)%CI_temp_ratio = ciTratio
@@ -605,44 +616,44 @@ iteration_result(1)%NeIII_IR_density_ratio = neiiiIRNratio
 
 
 iteration_result(1)%med_density = meddens
-if(oiiitemp >0.2)then 
+if(oiiitemp >0.2)then
         iteration_result(1)%OIII_temp = oiiitemp
-else if(INT(oiiitemp) == -1)then 
+else if(INT(oiiitemp) == -1)then
         iteration_result(1)%OIII_temp = 20000
 endif
 iteration_result(1)%OIII_temp_ratio = oiiiTratio
 
-if(neiiitemp>0.2)then 
+if(neiiitemp>0.2)then
         iteration_result(1)%NeIII_temp = neiiitemp
-else if(INT(neiiitemp) == -1)then 
+else if(INT(neiiitemp) == -1)then
         iteration_result(1)%NeIII_temp = 20000
 endif
 iteration_result(1)%NeIII_temp_ratio = neiiiTratio
 
-if(ariiitemp>0.2)then 
+if(ariiitemp>0.2)then
         iteration_result(1)%ArIII_temp = ariiitemp
-else if(INT(ariiitemp) == -1)then 
+else if(INT(ariiitemp) == -1)then
         iteration_result(1)%ArIII_temp = 20000
 endif
 iteration_result(1)%ArIII_temp_ratio = AriiiTratio
 
-if(siiitemp > 0.2)then 
+if(siiitemp > 0.2)then
         iteration_result(1)%SIII_temp = siiitemp
-else if(int(siiitemp) == -1)then 
+else if(int(siiitemp) == -1)then
         iteration_result(1)%SIII_temp = 20000
 endif
 iteration_result(1)%SIII_temp_ratio = siiiTratio
 
-if(oiiiIRtemp > 0.2)then 
+if(oiiiIRtemp > 0.2)then
         iteration_result(1)%OIII_IR_temp = oiiiIRtemp
-else if(int(oiiiIRtemp) == -1)then 
+else if(int(oiiiIRtemp) == -1)then
         iteration_result(1)%OIII_IR_temp = 20000
 endif
 iteration_result(1)%OIII_IR_temp_ratio = oiiiIRTratio
 
-if(neiiiIRtemp > 0.2)then 
+if(neiiiIRtemp > 0.2)then
         iteration_result(1)%NeIII_IR_temp = neiiiIRtemp
-else if(int(neiiiIRtemp) == -1)then 
+else if(int(neiiiIRtemp) == -1)then
         iteration_result(1)%NeIII_IR_temp = 20000
 endif
 iteration_result(1)%NeIII_IR_temp_ratio = NeiiiTratio
@@ -662,6 +673,10 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
         call get_helium(REAL(medtemp),REAL(meddens),REAL(He_lines(1)%int_dered),REAL(He_lines(2)%int_dered),REAL(He_lines(3)%int_dered),REAL(He_lines(4)%int_dered),heiabund,heiiabund,Hetotabund, A4471, A4686, A6678, A5876)
 
+        w1=0
+        w2=0
+        w3=0
+        w4=0
         if( (A4471 > 0 .or. A5876 > 0 ) .or. A6678 > 0)then
 
                 if(He_lines(2)%intensity > 0) w1 = 1/((He_lines(2)%int_err / He_lines(2)%intensity)**2)
@@ -676,11 +691,6 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
                 heiabund = 0.0
         endif
-
-        w1=0
-        w2=0
-        w3=0
-        w4=0
 
 
 ! get abundances for all CELs
@@ -989,10 +999,10 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         endif
 
         ariiiIRCELabund = ILs(get_ion("ariii9um   ", ILs, Iint))%abundance
-                
+
         ciiCELabund = ILs(get_ion("cii2325    ", ILs, Iint))%abundance
         civCELabund = ILs(get_ion("civ1548    ", ILs, Iint))%abundance
-                
+
         celabundtemp = 0.
                 ciiiCELabund = 0.
         weight = 0.
@@ -1095,7 +1105,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
          do j = 1,415
           if (abs(linelist(i)%wavelength-oiiRLs(j)%Wave) .le. 0.005) then
             oiiRLs(j)%Obs = linelist(i)%int_dered
-            oiiRLs(j)%abundance = oiiRLs(j)%obs/oiiRLs(j)%Int 
+            oiiRLs(j)%abundance = oiiRLs(j)%obs/oiiRLs(j)%Int
           endif
          enddo
        enddo
@@ -1166,9 +1176,9 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
       enddo
 
       if (weight .gt. 0) then
-        ciirlabund = rlabundtemp/weight 
+        ciirlabund = rlabundtemp/weight
       else
-        ciirlabund = 0.  
+        ciirlabund = 0.
       endif
 
 !nii recombination lines
@@ -1199,7 +1209,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
              rlabundtemp = rlabundtemp + niiRLs(i)%obs
              weight = weight + niiRLs(i)%Int
           endif
-        enddo 
+        enddo
       if (isnan((rlabundtemp/weight))) then
         niimultiplets(j)%Abundance = 0.
       else
@@ -1236,7 +1246,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
       enddo
 
       if (weight .gt. 0) then
-        niiRLabund = rlabundtemp/weight 
+        niiRLabund = rlabundtemp/weight
       else
         niiRLabund = 0.D0
       endif
@@ -1279,7 +1289,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
           oiimultiplets(j)%Abundance = rlabundtemp/weight
         else
           oiimultiplets(j)%Abundance = 0.0
-        endif 
+        endif
       enddo
 
       rlabundtemp = 0.
@@ -1335,7 +1345,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
       enddo
 
    if (weight .gt. 0) then
-      neiiRLabund = rlabundtemp/weight 
+      neiiRLabund = rlabundtemp/weight
    else
       neiiRLabund = 0.D0
    endif
@@ -1345,14 +1355,14 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
       weight = 0.0
 
       do i = 1,4
-        if (xiiiRLs(i)%abundance .ge. 1e-20) then 
+        if (xiiiRLs(i)%abundance .ge. 1e-20) then
           rlabundtemp = rlabundtemp + xiiiRLs(i)%obs
           weight = weight + xiiiRLs(i)%Int
         endif
       enddo
       if (weight .gt. 0) then
         ciiiRLabund = rlabundtemp / weight
-      else 
+      else
         ciiiRLabund = 0.0
       endif
 
@@ -1365,7 +1375,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
      if (xiiiRLs(6)%abundance .ge. 1e-20) then
         niiiRLabund = xiiiRLs(6)%abundance
      else
-        niiiRLabund = 0.0 
+        niiiRLabund = 0.0
      endif
 
 ! ICFs (Kingsburgh + Barlow 1994)
@@ -1384,7 +1394,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 OabundCEL = CELicfO * (oiiCELabund + oiiiCELabund)                                              ! A8
         elseif (oiiCELabund .ge. 1e-20 .and. oiiiCELabund .ge. 1e-20 .and. oivCELabund .lt. 1e-20 .and. nvCELabund .lt. 1e-20)then !no O3+ or N4+ seen
                 CELicfO = ((heiabund + heiiabund)/heiabund)**(2./3.) !KB94 A9
-                OabundCEL = CELicfO * (oiiCELabund + oiiiCELabund) !A10 
+                OabundCEL = CELicfO * (oiiCELabund + oiiiCELabund) !A10
         endif
 
 ! nitrogen - complete
@@ -1412,7 +1422,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
        CELicfC = OabundCEL/oiiiCELabund !A13
        CabundCEL = CELicfC * ciiiCELabund !A14
      elseif (nvCELabund .ge. 1e-20 .and. heiiabund .ge. 1e-20) then !N4+ and He2+
-       fn4 = (nvCELabund)/(niiCELabund + niiiCELabund + nivCELabund + nvCELabund) !A4, A15 
+       fn4 = (nvCELabund)/(niiCELabund + niiiCELabund + nivCELabund + nvCELabund) !A4, A15
        if (fn4 .lt. 0.29629) then !condition in KB94 is if icf(C)>5, but eqn A16 can go negative at high fn4 so this is a better check for the high-excitation case
          CELicfC = 1/(1-(2.7*fn4))!A16
        else
@@ -1465,7 +1475,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 ! Sulphur
      SabundCEL = 0.
      if (siiCELabund .ge. 1e-20 .and. siiiCELabund .ge. 1e-20 .and. sivIRCELabund .lt. 1e-20) then !both S+ and S2+
-       CELicfS = (1 - (  (1-(oiiCELabund/OabundCEL))**3.0  )   )**(-1.0/3.0) !KB94 A36 
+       CELicfS = (1 - (  (1-(oiiCELabund/OabundCEL))**3.0  )   )**(-1.0/3.0) !KB94 A36
        SabundCEL = CELicfS * (siiCELabund + siiiCELabund) !KB94 A37
      elseif (siiCELabund .ge. 1e-20 .and. siiiCELabund .ge. 1e-20 .and. sivIRCELabund .ge. 1e-20) then !all states observed
        CELicfS = 1.
@@ -1528,17 +1538,17 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
 !carbon
 
-        iteration_result(1)%NC_abund_CEL = NCabundCEL 
-        iteration_result(1)%cii_abund_CEL = ciiCELabund 
-        iteration_result(1)%ciii_abund_CEL = ciiiCELabund 
-        iteration_result(1)%civ_abund_CEL = civCELabund 
+        iteration_result(1)%NC_abund_CEL = NCabundCEL
+        iteration_result(1)%cii_abund_CEL = ciiCELabund
+        iteration_result(1)%ciii_abund_CEL = ciiiCELabund
+        iteration_result(1)%civ_abund_CEL = civCELabund
         iteration_result(1)%c_icf_CEL = CELicfC
         iteration_result(1)%C_abund_CEL = CabundCEL
-!nitrogen 
-        iteration_result(1)%Nii_abund_CEL = niiCELabund 
-        iteration_result(1)%Niii_abund_CEL = niiiCELabund 
-        iteration_result(1)%Niv_abund_CEL = nivCELabund 
-        iteration_result(1)%Nv_abund_CEL = nvCELabund 
+!nitrogen
+        iteration_result(1)%Nii_abund_CEL = niiCELabund
+        iteration_result(1)%Niii_abund_CEL = niiiCELabund
+        iteration_result(1)%Niv_abund_CEL = nivCELabund
+        iteration_result(1)%Nv_abund_CEL = nvCELabund
         iteration_result(1)%N_icf_CEL = CELicfN
         iteration_result(1)%N_abund_CEL = NabundCEL
 !oxygen
@@ -1588,7 +1598,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         iteration_result(1)%O_abund_ORL = OabundRL
         iteration_result(1)%Neii_abund_ORL = NeiiRLabund
         iteration_result(1)%Ne_icf_ORL = RLicfNe
-        iteration_result(1)%Ne_abund_ORL = NeabundRL 
+        iteration_result(1)%Ne_abund_ORL = NeabundRL
 
 !Strong line methods
 
