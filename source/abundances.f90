@@ -31,12 +31,14 @@ implicit none
         DOUBLE PRECISION :: adfC2plus, adfN2plus, adfO2plus, adfNe2plus
         DOUBLE PRECISION :: c1, c2, c3, meanextinction, A4471, A4686, A6678, A5876, R
         REAL :: heiabund,heiiabund,Hetotabund
+        REAL :: bajtemp
 
         logical :: calculate_extinction
 
         TYPE(line), DIMENSION(Iint) :: ILs
         TYPE(line), DIMENSION(38) :: H_BS
         TYPE(line), DIMENSION(4) :: He_lines
+        TYPE(line), DIMENSION(2) :: Balmer_jump
 
         !atomic data
         character*10 :: ionlist(40) !list of ion names
@@ -693,6 +695,24 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         endif
 
 
+!  Calculate T_e from Balmer Jump
+
+        BaJtemp = 0.0
+        Balmer_jump(1)%intensity = 0.0
+        Balmer_jump(2)%intensity = 0.0
+        
+        do i=1,listlength
+            if(linelist(i)%wavelength .eq. 3645.50) Balmer_jump(1) = linelist(i)
+            if(linelist(i)%wavelength .eq. 3646.50) Balmer_jump(2) = linelist(i)
+        enddo
+        
+        if(Balmer_jump(1)%intensity .gt. 0 .and. Balmer_jump(1)%intensity .gt. 0 .and. H_BS(9)%intensity .gt. 0) then
+        BaJtemp = (Balmer_jump(1)%intensity - Balmer_jump(1)%intensity)/H_BS(9)%intensity
+        BaJtemp = BaJtemp**(-3/2)
+        BaJtemp = BaJtemp*368
+        BaJtemp = BaJtemp*(1+0.256*heiabund+3.409*heiiabund)
+        endif
+        
 ! get abundances for all CELs
 
         !This routine is too simple. I have been changing the temperatures /densities which are input to each zone to disable the zone schtick.
