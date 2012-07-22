@@ -559,6 +559,7 @@ program neat
                 OPEN(950, FILE=trim(filename)//"_NeIV_density_ratio", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
                 OPEN(951, FILE=trim(filename)//"_ArV_temp_ratio", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
                 OPEN(952, FILE=trim(filename)//"_NeV_temp_ratio", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(953, FILE=trim(filename)//"_Bal_jump_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
 
 !XXXX add Cl/H, Niii, cii, ciii, ArIII IR dens, NeIII IR dens, strong line, ICF files
 
@@ -676,6 +677,7 @@ program neat
                 call qsort(all_results%NeIV_density_ratio)
                 call qsort(all_results%ArV_temp_ratio)
                 call qsort(all_results%NeV_temp_ratio)
+                call qsort(all_results%Bal_jump_temp)
 
 print *, gettime(), ": results processed.  Now writing to files"
 
@@ -792,9 +794,10 @@ print *, gettime(), ": results processed.  Now writing to files"
                     write(unit = 950,FMT=*) all_results(i)%NeIV_density_ratio
                     write(unit = 951,FMT=*) all_results(i)%ArV_temp_ratio
                     write(unit = 952,FMT=*) all_results(i)%NeV_temp_ratio
+                    write(unit = 953,FMT=*) all_results(i)%Bal_jump_temp
                 end do
 
-                DO I=841,952
+                DO I=841,953
                         CLOSE(unit=I)
                 END DO
 ! get median +- pseudo gaussian 34.1%
@@ -1034,6 +1037,10 @@ write (650,*)
                 quantity_result = all_results%high_temp
                 call get_uncertainties(quantity_result, uncertainty_array)
                 write (650,711) "High temperature :      ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1))
+                
+                quantity_result = all_results%Bal_jump_temp
+                call get_uncertainties(quantity_result, uncertainty_array)
+                write (650,711) "Balmer jump temperature :      ",int(uncertainty_array(2))," +",int(uncertainty_array(3)),"-",int(uncertainty_array(1))
 
 !CEL abundances
 write (650,*)

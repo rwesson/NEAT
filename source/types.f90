@@ -138,6 +138,7 @@ TYPE resultarray
         double precision :: NeIV_density_ratio
         double precision :: ArV_temp_ratio
         double precision :: NeV_temp_ratio
+        double precision :: Bal_jump_temp
 end type
 
 end module mod_resultarrays

@@ -713,6 +713,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         BaJtemp = BaJtemp*(1+0.256*heiabund+3.409*heiiabund)
         endif
         
+        iteration_result%Bal_jump_temp = BaJtemp
 ! get abundances for all CELs
 
         !This routine is too simple. I have been changing the temperatures /densities which are input to each zone to disable the zone schtick.
