@@ -330,6 +330,7 @@ program neat
                 write (650,705) "ArV_temp :         ",INT(iteration_result(1)%ArV_temp), iteration_result(1)%ArV_temp_ratio
                 write (650,705) "NeV_temp :         ",INT(iteration_result(1)%NeV_temp), iteration_result(1)%NeV_temp_ratio
                 write (650,701) "high_temp :        ",INT(iteration_result(1)%high_temp)
+                write (650,701) "Balmer_jump_temp : ",INT(iteration_result(1)%Bal_jump_temp)
                 write (650,*)
                 write (650,*),"Abundances"
                 write (650,*),"=========="
