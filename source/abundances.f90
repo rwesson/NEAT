@@ -121,27 +121,27 @@ implicit none
 
         if (switch_ext == "S") then
                 CALL deredden(ILs, Iint, meanextinction)
-                CALL deredden(H_BS, 4, meanextinction)
+                CALL deredden(H_BS, 38, meanextinction)
                 call deredden(He_lines, 4, meanextinction)
                 CALL deredden(linelist, listlength, meanextinction)
         elseif (switch_ext == "H") then
                 CALL deredden_LMC(ILs, Iint, meanextinction)
-                CALL deredden_LMC(H_BS, 4, meanextinction)
+                CALL deredden_LMC(H_BS, 38, meanextinction)
                 call deredden_LMC(He_lines, 4, meanextinction)
                 CALL deredden_LMC(linelist, listlength, meanextinction)
         elseif (switch_ext == "C") then
                 CALL deredden_CCM(ILs, Iint, meanextinction, R)
-                CALL deredden_CCM(H_BS, 4, meanextinction, R)
+                CALL deredden_CCM(H_BS, 38, meanextinction, R)
                 call deredden_CCM(He_lines, 4, meanextinction, R)
                 CALL deredden_CCM(linelist, listlength, meanextinction, R)
         elseif (switch_ext == "P") then
                 CALL deredden_SMC(ILs, Iint, meanextinction)
-                CALL deredden_SMC(H_BS, 4, meanextinction)
+                CALL deredden_SMC(H_BS, 38, meanextinction)
                 call deredden_SMC(He_lines, 4, meanextinction)
                 CALL deredden_SMC(linelist, listlength, meanextinction)
         elseif (switch_ext == "F") then
                 CALL deredden_Fitz(ILs, Iint, meanextinction)
-                CALL deredden_Fitz(H_BS, 4, meanextinction)
+                CALL deredden_Fitz(H_BS, 38, meanextinction)
                 call deredden_Fitz(He_lines, 4, meanextinction)
                 CALL deredden_Fitz(linelist, listlength, meanextinction)
         endif
@@ -480,27 +480,27 @@ implicit none
           linelist = linelist_orig
           if (switch_ext == "S") then
                   CALL deredden(ILs, Iint, meanextinction)
-                  CALL deredden(H_BS, 4, meanextinction)
+                  CALL deredden(H_BS, 38, meanextinction)
                   call deredden(He_lines, 4, meanextinction)
                   CALL deredden(linelist, listlength, meanextinction)
           elseif (switch_ext == "H") then
                   CALL deredden_LMC(ILs, Iint, meanextinction)
-                  CALL deredden_LMC(H_BS, 4, meanextinction)
+                  CALL deredden_LMC(H_BS, 38, meanextinction)
                   call deredden_LMC(He_lines, 4, meanextinction)
                   CALL deredden_LMC(linelist, listlength, meanextinction)
           elseif (switch_ext == "C") then
                   CALL deredden_CCM(ILs, Iint, meanextinction, R)
-                  CALL deredden_CCM(H_BS, 4, meanextinction, R)
+                  CALL deredden_CCM(H_BS, 38, meanextinction, R)
                   call deredden_CCM(He_lines, 4, meanextinction, R)
                   CALL deredden_CCM(linelist, listlength, meanextinction, R)
           elseif (switch_ext == "P") then
                   CALL deredden_SMC(ILs, Iint, meanextinction)
-                  CALL deredden_SMC(H_BS, 4, meanextinction)
+                  CALL deredden_SMC(H_BS, 38, meanextinction)
                   call deredden_SMC(He_lines, 4, meanextinction)
                   CALL deredden_SMC(linelist, listlength, meanextinction)
           elseif (switch_ext == "F") then
                   CALL deredden_Fitz(ILs, Iint, meanextinction)
-                  CALL deredden_Fitz(H_BS, 4, meanextinction)
+                  CALL deredden_Fitz(H_BS, 38, meanextinction)
                   call deredden_Fitz(He_lines, 4, meanextinction)
                   CALL deredden_Fitz(linelist, listlength, meanextinction)
           endif
@@ -706,14 +706,15 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
             if(linelist(i)%wavelength .eq. 3646.50) Balmer_jump(2) = linelist(i)
         enddo
         
-        if(Balmer_jump(1)%intensity .gt. 0 .and. Balmer_jump(1)%intensity .gt. 0 .and. H_BS(9)%intensity .gt. 0) then
-        BaJtemp = (Balmer_jump(1)%intensity - Balmer_jump(1)%intensity)/H_BS(9)%intensity
-        BaJtemp = BaJtemp**(-3/2)
+        if(Balmer_jump(1)%int_dered .gt. 0 .and. Balmer_jump(2)%int_dered .gt. 0 .and. H_BS(9)%intensity .gt. 0) then
+        BaJtemp = (Balmer_jump(1)%int_dered - Balmer_jump(2)%int_dered)/H_BS(9)%int_dered
+        BaJtemp = BaJtemp**(-3./2.)
         BaJtemp = BaJtemp*368
         BaJtemp = BaJtemp*(1+0.256*heiabund+3.409*heiiabund)
         endif
-        
+
         iteration_result%Bal_jump_temp = BaJtemp
+
 ! get abundances for all CELs
 
         !This routine is too simple. I have been changing the temperatures /densities which are input to each zone to disable the zone schtick.
