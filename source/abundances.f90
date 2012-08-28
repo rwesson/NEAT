@@ -30,7 +30,7 @@ implicit none
         DOUBLE PRECISION :: adfC, adfN, adfO, adfNe, w1, w2, w3, w4
         DOUBLE PRECISION :: adfC2plus, adfN2plus, adfO2plus, adfNe2plus
         DOUBLE PRECISION :: c1, c2, c3, meanextinction, A4471, A4686, A6678, A5876, R
-        REAL :: heiabund,heiiabund,Hetotabund
+        REAL :: heiabund,heiiabund,Hetotabund, heICFfactor
         REAL :: bajtemp
 
         logical :: calculate_extinction
@@ -1402,6 +1402,16 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
 ! ICFs (Kingsburgh + Barlow 1994)
 
+! first calculate the helium factor that appears in several ICFs
+! if no he lines are seen set this factor to zero, so that abundances relying on
+! this ratio are not calculated.
+
+if (heiabund .gt. 0.) then
+   heICFfactor = (heiabund + heiiabund)/heiabund
+elseif (heiabund .eq.0. .and. heiiabund .eq.0.0) then
+   heICFfactor = 0.0
+endif
+
 ! oxygen - complete
      OabundCEL = 0.
         if (oiiCELabund .ge. 1e-20 .and. oiiiCELabund .ge. 1e-20 .and. oivCELabund .ge. 1e-20 .and. nvCELabund .ge. 1e-20)then ! O3+ and N4+
@@ -1415,7 +1425,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 CELicfO = (niiCELabund + niiiCELabund + nivCELabund + nvCELabund) / (niiCELabund + niiiCELabund) ! A7
                 OabundCEL = CELicfO * (oiiCELabund + oiiiCELabund)                                              ! A8
         elseif (oiiCELabund .ge. 1e-20 .and. oiiiCELabund .ge. 1e-20 .and. oivCELabund .lt. 1e-20 .and. nvCELabund .lt. 1e-20)then !no O3+ or N4+ seen
-                CELicfO = ((heiabund + heiiabund)/heiabund)**(2./3.) !KB94 A9
+                CELicfO = heICFfactor**(2./3.) !KB94 A9
                 OabundCEL = CELicfO * (oiiCELabund + oiiiCELabund) !A10
         endif
 
@@ -1452,7 +1462,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
        endif
        CabundCEL = CELicfC * (ciiCELabund + ciiiCELabund + civCELabund) !A19
      elseif (ciiCELabund .ge. 1e-20 .and. ciiiCELabund .ge. 1e-20 .and. civCELabund .ge. 1e-20 .and. heiiabund .ge. 1e-20 .and. nvCELabund .lt. 1e-20) then !PN is hot enough for He2+ but not for N4+
-        CELicfC = ((heiiabund + heiabund)*heiabund)**(1./3.) !A20
+        CELicfC = heICFfactor**(1./3.) !A20
         CabundCEL = CELicfC * (ciiCELabund + ciiiCELabund + civCELabund) !A21
      elseif (ciiCELabund .lt. 1e-20 .and. ciiiCELabund .ge. 1e-20 .and. civCELabund .ge. 1e-20) then !C+ not seen
         CELicfC = 1/(1 - (niiCELabund/NabundCEL) - 2.7*(nvCELabund/NabundCEL)) !A22
@@ -1461,7 +1471,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         endif
         CabundCEL = CELicfC * (ciiiCELabund+ civCELabund) !A24
      elseif (ciiCELabund .ge. 1e-20 .and. ciiiCELabund .ge. 1e-20 .and. civCELabund .ge. 1e-20 .and. heiiabund .ge. 1e-20 .and. (nivCELabund .lt. 1e-20 .or. nvCELabund .lt. 1e-20)) then !final case i think.
-        CELicfC = ((oiiCELabund + oiiiCELabund)/oiiiCELabund)*((heiiabund + heiabund)*heiabund)**(1./3.) !A25
+        CELicfC = ((oiiCELabund + oiiiCELabund)/oiiiCELabund)*heICFfactor**(1./3.) !A25
         CabundCEL = CELicfC * (ciiCELabund + ciiiCELabund + civCELabund) !A26
      else
         CabundCEL = 0.D0 ! nothing at all seen
@@ -1527,7 +1537,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 !Oxygen
 
      if (oiiRLabund .ge. 1e-20) then
-       RLicfO = ((heiabund + heiiabund)/heiabund)**(2./3.) * (1+(oiiCELabund/oiiiCELabund))
+       RLicfO = heICFfactor**(2./3.) * (1+(oiiCELabund/oiiiCELabund))
        OabundRL = RLicfO * oiiRLabund
      else
        RLicfO = 1.0
