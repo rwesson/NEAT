@@ -41,7 +41,7 @@ implicit none
         TYPE(line), DIMENSION(2) :: Balmer_jump
 
         !atomic data
-        character*10 :: ionlist(40) !list of ion names
+
         integer :: iion !# of ions in Ilines
         integer :: maxlevs,maxtemps
         type(atomic_data) :: atomicdata(iion)
@@ -186,7 +186,7 @@ implicit none
 
 
 
-                if (ion_no1 .gt. 0 .and. ion_no2 .gt. 0 .and. ion_no3 .gt. 0 .and. ion_no4 .gt. 0) then
+                if (ILs(ion_no1)%int_dered .gt. 0 .and. ILs(ion_no2)%int_dered .gt. 0 .and. ILs(ion_no3)%int_dered .gt. 0 .and. ILs(ion_no4)%int_dered .gt. 0) then
                         oiiTratio = (ILs(ion_no1)%int_dered+ILs(ion_no2)%int_dered)/(ILs(ion_no3)%int_dered+ILs(ion_no4)%int_dered)
                 else
                         oiiTratio = 0.0
@@ -201,7 +201,7 @@ implicit none
                 ion_no5 = get_ion("oii3726    ",ILs, Iint)
                 ion_no6 = get_ion("oii3729    ",ILs, Iint)
 
-                if (ion_no1 .gt. 0 .and. ion_no2 .gt. 0 .and. ion_no3 .gt. 0 .and. ion_no4 .gt. 0 .and. ion_no5 .gt. 0 .and. ion_no6 .gt. 0) then
+                if (ILs(ion_no1)%int_dered .gt. 0 .and. ILs(ion_no2)%int_dered .gt. 0 .and. ILs(ion_no3)%int_dered .gt. 0 .and. ILs(ion_no4)%int_dered .gt. 0 .and. ILs(ion_no5)%int_dered .gt. 0 .and. ILs(ion_no6)%int_dered .gt. 0) then
                         oiiTratio = ((ILs(ion_no1)%int_dered+ILs(ion_no2)%int_dered)+(ILs(ion_no3)%int_dered+ILs(ion_no4)%int_dered))/(ILs(ion_no5)%int_dered+ILs(ion_no6)%int_dered)
                 else
                         oiiTratio = 0.0
@@ -219,7 +219,7 @@ implicit none
       ion_no3 = get_ion("sii4068    ",ILs, Iint)
       ion_no4 = get_ion("sii4076    ",ILs, Iint)
 
-      if (ion_no1 .gt. 0 .and. ion_no2 .gt. 0 .and. ion_no3 .gt. 0 .and. ion_no4 .gt. 0) then
+      if (ILs(ion_no1)%int_dered .gt. 0 .and. ILs(ion_no2)%int_dered .gt. 0 .and. ILs(ion_no3)%int_dered .gt. 0 .and. ILs(ion_no4)%int_dered .gt. 0) then
            siiTratio = (ILs(ion_no1)%int_dered+ILs(ion_no2)%int_dered)/(ILs(ion_no3)%int_dered+ILs(ion_no4)%int_dered)
       else
            siiTratio = 0.0
