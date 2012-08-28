@@ -681,9 +681,9 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         w4=0
         if( (A4471 > 0 .or. A5876 > 0 ) .or. A6678 > 0)then
 
-                if(He_lines(2)%intensity > 0) w1 = 1/((He_lines(2)%int_err / He_lines(2)%intensity)**2)
-                if(He_lines(3)%intensity > 0) w2 = 1/((He_lines(3)%int_err / He_lines(3)%intensity)**2)
-                if(He_lines(4)%intensity > 0) w3 = 1/((He_lines(4)%int_err / He_lines(4)%intensity)**2)
+                if(He_lines(2)%intensity > 0) w1 = He_lines(2)%intensity
+                if(He_lines(3)%intensity > 0) w2 = He_lines(3)%intensity
+                if(He_lines(4)%intensity > 0) w3 = He_lines(4)%intensity
 
                 !PRINT*, w1, " ", w2, " ", w3
 
@@ -756,8 +756,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 niiCELabund = 0.
         weight = 0.
         do i= get_ion("nii5754    ", ILs, Iint), get_ion("nii6584    ", ILs, Iint)
-          if (ILs(i)%abundance .ge. 1e-10) niiCELabund = niiCELabund + ILs(i)%abundance/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
-          if (ILs(i)%abundance .ge. 1e-10) weight = weight + 1/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .ge. 1e-10) niiCELabund = niiCELabund + ILs(i)%abundance*ILs(i)%intensity
+          if (ILs(i)%abundance .ge. 1e-10) weight = weight + ILs(i)%intensity
         enddo
         if (weight .ge. 1e-20) then
           niiCELabund = niiCELabund / weight
@@ -780,8 +780,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
                 nivCELabund = 0.
         do i= get_ion("niv1483    ", ILs, Iint), get_ion("niv1485b   ", ILs, Iint) ! would screw up if blend and non blends were both given
-          if (ILs(i)%abundance .ge. 1e-20) nivCELabund = nivCELabund + ILs(i)%abundance/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
-          if (ILs(i)%abundance .ge. 1e-20) weight = weight + 1/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .ge. 1e-20) nivCELabund = nivCELabund + ILs(i)%abundance*ILs(i)%intensity
+          if (ILs(i)%abundance .ge. 1e-20) weight = weight + ILs(i)%intensity
         enddo
         if (weight .ge. 1e-20) then
           nivCELabund = nivCELabund / weight
@@ -799,26 +799,26 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
         else if(ILs(get_ion("oii3729    ", ILs, Iint))%int_dered > 0.0 .and. ILs(get_ion("oii3726    ", ILs, Iint))%int_dered > 0.0 )then
                 !calc abundance from doublet
-                w1 = 1/(( ILs(get_ion("oii3729    ", ILs, Iint))%int_err / ILs(get_ion("oii3729    ", ILs, Iint))%intensity   )**2)
-                w2 = 1/(( ILs(get_ion("oii3726    ", ILs, Iint))%int_err / ILs(get_ion("oii3726    ", ILs, Iint))%intensity   )**2)
+                w1 = ILs(get_ion("oii3729    ", ILs, Iint))%intensity
+                w2 = ILs(get_ion("oii3726    ", ILs, Iint))%intensity
 
                 oiiCELabund = (w1*ILs(get_ion("oii3729    ", ILs, Iint))%abundance + w2*ILs(get_ion("oii3726    ", ILs, Iint))%abundance)/(w1+w2)
 
 
         else if((ILs(get_ion("oii3728b   ", ILs, Iint))%int_dered == 0.0 .and. (ILs(get_ion("oii3729    ", ILs, Iint))%int_dered ==0.0 .and. ILs(get_ion("oii3726    ", ILs, Iint))%int_dered == 0.0 )) .and.  (ILs(get_ion("oii7330b   ", ILs, Iint))%abundance > 0.0 .or. ILs(get_ion("oii7319b   ", ILs, Iint))%abundance > 0.0)  )then
                 !calc abundance based on far red blends
-                w1 = 1/(( ILs(get_ion("oii7330b   ", ILs, Iint))%int_err / ILs(get_ion("oii7330b   ", ILs, Iint))%intensity   )**2)
-                w2 = 1/(( ILs(get_ion("oii7319b   ", ILs, Iint))%int_err / ILs(get_ion("oii7319b   ", ILs, Iint))%intensity   )**2)
+                w1 = ILs(get_ion("oii7330b   ", ILs, Iint))%intensity
+                w2 = ILs(get_ion("oii7319b   ", ILs, Iint))%intensity
 
                 oiiCELabund = (w1*ILs(get_ion("oii7330b   ", ILs, Iint))%abundance + w2*ILs(get_ion("oii7319b   ", ILs, Iint))%abundance)/(w1+w2)
 
 
         else if        ((ILs(get_ion("oii3728b   ", ILs, Iint))%int_dered == 0.0 .and. (ILs(get_ion("oii3729    ", ILs, Iint))%int_dered ==0.0 .and. ILs(get_ion("oii3726    ", ILs, Iint))%int_dered == 0.0 )) .and. ( (ILs(get_ion("oii7320    ", ILs, Iint))%abundance > 0.0 .or. ILs(get_ion("oii7319    ", ILs, Iint))%abundance > 0.0) .or.  (ILs(get_ion("oii7330    ", ILs, Iint))%abundance > 0.0 .or. ILs(get_ion("oii7331    ", ILs, Iint))%abundance > 0.0)) )then
                 !calc abundance based on far red quadruplet
-                if(ILs(get_ion("oii7319    ", ILs, Iint))%int_err > 0) w1 = 1/(( ILs(get_ion("oii7319    ", ILs, Iint))%int_err / ILs(get_ion("oii7319    ", ILs, Iint))%intensity   )**2)
-                if(ILs(get_ion("oii7320    ", ILs, Iint))%int_err > 0) w2 = 1/(( ILs(get_ion("oii7320    ", ILs, Iint))%int_err / ILs(get_ion("oii7320    ", ILs, Iint))%intensity   )**2)
-                if(ILs(get_ion("oii7330    ", ILs, Iint))%int_err > 0) w3 = 1/(( ILs(get_ion("oii7330    ", ILs, Iint))%int_err / ILs(get_ion("oii7330    ", ILs, Iint))%intensity   )**2)
-                if(ILs(get_ion("oii7331    ", ILs, Iint))%int_err > 0) w4 = 1/(( ILs(get_ion("oii7331    ", ILs, Iint))%int_err / ILs(get_ion("oii7320    ", ILs, Iint))%intensity   )**2)
+                if(ILs(get_ion("oii7319    ", ILs, Iint))%intensity > 0) w1 = ILs(get_ion("oii7319    ", ILs, Iint))%intensity
+                if(ILs(get_ion("oii7320    ", ILs, Iint))%intensity > 0) w2 = ILs(get_ion("oii7320    ", ILs, Iint))%intensity
+                if(ILs(get_ion("oii7330    ", ILs, Iint))%intensity > 0) w3 = ILs(get_ion("oii7330    ", ILs, Iint))%intensity
+                if(ILs(get_ion("oii7331    ", ILs, Iint))%intensity > 0) w4 = ILs(get_ion("oii7320    ", ILs, Iint))%intensity
 
                 !if statements stop non existent lines being granted infinite weight 1/(0/0)^2 = infinity, defaults to zero if no line detected which keeps the following calculation honest
 
@@ -866,8 +866,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 oiiiCELabund = 0.0
         weight = 0.
         do i=get_ion("oiii4959   ", ILs, Iint), get_ion("oiii5007   ", ILs, Iint)
-          if (ILs(i)%abundance .ge. 1e-20) oiiiCELabund = oiiiCELabund + ILs(i)%abundance /((ILs(i)%int_err/ ILs(i)%intensity)  **2)
-          if (ILs(i)%abundance .ge. 1e-20) weight = weight + 1 / ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .ge. 1e-20) oiiiCELabund = oiiiCELabund + ILs(i)%abundance *ILs(i)%intensity
+          if (ILs(i)%abundance .ge. 1e-20) weight = weight + ILs(i)%intensity
         enddo
         if (weight .ge. 1e-20) then
           oiiiCELabund = oiiiCELabund / weight
@@ -879,8 +879,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 oiiiIRCELabund = 0.0
         weight = 0.
         do i=get_ion("oiii52um   ", ILs, Iint), get_ion("oiii88um   ", ILs, Iint)
-          if (ILs(i)%abundance .ge. 1e-20) oiiiIRCELabund = oiiiIRCELabund + ILs(i)%abundance / ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
-          if (ILs(i)%abundance .ge. 1e-20) weight = weight + 1/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .ge. 1e-20) oiiiIRCELabund = oiiiIRCELabund + ILs(i)%abundance *ILs(i)%intensity
+          if (ILs(i)%abundance .ge. 1e-20) weight = weight + ILs(i)%intensity
         enddo
         if (weight .ge. 1e-20) then
           oiiiIRCELabund = oiiiIRCELabund / weight
@@ -897,8 +897,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 neiiiCELabund = 0.
         weight = 0.
         do i=get_ion("neiii3868  ", ILs, Iint), get_ion("neiii3967  ", ILs, Iint)
-          if (ILs(i)%abundance .ge. 1e-20) neiiiCELabund = neiiiCELabund + ILs(i)%abundance/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
-          if (ILs(i)%abundance .ge. 1e-20) weight = weight + 1/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .ge. 1e-20) neiiiCELabund = neiiiCELabund + ILs(i)%abundance*ILs(i)%intensity
+          if (ILs(i)%abundance .ge. 1e-20) weight = weight + ILs(i)%intensity
         enddo
         if (weight .ge. 1e-20) then
           neiiiCELabund = neiiiCELabund / weight
@@ -911,8 +911,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 neivCELabund = 0.
         weight = 0.
         do i=get_ion("neiv2423   ", ILs, Iint), get_ion("neiv4725b  ", ILs, Iint) ! would screw up if blends and non blends were given
-          if (ILs(i)%abundance .ge. 1e-20) neivCELabund = neivCELabund + ILs(i)%abundance/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
-          if (ILs(i)%abundance .ge. 1e-20) weight = weight + 1/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .ge. 1e-20) neivCELabund = neivCELabund + ILs(i)%abundance*ILs(i)%intensity
+          if (ILs(i)%abundance .ge. 1e-20) weight = weight + ILs(i)%intensity
         enddo
         if (weight .ge. 1e-20) then
           neivCELabund = neivCELabund / weight
@@ -924,8 +924,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 siiCELabund = 0.
         weight = 0.
         do i=get_ion("sii4068    ", ILs, Iint), get_ion("sii6731    ", ILs, Iint)
-          if (ILs(i)%abundance .ge. 1e-20) siiCELabund = siiCELabund + ILs(i)%abundance/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
-          if (ILs(i)%abundance .ge. 1e-20) weight = weight + 1/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .ge. 1e-20) siiCELabund = siiCELabund + ILs(i)%abundance*ILs(i)%intensity
+          if (ILs(i)%abundance .ge. 1e-20) weight = weight + ILs(i)%intensity
         enddo
         if (weight .ge. 1e-20) then
           siiCELabund = siiCELabund / weight
@@ -955,8 +955,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
                 if(siiiCELabund < (1.05 * 0.403) .and. siiiCELabund > (0.90 * 0.403))then !this case should never occur
 
-                        if(ILs(get_ion("siii9069   ", ILs, Iint))%intensity > 0) w1 = 1/(ILs(get_ion("siii9069   ", ILs, Iint))%int_err / ILs(get_ion("siii9069   ", ILs, Iint))%intensity)**2
-                        if(ILs(get_ion("siii9531   ", ILs, Iint))%intensity > 0) w2 = 1/(ILs(get_ion("siii9531   ", ILs, Iint))%int_err / ILs(get_ion("siii9531   ", ILs, Iint))%intensity)**2
+                        if(ILs(get_ion("siii9069   ", ILs, Iint))%intensity > 0) w1 = ILs(get_ion("siii9069   ", ILs, Iint))%intensity
+                        if(ILs(get_ion("siii9531   ", ILs, Iint))%intensity > 0) w2 = ILs(get_ion("siii9531   ", ILs, Iint))%intensity
 
                         siiiCELabund= ( w1*ILs(get_ion("siii9069   ", ILs, Iint))%abundance + w2*ILs(get_ion("siii9531   ", ILs, Iint))%abundance )/(w1+w2)
 
@@ -979,9 +979,9 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 cliiiCELabund = 0.
         weight = 0.
         do i=get_ion("cliii5517  ", ILs, Iint), get_ion("cliii5537  ", ILs, Iint)
-          if (ILs(i)%abundance .ge. 1e-20) cliiiCELabund = cliiiCELabund + ILs(i)%abundance/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .ge. 1e-20) cliiiCELabund = cliiiCELabund + ILs(i)%abundance*ILs(i)%intensity
           if (ILs(i)%abundance .ge. 1e-20) then
-            weight = weight + 1/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+            weight = weight + ILs(i)%intensity
           endif
         enddo
         if (weight .ge. 1e-20) then
@@ -994,9 +994,9 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 ariiiCELabund = 0.
         weight = 0.
         do i=get_ion("ariii7135  ", ILs, Iint), get_ion("ariii7751  ", ILs, Iint)
-          if (ILs(i)%abundance .ge. 1e-20) ariiiCELabund = ariiiCELabund + ILs(i)%abundance/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .ge. 1e-20) ariiiCELabund = ariiiCELabund + ILs(i)%abundance*ILs(i)%intensity
           if (ILs(i)%abundance .ge. 1e-20) then
-            weight = weight + 1/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+            weight = weight + ILs(i)%intensity
           endif
         enddo
         if (weight .ge. 1e-20) then
@@ -1009,9 +1009,9 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 arivCELabund = 0.
         weight = 0.
         do i=get_ion("ariv4711   ", ILs, Iint), get_ion("ariv4740   ", ILs, Iint)
-        arivCELabund = arivCELabund + ILs(i)%abundance/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+        arivCELabund = arivCELabund + ILs(i)%abundance*ILs(i)%intensity
           if (ILs(i)%abundance .ge. 1e-20) then
-            weight = weight + 1/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+            weight = weight + ILs(i)%intensity
           endif
         enddo
         if (weight .ge. 1e-20) then
@@ -1030,8 +1030,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         weight = 0.
         do i=get_ion("ciii1907   ", ILs, Iint), get_ion("ciii1909b  ", ILs, Iint) ! would screw up if blend and non-blend were given.
           if (ILs(i)%abundance .ge. 1e-20) then
-            ciiiCELabund = ciiiCELabund + ILs(i)%abundance/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
-            weight = weight + 1/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+            ciiiCELabund = ciiiCELabund + ILs(i)%abundance*ILs(i)%intensity
+            weight = weight + ILs(i)%intensity
           endif
         enddo
         if (weight .ge. 1e-20) then
@@ -1044,9 +1044,9 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 neivCELabund = 0.
         weight = 0.
         do i=get_ion("neiv2423   ", ILs, Iint), get_ion("neiv2425   ", ILs, Iint)
-          if (ILs(i)%abundance .ge. 1e-20) neivCELabund = neivCELabund + ILs(i)%abundance/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .ge. 1e-20) neivCELabund = neivCELabund + ILs(i)%abundance*ILs(i)%intensity
           if (ILs(i)%abundance .ge. 1e-20) then
-            weight = weight + 1/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+            weight = weight + ILs(i)%intensity
           endif
         enddo
         if (weight .ge. 1e-20) then
@@ -1059,9 +1059,9 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 nevCELabund = 0.
         weight = 0.
         do i=get_ion("nev3345    ", ILs, Iint), get_ion("nev3426    ", ILs, Iint)
-          if (ILs(i)%abundance .ge. 1e-20) nevCELabund = nevCELabund + ILs(i)%abundance/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .ge. 1e-20) nevCELabund = nevCELabund + ILs(i)%abundance*ILs(i)%intensity
           if (ILs(i)%abundance .ge. 1e-20) then
-            weight = weight + 1/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+            weight = weight + ILs(i)%intensity
           endif
         enddo
         if (weight .ge. 1e-20) then
@@ -1074,9 +1074,9 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 arvCELabund = 0.
         weight = 0.
         do i=get_ion("arv6435    ", ILs, Iint), get_ion("arv7005    ", ILs, Iint)
-          if (ILs(i)%abundance .ge. 1e-20) arvCELabund = arvCELabund + ILs(i)%abundance/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .ge. 1e-20) arvCELabund = arvCELabund + ILs(i)%abundance*ILs(i)%intensity
           if (ILs(i)%abundance .ge. 1e-20) then
-            weight = weight + 1/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+            weight = weight + ILs(i)%intensity
           endif
         enddo
         if (weight .ge. 1e-20) then
@@ -1089,9 +1089,9 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                  ciCELabund = 0.
         weight = 0.
         do i=get_ion("ci9850     ", ILs, Iint), get_ion("ci8727     ", ILs, Iint)
-          if (ILs(i)%abundance .ge. 1e-20) ciCELabund = ciCELabund + ILs(i)%abundance/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .ge. 1e-20) ciCELabund = ciCELabund + ILs(i)%abundance*ILs(i)%intensity
           if (ILs(i)%abundance .ge. 1e-20) then
-            weight = weight + 1/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+            weight = weight + ILs(i)%intensity
           endif
         enddo
         if (weight .ge. 1e-20) then
@@ -1106,9 +1106,9 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                  oiCELabund = 0.
         weight = 0.
         do i=get_ion("oi6300     ", ILs, Iint), get_ion("oi5577     ", ILs, Iint)
-          if (ILs(i)%abundance .ge. 1e-20) oiCELabund = oiCELabund + ILs(i)%abundance/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .ge. 1e-20) oiCELabund = oiCELabund + ILs(i)%abundance*ILs(i)%intensity
           if (ILs(i)%abundance .ge. 1e-20) then
-            weight = weight + 1/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+            weight = weight + ILs(i)%intensity
           endif
         enddo
         if (weight .ge. 1e-20) then
