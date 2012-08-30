@@ -698,8 +698,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 !  Calculate T_e from Balmer Jump
 
         BaJtemp = 0.0
-        Balmer_jump(1)%intensity = 0.0
-        Balmer_jump(2)%intensity = 0.0
+        Balmer_jump(1)%int_dered = 0.0
+        Balmer_jump(2)%int_dered = 0.0
         
         do i=1,listlength
             if(linelist(i)%wavelength .eq. 3645.50) Balmer_jump(1) = linelist(i)
