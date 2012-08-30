@@ -40,6 +40,7 @@ program neat
 
         !file reading variables
 
+        LOGICAL :: file_exists
         TYPE(LINE),DIMENSION(:), allocatable :: linelist
         TYPE(LINE),DIMENSION(:), allocatable :: linelist_original
         CHARACTER*80 :: filename
@@ -177,6 +178,13 @@ program neat
 
          if (filename=="") then
                 print *,"Error: No input file specified"
+                stop
+         endif
+
+         inquire(file=filename, exist=file_exists) ! see if the input file is present
+
+         if (.not. file_exists) then
+                print *,"Error: input file ",trim(filename)," does not exist"
                 stop
          endif
 
@@ -1271,6 +1279,8 @@ write (650,*)
                 write (650,714) "adf(Ne/H) :             ",uncertainty_array(2),uncertainty_array(3),-uncertainty_array(1)
 
                 close (650)
+
+                print *, gettime(), ": results summary file ",trim(filename)//"_results written"
 
         else
                 print*, gettime(), ": I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."
