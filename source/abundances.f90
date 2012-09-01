@@ -30,16 +30,18 @@ implicit none
         DOUBLE PRECISION :: adfC, adfN, adfO, adfNe, w1, w2, w3, w4
         DOUBLE PRECISION :: adfC2plus, adfN2plus, adfO2plus, adfNe2plus
         DOUBLE PRECISION :: c1, c2, c3, meanextinction, A4471, A4686, A6678, A5876, R
-        REAL :: heiabund,heiiabund,Hetotabund
+        REAL :: heiabund,heiiabund,Hetotabund, heICFfactor
+        REAL :: bajtemp
 
         logical :: calculate_extinction
 
         TYPE(line), DIMENSION(Iint) :: ILs
         TYPE(line), DIMENSION(38) :: H_BS
         TYPE(line), DIMENSION(4) :: He_lines
+        TYPE(line), DIMENSION(2) :: Balmer_jump
 
         !atomic data
-        character*10 :: ionlist(40) !list of ion names
+
         integer :: iion !# of ions in Ilines
         integer :: maxlevs,maxtemps
         type(atomic_data) :: atomicdata(iion)
@@ -119,27 +121,27 @@ implicit none
 
         if (switch_ext == "S") then
                 CALL deredden(ILs, Iint, meanextinction)
-                CALL deredden(H_BS, 4, meanextinction)
+                CALL deredden(H_BS, 38, meanextinction)
                 call deredden(He_lines, 4, meanextinction)
                 CALL deredden(linelist, listlength, meanextinction)
         elseif (switch_ext == "H") then
                 CALL deredden_LMC(ILs, Iint, meanextinction)
-                CALL deredden_LMC(H_BS, 4, meanextinction)
+                CALL deredden_LMC(H_BS, 38, meanextinction)
                 call deredden_LMC(He_lines, 4, meanextinction)
                 CALL deredden_LMC(linelist, listlength, meanextinction)
         elseif (switch_ext == "C") then
                 CALL deredden_CCM(ILs, Iint, meanextinction, R)
-                CALL deredden_CCM(H_BS, 4, meanextinction, R)
+                CALL deredden_CCM(H_BS, 38, meanextinction, R)
                 call deredden_CCM(He_lines, 4, meanextinction, R)
                 CALL deredden_CCM(linelist, listlength, meanextinction, R)
         elseif (switch_ext == "P") then
                 CALL deredden_SMC(ILs, Iint, meanextinction)
-                CALL deredden_SMC(H_BS, 4, meanextinction)
+                CALL deredden_SMC(H_BS, 38, meanextinction)
                 call deredden_SMC(He_lines, 4, meanextinction)
                 CALL deredden_SMC(linelist, listlength, meanextinction)
         elseif (switch_ext == "F") then
                 CALL deredden_Fitz(ILs, Iint, meanextinction)
-                CALL deredden_Fitz(H_BS, 4, meanextinction)
+                CALL deredden_Fitz(H_BS, 38, meanextinction)
                 call deredden_Fitz(He_lines, 4, meanextinction)
                 CALL deredden_Fitz(linelist, listlength, meanextinction)
         endif
@@ -184,7 +186,7 @@ implicit none
 
 
 
-                if (ion_no1 .gt. 0 .and. ion_no2 .gt. 0 .and. ion_no3 .gt. 0 .and. ion_no4 .gt. 0) then
+                if (ILs(ion_no1)%int_dered .gt. 0 .and. ILs(ion_no2)%int_dered .gt. 0 .and. ILs(ion_no3)%int_dered .gt. 0 .and. ILs(ion_no4)%int_dered .gt. 0) then
                         oiiTratio = (ILs(ion_no1)%int_dered+ILs(ion_no2)%int_dered)/(ILs(ion_no3)%int_dered+ILs(ion_no4)%int_dered)
                 else
                         oiiTratio = 0.0
@@ -199,7 +201,7 @@ implicit none
                 ion_no5 = get_ion("oii3726    ",ILs, Iint)
                 ion_no6 = get_ion("oii3729    ",ILs, Iint)
 
-                if (ion_no1 .gt. 0 .and. ion_no2 .gt. 0 .and. ion_no3 .gt. 0 .and. ion_no4 .gt. 0 .and. ion_no5 .gt. 0 .and. ion_no6 .gt. 0) then
+                if (ILs(ion_no1)%int_dered .gt. 0 .and. ILs(ion_no2)%int_dered .gt. 0 .and. ILs(ion_no3)%int_dered .gt. 0 .and. ILs(ion_no4)%int_dered .gt. 0 .and. ILs(ion_no5)%int_dered .gt. 0 .and. ILs(ion_no6)%int_dered .gt. 0) then
                         oiiTratio = ((ILs(ion_no1)%int_dered+ILs(ion_no2)%int_dered)+(ILs(ion_no3)%int_dered+ILs(ion_no4)%int_dered))/(ILs(ion_no5)%int_dered+ILs(ion_no6)%int_dered)
                 else
                         oiiTratio = 0.0
@@ -217,7 +219,7 @@ implicit none
       ion_no3 = get_ion("sii4068    ",ILs, Iint)
       ion_no4 = get_ion("sii4076    ",ILs, Iint)
 
-      if (ion_no1 .gt. 0 .and. ion_no2 .gt. 0 .and. ion_no3 .gt. 0 .and. ion_no4 .gt. 0) then
+      if (ILs(ion_no1)%int_dered .gt. 0 .and. ILs(ion_no2)%int_dered .gt. 0 .and. ILs(ion_no3)%int_dered .gt. 0 .and. ILs(ion_no4)%int_dered .gt. 0) then
            siiTratio = (ILs(ion_no1)%int_dered+ILs(ion_no2)%int_dered)/(ILs(ion_no3)%int_dered+ILs(ion_no4)%int_dered)
       else
            siiTratio = 0.0
@@ -478,27 +480,27 @@ implicit none
           linelist = linelist_orig
           if (switch_ext == "S") then
                   CALL deredden(ILs, Iint, meanextinction)
-                  CALL deredden(H_BS, 4, meanextinction)
+                  CALL deredden(H_BS, 38, meanextinction)
                   call deredden(He_lines, 4, meanextinction)
                   CALL deredden(linelist, listlength, meanextinction)
           elseif (switch_ext == "H") then
                   CALL deredden_LMC(ILs, Iint, meanextinction)
-                  CALL deredden_LMC(H_BS, 4, meanextinction)
+                  CALL deredden_LMC(H_BS, 38, meanextinction)
                   call deredden_LMC(He_lines, 4, meanextinction)
                   CALL deredden_LMC(linelist, listlength, meanextinction)
           elseif (switch_ext == "C") then
                   CALL deredden_CCM(ILs, Iint, meanextinction, R)
-                  CALL deredden_CCM(H_BS, 4, meanextinction, R)
+                  CALL deredden_CCM(H_BS, 38, meanextinction, R)
                   call deredden_CCM(He_lines, 4, meanextinction, R)
                   CALL deredden_CCM(linelist, listlength, meanextinction, R)
           elseif (switch_ext == "P") then
                   CALL deredden_SMC(ILs, Iint, meanextinction)
-                  CALL deredden_SMC(H_BS, 4, meanextinction)
+                  CALL deredden_SMC(H_BS, 38, meanextinction)
                   call deredden_SMC(He_lines, 4, meanextinction)
                   CALL deredden_SMC(linelist, listlength, meanextinction)
           elseif (switch_ext == "F") then
                   CALL deredden_Fitz(ILs, Iint, meanextinction)
-                  CALL deredden_Fitz(H_BS, 4, meanextinction)
+                  CALL deredden_Fitz(H_BS, 38, meanextinction)
                   call deredden_Fitz(He_lines, 4, meanextinction)
                   CALL deredden_Fitz(linelist, listlength, meanextinction)
           endif
@@ -679,9 +681,9 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         w4=0
         if( (A4471 > 0 .or. A5876 > 0 ) .or. A6678 > 0)then
 
-                if(He_lines(2)%intensity > 0) w1 = 1/((He_lines(2)%int_err / He_lines(2)%intensity)**2)
-                if(He_lines(3)%intensity > 0) w2 = 1/((He_lines(3)%int_err / He_lines(3)%intensity)**2)
-                if(He_lines(4)%intensity > 0) w3 = 1/((He_lines(4)%int_err / He_lines(4)%intensity)**2)
+                if(He_lines(2)%intensity > 0) w1 = He_lines(2)%intensity
+                if(He_lines(3)%intensity > 0) w2 = He_lines(3)%intensity
+                if(He_lines(4)%intensity > 0) w3 = He_lines(4)%intensity
 
                 !PRINT*, w1, " ", w2, " ", w3
 
@@ -692,6 +694,26 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 heiabund = 0.0
         endif
 
+
+!  Calculate T_e from Balmer Jump
+
+        BaJtemp = 0.0
+        Balmer_jump(1)%int_dered = 0.0
+        Balmer_jump(2)%int_dered = 0.0
+        
+        do i=1,listlength
+            if(linelist(i)%wavelength .eq. 3645.50) Balmer_jump(1) = linelist(i)
+            if(linelist(i)%wavelength .eq. 3646.50) Balmer_jump(2) = linelist(i)
+        enddo
+        
+        if(Balmer_jump(1)%int_dered .gt. 0 .and. Balmer_jump(2)%int_dered .gt. 0 .and. H_BS(9)%intensity .gt. 0) then
+        BaJtemp = (Balmer_jump(1)%int_dered - Balmer_jump(2)%int_dered)/H_BS(9)%int_dered
+        BaJtemp = BaJtemp**(-3./2.)
+        BaJtemp = BaJtemp*368
+        BaJtemp = BaJtemp*(1+0.256*heiabund+3.409*heiiabund)
+        endif
+
+        iteration_result%Bal_jump_temp = BaJtemp
 
 ! get abundances for all CELs
 
@@ -734,8 +756,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 niiCELabund = 0.
         weight = 0.
         do i= get_ion("nii5754    ", ILs, Iint), get_ion("nii6584    ", ILs, Iint)
-          if (ILs(i)%abundance .ge. 1e-10) niiCELabund = niiCELabund + ILs(i)%abundance/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
-          if (ILs(i)%abundance .ge. 1e-10) weight = weight + 1/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .ge. 1e-10) niiCELabund = niiCELabund + ILs(i)%abundance*ILs(i)%intensity
+          if (ILs(i)%abundance .ge. 1e-10) weight = weight + ILs(i)%intensity
         enddo
         if (weight .ge. 1e-20) then
           niiCELabund = niiCELabund / weight
@@ -758,8 +780,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
                 nivCELabund = 0.
         do i= get_ion("niv1483    ", ILs, Iint), get_ion("niv1485b   ", ILs, Iint) ! would screw up if blend and non blends were both given
-          if (ILs(i)%abundance .ge. 1e-20) nivCELabund = nivCELabund + ILs(i)%abundance/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
-          if (ILs(i)%abundance .ge. 1e-20) weight = weight + 1/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .ge. 1e-20) nivCELabund = nivCELabund + ILs(i)%abundance*ILs(i)%intensity
+          if (ILs(i)%abundance .ge. 1e-20) weight = weight + ILs(i)%intensity
         enddo
         if (weight .ge. 1e-20) then
           nivCELabund = nivCELabund / weight
@@ -777,26 +799,26 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
         else if(ILs(get_ion("oii3729    ", ILs, Iint))%int_dered > 0.0 .and. ILs(get_ion("oii3726    ", ILs, Iint))%int_dered > 0.0 )then
                 !calc abundance from doublet
-                w1 = 1/(( ILs(get_ion("oii3729    ", ILs, Iint))%int_err / ILs(get_ion("oii3729    ", ILs, Iint))%intensity   )**2)
-                w2 = 1/(( ILs(get_ion("oii3726    ", ILs, Iint))%int_err / ILs(get_ion("oii3726    ", ILs, Iint))%intensity   )**2)
+                w1 = ILs(get_ion("oii3729    ", ILs, Iint))%intensity
+                w2 = ILs(get_ion("oii3726    ", ILs, Iint))%intensity
 
                 oiiCELabund = (w1*ILs(get_ion("oii3729    ", ILs, Iint))%abundance + w2*ILs(get_ion("oii3726    ", ILs, Iint))%abundance)/(w1+w2)
 
 
         else if((ILs(get_ion("oii3728b   ", ILs, Iint))%int_dered == 0.0 .and. (ILs(get_ion("oii3729    ", ILs, Iint))%int_dered ==0.0 .and. ILs(get_ion("oii3726    ", ILs, Iint))%int_dered == 0.0 )) .and.  (ILs(get_ion("oii7330b   ", ILs, Iint))%abundance > 0.0 .or. ILs(get_ion("oii7319b   ", ILs, Iint))%abundance > 0.0)  )then
                 !calc abundance based on far red blends
-                w1 = 1/(( ILs(get_ion("oii7330b   ", ILs, Iint))%int_err / ILs(get_ion("oii7330b   ", ILs, Iint))%intensity   )**2)
-                w2 = 1/(( ILs(get_ion("oii7319b   ", ILs, Iint))%int_err / ILs(get_ion("oii7319b   ", ILs, Iint))%intensity   )**2)
+                w1 = ILs(get_ion("oii7330b   ", ILs, Iint))%intensity
+                w2 = ILs(get_ion("oii7319b   ", ILs, Iint))%intensity
 
                 oiiCELabund = (w1*ILs(get_ion("oii7330b   ", ILs, Iint))%abundance + w2*ILs(get_ion("oii7319b   ", ILs, Iint))%abundance)/(w1+w2)
 
 
         else if        ((ILs(get_ion("oii3728b   ", ILs, Iint))%int_dered == 0.0 .and. (ILs(get_ion("oii3729    ", ILs, Iint))%int_dered ==0.0 .and. ILs(get_ion("oii3726    ", ILs, Iint))%int_dered == 0.0 )) .and. ( (ILs(get_ion("oii7320    ", ILs, Iint))%abundance > 0.0 .or. ILs(get_ion("oii7319    ", ILs, Iint))%abundance > 0.0) .or.  (ILs(get_ion("oii7330    ", ILs, Iint))%abundance > 0.0 .or. ILs(get_ion("oii7331    ", ILs, Iint))%abundance > 0.0)) )then
                 !calc abundance based on far red quadruplet
-                if(ILs(get_ion("oii7319    ", ILs, Iint))%int_err > 0) w1 = 1/(( ILs(get_ion("oii7319    ", ILs, Iint))%int_err / ILs(get_ion("oii7319    ", ILs, Iint))%intensity   )**2)
-                if(ILs(get_ion("oii7320    ", ILs, Iint))%int_err > 0) w2 = 1/(( ILs(get_ion("oii7320    ", ILs, Iint))%int_err / ILs(get_ion("oii7320    ", ILs, Iint))%intensity   )**2)
-                if(ILs(get_ion("oii7330    ", ILs, Iint))%int_err > 0) w3 = 1/(( ILs(get_ion("oii7330    ", ILs, Iint))%int_err / ILs(get_ion("oii7330    ", ILs, Iint))%intensity   )**2)
-                if(ILs(get_ion("oii7331    ", ILs, Iint))%int_err > 0) w4 = 1/(( ILs(get_ion("oii7331    ", ILs, Iint))%int_err / ILs(get_ion("oii7320    ", ILs, Iint))%intensity   )**2)
+                if(ILs(get_ion("oii7319    ", ILs, Iint))%intensity > 0) w1 = ILs(get_ion("oii7319    ", ILs, Iint))%intensity
+                if(ILs(get_ion("oii7320    ", ILs, Iint))%intensity > 0) w2 = ILs(get_ion("oii7320    ", ILs, Iint))%intensity
+                if(ILs(get_ion("oii7330    ", ILs, Iint))%intensity > 0) w3 = ILs(get_ion("oii7330    ", ILs, Iint))%intensity
+                if(ILs(get_ion("oii7331    ", ILs, Iint))%intensity > 0) w4 = ILs(get_ion("oii7320    ", ILs, Iint))%intensity
 
                 !if statements stop non existent lines being granted infinite weight 1/(0/0)^2 = infinity, defaults to zero if no line detected which keeps the following calculation honest
 
@@ -844,8 +866,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 oiiiCELabund = 0.0
         weight = 0.
         do i=get_ion("oiii4959   ", ILs, Iint), get_ion("oiii5007   ", ILs, Iint)
-          if (ILs(i)%abundance .ge. 1e-20) oiiiCELabund = oiiiCELabund + ILs(i)%abundance /((ILs(i)%int_err/ ILs(i)%intensity)  **2)
-          if (ILs(i)%abundance .ge. 1e-20) weight = weight + 1 / ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .ge. 1e-20) oiiiCELabund = oiiiCELabund + ILs(i)%abundance *ILs(i)%intensity
+          if (ILs(i)%abundance .ge. 1e-20) weight = weight + ILs(i)%intensity
         enddo
         if (weight .ge. 1e-20) then
           oiiiCELabund = oiiiCELabund / weight
@@ -857,8 +879,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 oiiiIRCELabund = 0.0
         weight = 0.
         do i=get_ion("oiii52um   ", ILs, Iint), get_ion("oiii88um   ", ILs, Iint)
-          if (ILs(i)%abundance .ge. 1e-20) oiiiIRCELabund = oiiiIRCELabund + ILs(i)%abundance / ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
-          if (ILs(i)%abundance .ge. 1e-20) weight = weight + 1/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .ge. 1e-20) oiiiIRCELabund = oiiiIRCELabund + ILs(i)%abundance *ILs(i)%intensity
+          if (ILs(i)%abundance .ge. 1e-20) weight = weight + ILs(i)%intensity
         enddo
         if (weight .ge. 1e-20) then
           oiiiIRCELabund = oiiiIRCELabund / weight
@@ -875,8 +897,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 neiiiCELabund = 0.
         weight = 0.
         do i=get_ion("neiii3868  ", ILs, Iint), get_ion("neiii3967  ", ILs, Iint)
-          if (ILs(i)%abundance .ge. 1e-20) neiiiCELabund = neiiiCELabund + ILs(i)%abundance/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
-          if (ILs(i)%abundance .ge. 1e-20) weight = weight + 1/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .ge. 1e-20) neiiiCELabund = neiiiCELabund + ILs(i)%abundance*ILs(i)%intensity
+          if (ILs(i)%abundance .ge. 1e-20) weight = weight + ILs(i)%intensity
         enddo
         if (weight .ge. 1e-20) then
           neiiiCELabund = neiiiCELabund / weight
@@ -889,8 +911,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 neivCELabund = 0.
         weight = 0.
         do i=get_ion("neiv2423   ", ILs, Iint), get_ion("neiv4725b  ", ILs, Iint) ! would screw up if blends and non blends were given
-          if (ILs(i)%abundance .ge. 1e-20) neivCELabund = neivCELabund + ILs(i)%abundance/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
-          if (ILs(i)%abundance .ge. 1e-20) weight = weight + 1/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .ge. 1e-20) neivCELabund = neivCELabund + ILs(i)%abundance*ILs(i)%intensity
+          if (ILs(i)%abundance .ge. 1e-20) weight = weight + ILs(i)%intensity
         enddo
         if (weight .ge. 1e-20) then
           neivCELabund = neivCELabund / weight
@@ -902,8 +924,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 siiCELabund = 0.
         weight = 0.
         do i=get_ion("sii4068    ", ILs, Iint), get_ion("sii6731    ", ILs, Iint)
-          if (ILs(i)%abundance .ge. 1e-20) siiCELabund = siiCELabund + ILs(i)%abundance/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
-          if (ILs(i)%abundance .ge. 1e-20) weight = weight + 1/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .ge. 1e-20) siiCELabund = siiCELabund + ILs(i)%abundance*ILs(i)%intensity
+          if (ILs(i)%abundance .ge. 1e-20) weight = weight + ILs(i)%intensity
         enddo
         if (weight .ge. 1e-20) then
           siiCELabund = siiCELabund / weight
@@ -933,8 +955,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
                 if(siiiCELabund < (1.05 * 0.403) .and. siiiCELabund > (0.90 * 0.403))then !this case should never occur
 
-                        if(ILs(get_ion("siii9069   ", ILs, Iint))%intensity > 0) w1 = 1/(ILs(get_ion("siii9069   ", ILs, Iint))%int_err / ILs(get_ion("siii9069   ", ILs, Iint))%intensity)**2
-                        if(ILs(get_ion("siii9531   ", ILs, Iint))%intensity > 0) w2 = 1/(ILs(get_ion("siii9531   ", ILs, Iint))%int_err / ILs(get_ion("siii9531   ", ILs, Iint))%intensity)**2
+                        if(ILs(get_ion("siii9069   ", ILs, Iint))%intensity > 0) w1 = ILs(get_ion("siii9069   ", ILs, Iint))%intensity
+                        if(ILs(get_ion("siii9531   ", ILs, Iint))%intensity > 0) w2 = ILs(get_ion("siii9531   ", ILs, Iint))%intensity
 
                         siiiCELabund= ( w1*ILs(get_ion("siii9069   ", ILs, Iint))%abundance + w2*ILs(get_ion("siii9531   ", ILs, Iint))%abundance )/(w1+w2)
 
@@ -957,9 +979,9 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 cliiiCELabund = 0.
         weight = 0.
         do i=get_ion("cliii5517  ", ILs, Iint), get_ion("cliii5537  ", ILs, Iint)
-          if (ILs(i)%abundance .ge. 1e-20) cliiiCELabund = cliiiCELabund + ILs(i)%abundance/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .ge. 1e-20) cliiiCELabund = cliiiCELabund + ILs(i)%abundance*ILs(i)%intensity
           if (ILs(i)%abundance .ge. 1e-20) then
-            weight = weight + 1/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+            weight = weight + ILs(i)%intensity
           endif
         enddo
         if (weight .ge. 1e-20) then
@@ -972,9 +994,9 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 ariiiCELabund = 0.
         weight = 0.
         do i=get_ion("ariii7135  ", ILs, Iint), get_ion("ariii7751  ", ILs, Iint)
-          if (ILs(i)%abundance .ge. 1e-20) ariiiCELabund = ariiiCELabund + ILs(i)%abundance/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .ge. 1e-20) ariiiCELabund = ariiiCELabund + ILs(i)%abundance*ILs(i)%intensity
           if (ILs(i)%abundance .ge. 1e-20) then
-            weight = weight + 1/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+            weight = weight + ILs(i)%intensity
           endif
         enddo
         if (weight .ge. 1e-20) then
@@ -987,9 +1009,9 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 arivCELabund = 0.
         weight = 0.
         do i=get_ion("ariv4711   ", ILs, Iint), get_ion("ariv4740   ", ILs, Iint)
-        arivCELabund = arivCELabund + ILs(i)%abundance/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+        arivCELabund = arivCELabund + ILs(i)%abundance*ILs(i)%intensity
           if (ILs(i)%abundance .ge. 1e-20) then
-            weight = weight + 1/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+            weight = weight + ILs(i)%intensity
           endif
         enddo
         if (weight .ge. 1e-20) then
@@ -1008,8 +1030,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         weight = 0.
         do i=get_ion("ciii1907   ", ILs, Iint), get_ion("ciii1909b  ", ILs, Iint) ! would screw up if blend and non-blend were given.
           if (ILs(i)%abundance .ge. 1e-20) then
-            ciiiCELabund = ciiiCELabund + ILs(i)%abundance/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
-            weight = weight + 1/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+            ciiiCELabund = ciiiCELabund + ILs(i)%abundance*ILs(i)%intensity
+            weight = weight + ILs(i)%intensity
           endif
         enddo
         if (weight .ge. 1e-20) then
@@ -1022,9 +1044,9 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 neivCELabund = 0.
         weight = 0.
         do i=get_ion("neiv2423   ", ILs, Iint), get_ion("neiv2425   ", ILs, Iint)
-          if (ILs(i)%abundance .ge. 1e-20) neivCELabund = neivCELabund + ILs(i)%abundance/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .ge. 1e-20) neivCELabund = neivCELabund + ILs(i)%abundance*ILs(i)%intensity
           if (ILs(i)%abundance .ge. 1e-20) then
-            weight = weight + 1/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+            weight = weight + ILs(i)%intensity
           endif
         enddo
         if (weight .ge. 1e-20) then
@@ -1037,9 +1059,9 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 nevCELabund = 0.
         weight = 0.
         do i=get_ion("nev3345    ", ILs, Iint), get_ion("nev3426    ", ILs, Iint)
-          if (ILs(i)%abundance .ge. 1e-20) nevCELabund = nevCELabund + ILs(i)%abundance/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .ge. 1e-20) nevCELabund = nevCELabund + ILs(i)%abundance*ILs(i)%intensity
           if (ILs(i)%abundance .ge. 1e-20) then
-            weight = weight + 1/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+            weight = weight + ILs(i)%intensity
           endif
         enddo
         if (weight .ge. 1e-20) then
@@ -1052,9 +1074,9 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 arvCELabund = 0.
         weight = 0.
         do i=get_ion("arv6435    ", ILs, Iint), get_ion("arv7005    ", ILs, Iint)
-          if (ILs(i)%abundance .ge. 1e-20) arvCELabund = arvCELabund + ILs(i)%abundance/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .ge. 1e-20) arvCELabund = arvCELabund + ILs(i)%abundance*ILs(i)%intensity
           if (ILs(i)%abundance .ge. 1e-20) then
-            weight = weight + 1/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+            weight = weight + ILs(i)%intensity
           endif
         enddo
         if (weight .ge. 1e-20) then
@@ -1067,9 +1089,9 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                  ciCELabund = 0.
         weight = 0.
         do i=get_ion("ci9850     ", ILs, Iint), get_ion("ci8727     ", ILs, Iint)
-          if (ILs(i)%abundance .ge. 1e-20) ciCELabund = ciCELabund + ILs(i)%abundance/ ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .ge. 1e-20) ciCELabund = ciCELabund + ILs(i)%abundance*ILs(i)%intensity
           if (ILs(i)%abundance .ge. 1e-20) then
-            weight = weight + 1/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+            weight = weight + ILs(i)%intensity
           endif
         enddo
         if (weight .ge. 1e-20) then
@@ -1084,9 +1106,9 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                  oiCELabund = 0.
         weight = 0.
         do i=get_ion("oi6300     ", ILs, Iint), get_ion("oi5577     ", ILs, Iint)
-          if (ILs(i)%abundance .ge. 1e-20) oiCELabund = oiCELabund + ILs(i)%abundance/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+          if (ILs(i)%abundance .ge. 1e-20) oiCELabund = oiCELabund + ILs(i)%abundance*ILs(i)%intensity
           if (ILs(i)%abundance .ge. 1e-20) then
-            weight = weight + 1/  ((ILs(i)%int_err/ ILs(i)%intensity)  **2)
+            weight = weight + ILs(i)%intensity
           endif
         enddo
         if (weight .ge. 1e-20) then
@@ -1380,6 +1402,16 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
 ! ICFs (Kingsburgh + Barlow 1994)
 
+! first calculate the helium factor that appears in several ICFs
+! if no he lines are seen set this factor to zero, so that abundances relying on
+! this ratio are not calculated.
+
+if (heiabund .gt. 0.) then
+   heICFfactor = (heiabund + heiiabund)/heiabund
+elseif (heiabund .eq.0. .and. heiiabund .eq.0.0) then
+   heICFfactor = 0.0
+endif
+
 ! oxygen - complete
      OabundCEL = 0.
         if (oiiCELabund .ge. 1e-20 .and. oiiiCELabund .ge. 1e-20 .and. oivCELabund .ge. 1e-20 .and. nvCELabund .ge. 1e-20)then ! O3+ and N4+
@@ -1393,7 +1425,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 CELicfO = (niiCELabund + niiiCELabund + nivCELabund + nvCELabund) / (niiCELabund + niiiCELabund) ! A7
                 OabundCEL = CELicfO * (oiiCELabund + oiiiCELabund)                                              ! A8
         elseif (oiiCELabund .ge. 1e-20 .and. oiiiCELabund .ge. 1e-20 .and. oivCELabund .lt. 1e-20 .and. nvCELabund .lt. 1e-20)then !no O3+ or N4+ seen
-                CELicfO = ((heiabund + heiiabund)/heiabund)**(2./3.) !KB94 A9
+                CELicfO = heICFfactor**(2./3.) !KB94 A9
                 OabundCEL = CELicfO * (oiiCELabund + oiiiCELabund) !A10
         endif
 
@@ -1430,7 +1462,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
        endif
        CabundCEL = CELicfC * (ciiCELabund + ciiiCELabund + civCELabund) !A19
      elseif (ciiCELabund .ge. 1e-20 .and. ciiiCELabund .ge. 1e-20 .and. civCELabund .ge. 1e-20 .and. heiiabund .ge. 1e-20 .and. nvCELabund .lt. 1e-20) then !PN is hot enough for He2+ but not for N4+
-        CELicfC = ((heiiabund + heiabund)*heiabund)**(1./3.) !A20
+        CELicfC = heICFfactor**(1./3.) !A20
         CabundCEL = CELicfC * (ciiCELabund + ciiiCELabund + civCELabund) !A21
      elseif (ciiCELabund .lt. 1e-20 .and. ciiiCELabund .ge. 1e-20 .and. civCELabund .ge. 1e-20) then !C+ not seen
         CELicfC = 1/(1 - (niiCELabund/NabundCEL) - 2.7*(nvCELabund/NabundCEL)) !A22
@@ -1439,7 +1471,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         endif
         CabundCEL = CELicfC * (ciiiCELabund+ civCELabund) !A24
      elseif (ciiCELabund .ge. 1e-20 .and. ciiiCELabund .ge. 1e-20 .and. civCELabund .ge. 1e-20 .and. heiiabund .ge. 1e-20 .and. (nivCELabund .lt. 1e-20 .or. nvCELabund .lt. 1e-20)) then !final case i think.
-        CELicfC = ((oiiCELabund + oiiiCELabund)/oiiiCELabund)*((heiiabund + heiabund)*heiabund)**(1./3.) !A25
+        CELicfC = ((oiiCELabund + oiiiCELabund)/oiiiCELabund)*heICFfactor**(1./3.) !A25
         CabundCEL = CELicfC * (ciiCELabund + ciiiCELabund + civCELabund) !A26
      else
         CabundCEL = 0.D0 ! nothing at all seen
@@ -1505,7 +1537,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 !Oxygen
 
      if (oiiRLabund .ge. 1e-20) then
-       RLicfO = ((heiabund + heiiabund)/heiabund)**(2./3.) * (1+(oiiCELabund/oiiiCELabund))
+       RLicfO = heICFfactor**(2./3.) * (1+(oiiCELabund/oiiiCELabund))
        OabundRL = RLicfO * oiiRLabund
      else
        RLicfO = 1.0

@@ -672,6 +672,10 @@ CONTAINS
     Type (Limits), Allocatable :: Stack(:)
 
 
+    if (minval(X) .eq. maxval(X)) then !nothing to sort in this case
+        return
+    else
+
     Allocate(Stack(2*Size(X)))
 
 
@@ -740,6 +744,8 @@ CONTAINS
     Deallocate(Stack)
 
     Return
+
+    endif
 
   CONTAINS
 
