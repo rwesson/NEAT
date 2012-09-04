@@ -1320,7 +1320,7 @@ double precision, intent(in) :: input_array(:)
 double precision, intent(out) :: uncertainty_array(3)
 double precision :: binsize, comp
 double precision, dimension (:,:), allocatable :: binned_quantity_result
-integer :: ii, bincount, bincountmax, arraysize, abovepos, belowpos
+integer :: ii, bincount, bincountmax, arraysize, abovepos, belowpos, nbins
 character*24, intent(in) :: itemtext
 character*35, intent(in) :: itemformat
 
@@ -1328,9 +1328,10 @@ uncertainty_array = (/0.0,0.0,0.0/)
 
 arraysize = size(input_array)
 binsize=(input_array(int(0.841*size(input_array))) - input_array(int(0.159*size(input_array))))/20
+nbins = int((maxval(input_array) - minval(input_array))/binsize) + 1
 
 if (binsize .gt. 0) then
-  allocate(binned_quantity_result(arraysize,2))
+  allocate(binned_quantity_result(nbins,2))
   binned_quantity_result = 0.D0
 
   ii=1
