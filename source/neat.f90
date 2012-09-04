@@ -1376,7 +1376,7 @@ if (binsize .gt. 0) then
   endif
 
   if (belowpos<1) then
-    uncertainty_array(1) = 0.D0
+    uncertainty_array(1) = uncertainty_array(2) ! no lower limit so the negative uncertainty is equal to the value
   else
     uncertainty_array(1) = uncertainty_array(2) - input_array(belowpos)
   endif
@@ -1390,7 +1390,7 @@ endif
 if (maxval(uncertainty_array) .gt. 0) then !if this condition is not true, array will be full of zeroes
   write (650,itemformat) itemtext,uncertainty_array(2),uncertainty_array(3),-uncertainty_array(1)
 else
-  write (650,*) itemtext,"not determined"
+  write (650,*) itemtext,"--"
 endif
 
 end subroutine get_uncertainties
