@@ -1320,7 +1320,7 @@ double precision, intent(in) :: input_array(:)
 double precision, intent(out) :: uncertainty_array(3)
 double precision :: binsize, comp
 double precision, dimension (:,:), allocatable :: binned_quantity_result
-integer :: ii, bincount, bincountmax, arraysize, abovepos, belowpos
+integer :: ii, bincount, bincountmax, arraysize, abovepos, belowpos, nbins
 character*24, intent(in) :: itemtext
 character*35, intent(in) :: itemformat
 
@@ -1328,9 +1328,10 @@ uncertainty_array = (/0.0,0.0,0.0/)
 
 arraysize = size(input_array)
 binsize=(input_array(int(0.841*size(input_array))) - input_array(int(0.159*size(input_array))))/20
+nbins = int((maxval(input_array) - minval(input_array))/binsize) + 1 ! without the plus one, out-of-bounds errors occur
 
 if (binsize .gt. 0) then
-  allocate(binned_quantity_result(arraysize,2))
+  allocate(binned_quantity_result(nbins,2))
   binned_quantity_result = 0.D0
 
   ii=1
@@ -1376,7 +1377,7 @@ if (binsize .gt. 0) then
   endif
 
   if (belowpos<1) then
-    uncertainty_array(1) = 0.D0
+    uncertainty_array(1) = uncertainty_array(2) ! no lower limit so the negative uncertainty is equal to the value
   else
     uncertainty_array(1) = uncertainty_array(2) - input_array(belowpos)
   endif
@@ -1390,7 +1391,7 @@ endif
 if (maxval(uncertainty_array) .gt. 0) then !if this condition is not true, array will be full of zeroes
   write (650,itemformat) itemtext,uncertainty_array(2),uncertainty_array(3),-uncertainty_array(1)
 else
-  write (650,*) itemtext,"not determined"
+  write (650,*) itemtext,"--"
 endif
 
 end subroutine get_uncertainties
