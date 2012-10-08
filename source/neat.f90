@@ -1328,7 +1328,8 @@ uncertainty_array = (/0.0,0.0,0.0/)
 
 arraysize = size(input_array)
 binsize=(input_array(int(0.841*size(input_array))) - input_array(int(0.159*size(input_array))))/20
-nbins = int((maxval(input_array) - minval(input_array))/binsize) + 1 ! without the plus one, out-of-bounds errors occur
+!nbins = int((maxval(input_array) - minval(input_array))/binsize) + 1 ! without the plus one, out-of-bounds errors occur
+nbins = arraysize
 
 if (binsize .gt. 0) then
   allocate(binned_quantity_result(nbins,2))
