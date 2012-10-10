@@ -676,6 +676,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         call get_heii(REAL(medtemp),REAL(meddens),REAL(He_lines(1)%int_dered),heiiabund)
         call get_helium(REAL(medtemp),REAL(meddens),REAL(He_lines(2)%int_dered),REAL(He_lines(3)%int_dered),REAL(He_lines(4)%int_dered),heiabund)
 
+        hetotabund = heiabund + heiiabund
+
 !  Calculate T_e from Balmer Jump
 
         BaJtemp = 0.0
