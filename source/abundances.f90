@@ -1,5 +1,5 @@
 
-subroutine abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array,iion,atomicdata,maxlevs,maxtemps)
+subroutine abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata)
 use mod_abundmaths
 use mod_abundtypes
 use mod_equib
@@ -45,6 +45,8 @@ implicit none
         integer :: iion !# of ions in Ilines
         integer :: maxlevs,maxtemps
         type(atomic_data) :: atomicdata(iion)
+
+        double precision, dimension(21,15,44) :: heidata
 
 ! recombination line variables
 
@@ -675,6 +677,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
         call get_heii(REAL(medtemp),REAL(meddens),REAL(He_lines(1)%int_dered),heiiabund)
         call get_helium(REAL(medtemp),REAL(meddens),REAL(He_lines(2)%int_dered),REAL(He_lines(3)%int_dered),REAL(He_lines(4)%int_dered),heiabund)
+!        call get_hei_porter(REAL(medtemp),REAL(meddens),REAL(He_lines(2)%int_dered),REAL(He_lines(3)%int_dered),REAL(He_lines(4)%int_dered),heidata, heiabund)
 
         hetotabund = heiabund + heiiabund
 
