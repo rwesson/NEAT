@@ -673,27 +673,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
 ! Helium abundances
 
-        call get_helium(REAL(medtemp),REAL(meddens),REAL(He_lines(1)%int_dered),REAL(He_lines(2)%int_dered),REAL(He_lines(3)%int_dered),REAL(He_lines(4)%int_dered),heiabund,heiiabund,Hetotabund, A4471, A4686, A6678, A5876)
-
-        w1=0
-        w2=0
-        w3=0
-        w4=0
-        if( (A4471 > 0 .or. A5876 > 0 ) .or. A6678 > 0)then
-
-                if(He_lines(2)%intensity > 0) w1 = He_lines(2)%intensity
-                if(He_lines(3)%intensity > 0) w2 = He_lines(3)%intensity
-                if(He_lines(4)%intensity > 0) w3 = He_lines(4)%intensity
-
-                !PRINT*, w1, " ", w2, " ", w3
-
-                heiabund = (w1*A4471 + w2*A5876 + w3*A6678)/(w1+w2+w3)
-
-        else
-
-                heiabund = 0.0
-        endif
-
+        call get_heii(REAL(medtemp),REAL(meddens),REAL(He_lines(1)%int_dered),heiiabund)
+        call get_helium(REAL(medtemp),REAL(meddens),REAL(He_lines(2)%int_dered),REAL(He_lines(3)%int_dered),REAL(He_lines(4)%int_dered),heiabund)
 
 !  Calculate T_e from Balmer Jump
 
