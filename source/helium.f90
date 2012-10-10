@@ -1,19 +1,28 @@
       module mod_helium
       contains
 
-      subroutine get_helium(TEh2,NEh2,IHeII4686,IHeI4471,IHeI5876,      &
-     & IHeI6678,abheii,abheiii,Hetotabund,Abb4471,Abb4686,Abb6678,Abb5876)
+      subroutine get_heii(te, ne, IHeII4686, heiiabund)
 
       IMPLICIT NONE
-      REAL A4686,A4471,A5876,A6678,TEh2,NEh2,D,                         &
-     & C4471,C5876,C6678,IHeII4686,                                     &
+      REAL A4686,TE,NE,IHeII4686,AB4686,heiiabund
+
+      A4686=10.**(GAMM4861(TE,NE)-GAMM4686(TE,NE))
+      heiiabund=IHeII4686/100.*A4686
+
+      end subroutine
+
+      subroutine get_helium(TEh2,NEh2,IHeI4471,IHeI5876,      &
+     & IHeI6678,Heiabund)
+
+      IMPLICIT NONE
+      REAL A4471,A5876,A6678,TEh2,NEh2,D,                         &
+     & C4471,C5876,C6678,                                     &
      & IHeI4471,IHeI5876,IHeI6678,                                      &
-     & AB4686,AB4471,AB5876,AB6678,ABHeII,ABHeIII,hetotabund
+     & AB4471,AB5876,AB6678,heiabund
       double precision, dimension(3) :: weights
 
       double precision :: Abb4471, Abb4686, Abb6678, Abb5876
 
-      A4686=10.**(GAMM4861(TEh2,NEh2)-GAMM4686(TEh2,NEh2))
       A4471=10.**(GAMM4861(TEh2,NEh2)-GAMM4471(TEh2,NEh2))
       A5876=10.**(GAMM4861(TEh2,NEh2)-GAMM5876(TEh2,NEh2))
       A6678=10.**(GAMM4861(TEh2,NEh2)-GAMM6678(TEh2,NEh2))
@@ -29,16 +38,9 @@
       C5876=(  6.78*TEh2**(0.07)*exp(-3.776/TEh2)  + 1.67*TEh2**(-0.15)*exp(-4.545/TEh2) + 0.60*TEh2**(-0.34)*exp(-4.901/TEh2)  )/D
       C6678=(  3.15*TEh2**(-0.54)*exp(-3.776/TEh2) + 0.51*TEh2**(-0.51)*exp(-4.545/TEh2) + 0.20*TEh2**(-0.66)*exp(-4.901/TEh2)  )/D
 
-           AB4686=IHeII4686/100.*A4686
            AB4471=IHeI4471/100.*A4471/(1.+C4471)
            AB5876=IHeI5876/100.*A5876/(1.+C5876)
            AB6678=IHeI6678/100.*A6678/(1.+C6678)
-
-           Abb4471 = AB4471
-           Abb4686 = AB4686
-           Abb6678 = AB6678
-           Abb5876 = AB5876
-           !ABHeII=(AB4471+AB5876*3+AB6678)/5
 
            weights=0.D0
 
@@ -47,14 +49,10 @@
            if (AB6678 .gt. 0) weights(3) = 1.
 
            if (weights(1)+weights(2)+weights(3).gt.0.0) then
-               ABHeII = ((weights(1)*AB4471) + (weights(2)*AB5876) + (weights(3)*AB6678)) / (weights(1) + weights(2) + weights(3))
+               heiabund = ((weights(1)*AB4471) + (weights(2)*AB5876) + (weights(3)*AB6678)) / (weights(1) + weights(2) + weights(3))
            else
-               ABHeII = 0.D0
+               heiabund = 0.D0
            endif
-
-           ABHeIII=AB4686
-
-           hetotabund = ABHeII+ABHeIII
 
       END subroutine get_helium
 !
