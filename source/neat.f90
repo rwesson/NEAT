@@ -57,6 +57,7 @@ program neat
         integer :: iion !# of ions in Ilines
         integer :: maxlevs,maxtemps
         type(atomic_data),allocatable :: atomicdata(:)
+        double precision, dimension(21,15,44) :: heidata
 
         !extinction
 
@@ -286,6 +287,9 @@ program neat
         !read ORL data
         call read_orl_data
 
+        !read Porter et al helium emissivities
+        call read_porter(heidata)
+
         !find maximum #levels and temperatures - pass to equib to reduce footprint
 
         maxlevs = atomicdata(1)%nlevs
@@ -302,7 +306,7 @@ program neat
 !single iteration formats
 
         if(runs == 1)then !calculates abundances without uncertainties
-                call abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array,iion,atomicdata,maxlevs,maxtemps)
+                call abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata)
 
                 !generate outputs
 
@@ -468,7 +472,7 @@ program neat
 
                         call randomizer(linelist, listlength, R)
                         R=3.1 ! no randomisation
-                        call abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array,iion,atomicdata,maxlevs,maxtemps)
+                        call abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata)
                         linelist = linelist_original
                         all_results(i)=iteration_result(1)
                 END DO
@@ -1328,7 +1332,8 @@ uncertainty_array = (/0.0,0.0,0.0/)
 
 arraysize = size(input_array)
 binsize=(input_array(int(0.841*size(input_array))) - input_array(int(0.159*size(input_array))))/20
-nbins = int((maxval(input_array) - minval(input_array))/binsize) + 1 ! without the plus one, out-of-bounds errors occur
+!nbins = int((maxval(input_array) - minval(input_array))/binsize) + 1 ! without the plus one, out-of-bounds errors occur
+nbins = arraysize
 
 if (binsize .gt. 0) then
   allocate(binned_quantity_result(nbins,2))

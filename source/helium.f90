@@ -1,19 +1,126 @@
       module mod_helium
       contains
 
-      subroutine get_helium(TEh2,NEh2,IHeII4686,IHeI4471,IHeI5876,      &
-     & IHeI6678,abheii,abheiii,Hetotabund,Abb4471,Abb4686,Abb6678,Abb5876)
+      subroutine get_heii(te, ne, IHeII4686, heiiabund)
 
       IMPLICIT NONE
-      REAL A4686,A4471,A5876,A6678,TEh2,NEh2,D,                         &
-     & C4471,C5876,C6678,IHeII4686,                                     &
+      REAL A4686,TE,NE,IHeII4686,AB4686,heiiabund
+
+      A4686=10.**(GAMM4861(TE,NE)-GAMM4686(TE,NE))
+      heiiabund=IHeII4686/100.*A4686
+
+      end subroutine
+
+      subroutine get_hei_porter(Te, ne, IHeI4471,IHeI5876,      &
+     & IHeI6678,heidata,Heiabund)
+
+      IMPLICIT NONE
+      real :: te, ne, emissivity
+      real :: A4471,A5876,A6678,D,                         &
+     & C4471,C5876,C6678,                                     &
+     & IHeI4471,IHeI5876,IHeI6678, em4471, em5876, em6678,             &
+     & AB4471,AB5876,AB6678,heiabund 
+ 
+      double precision, dimension(3) :: weights
+      double precision, dimension(21,15,44), intent(in) :: heidata
+
+      call get_emissivity(te,ne, 10, em4471, heidata)
+      call get_emissivity(te,ne, 15, em5876, heidata)
+      call get_emissivity(te,ne, 16, em6678, heidata)
+
+      A4471=10.**(GAMM4861(TE,NE)-em4471)
+      A5876=10.**(GAMM4861(Te,NE)-em5876)
+      A6678=10.**(GAMM4861(TE,NE)-em6678)
+
+           AB4471=IHeI4471/100.*A4471
+           AB5876=IHeI5876/100.*A5876
+           AB6678=IHeI6678/100.*A6678
+
+           weights=0.D0
+
+           if (AB4471 .gt. 0) weights(1) = 1.
+           if (AB5876 .gt. 0) weights(2) = 3.
+           if (AB6678 .gt. 0) weights(3) = 1.
+
+           if (weights(1)+weights(2)+weights(3).gt.0.0) then
+               heiabund = ((weights(1)*AB4471) + (weights(2)*AB5876) + (weights(3)*AB6678)) / (weights(1) + weights(2) + weights(3))
+           else
+               heiabund = 0.D0
+           endif
+
+      end subroutine get_hei_porter
+
+        subroutine get_emissivity(te, ne, line, emissivity, heidata)
+
+        implicit none
+        real :: te, ne, testart, nestart
+        real :: interp_factor_te, interp_factor_ne, interp_t1, interp_t2, emissivity
+        double precision, dimension(21,15,44), intent(in) :: heidata
+        integer :: i,j, line
+
+        ! ne needs to be logarithmic, input is linear
+
+        ne=log10(ne)
+
+        ! check that data is within the ranges calculated by Porter
+
+        if (te .lt. 5000) te=5000.
+        if (te .gt. 25000) te=25000.
+        if (ne .lt. 1.) ne=1.
+        if (ne .gt. 14.) ne=14.
+
+        !do bilinear interpolation of the log values
+        !find starting values
+
+        testart=25000.
+        nestart=15.
+
+        !find temperature box
+        do i=1,21
+          if (te .lt. dble(i*1000+4000)) then
+            testart=dble((i-1)*1000+4000)
+            exit
+          endif
+        end do
+
+        !find density box
+        do j=1,14
+          if (ne .lt. dble(j)) then
+            nestart=dble(j-1)
+            exit
+          endif
+        end do
+
+        i=i-1
+        j=j-1
+
+        !now we have the array positions in i and j and the values in nestart and
+        !testart
+
+        !now interpolate first in T and then in ne
+
+        interp_factor_te = (te-testart)/1000.
+        interp_factor_ne = (ne-nestart)
+
+        !get two interpolated values for each ne, then interpolate between those
+
+        interp_t1 = heidata(i,j,line)+interp_factor_te*(heidata(i+1,j,line)-heidata(i,j,line))
+        interp_t2 = heidata(i,j+1,line)+interp_factor_te*(heidata(i+1,j+1,line)-heidata(i,j+1,line))
+
+        emissivity = interp_t1+(interp_factor_ne*(interp_t2-interp_t1))
+
+      end subroutine get_emissivity
+
+      subroutine get_helium(TEh2,NEh2,IHeI4471,IHeI5876,      &
+     & IHeI6678,Heiabund)
+
+      IMPLICIT NONE
+      REAL A4471,A5876,A6678,TEh2,NEh2,D,                         &
+     & C4471,C5876,C6678,                                     &
      & IHeI4471,IHeI5876,IHeI6678,                                      &
-     & AB4686,AB4471,AB5876,AB6678,ABHeII,ABHeIII,hetotabund
+     & AB4471,AB5876,AB6678,heiabund
       double precision, dimension(3) :: weights
 
-      double precision :: Abb4471, Abb4686, Abb6678, Abb5876
-
-      A4686=10.**(GAMM4861(TEh2,NEh2)-GAMM4686(TEh2,NEh2))
       A4471=10.**(GAMM4861(TEh2,NEh2)-GAMM4471(TEh2,NEh2))
       A5876=10.**(GAMM4861(TEh2,NEh2)-GAMM5876(TEh2,NEh2))
       A6678=10.**(GAMM4861(TEh2,NEh2)-GAMM6678(TEh2,NEh2))
@@ -29,16 +136,9 @@
       C5876=(  6.78*TEh2**(0.07)*exp(-3.776/TEh2)  + 1.67*TEh2**(-0.15)*exp(-4.545/TEh2) + 0.60*TEh2**(-0.34)*exp(-4.901/TEh2)  )/D
       C6678=(  3.15*TEh2**(-0.54)*exp(-3.776/TEh2) + 0.51*TEh2**(-0.51)*exp(-4.545/TEh2) + 0.20*TEh2**(-0.66)*exp(-4.901/TEh2)  )/D
 
-           AB4686=IHeII4686/100.*A4686
            AB4471=IHeI4471/100.*A4471/(1.+C4471)
            AB5876=IHeI5876/100.*A5876/(1.+C5876)
            AB6678=IHeI6678/100.*A6678/(1.+C6678)
-
-           Abb4471 = AB4471
-           Abb4686 = AB4686
-           Abb6678 = AB6678
-           Abb5876 = AB5876
-           !ABHeII=(AB4471+AB5876*3+AB6678)/5
 
            weights=0.D0
 
@@ -47,14 +147,10 @@
            if (AB6678 .gt. 0) weights(3) = 1.
 
            if (weights(1)+weights(2)+weights(3).gt.0.0) then
-               ABHeII = ((weights(1)*AB4471) + (weights(2)*AB5876) + (weights(3)*AB6678)) / (weights(1) + weights(2) + weights(3))
+               heiabund = ((weights(1)*AB4471) + (weights(2)*AB5876) + (weights(3)*AB6678)) / (weights(1) + weights(2) + weights(3))
            else
-               ABHeII = 0.D0
+               heiabund = 0.D0
            endif
-
-           ABHeIII=AB4686
-
-           hetotabund = ABHeII+ABHeIII
 
       END subroutine get_helium
 !

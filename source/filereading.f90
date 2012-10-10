@@ -250,4 +250,35 @@ use mod_atomicdata
 1003 FORMAT(78A1)
 end subroutine read_atomic_data
 
+!read in tables of helium emissivities from Porter et al.
+!http://cdsads.u-strasbg.fr/abs/2012MNRAS.425L..28P
+
+subroutine read_porter(heidata)
+
+implicit none
+double precision, dimension(21,15,44) :: heidata
+integer :: i,j,tpos,npos, line, io
+double precision, dimension(46) :: temp
+double precision :: te, ne, testart, nestart
+double precision :: interp_factor_te, interp_factor_ne
+double precision :: interp_t1, interp_t2, emissivity
+character*10 :: tech, nech, linech
+
+!read data
+
+OPEN(100, file='Atomic-data/RHei_porter2012.dat', iostat=IO, status='old')
+
+! read in the data
+
+do i=1,294
+  read (100,*) temp
+  tpos=int((temp(1)/1000)-4)
+  npos=int(temp(2))
+  do j=1,44
+    heidata(tpos,npos,j)=temp(j+2)
+  end do
+end do
+
+end subroutine
+
 end module mod_atomic_read
