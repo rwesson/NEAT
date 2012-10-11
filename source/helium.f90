@@ -111,7 +111,7 @@
 
       end subroutine get_emissivity
 
-      subroutine get_helium(TEh2,NEh2,IHeI4471,IHeI5876,      &
+      subroutine get_hei_smits(TEh2,NEh2,IHeI4471,IHeI5876,      &
      & IHeI6678,Heiabund)
 
       IMPLICIT NONE
@@ -152,7 +152,7 @@
                heiabund = 0.D0
            endif
 
-      END subroutine get_helium
+      END subroutine get_hei_smits
 !
 !
       REAL FUNCTION GAMM4861(TE,NE)

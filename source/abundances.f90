@@ -676,8 +676,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 ! Helium abundances
 
         call get_heii(REAL(medtemp),REAL(meddens),REAL(He_lines(1)%int_dered),heiiabund)
-        call get_helium(REAL(medtemp),REAL(meddens),REAL(He_lines(2)%int_dered),REAL(He_lines(3)%int_dered),REAL(He_lines(4)%int_dered),heiabund)
-!        call get_hei_porter(REAL(medtemp),REAL(meddens),REAL(He_lines(2)%int_dered),REAL(He_lines(3)%int_dered),REAL(He_lines(4)%int_dered),heidata, heiabund)
+!        call get_hei_smits(REAL(medtemp),REAL(meddens),REAL(He_lines(2)%int_dered),REAL(He_lines(3)%int_dered),REAL(He_lines(4)%int_dered),heiabund)
+        call get_hei_porter(REAL(medtemp),REAL(meddens),REAL(He_lines(2)%int_dered),REAL(He_lines(3)%int_dered),REAL(He_lines(4)%int_dered),heidata, heiabund)
 
         hetotabund = heiabund + heiiabund
 
