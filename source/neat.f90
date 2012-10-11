@@ -31,6 +31,7 @@ program neat
         !use mod_common_data
 
         CHARACTER :: switch_ext !switch for extinction laws
+        CHARACTeR :: switch_he  !switch for helium atomic data
         INTEGER :: I, runs, Narg !runs = number of runs for randomiser
 
         !input options
@@ -130,6 +131,12 @@ program neat
            print *,"       The electron densities and temperatures to be used."
            print *,"       Units: cm-3 for densities, K for temperatures"
            print *,"       Default: calculated from available diagnostics."
+           print *,"  -he / --helium-data"
+           print *,"       The atomic data to use for He I abundances"
+           print *,"       Default: Smits, 1996, MNRAS, 278, 683"
+           print *,"       Values:"
+           print *,"          S96: Smits, 1996, MNRAS, 278, 683"
+           print *,"          P12: Porter et al., 2012, MNRAS, 425, 28"
         !  to be fully implemented:
         !  -R                     : R (default 3.1)
            stop
@@ -147,6 +154,7 @@ program neat
 
         runs=1
         switch_ext="S"
+        switch_he="S"
         filename=""
         meanextinction=0.D0
         diagnostic_array=0.D0
@@ -192,6 +200,11 @@ program neat
                 endif
                 if (trim(options(i))=="-tehigh" .and. (i+1) .le. Narg) then
                    read (options(i+1),*) diagnostic_array(6)
+                endif
+                if ((trim(options(i))=="-he" .or. trim(options(i))=="--helium-data") .and. (i+1) .le. Narg) then
+                  if (trim(options(i+1))=="P12") then
+                    switch_he="P"
+                  endif
                 endif
          enddo
 
@@ -306,7 +319,7 @@ program neat
 !single iteration formats
 
         if(runs == 1)then !calculates abundances without uncertainties
-                call abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata)
+                call abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he)
 
                 !generate outputs
 
@@ -472,7 +485,7 @@ program neat
 
                         call randomizer(linelist, listlength, R)
                         R=3.1 ! no randomisation
-                        call abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata)
+                        call abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he)
                         linelist = linelist_original
                         all_results(i)=iteration_result(1)
                 END DO

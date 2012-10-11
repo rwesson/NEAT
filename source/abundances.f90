@@ -1,5 +1,5 @@
 
-subroutine abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata)
+subroutine abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he)
 use mod_abundmaths
 use mod_abundtypes
 use mod_equib
@@ -16,6 +16,7 @@ implicit none
         integer, intent(in) :: listlength
         TYPE(line), dimension(listlength) :: linelist, linelist_orig
         CHARACTER :: switch_ext !switch for extinction laws
+        CHARACTER :: switch_he !switch for helium atomic data
         type(resultarray), dimension(1) :: iteration_result
         double precision, dimension(6), intent(in) :: diagnostic_array
 
@@ -676,8 +677,11 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 ! Helium abundances
 
         call get_heii(REAL(medtemp),REAL(meddens),REAL(He_lines(1)%int_dered),heiiabund)
-!        call get_hei_smits(REAL(medtemp),REAL(meddens),REAL(He_lines(2)%int_dered),REAL(He_lines(3)%int_dered),REAL(He_lines(4)%int_dered),heiabund)
-        call get_hei_porter(REAL(medtemp),REAL(meddens),REAL(He_lines(2)%int_dered),REAL(He_lines(3)%int_dered),REAL(He_lines(4)%int_dered),heidata, heiabund)
+        if (switch_he=="S") then
+          call get_hei_smits(REAL(medtemp),REAL(meddens),REAL(He_lines(2)%int_dered),REAL(He_lines(3)%int_dered),REAL(He_lines(4)%int_dered),heiabund)
+        else
+          call get_hei_porter(REAL(medtemp),REAL(meddens),REAL(He_lines(2)%int_dered),REAL(He_lines(3)%int_dered),REAL(He_lines(4)%int_dered),heidata, heiabund)
+        endif
 
         hetotabund = heiabund + heiiabund
 
