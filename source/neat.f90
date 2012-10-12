@@ -989,7 +989,7 @@ close(850)
 ! bin the array
 
 arraysize = size(input_array)
-binsize=(input_array(nint(0.841*size(input_array))) - input_array(nint(0.159*size(input_array))))/20
+binsize=(input_array(nint(0.841*arraysize)) - input_array(nint(0.159*arraysize)))/20
 
 if (binsize .gt. 0) then
 
@@ -1026,6 +1026,7 @@ if (binsize .gt. 0) then
 
   bintemp = abs(input_array - uncertainty_array(2))
   i = minloc(bintemp,1)
+  uncertainty_array(2)=input_array(i)
 
 !now find the values such that 68.2% of all values lie within the uncertainties
 
