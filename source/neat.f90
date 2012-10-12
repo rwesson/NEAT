@@ -283,6 +283,12 @@ program neat
                 print *,gettime(), ": using Fitzpatrick (1990) galactic law"
         endif
 
+        if (switch_he == "S") then
+                print *,gettime(), ": using Smits (1996) He I emissivities"
+        else
+                print *,gettime(), ": using Porter et al. (2012) He I emissivities"
+        endif
+
 ! read the CEL data
 
         call read_ilines(ILs, Iint,iion,ionlist)
