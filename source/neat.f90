@@ -994,40 +994,40 @@ binsize=(input_array(nint(0.841*size(input_array))) - input_array(nint(0.159*siz
 if (binsize .gt. 0) then
 
 !quantize the input array by taking the integer of each value divided by the binsize, and multiplying by the binsize.
-allocate(bintemp(arraysize))
-bintemp = binsize*nint(input_array/binsize)
-nbins=nint((maxval(bintemp)-minval(bintemp))/binsize)+1
-allocate(binned_quantity_result(nbins,2))
+
+  allocate(bintemp(arraysize))
+  bintemp = binsize*nint(input_array/binsize)
+  nbins=nint((maxval(bintemp)-minval(bintemp))/binsize)+1
+  allocate(binned_quantity_result(nbins,2))
 
 !then, go through the quantized array and count the number of occurrences of each value
 
-comp=bintemp(1)
-bincount=0
-ii=1
+  comp=bintemp(1)
+  bincount=0
+  ii=1
 
-do i=1,arraysize
-  if (bintemp(i).eq.comp) then
-    bincount=bincount+1 
-  else 
-    binned_quantity_result(ii,:)=(/comp, dble(bincount)/) 
-    comp=bintemp(i)
-    bincount=0
-    ii=ii+1 
-  endif
-enddo
+  do i=1,arraysize
+    if (bintemp(i).eq.comp) then
+      bincount=bincount+1 
+    else 
+      binned_quantity_result(ii,:)=(/comp, dble(bincount)/) 
+      comp=bintemp(i)
+      bincount=0
+      ii=ii+1 
+    endif
+  enddo
 
 !mode of distribution is the value with the highest bin count
 
-maxpos=maxloc(binned_quantity_result(:,2))
-uncertainty_array(2)=binned_quantity_result(maxpos(1),1)
+  maxpos=maxloc(binned_quantity_result(:,2))
+  uncertainty_array(2)=binned_quantity_result(maxpos(1),1)
 
 !now find the value in the unbinned array that's closest to the mode
 
-  comp = 1.e10
-  do i=1,arraysize
-    if (abs(input_array(i)-uncertainty_array(2))>comp) exit
-    comp = abs(input_array(i)-uncertainty_array(2))
-  enddo
+  bintemp = abs(input_array - uncertainty_array(2))
+  i = minloc(bintemp,1)
+
+!now find the values such that 68.2% of all values lie within the uncertainties
 
   abovepos = i+nint(0.341*arraysize)
   belowpos = i-nint(0.341*arraysize)
@@ -1046,15 +1046,16 @@ uncertainty_array(2)=binned_quantity_result(maxpos(1),1)
 
 !write out the binned results with the mode+-uncertainties at the top
 
-OPEN(850, FILE=trim(filename)//"_"//trim(suffix)//"_binned", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-write(unit = 850,FMT=*) uncertainty_array(2),uncertainty_array(2)-uncertainty_array(1), uncertainty_array(3)+uncertainty_array(2)
-write(unit = 850,FMT=*)
-do i=1,ii-1
-  write(unit = 850,FMT=*) binned_quantity_result(i,1), int(binned_quantity_result(i,2))
-end do
-close(850)
+  OPEN(850, FILE=trim(filename)//"_"//trim(suffix)//"_binned", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+  write(unit = 850,FMT=*) uncertainty_array(2),uncertainty_array(2)-uncertainty_array(1), uncertainty_array(3)+uncertainty_array(2)
+  write(unit = 850,FMT=*)
+  do i=1,ii-1
+    write(unit = 850,FMT=*) binned_quantity_result(i,1), int(binned_quantity_result(i,2))
+  end do
+  close(850)
 
-deallocate(binned_quantity_result)
+  deallocate(bintemp)
+  deallocate(binned_quantity_result)
 
 else !all results are identical
   uncertainty_array(1) = 0.D0
