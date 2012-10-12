@@ -606,6 +606,10 @@ program neat
                 OPEN(951, FILE=trim(filename)//"_ArV_temp_ratio", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
                 OPEN(952, FILE=trim(filename)//"_NeV_temp_ratio", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
                 OPEN(953, FILE=trim(filename)//"_Bal_jump_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(954, FILE=trim(filename)//"_[SIII]_IR_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(955, FILE=trim(filename)//"_[OIII]_IR_density", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(956, FILE=trim(filename)//"_[OIII]_IR_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                OPEN(957, FILE=trim(filename)//"_[NeIII]_IR_temp", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
 
 !XXXX add Cl/H, Niii, cii, ciii, ArIII IR dens, NeIII IR dens, strong line, ICF files
 
@@ -674,11 +678,15 @@ program neat
                 call qsort(all_results%ciii_density)
                 call qsort(all_results%ariii_ir_density)
                 call qsort(all_results%Neiii_IR_density)
+                call qsort(all_results%Oiii_IR_density)
+                call qsort(all_results%Siii_IR_density)
                 call qsort(all_results%med_density)
                 call qsort(all_results%oiii_temp)
                 call qsort(all_results%neiii_temp)
+                call qsort(all_results%neiii_ir_temp)
                 call qsort(all_results%ariii_temp)
                 call qsort(all_results%siii_temp)
+                call qsort(all_results%OIII_IR_temp)
                 call qsort(all_results%med_temp)
                 call qsort(all_results%neiv_density)
                 call qsort(all_results%high_density)
@@ -841,9 +849,13 @@ print *, gettime(), ": results processed.  Now writing to files"
                     write(unit = 951,FMT=*) all_results(i)%ArV_temp_ratio
                     write(unit = 952,FMT=*) all_results(i)%NeV_temp_ratio
                     write(unit = 953,FMT=*) all_results(i)%Bal_jump_temp
+                    write(unit = 954,FMT=*) all_results(i)%SIII_IR_density
+                    write(unit = 955,FMT=*) all_results(i)%OIII_IR_density
+                    write(unit = 956,FMT=*) all_results(i)%OIII_IR_temp
+                    write(unit = 957,FMT=*) all_results(i)%NeIII_IR_temp
                 end do
 
-                DO I=841,953
+                DO I=841,957
                         CLOSE(unit=I)
                 END DO
 ! get median +- pseudo gaussian 34.1%
@@ -943,7 +955,7 @@ write (650,*)
                 call get_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format)
 
                 quantity_result = all_results%SIII_IR_density
-                call get_uncertainties(quantity_result, uncertainty_array, "[SIII] IRdensity :      ", diagnostic_format)
+                call get_uncertainties(quantity_result, uncertainty_array, "[SIII] IR density :     ", diagnostic_format)
                 quantity_result = all_results%siii_ir_density_ratio
                 call get_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format)
 
