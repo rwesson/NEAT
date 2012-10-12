@@ -1345,49 +1345,53 @@ END SUBROUTINE
 
 subroutine get_uncertainties(input_array, uncertainty_array, itemtext,itemformat)
 
+implicit none
 double precision, intent(in) :: input_array(:)
 double precision, intent(out) :: uncertainty_array(3)
+double precision, dimension(:), allocatable :: bintemp
 double precision :: binsize, comp
 double precision, dimension (:,:), allocatable :: binned_quantity_result
 integer :: ii, bincount, bincountmax, arraysize, abovepos, belowpos, nbins
+integer, dimension(1) :: maxpos
 character*24, intent(in) :: itemtext
 character*35, intent(in) :: itemformat
 
 uncertainty_array = (/0.0,0.0,0.0/)
 
 arraysize = size(input_array)
-binsize=(input_array(int(0.841*size(input_array))) - input_array(int(0.159*size(input_array))))/20
-!nbins = int((maxval(input_array) - minval(input_array))/binsize) + 1 ! without the plus one, out-of-bounds errors occur
-nbins = arraysize
+binsize=(input_array(nint(0.841*size(input_array))) - input_array(nint(0.159*size(input_array))))/20
 
 if (binsize .gt. 0) then
-  allocate(binned_quantity_result(nbins,2))
-  binned_quantity_result = 0.D0
 
-  ii=1
-  bincount=1 !(why does this need to be one and not zero??)
-  binvalue = int(quantity_result(1)/binsize)
-  bincountmax=0
+!quantize the input array by taking the integer of each value divided by the binsize, and multiplying by the binsize.
+allocate(bintemp(arraysize))
+bintemp = binsize*nint(input_array/binsize)
+nbins=nint((maxval(bintemp)-minval(bintemp))/binsize)+1
+allocate(binned_quantity_result(nbins,2))
 
-  do i=1,runs
-    if (int(quantity_result(i)/binsize) == binvalue) then
-      bincount = bincount + 1
-    else
-      binned_quantity_result(ii,1) = binvalue*binsize
-      binned_quantity_result(ii,2) = bincount
+!then, go through the quantized array and count the number of occurrences of each value
 
-      if (bincount>bincountmax) then
-        bincountmax=bincount
-        uncertainty_array(2) = binned_quantity_result(ii,1) + 0.5*binsize ! otherwise it is the value of the edge of the bin and not the centre
-      endif
+comp=bintemp(1)
+bincount=0
+ii=1
 
-      ii=ii+1
-      bincount = 1
-      binvalue = binvalue + 1
-    endif
-  enddo
+do i=1,arraysize
+  if (bintemp(i).eq.comp) then
+    bincount=bincount+1 
+  else 
+    binned_quantity_result(ii,:)=(/comp, dble(bincount)/) 
+    comp=bintemp(i)
+    bincount=0
+    ii=ii+1 
+  endif
+enddo
+if (ii .gt. nbins) print *,ii,nbins,itemtext
+!mode of distribution is the value with the highest bin count
 
-  deallocate(binned_quantity_result)
+maxpos=maxloc(binned_quantity_result(:,2))
+uncertainty_array(2)=binned_quantity_result(maxpos(1),1)
+
+deallocate(binned_quantity_result)
 
 !find value in array closest to mode
 
@@ -1397,8 +1401,8 @@ if (binsize .gt. 0) then
     comp = abs(input_array(i)-uncertainty_array(2))
   enddo
 
-  abovepos = i+int(0.341*arraysize)
-  belowpos = i-int(0.341*arraysize)
+  abovepos = i+nint(0.341*arraysize)
+  belowpos = i-nint(0.341*arraysize)
 
   if (abovepos>arraysize) then
     uncertainty_array(3) = 99999999
