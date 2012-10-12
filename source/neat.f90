@@ -516,7 +516,7 @@ program neat
                 write (650,*) "=========="
                 write (650,*)
                 quantity_result = all_results%mean_cHb
-                call get_uncertainties(quantity_result, uncertainty_array,"c(Hb) :                 ", extinction_format, filename, "mean_cHb                 ")
+                call get_uncertainties(quantity_result, uncertainty_array,"c(Hb) :                 ", extinction_format, filename, "mean_chb                 ")
 
 write (650,*)
 write (650,*) "Diagnostics"
@@ -531,7 +531,7 @@ write (650,*)
                 call get_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "oii_density_ratio        ")
 
                 quantity_result = all_results%SII_density
-                call get_uncertainties(quantity_result, uncertainty_array, "[SII] density :         ", diagnostic_format, filename, "SII_density              ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[SII] density :         ", diagnostic_format, filename, "sii_density              ")
                 quantity_result = all_results%sii_density_ratio
                 call get_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "sii_density_ratio        ")
 
@@ -549,22 +549,22 @@ write (650,*)
                 call get_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "oii_temp_ratio           ")
 
                 quantity_result = all_results%SII_temp
-                call get_uncertainties(quantity_result, uncertainty_array, "[SII] temperature :     ", diagnostic_format, filename, "SII_temp                 ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[SII] temperature :     ", diagnostic_format, filename, "sii_temp                 ")
                 quantity_result = all_results%sii_temp_ratio
                 call get_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "sii_temp_ratio           ")
 
                 quantity_result = all_results%NII_temp
-                call get_uncertainties(quantity_result, uncertainty_array, "[NII] temperature :     ", diagnostic_format, filename, "NII_temp                 ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[NII] temperature :     ", diagnostic_format, filename, "nii_temp                 ")
                 quantity_result = all_results%nii_temp_ratio
                 call get_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "nii_temp_ratio           ")
 
                 quantity_result = all_results%OI_temp
-                call get_uncertainties(quantity_result, uncertainty_array, "[OI] temperature :      ", diagnostic_format, filename, "OI_temp                  ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[OI] temperature :      ", diagnostic_format, filename, "oi_temp                  ")
                 quantity_result = all_results%oi_temp_ratio
                 call get_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "oi_temp_ratio            ")
 
                 quantity_result = all_results%CI_temp
-                call get_uncertainties(quantity_result, uncertainty_array, "[CI] temperature :      ", diagnostic_format, filename, "CI_temp                  ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[CI] temperature :      ", diagnostic_format, filename, "ci_temp                  ")
                 quantity_result = all_results%ci_temp_ratio
                 call get_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "ci_temp_ratio            ")
 
@@ -582,32 +582,32 @@ write (650,*)
                 call get_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "cliii_density_ratio      ")
 
                 quantity_result = all_results%ArIV_density
-                call get_uncertainties(quantity_result, uncertainty_array, "[ArIV] density :        ", diagnostic_format, filename, "ArIV_density             ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[ArIV] density :        ", diagnostic_format, filename, "ariv_density             ")
                 quantity_result = all_results%Ariv_density_ratio
-                call get_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "Ariv_density_ratio       ")
+                call get_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "ariv_density_ratio       ")
 
                 quantity_result = all_results%CIII_density
-                call get_uncertainties(quantity_result, uncertainty_array, "[CIII] density :        ", diagnostic_format, filename, "CIII_density             ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[CIII] density :        ", diagnostic_format, filename, "ciii_density             ")
                 quantity_result = all_results%ciii_density_ratio
                 call get_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "ciii_density_ratio       ")
 
                 quantity_result = all_results%OIII_IR_density
-                call get_uncertainties(quantity_result, uncertainty_array, "[OIII] IR density :     ", diagnostic_format, filename, "OIII_IR_density          ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[OIII] IR density :     ", diagnostic_format, filename, "oiii_ir_density          ")
                 quantity_result = all_results%oiii_ir_density_ratio
                 call get_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "oiii_ir_density_ratio    ")
 
                 quantity_result = all_results%SIII_IR_density
-                call get_uncertainties(quantity_result, uncertainty_array, "[SIII] IR density :     ", diagnostic_format, filename, "SIII_IR_density          ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[SIII] IR density :     ", diagnostic_format, filename, "siii_ir_density          ")
                 quantity_result = all_results%siii_ir_density_ratio
                 call get_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "siii_ir_density_ratio    ")
 
                 quantity_result = all_results%ArIII_IR_density
-                call get_uncertainties(quantity_result, uncertainty_array, "[ArIII] IR density :    ", diagnostic_format, filename, "ArIII_IR_density         ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[ArIII] IR density :    ", diagnostic_format, filename, "ariii_ir_density         ")
                 quantity_result = all_results%ariii_ir_density_ratio
                 call get_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "ariii_ir_density_ratio   ")
 
                 quantity_result = all_results%NeIII_IR_density
-                call get_uncertainties(quantity_result, uncertainty_array, "[NeIII] IR density :    ", diagnostic_format, filename, "NeIII_IR_density         ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[NeIII] IR density :    ", diagnostic_format, filename, "neiii_ir_density         ")
                 quantity_result = all_results%neiii_ir_density_ratio
                 call get_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "neiii_ir_density_ratio   ")
 
@@ -620,32 +620,32 @@ write (650,*)
 write (650,*)
 
                 quantity_result = all_results%OIII_temp
-                call get_uncertainties(quantity_result, uncertainty_array, "[OIII] temperature :    ", diagnostic_format, filename, "OIII_temp                ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[OIII] temperature :    ", diagnostic_format, filename, "oiii_temp                ")
                 quantity_result = all_results%oiii_temp_ratio
                 call get_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "oiii_temp_ratio          ")
 
                 quantity_result = all_results%OIII_IR_temp
-                call get_uncertainties(quantity_result, uncertainty_array, "[OIII] IR temperature : ", diagnostic_format, filename, "OIII_IR_temp             ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[OIII] IR temperature : ", diagnostic_format, filename, "oiii_ir_temp             ")
                 quantity_result = all_results%oiii_ir_temp_ratio
                 call get_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "oiii_ir_temp_ratio       ")
 
                 quantity_result = all_results%NeIII_temp
-                call get_uncertainties(quantity_result, uncertainty_array, "[NeIII] temperature :   ", diagnostic_format, filename, "NeIII_temp               ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[NeIII] temperature :   ", diagnostic_format, filename, "neiii_temp               ")
                 quantity_result = all_results%neiii_temp_ratio
                 call get_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "neiii_temp_ratio         ")
 
                 quantity_result = all_results%NeIII_IR_temp
-                call get_uncertainties(quantity_result, uncertainty_array, "[NeIII] IR temperature :", diagnostic_format, filename, "NeIII_IR_temp            ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[NeIII] IR temperature :", diagnostic_format, filename, "neiii_ir_temp            ")
                 quantity_result = all_results%neiii_ir_temp_ratio
                 call get_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "neiii_ir_temp_ratio      ")
 
                 quantity_result = all_results%ArIII_temp
-                call get_uncertainties(quantity_result, uncertainty_array, "[ArIII] temperature :   ", diagnostic_format, filename, "ArIII_temp               ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[ArIII] temperature :   ", diagnostic_format, filename, "ariii_temp               ")
                 quantity_result = all_results%ariii_temp_ratio
                 call get_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "ariii_temp_ratio         ")
 
                 quantity_result = all_results%SIII_temp
-                call get_uncertainties(quantity_result, uncertainty_array, "[SIII] temperature :    ", diagnostic_format, filename, "SIII_temp                ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[SIII] temperature :    ", diagnostic_format, filename, "siii_temp                ")
                 quantity_result = all_results%siii_temp_ratio
                 call get_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "siii_temp_ratio          ")
 
@@ -670,12 +670,12 @@ write (650,*)
 !high temperature
 
                 quantity_result = all_results%ArV_temp
-                call get_uncertainties(quantity_result, uncertainty_array, "[ArV] temperature :     ", diagnostic_format, filename, "ArV_temp                 ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[ArV] temperature :     ", diagnostic_format, filename, "arv_temp                 ")
                 quantity_result = all_results%arv_temp_ratio
                 call get_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "arv_temp_ratio           ")
 
                 quantity_result = all_results%NeV_temp
-                call get_uncertainties(quantity_result, uncertainty_array, "[NeV] temperature :     ", diagnostic_format, filename, "NeV_temp                 ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[NeV] temperature :     ", diagnostic_format, filename, "nev_temp                 ")
                 quantity_result = all_results%nev_temp_ratio
                 call get_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "nev_temp_ratio           ")
 
@@ -687,7 +687,7 @@ write (650,*)
 write (650,*)
                 
                 quantity_result = all_results%Bal_jump_temp
-                call get_uncertainties(quantity_result, uncertainty_array, "Balmer jump temp :      ", diagnostic_format, filename, "Bal_jump_temp            ")
+                call get_uncertainties(quantity_result, uncertainty_array, "Balmer jump temp :      ", diagnostic_format, filename, "bal_jump_temp            ")
 
 !CEL abundances
 write (650,*)
@@ -696,92 +696,92 @@ write (650,*) "========================================"
 write (650,*)
 
                 quantity_result = all_results%NC_abund_CEL
-                call get_uncertainties(quantity_result, uncertainty_array, "[CI] abundance :        ", abundances_format, filename, "NC_abund_CEL             ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[CI] abundance :        ", abundances_format, filename, "nc_abund_cel             ")
 
                 quantity_result = all_results%cii_abund_CEL
-                call get_uncertainties(quantity_result, uncertainty_array, "[CII] abundance :       ", abundances_format, filename, "cii_abund_CEL            ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[CII] abundance :       ", abundances_format, filename, "cii_abund_cel            ")
 
                 quantity_result = all_results%ciii_abund_CEL
-                call get_uncertainties(quantity_result, uncertainty_array, "[CIII] abundance :      ", abundances_format, filename, "ciii_abund_CEL           ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[CIII] abundance :      ", abundances_format, filename, "ciii_abund_cel           ")
 
                 quantity_result = all_results%civ_abund_CEL
-                call get_uncertainties(quantity_result, uncertainty_array, "[CIV] abundance :       ", abundances_format, filename, "civ_abund_CEL            ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[CIV] abundance :       ", abundances_format, filename, "civ_abund_cel            ")
 
                 quantity_result = all_results%C_abund_CEL
-                call get_uncertainties(quantity_result, uncertainty_array, "C/H abundance :         ", abundances_format, filename, "C_abund_CEL              ")
+                call get_uncertainties(quantity_result, uncertainty_array, "C/H abundance :         ", abundances_format, filename, "c_abund_cel              ")
 
                 quantity_result = all_results%nii_abund_CEL
-                call get_uncertainties(quantity_result, uncertainty_array, "[NII] abundance :       ", abundances_format, filename, "nii_abund_CEL            ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[NII] abundance :       ", abundances_format, filename, "nii_abund_cel            ")
 
                 quantity_result = all_results%niii_abund_CEL
-                call get_uncertainties(quantity_result, uncertainty_array, "[NIII] abundance :      ", abundances_format, filename, "niii_abund_CEL           ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[NIII] abundance :      ", abundances_format, filename, "niii_abund_cel           ")
 
                 quantity_result = all_results%niv_abund_CEL
-                call get_uncertainties(quantity_result, uncertainty_array, "[NIV] abundance :       ", abundances_format, filename, "niv_abund_CEL            ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[NIV] abundance :       ", abundances_format, filename, "niv_abund_cel            ")
 
                 quantity_result = all_results%nv_abund_CEL
-                call get_uncertainties(quantity_result, uncertainty_array, "[NV] abundance :        ", abundances_format, filename, "nv_abund_CEL             ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[NV] abundance :        ", abundances_format, filename, "nv_abund_cel             ")
 
                 quantity_result = all_results%N_abund_CEL
-                call get_uncertainties(quantity_result, uncertainty_array, "N/H abundance :         ", abundances_format, filename, "N_abund_CEL              ")
+                call get_uncertainties(quantity_result, uncertainty_array, "N/H abundance :         ", abundances_format, filename, "n_abund_cel              ")
 
                 quantity_result = all_results%NO_abund_CEL
-                call get_uncertainties(quantity_result, uncertainty_array, "[OI] abundance :        ", abundances_format, filename, "NO_abund_CEL             ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[OI] abundance :        ", abundances_format, filename, "no_abund_cel             ")
 
                 quantity_result = all_results%Oii_abund_CEL
-                call get_uncertainties(quantity_result, uncertainty_array, "[OII] abundance :       ", abundances_format, filename, "Oii_abund_CEL            ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[OII] abundance :       ", abundances_format, filename, "oii_abund_cel            ")
 
                 quantity_result = all_results%Oiii_abund_CEL
-                call get_uncertainties(quantity_result, uncertainty_array, "[OIII] abundance :      ", abundances_format, filename, "Oiii_abund_CEL           ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[OIII] abundance :      ", abundances_format, filename, "oiii_abund_cel           ")
 
                 quantity_result = all_results%Oiv_abund_CEL
-                call get_uncertainties(quantity_result, uncertainty_array, "[OIV] abundance :       ", abundances_format, filename, "Oiv_abund_CEL            ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[OIV] abundance :       ", abundances_format, filename, "oiv_abund_cel            ")
 
                 quantity_result = all_results%O_abund_CEL
-                call get_uncertainties(quantity_result, uncertainty_array, "O/H abundance :         ", abundances_format, filename, "O_abund_CEL              ")
+                call get_uncertainties(quantity_result, uncertainty_array, "O/H abundance :         ", abundances_format, filename, "o_abund_cel              ")
 
 !                quantity_result = all_results%NeII_abund_CEL
-!                call get_uncertainties(quantity_result, uncertainty_array, filename, "NeII_abund_CEL           ")
+!                call get_uncertainties(quantity_result, uncertainty_array, filename, "neii_abund_cel           ")
 !                write (650,713) "[NeII] abundance :  ",uncertainty_array(2),uncertainty_array(3),-uncertainty_array(1)
 !
                 quantity_result = all_results%NeIII_abund_CEL
-                call get_uncertainties(quantity_result, uncertainty_array, "[NeIII] abundance :     ", abundances_format, filename, "NeIII_abund_CEL          ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[NeIII] abundance :     ", abundances_format, filename, "neiii_abund_cel          ")
 
                 quantity_result = all_results%NeIV_abund_CEL
-                call get_uncertainties(quantity_result, uncertainty_array, "[NeIV] abundance :      ", abundances_format, filename, "NeIV_abund_CEL           ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[NeIV] abundance :      ", abundances_format, filename, "neiv_abund_cel           ")
 
                 quantity_result = all_results%NeV_abund_CEL
-                call get_uncertainties(quantity_result, uncertainty_array, "[NeV] abundance :       ", abundances_format, filename, "NeV_abund_CEL            ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[NeV] abundance :       ", abundances_format, filename, "nev_abund_cel            ")
 
                 quantity_result = all_results%Ne_abund_CEL
-                call get_uncertainties(quantity_result, uncertainty_array, "Ne/H abundance :        ", abundances_format, filename, "Ne_abund_CEL             ")
+                call get_uncertainties(quantity_result, uncertainty_array, "Ne/H abundance :        ", abundances_format, filename, "ne_abund_cel             ")
 
                 quantity_result = all_results%ArIII_abund_CEL
-                call get_uncertainties(quantity_result, uncertainty_array, "[ArIII] abundance :     ", abundances_format, filename, "ArIII_abund_CEL          ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[ArIII] abundance :     ", abundances_format, filename, "ariii_abund_cel          ")
 
                 quantity_result = all_results%ArIV_abund_CEL
-                call get_uncertainties(quantity_result, uncertainty_array, "[ArIV] abundance :      ", abundances_format, filename, "ArIV_abund_CEL           ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[ArIV] abundance :      ", abundances_format, filename, "ariv_abund_cel           ")
 
                 quantity_result = all_results%ArV_abund_CEL
-                call get_uncertainties(quantity_result, uncertainty_array, "[ArV] abundance :       ", abundances_format, filename, "ArV_abund_CEL            ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[ArV] abundance :       ", abundances_format, filename, "arv_abund_cel            ")
 
                 quantity_result = all_results%Ar_abund_CEL
-                call get_uncertainties(quantity_result, uncertainty_array, "Ar/H abundance :        ", abundances_format, filename, "Ar_abund_CEL             ")
+                call get_uncertainties(quantity_result, uncertainty_array, "Ar/H abundance :        ", abundances_format, filename, "ar_abund_cel             ")
 
                 quantity_result = all_results%SII_abund_CEL
-                call get_uncertainties(quantity_result, uncertainty_array, "[SII] abundance :       ", abundances_format, filename, "SII_abund_CEL            ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[SII] abundance :       ", abundances_format, filename, "sii_abund_cel            ")
 
                 quantity_result = all_results%SIII_abund_CEL
-                call get_uncertainties(quantity_result, uncertainty_array, "[SIII] abundance :      ", abundances_format, filename, "SIII_abund_CEL           ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[SIII] abundance :      ", abundances_format, filename, "siii_abund_cel           ")
 
                 quantity_result = all_results%S_abund_CEL
-                call get_uncertainties(quantity_result, uncertainty_array, "S/H abundance :         ", abundances_format, filename, "S_abund_CEL              ")
+                call get_uncertainties(quantity_result, uncertainty_array, "S/H abundance :         ", abundances_format, filename, "s_abund_cel              ")
 
                 quantity_result = all_results%ClIII_abund_CEL
-                call get_uncertainties(quantity_result, uncertainty_array, "[ClIII] abundance :     ", abundances_format, filename, "ClIII_abund_CEL          ")
+                call get_uncertainties(quantity_result, uncertainty_array, "[ClIII] abundance :     ", abundances_format, filename, "cliii_abund_cel          ")
 
                 quantity_result = all_results%Cl_abund_CEL
-                call get_uncertainties(quantity_result, uncertainty_array, "Cl/H abundance :        ", abundances_format, filename, "Cl_abund_CEL             ")
+                call get_uncertainties(quantity_result, uncertainty_array, "Cl/H abundance :        ", abundances_format, filename, "cl_abund_cel             ")
 
 !RL abundances
 write (650,*)
@@ -790,19 +790,19 @@ write (650,*) "================================"
 write (650,*)
 
                 quantity_result = all_results%He_abund_ORL
-                call get_uncertainties(quantity_result, uncertainty_array, "He/H abundance :        ", abundances_format, filename, "He_abund_ORL             ")
+                call get_uncertainties(quantity_result, uncertainty_array, "He/H abundance :        ", abundances_format, filename, "he_abund_orl             ")
 
                 quantity_result = all_results%C_abund_ORL
-                call get_uncertainties(quantity_result, uncertainty_array, "C/H abundance :         ", abundances_format, filename, "C_abund_ORL              ")
+                call get_uncertainties(quantity_result, uncertainty_array, "C/H abundance :         ", abundances_format, filename, "c_abund_orl              ")
 
                 quantity_result = all_results%N_abund_ORL
-                call get_uncertainties(quantity_result, uncertainty_array, "N/H abundance :         ", abundances_format, filename, "N_abund_ORL              ")
+                call get_uncertainties(quantity_result, uncertainty_array, "N/H abundance :         ", abundances_format, filename, "n_abund_orl              ")
 
                 quantity_result = all_results%O_abund_ORL
-                call get_uncertainties(quantity_result, uncertainty_array, "O/H abundance :         ", abundances_format, filename, "O_abund_ORL              ")
+                call get_uncertainties(quantity_result, uncertainty_array, "O/H abundance :         ", abundances_format, filename, "o_abund_orl              ")
 
                 quantity_result = all_results%Ne_abund_ORL
-                call get_uncertainties(quantity_result, uncertainty_array, "Ne/H abundance :        ", abundances_format, filename, "Ne_abund_ORL             ")
+                call get_uncertainties(quantity_result, uncertainty_array, "Ne/H abundance :        ", abundances_format, filename, "ne_abund_orl             ")
 
 !strong line abundances
 write (650,*)
@@ -811,22 +811,22 @@ write (650,*) "================================"
 write (650,*)
 
                 quantity_result = all_results%O_R23_upper
-                call get_uncertainties(quantity_result, uncertainty_array, "O/H (R23 upper) :       ", abundances_format, filename, "O_R23_upper              ")
+                call get_uncertainties(quantity_result, uncertainty_array, "O/H (R23 upper) :       ", abundances_format, filename, "o_r23_upper              ")
 
                 quantity_result = all_results%O_R23_lower
-                call get_uncertainties(quantity_result, uncertainty_array, "O/H (R23 lower) :       ", abundances_format, filename, "O_R23_lower              ")
+                call get_uncertainties(quantity_result, uncertainty_array, "O/H (R23 lower) :       ", abundances_format, filename, "o_r23_lower              ")
 
                 quantity_result = all_results%O_N2
-                call get_uncertainties(quantity_result, uncertainty_array, "O/H (N2) :              ", abundances_format, filename, "O_N2                     ")
+                call get_uncertainties(quantity_result, uncertainty_array, "O/H (N2) :              ", abundances_format, filename, "o_n2                     ")
 
                 quantity_result = all_results%O_O3N2
-                call get_uncertainties(quantity_result, uncertainty_array, "O/H (O3N2) :            ", abundances_format, filename, "O_O3N2                   ")
+                call get_uncertainties(quantity_result, uncertainty_array, "O/H (O3N2) :            ", abundances_format, filename, "o_o3n2                   ")
 
                 quantity_result = all_results%O_Ar3O3
-                call get_uncertainties(quantity_result, uncertainty_array, "O/H (Ar3O3) :           ", abundances_format, filename, "O_Ar3O3                  ")
+                call get_uncertainties(quantity_result, uncertainty_array, "O/H (Ar3O3) :           ", abundances_format, filename, "o_ar3o3                  ")
 
                 quantity_result = all_results%O_S3O3
-                call get_uncertainties(quantity_result, uncertainty_array, "O/H (S3O3) :            ", abundances_format, filename, "O_S3O3                   ")
+                call get_uncertainties(quantity_result, uncertainty_array, "O/H (S3O3) :            ", abundances_format, filename, "o_s3o3                   ")
 
 !adfs
 write (650,*)
