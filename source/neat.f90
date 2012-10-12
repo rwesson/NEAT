@@ -272,15 +272,15 @@ program neat
         endif
 
         if (switch_ext == "S") then
-                print *,gettime(), ": using Howarth (1983) galactic law"
+                print *,gettime(), ": using Howarth (1983) galactic extinction law"
         elseif (switch_ext == "H") then
-                print *,gettime(), ": using Howarth (1983) LMC law"
+                print *,gettime(), ": using Howarth (1983) LMC extinction law"
         elseif (switch_ext == "C") then
-                print *,gettime(), ": using CCM (1989) galactic law"
+                print *,gettime(), ": using CCM (1989) galactic extinction law"
         elseif (switch_ext == "P") then
-                print *,gettime(), ": using Prevot et al. (1984) SMC law"
+                print *,gettime(), ": using Prevot et al. (1984) SMC extinction law"
         elseif (switch_ext == "F") then
-                print *,gettime(), ": using Fitzpatrick (1990) galactic law"
+                print *,gettime(), ": using Fitzpatrick (1990) galactic extinction law"
         endif
 
         if (switch_he == "S") then
@@ -1021,17 +1021,7 @@ enddo
 maxpos=maxloc(binned_quantity_result(:,2))
 uncertainty_array(2)=binned_quantity_result(maxpos(1),1)
 
-!write out the binned results
-
-OPEN(850, FILE=trim(filename)//"_"//trim(suffix)//"_binned", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-do i=1,ii-1
-  write(unit = 850,FMT=*) binned_quantity_result(i,1), int(binned_quantity_result(i,2))
-end do
-close(850)
-
-deallocate(binned_quantity_result)
-
-!find value in array closest to mode
+!now find the value in the unbinned array that's closest to the mode
 
   comp = 1.e10
   do i=1,arraysize
@@ -1053,6 +1043,18 @@ deallocate(binned_quantity_result)
   else
     uncertainty_array(1) = uncertainty_array(2) - input_array(belowpos)
   endif
+
+!write out the binned results with the mode+-uncertainties at the top
+
+OPEN(850, FILE=trim(filename)//"_"//trim(suffix)//"_binned", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+write(unit = 850,FMT=*) uncertainty_array(2),uncertainty_array(2)-uncertainty_array(1), uncertainty_array(3)+uncertainty_array(2)
+write(unit = 850,FMT=*)
+do i=1,ii-1
+  write(unit = 850,FMT=*) binned_quantity_result(i,1), int(binned_quantity_result(i,2))
+end do
+close(850)
+
+deallocate(binned_quantity_result)
 
 else !all results are identical
   uncertainty_array(1) = 0.D0
