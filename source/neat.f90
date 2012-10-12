@@ -951,40 +951,6 @@ contains
             DEALLOCATE(seed)
           END SUBROUTINE
 
-SUBROUTINE deredden_ll(switch_ext, linelist, listlength, meanextinction )
-        INTEGER :: iii, listlength
-        CHARACTER :: switch_ext !switch for extinction laws
-        TYPE(LINE),DIMENSION(:), allocatable :: linelist
-        double precision :: meanextinction
-
-        if (switch_ext == "S") then
-                CALL deredden(linelist, listlength, meanextinction)
-        elseif (switch_ext == "H") then
-                CALL deredden_LMC(linelist, listlength, meanextinction)
-        elseif (switch_ext == "C") then
-                CALL deredden_CCM(linelist, listlength, meanextinction, R)
-        elseif (switch_ext == "P") then
-                CALL deredden_SMC(linelist, listlength, meanextinction)
-        elseif (switch_ext == "F") then
-                CALL deredden_Fitz(linelist, listlength, meanextinction)
-        endif
-
-
-        500 FORMAT (5(f10.4))
-
-        OPEN(801, FILE=trim(filename)//"_dered", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-        do iii=1, listlength
-                if(linelist(iii)%int_dered .ne. 0)then
-                        write(801,500) linelist(iii)%wavelength, linelist(iii)%intensity, linelist(iii)%int_err, linelist(iii)%int_dered
-                endif
-        end do
-               CLOSE(801)
-               call system("sort "//trim(filename)//"_dered > "//trim(filename)//"_dered_sort")
-               call system("rm "//trim(filename)//"_dered")
-
-
-END SUBROUTINE
-
 subroutine get_uncertainties(input_array, uncertainty_array, itemtext,itemformat, filename, suffix)
 
 implicit none
