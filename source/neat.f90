@@ -989,7 +989,7 @@ close(850)
 ! bin the array
 
 arraysize = size(input_array)
-binsize=(input_array(nint(0.841*arraysize)) - input_array(nint(0.159*arraysize)))/20
+binsize=(input_array(nint(0.841*arraysize)) - input_array(nint(0.159*arraysize)))/5
 
 if (binsize .gt. 0) then
 
@@ -1034,7 +1034,7 @@ if (binsize .gt. 0) then
   belowpos = i-nint(0.341*arraysize)
 
   if (abovepos>arraysize) then
-    uncertainty_array(3) = 99999999
+    uncertainty_array(3) = input_array(arraysize) - uncertainty_array(2)
   else
     uncertainty_array(3) = input_array(abovepos) - uncertainty_array(2)
   endif
