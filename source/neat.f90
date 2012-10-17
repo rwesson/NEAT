@@ -965,6 +965,14 @@ character*24, intent(in) :: itemtext
 character*35, intent(in) :: itemformat
 character*80, intent(in) :: filename
 character*25, intent(in) :: suffix
+double precision :: mean, sd
+double precision :: mean_log, sd_log
+double precision :: mean_exp, sd_exp
+double precision, dimension(3,3) :: sds
+double precision :: tolerance
+
+tolerance=0.02 ! to determine whether a probability distribution is normal, log normal or exp normal, we calculate the mean and standard deviation of the original array, the logarithm of the values, and the exponent of the values.  We then determine the fractions of the distribution lying within 1, 2 and 3 standard deviations of the mean in each case.  If these correspond to the 0.68-0.95-0.99 expected for a normal distribution then we know that the distribution is normal, log normal or exp normal and record the uncertainties accordingly.  The fractions must be (0.6827+-tol), (0.9545-tol/2) and (0.9973+-tol/5) for the subroutine to assign a distribution.
+sds=0.D0
 
 !binned_quantity_result = 0.D0
 uncertainty_array = (/0.0,0.0,0.0/)
@@ -1024,6 +1032,7 @@ if (binsize .gt. 0) then
 
 !now find the value in the unbinned array that's closest to the mode
 
+  bintemp=0.D0
   bintemp = abs(input_array - uncertainty_array(2))
   i = minloc(bintemp,1)
   uncertainty_array(2)=input_array(i)
@@ -1043,6 +1052,51 @@ if (binsize .gt. 0) then
     uncertainty_array(1) = uncertainty_array(2) ! no lower limit so the negative uncertainty is equal to the value
   else
     uncertainty_array(1) = uncertainty_array(2) - input_array(belowpos)
+  endif
+
+!simple test for normality - calculate the mean and standard deviation of the array, determine the number of values within 1, 2 and 3 sigma of the mean.
+!if the fractions are close to 68.27, 95.45 and 99.73 then it's normal
+!also calculate for log and exp
+
+  mean=sum(input_array)/arraysize
+  mean_log=sum(log(input_array))/arraysize
+  mean_exp=sum(exp(input_array))/arraysize
+
+  do i=1,arraysize
+    sd=sd+(input_array(i)-mean)**2
+    sd_log=sd_log+(log(input_array(i))-mean_log)**2
+    sd_exp=sd_exp+(exp(input_array(i))-mean_exp)**2
+  end do
+
+  sd=(sd/arraysize)**0.5
+  sd_log=(sd_log/arraysize)**0.5
+  sd_exp=(sd_exp/arraysize)**0.5
+
+  do i=1,arraysize
+    if (abs(input_array(i)-mean) .lt. sd) sds(1,1)=sds(1,1)+1
+    if (abs(input_array(i)-mean) .lt. (2*sd)) sds(1,2)=sds(1,2)+1
+    if (abs(input_array(i)-mean) .lt. (3*sd)) sds(1,3)=sds(1,3)+1
+
+    if (abs(log(input_array(i))-mean_log) .lt. sd_log) sds(2,1)=sds(2,1)+1
+    if (abs(log(input_array(i))-mean_log) .lt. (2*sd_log)) sds(2,2)=sds(2,2)+1
+    if (abs(log(input_array(i))-mean_log) .lt. (3*sd_log)) sds(2,3)=sds(2,3)+1
+
+    if (abs(exp(input_array(i))-mean_exp) .lt. sd_exp) sds(3,1)=sds(3,1)+1
+    if (abs(exp(input_array(i))-mean_exp) .lt. (2*sd_exp)) sds(3,2)=sds(3,2)+1
+    if (abs(exp(input_array(i))-mean_exp) .lt. (3*sd_exp)) sds(3,3)=sds(3,3)+1
+  end do
+
+  sds=sds/arraysize
+
+  if (abs(sds(1,1)-0.6827).lt.tolerance .and. abs(sds(1,2)-0.9545).lt.tolerance .and. abs(sds(1,3)-0.9973).lt. tolerance) then 
+    uncertainty_array(:)=(/sd,mean,sd/)
+  elseif (abs(sds(2,1)-0.6827).lt.tolerance .and. abs(sds(2,2)-0.9545).lt.tolerance .and. abs(sds(2,3)-0.9973).lt. tolerance) then 
+    uncertainty_array(:)=(/exp(mean_log)-exp(mean_log-sd_log),exp(mean_log),exp(mean_log+sd_log)-exp(mean_log)/)
+  elseif (abs(sds(3,1)-0.6827).lt.tolerance .and. abs(sds(3,2)-0.9545).lt.tolerance .and. abs(sds(3,3)-0.9973).lt. tolerance) then
+write (650,*) "exp-normal distribution:"
+    uncertainty_array(:)=(/log(mean_exp+sd_exp)-log(mean_exp),log(mean_exp),log(mean_exp-sd_exp)-log(mean_exp)/)
+  else
+    write (650,*) "Warning! Unusual probability distribution.  You should inspect this one"
   endif
 
 !write out the binned results with the mode+-uncertainties at the top
