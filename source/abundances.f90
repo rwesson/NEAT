@@ -333,10 +333,13 @@ implicit none
       enddo
 
 ! medium ionisation
-        cliiiDens = 0
-        ciiiDens = 0
-        arivDens = 0
-
+        cliiiDens = 0.D0
+        ciiiDens = 0.D0
+        arivDens = 0.D0
+        oiiiIRdens = 0.D0
+        ariiiIRdens = 0.D0
+        siiiIRdens = 0.D0
+        neiiiIRdens = 0.D0
 
       medtemp = lowtemp
 
