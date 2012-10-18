@@ -1009,6 +1009,7 @@ if (binsize .gt. 0) then
   bintemp = binsize*nint(input_array/binsize)
   nbins=nint((maxval(bintemp)-minval(bintemp))/binsize)+1
   allocate(binned_quantity_result(nbins,2))
+  binned_quantity_result=0.D0
 
 !then, go through the quantized array and count the number of occurrences of each value
 
