@@ -1034,10 +1034,10 @@ if (binsize .gt. 0) then
 
 !now find the value in the unbinned array that's closest to the mode
 
-!  bintemp=0.D0
-!  bintemp = abs(input_array - uncertainty_array(2))
-!  i = minloc(bintemp,1)
-!  uncertainty_array(2)=input_array(i)
+  bintemp=0.D0
+  bintemp = abs(input_array - uncertainty_array(2))
+  i = minloc(bintemp,1)
+  uncertainty_array(2)=input_array(i)
 
 !now find the values such that 68.2% of all values lie within the uncertainties
 
@@ -1091,13 +1091,10 @@ if (binsize .gt. 0) then
   sds=sds/arraysize
 
   if (abs(sds(1,1)-0.6827).lt.tolerance .and. abs(sds(1,2)-0.9545).lt.(tolerance*0.5) .and. abs(sds(1,3)-0.9973).lt. (tolerance*0.1)) then 
-write (650,*) "normal distribution:"
     uncertainty_array(:)=(/sd,mean,sd/)
   elseif (abs(sds(2,1)-0.6827).lt.tolerance .and. abs(sds(2,2)-0.9545).lt.(tolerance*0.5) .and. abs(sds(2,3)-0.9973).lt. (tolerance*0.1)) then 
-write (650,*) "log-normal distribution"
     uncertainty_array(:)=(/exp(mean_log)-exp(mean_log-sd_log),exp(mean_log),exp(mean_log+sd_log)-exp(mean_log)/)
   elseif (abs(sds(3,1)-0.6827).lt.tolerance .and. abs(sds(3,2)-0.9545).lt.(tolerance*0.5) .and. abs(sds(3,3)-0.9973).lt. (tolerance*0.1)) then
-write (650,*) "exp-normal distribution:"
     uncertainty_array(:)=(/log(mean_exp+sd_exp)-log(mean_exp),log(mean_exp),log(mean_exp-sd_exp)-log(mean_exp)/)
   else
     write (650,*) "Warning! Unusual probability distribution.  You should inspect this one:"
