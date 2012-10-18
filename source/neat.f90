@@ -1088,11 +1088,11 @@ if (binsize .gt. 0) then
 
   sds=sds/arraysize
 
-  if (abs(sds(1,1)-0.6827).lt.tolerance .and. abs(sds(1,2)-0.9545).lt.tolerance .and. abs(sds(1,3)-0.9973).lt. tolerance) then 
+  if (abs(sds(1,1)-0.6827).lt.tolerance .and. abs(sds(1,2)-0.9545).lt.(tolerance*0.5) .and. abs(sds(1,3)-0.9973).lt. (tolerance*0.1)) then 
     uncertainty_array(:)=(/sd,mean,sd/)
-  elseif (abs(sds(2,1)-0.6827).lt.tolerance .and. abs(sds(2,2)-0.9545).lt.tolerance .and. abs(sds(2,3)-0.9973).lt. tolerance) then 
+  elseif (abs(sds(2,1)-0.6827).lt.tolerance .and. abs(sds(2,2)-0.9545).lt.(tolerance*0.5) .and. abs(sds(2,3)-0.9973).lt. (tolerance*0.1)) then 
     uncertainty_array(:)=(/exp(mean_log)-exp(mean_log-sd_log),exp(mean_log),exp(mean_log+sd_log)-exp(mean_log)/)
-  elseif (abs(sds(3,1)-0.6827).lt.tolerance .and. abs(sds(3,2)-0.9545).lt.tolerance .and. abs(sds(3,3)-0.9973).lt. tolerance) then
+  elseif (abs(sds(3,1)-0.6827).lt.tolerance .and. abs(sds(3,2)-0.9545).lt.(tolerance*0.5) .and. abs(sds(3,3)-0.9973).lt. (tolerance*0.1)) then
 write (650,*) "exp-normal distribution:"
     uncertainty_array(:)=(/log(mean_exp+sd_exp)-log(mean_exp),log(mean_exp),log(mean_exp-sd_exp)-log(mean_exp)/)
   else
