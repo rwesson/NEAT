@@ -72,6 +72,8 @@ implicit none
         CELicfNe = 0.d0
         CELicfN = 0.d0
         CELicfO = 0.d0
+        Ar3O3 = 0.D0
+        O_Ar3O3 = 0.D0
 
         linelist_orig = linelist
 
