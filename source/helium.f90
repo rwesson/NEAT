@@ -4,7 +4,7 @@
       subroutine get_heii(te, ne, IHeII4686, heiiabund)
 
       IMPLICIT NONE
-      REAL A4686,TE,NE,IHeII4686,AB4686,heiiabund
+      REAL A4686,TE,NE,IHeII4686,heiiabund
 
       A4686=10.**(GAMM4861(TE,NE)-GAMM4686(TE,NE))
       heiiabund=IHeII4686/100.*A4686
@@ -15,9 +15,8 @@
      & IHeI6678,heidata,Heiabund)
 
       IMPLICIT NONE
-      real :: te, ne, emissivity
-      real :: A4471,A5876,A6678,D,                         &
-     & C4471,C5876,C6678,                                     &
+      real :: te, ne
+      real :: A4471,A5876,A6678,                         & 
      & IHeI4471,IHeI5876,IHeI6678, em4471, em5876, em6678,             &
      & AB4471,AB5876,AB6678,heiabund 
  

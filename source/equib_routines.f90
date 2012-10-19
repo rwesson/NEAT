@@ -38,20 +38,20 @@
       use mod_atomicdata
       IMPLICIT NONE
 
-      INTEGER NDIM1, NDIM2, NDIM1T3, MAXND,maxlevs,maxtemps
+      INTEGER NDIM1, NDIM2, NDIM1T3, MAXND
                                                       !Maximum no of Te & levels
       !PARAMETER (NDIM1=maxtemps, NDIM2=maxlevs)!35, NDIM2=150)
                                              !NDIM1T3 should be at least 3*NDIM1
       !PARAMETER (NDIM1T3 = 3*NDIM1)!105)
                                                    !Maximum no. of Ne increments
       PARAMETER (MAXND=100)
-      INTEGER GX, G(NDIM2), ID(2), JD(2),                               &
+      INTEGER G(NDIM2),                                                 &
      &  ITRANA(2,NDIM2),ITRANB(2,NDIM2),ITRANC(2,NDIM2),LOOP
       type(atomic_data),dimension(:),intent(in) :: atomicdata
       integer iion,nion
       REAL*8 N(NDIM2)
       REAL*8 & !TDRAT(2,MAXND)
-     & TNIJ(NDIM2,NDIM2), FINTIJ(NDIM2,NDIM2),    &
+     & TNIJ(NDIM2,NDIM2), FINTIJ(NDIM2,NDIM2),                          &
      & WAVA(NDIM2), WAVB(NDIM2), WAVC(NDIM2), CS(NDIM2,NDIM2),          &
      & QEFF(NDIM2,NDIM2), QQ(NDIM1),                                    &
      & QOM(NDIM1,NDIM2,NDIM2), A(NDIM2,NDIM2), E(NDIM2), T(NDIM1),      &
@@ -59,15 +59,14 @@
      & X2(NDIM2,NDIM2), XKEEP(NDIM2,NDIM2), Y2(NDIM2), YKEEP(NDIM2),    &
      & HMH(NDIM1,NDIM1), D(NDIM1)
       CHARACTER*20 LABEL(NDIM2)
-      CHARACTER*10 ION
-      CHARACTER*1 LTEXT(78)
-      INTEGER I, I1, I2, J, K, L, KK, LL, JT, JJD,              &
-     & IONL, NLINES, NLEV, NTEMP, IBIG, IRATS, NTRA, ITEMP,      &
-     & IN, NLEV1, KP1, INT, IND, IOPT, IT, IM1, JM1, IP1,               &
+      CHARACTER*10 ION 
+      INTEGER I, I1, I2, J, KK, LL, JT, JJD,                            &
+     & NLEV, NTEMP, IBIG, IRATS,                                        &
+     & NLEV1, INT, IND, IOPT, IT, IM1, JM1, IP1,                        &
      & IAPR, IBPR, ICPR, IKT, IA, IB, IC, IA1, IA2, IB1, IB2, IC1, IC2
       REAL*8 TEMPI, TINC, DENSI, DINC, DENS, DLOGD, TEMP, TLOGT,        &
      & TEMP2, DD, DELTEK, EXPE, VALUE, SUMN, TTT, TTP, AHB, EJI, WAV,   &
-     & RLINT, FINT, SUMA, SUMB, SUMC, QX, AX, EX, FRAT, DEE
+     & RLINT, FINT, SUMA, SUMB, SUMC, FRAT, DEE
 
       DOUBLE PRECISION :: fixedq
       REAL*8 inratio,result
@@ -514,7 +513,7 @@
       !PARAMETER (NDIM1T3 = 3*NDIM1)!105)
                                                    !Maximum no. of Ne increments
       PARAMETER (MAXND=100)
-      INTEGER GX, G(NDIM2), ID(2), JD(2),                               &
+      INTEGER G(NDIM2),                                                 &
      &  ITRANA(2,NDIM2),ITRANB(2,NDIM2),ITRANC(2,NDIM2)
       type(atomic_data),dimension(:),intent(in) :: atomicdata
       integer :: nion,iion
@@ -526,15 +525,14 @@
      & ROOTT(NDIM1), X(NDIM2,NDIM2), Y(NDIM2),                          &
      & X2(NDIM2,NDIM2), XKEEP(NDIM2,NDIM2), Y2(NDIM2), YKEEP(NDIM2),    &
      & HMH(NDIM1,NDIM1), D(NDIM1)
-      CHARACTER*20 LABEL(NDIM2), ION
-      CHARACTER*1 LTEXT(78)
-      INTEGER I, I1, I2, J, K, L, KK, LL, JT, JJD,              &
-     & IONL, NLINES, NLEV, NTEMP, IBIG, IRATS, NTRA, ITEMP,      &
-     & IN, NLEV1, KP1, INT, IND, IOPT, IT, IM1, JM1, IP1,               &
+      CHARACTER*20 LABEL(NDIM2), ION 
+      INTEGER I, I1, I2, J, KK, LL, JT, JJD,                            &
+     & NLEV, NTEMP, IBIG, IRATS,                                        &
+     & NLEV1, INT, IND, IOPT, IT, IM1, JM1, IP1,                        &
      & IAPR, IBPR, ICPR, IKT, IA, IB, IC, IA1, IA2, IB1, IB2, IC1, IC2
       REAL*8 TEMPI, TINC, DENSI, DINC, DENS, DLOGD, TEMP, TLOGT,        &
      & TEMP2, DD, DELTEK, EXPE, VALUE, SUMN, TTT, TTP, AHB, EJI, WAV,   &
-     & RLINT, FINT, SUMA, SUMB, SUMC, QX, AX, EX, FRAT, DEE
+     & RLINT, FINT, SUMA, SUMB, SUMC, FRAT, DEE
 
       CHARACTER*20 levels
       real*8 iobs, abund

@@ -625,7 +625,7 @@ CONTAINS
       Integer, Intent (in) :: IIl, IIr
 
       Real (kind=SP) :: RRtmp
-      Integer :: II, JJ, IItmp
+      Integer :: II, JJ
 
 
       Do II = IIl+1, IIr
@@ -790,7 +790,7 @@ CONTAINS
       Integer, Intent (in) :: IIl, IIr
 
       Real (kind=DP) :: RRtmp
-      Integer :: II, JJ, IItmp
+      Integer :: II, JJ
 
 
       Do II = IIl+1, IIr
@@ -949,7 +949,7 @@ CONTAINS
       Integer, Intent (in) :: IIl, IIr
 
       Integer :: RRtmp
-      Integer :: II, JJ, IItmp
+      Integer :: II, JJ
 
 
       Do II = IIl+1, IIr

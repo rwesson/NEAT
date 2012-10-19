@@ -50,7 +50,6 @@ program neat
         type(resultarray), dimension(:), allocatable :: all_results
         type(resultarray), dimension(1) :: iteration_result
         double precision, dimension(:), allocatable :: quantity_result
-        double precision :: binvalue
 
         !atomic data
 
@@ -961,7 +960,7 @@ double precision, intent(out) :: uncertainty_array(3)
 double precision, dimension(:), allocatable :: bintemp
 double precision :: binsize, comp
 double precision, dimension (:,:), allocatable :: binned_quantity_result
-integer :: ii, bincount, bincountmax, arraysize, abovepos, belowpos, nbins
+integer :: ii, bincount, arraysize, abovepos, belowpos, nbins
 integer, dimension(1) :: maxpos
 character*24, intent(in) :: itemtext
 character*35, intent(in) :: itemformat

@@ -257,12 +257,8 @@ subroutine read_porter(heidata)
 
 implicit none
 double precision, dimension(21,15,44) :: heidata
-integer :: i,j,tpos,npos, line, io
+integer :: i,j,tpos,npos,io
 double precision, dimension(46) :: temp
-double precision :: te, ne, testart, nestart
-double precision :: interp_factor_te, interp_factor_ne
-double precision :: interp_t1, interp_t2, emissivity
-character*10 :: tech, nech, linech
 
 !read data
 
