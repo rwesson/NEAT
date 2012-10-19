@@ -1128,7 +1128,7 @@ endif
 end subroutine get_uncertainties
 
 character*10 function gettime()
-
+implicit none
 character*10 :: time
 
   call DATE_AND_TIME(TIME=time)

@@ -1224,7 +1224,7 @@
       end subroutine xiii_rec_lines
 
       subroutine get_aeff_hb(te, ne, aeff_hb, em_hb)
-
+      IMPLICIT NONE
       double precision :: Te, Ne, AE2, AE3, AE4, AE5, AE6, AE7, AE8, aeff_hb, Em_Hb, logem
 
       AE2 = -9.06524E+00 -2.69954E+00 * log10(te) + 8.80123E-01 * &

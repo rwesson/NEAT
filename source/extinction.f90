@@ -5,6 +5,7 @@ implicit none
 contains
 
 subroutine calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction, switch_ext, temp, dens, R)
+        IMPLICIT NONE
         TYPE(line), DIMENSION(38) :: H_BS
         DOUBLE PRECISION :: c1, c2, c3, meanextinction, R
         double precision :: fl_ha, fl_hg, fl_hd
@@ -80,6 +81,7 @@ endif
 end subroutine calc_extinction_coeffs
 
 double precision function calc_balmer_ratios(temp, dens, line)
+        implicit none
         integer :: i, j, line
         double precision :: d1, d2, temp, dens
         double precision, dimension(6,3,4) :: HS
@@ -165,6 +167,7 @@ end function
 !-------SEATON GALACTIC LAW-------------------------------!
 
 double precision function flambda(X,switch)
+        IMPLICIT NONE
         DOUBLE PRECISION :: X
         INTEGER :: switch
         !Howarth 1983 Galactic + Seaton 1979
@@ -188,6 +191,7 @@ double precision function flambda(X,switch)
 end function
 
 subroutine deredden(lines, number, m_ext)
+        IMPLICIT NONE
         TYPE(line), DIMENSION(:) :: lines
         INTEGER :: number
         DOUBLE PRECISION :: m_ext, fl
@@ -230,6 +234,7 @@ end subroutine
 !-------HOWARTH LMC LAW-----------------------------------!
 
 double precision function flambdaLMC(X,switch)
+        IMPLICIT NONE
         DOUBLE PRECISION :: X
         INTEGER :: switch
         !Howarth 1983 LMC
@@ -249,6 +254,7 @@ double precision function flambdaLMC(X,switch)
 end function
 
 subroutine deredden_LMC(lines, number, m_ext)
+        IMPLICIT NONE
         TYPE(line), DIMENSION(:) :: lines
         INTEGER :: number
         DOUBLE PRECISION :: m_ext, fl
@@ -283,6 +289,7 @@ end subroutine
 !-------CCM GALACTIC LAW----------------------------------!
 
 double precision function flambdaCCM(X,switch, R)
+        IMPLICIT NONE
         DOUBLE PRECISION :: X, a, b, y, Fa, Fb, R
         INTEGER :: switch
         !CCM 1989 Galactic
@@ -317,6 +324,7 @@ double precision function flambdaCCM(X,switch, R)
 end function
 
 subroutine deredden_CCM(lines, number, m_ext, R)
+        IMPLICIT NONE
         TYPE(line), DIMENSION(:) :: lines
         INTEGER :: number
         DOUBLE PRECISION :: m_ext, fl, R
@@ -355,6 +363,7 @@ end subroutine
 !-------PREVOT SMC LAW------------------------------------!
 
 double precision function flambdaSMC(X,switch)
+        IMPLICIT NONE
         DOUBLE PRECISION :: X
         INTEGER :: switch
         !Prevot 1984 SMC
@@ -374,6 +383,7 @@ double precision function flambdaSMC(X,switch)
 end function
 
 subroutine deredden_SMC(lines, number, m_ext)
+        IMPLICIT NONE
         TYPE(line), DIMENSION(:) :: lines
         INTEGER :: number
         DOUBLE PRECISION :: m_ext, fl
@@ -409,6 +419,7 @@ end subroutine
 
 
 double precision function flambdaFitz(X,switch) !based on FM90 with values taken from Fitxpatrick 1992
+        IMPLICIT NONE
         DOUBLE PRECISION :: X, x_0, c1, c2, c3, c4, gamma, D, F
         INTEGER :: switch
        c1 = -0.38
@@ -444,6 +455,7 @@ double precision function flambdaFitz(X,switch) !based on FM90 with values taken
 end function
 
 subroutine deredden_Fitz(lines, number, m_ext) !Uses Seaton/Howarth for IR, optical and near UV, as fit for Fitzpatrick law is poor at wavelengths longer than 2700 Angstroms
+        IMPLICIT NONE
         TYPE(line), DIMENSION(:) :: lines
         INTEGER :: number
         DOUBLE PRECISION :: m_ext, fl

@@ -5,6 +5,7 @@ implicit none!
 contains
 
 subroutine read_ilines(ILs, Iint,iion,ionlist)
+        IMPLICIT NONE
         TYPE(line), DIMENSION(:), allocatable :: ILs
         INTEGER :: Iint, Iread,iion
         character*10 :: ionlist(40)
@@ -42,6 +43,7 @@ contains
 !this fantastically ugly function gets the location of certain ions in the important ions array using their name as a key.
 
 integer function get_ion(ionname, iontable, Iint)
+        IMPLICIT NONE
         CHARACTER*11 :: ionname
         TYPE(line), DIMENSION(:) :: iontable
         INTEGER :: i
@@ -64,6 +66,7 @@ end function
 
 
 subroutine element_assign(ILs, linelist, Iint, listlength)
+        IMPLICIT NONE
         TYPE(line), DIMENSION(:), INTENT(OUT) :: ILs
         TYPE(line), DIMENSION(:) :: linelist
         INTEGER, INTENT(IN) :: Iint, listlength
@@ -82,6 +85,7 @@ subroutine element_assign(ILs, linelist, Iint, listlength)
 end subroutine
 
 subroutine get_H(H_BS, linelist, listlength)
+        IMPLICIT NONE
         TYPE(line), DIMENSION(38), INTENT(OUT) :: H_BS
         TYPE(line), DIMENSION(:) :: linelist
         double precision, dimension(38) :: balmerlines
@@ -107,6 +111,7 @@ subroutine get_H(H_BS, linelist, listlength)
 end subroutine
 
 subroutine get_He(He_lines, linelist,listlength)
+        IMPLICIT NONE
         TYPE(line), DIMENSION(4), INTENT(OUT) :: He_lines
         TYPE(line), DIMENSION(:), INTENT(IN) :: linelist
         INTEGER :: i, j, listlength
@@ -153,8 +158,9 @@ module mod_atomic_read
 contains
 subroutine read_atomic_data(ion)
 use mod_atomicdata
+    IMPLICIT NONE
     type(atomic_data) :: ion
-    integer :: I,J,K,NCOMS,ID(2),JD(2),KP1,NLEV1,ionl,dummy
+    integer :: I,J,K,L,N,NCOMS,ID(2),JD(2),KP1,NLEV1,ionl,dummy
     character*1 :: comments(78)
     character*10 :: ionname
     character*25 :: filename

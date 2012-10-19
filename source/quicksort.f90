@@ -13,6 +13,7 @@ CONTAINS
   Subroutine Abort(Routine, Msg)
 ! *
 ! ***************************************************
+    IMPLICIT NONE
 
     Character (len=*), Intent (in), Optional :: Routine
     Character (len=*), Intent (in) :: Msg
@@ -33,6 +34,7 @@ CONTAINS
   Subroutine Perror(Routine, Msg)
 ! *
 ! ***************************************************
+    IMPLICIT NONE
 
     Character (len=*), Intent (in), Optional :: Routine
     Character (len=*), Intent (in) :: Msg
@@ -154,6 +156,7 @@ CONTAINS
 ! * initial guess of the position.
 ! * Integer version.
 ! ***********************************
+    IMPLICIT NONE
 
     Integer, Intent (in) :: X(:), Xo
     Integer, Intent (in), Optional :: Iin
@@ -200,6 +203,7 @@ CONTAINS
 ! * Size(X) is returned then is bigger
 ! * than all X(:). Integer version.
 ! ***********************************
+    IMPLICIT NONE
 
     Real (kind=SP), Intent (in) :: X(:), Xo
     Integer, Intent (in), Optional :: Iin
@@ -246,6 +250,7 @@ CONTAINS
 ! * Size(X) is returned then is bigger
 ! * than all X(:). Integer version.
 ! ***********************************
+    IMPLICIT NONE
 
     Real (kind=DP), Intent (in) :: X(:), Xo
     Integer, Intent (in), Optional :: Iin
@@ -289,6 +294,7 @@ CONTAINS
 ! * changes is returned in Ipt. Integer
 ! * version.
 ! ***********************************
+    IMPLICIT NONE
 
     Integer, Intent (inout) :: X(:)
     Integer, Intent (out), Optional :: Ipt(:)
@@ -340,6 +346,7 @@ CONTAINS
 ! * changes is returned in Ipt. Integer
 ! * version.
 ! ***********************************
+    IMPLICIT NONE
 
     Real (kind=SP), Intent (inout) :: X(:)
     Integer, Intent (out), Optional :: Ipt(:)
@@ -390,6 +397,7 @@ CONTAINS
 ! * changes is returned in Ipt. Integer
 ! * version.
 ! ***********************************
+    IMPLICIT NONE
 
     Real (kind=DP), Intent (inout) :: X(:)
     Integer, Intent (out), Optional :: Ipt(:)
@@ -437,6 +445,7 @@ CONTAINS
 ! ***********************************
 ! * Swaps elements I and J of array X(:).
 ! ***********************************
+    IMPLICIT NONE
 
     Real (kind=SP), Intent (inout) :: X(:)
     Integer, Intent (in) :: I, J
@@ -457,6 +466,7 @@ CONTAINS
 ! ***********************************
 ! * Swaps elements I and J of array X(:).
 ! ***********************************
+    IMPLICIT NONE
 
     Real (kind=DP), Intent (inout) :: X(:)
     Integer, Intent (in) :: I, J
@@ -477,6 +487,7 @@ CONTAINS
 ! ***********************************
 ! * Swaps elements I and J of array X(:).
 ! ***********************************
+    IMPLICIT NONE
 
     Integer, Intent (inout) :: X(:)
     Integer, Intent (in) :: I, J
@@ -499,6 +510,7 @@ CONTAINS
 ! * If present Ipt, a pointer with the
 ! * changes is returned in Ipt. SP version
 ! ***********************************
+    IMPLICIT NONE
 
     Type Limits
        Integer :: Ileft, Iright
@@ -590,6 +602,7 @@ CONTAINS
     ! * Choose a Pivot element from XX(Ileft:Iright)
     ! * for Qsort.
     ! ***********************************
+      IMPLICIT NONE
 
       Real (kind=SP), Intent (in) :: XX(:)
       Integer, Intent (in) :: IIleft, IIright
@@ -619,6 +632,7 @@ CONTAINS
     ! ***********************************
     Subroutine InsrtLC(XX, IIpt, IIl, IIr)
     ! ***********************************
+      IMPLICIT NONE
 
       Real (kind=SP), Intent (inout) :: XX(:)
       Integer, Intent (inout) :: IIpt(:)
@@ -656,6 +670,7 @@ CONTAINS
 ! * If present Ipt, a pointer with the
 ! * changes is returned in Ipt. DP version
 ! ***********************************
+    IMPLICIT NONE
 
     Type Limits
        Integer :: Ileft, Iright
@@ -755,6 +770,7 @@ CONTAINS
     ! * Choose a Pivot element from XX(Ileft:Iright)
     ! * for Qsort.
     ! ***********************************
+      IMPLICIT NONE
 
       Real (kind=DP), Intent (in) :: XX(:)
       Integer, Intent (in) :: IIleft, IIright
@@ -784,6 +800,7 @@ CONTAINS
     ! ***********************************
     Subroutine InsrtLC(XX, IIpt, IIl, IIr)
     ! ***********************************
+      IMPLICIT NONE
 
       Real (kind=DP), Intent (inout) :: XX(:)
       Integer, Intent (inout) :: IIpt(:)
@@ -821,6 +838,7 @@ CONTAINS
 ! * If present Ipt, a pointer with the
 ! * changes is returned in Ipt. DP version
 ! ***********************************
+    IMPLICIT NONE
 
     Type Limits
        Integer :: Ileft, Iright
@@ -914,6 +932,7 @@ CONTAINS
     ! * Choose a Pivot element from XX(Ileft:Iright)
     ! * for Qsort.
     ! ***********************************
+      IMPLICIT NONE
 
       Integer, Intent (in) :: XX(:)
       Integer, Intent (in) :: IIleft, IIright
@@ -943,6 +962,7 @@ CONTAINS
     ! ***********************************
     Subroutine InsrtLC(XX, IIpt, IIl, IIr)
     ! ***********************************
+      IMPLICIT NONE
 
       Integer, Intent (inout) :: XX(:)
       Integer, Intent (inout) :: IIpt(:)
@@ -983,6 +1003,7 @@ CONTAINS
 ! * at the right.
 ! * Internal routine used by Qsort.
 ! ***********************************
+    IMPLICIT NONE
 
     Real (kind=SP), Intent (inout) :: X(:)
     Integer, Intent (in) :: Ileft, Iright, Ipv
@@ -1031,6 +1052,7 @@ CONTAINS
 ! * at the right.
 ! * Internal routine used by Qsort.
 ! ***********************************
+    IMPLICIT NONE
 
     Real (kind=DP), Intent (inout) :: X(:)
     Integer, Intent (in) :: Ileft, Iright, Ipv
@@ -1079,6 +1101,7 @@ CONTAINS
 ! * at the right.
 ! * Internal routine used by Qsort.
 ! ***********************************
+    IMPLICIT NONE
 
     Integer, Intent (inout) :: X(:)
     Integer, Intent (in) :: Ileft, Iright, Ipv

@@ -1756,6 +1756,7 @@ iteration_result(1)%adf_ne = adfne
 contains
 
         SUBROUTINE get_diag(name1, name2, lines, diag)
+                IMPLICIT NONE
                 TYPE(line), DIMENSION(:), INTENT(IN) :: lines
                 CHARACTER*11 :: name1, name2
                 INTEGER :: ion_no1, ion_no2
@@ -1774,6 +1775,7 @@ contains
 
         SUBROUTINE get_Tdiag(name1, name2, name3, lines, factor1, factor2, ratio)
                                                         !3.47,   1.403   SIII
+                IMPLICIT NONE
                 TYPE(line), DIMENSION(:), INTENT(IN) :: lines
                 CHARACTER*11 :: name1, name2, name3
                 INTEGER :: ion_no1, ion_no2, ion_no3
