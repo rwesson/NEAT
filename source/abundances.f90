@@ -153,30 +153,30 @@ implicit none
 
 
 !diagnostics
-        call get_diag("ciii1909   ","ciii1907   ", ILs, ciiiNratio)        ! ciii ratio
-        call get_diag("oii3729    ","oii3726    ", ILs, oiiNratio )        ! oii ratio
-        call get_diag("neiv2425   ","neiv2423   ", ILs, neivNratio )       ! neiv ratio
-        call get_diag("sii6731    ","sii6716    ", ILs, siiNratio )        ! s ii ratio
-        call get_diag("cliii5537  ","cliii5517  ", ILs, cliiiNratio )      ! Cl iii ratio
-        call get_diag("ariv4740   ","ariv4711   ", ILs, arivNratio )       ! Ar iv ratio
-        call get_diag("oiii88um   ","oiii52um   ", ILs, oiiiIRNratio )     ! oiii ir ratio
-        call get_diag("siii33p5um ","siii18p7um ", ILs, siiiIRNratio )       ! siii ir ratio
-        call get_diag("neiii15p5um","neiii36p0um", ILs, neiiiIRNratio )       ! neiii ir ratio
-        call get_diag("ariii9um   ","ariii21p8um", ILs, ariiiIRNratio )       ! ariii ir ratio
+        call get_diag("ciii1909   ","ciii1907   ", ciiiNratio)        ! ciii ratio
+        call get_diag("oii3729    ","oii3726    ", oiiNratio )        ! oii ratio
+        call get_diag("neiv2425   ","neiv2423   ", neivNratio )       ! neiv ratio
+        call get_diag("sii6731    ","sii6716    ", siiNratio )        ! s ii ratio
+        call get_diag("cliii5537  ","cliii5517  ", cliiiNratio )      ! Cl iii ratio
+        call get_diag("ariv4740   ","ariv4711   ", arivNratio )       ! Ar iv ratio
+        call get_diag("oiii88um   ","oiii52um   ", oiiiIRNratio )     ! oiii ir ratio
+        call get_diag("siii33p5um ","siii18p7um ", siiiIRNratio )       ! siii ir ratio
+        call get_diag("neiii15p5um","neiii36p0um", neiiiIRNratio )       ! neiii ir ratio
+        call get_diag("ariii9um   ","ariii21p8um", ariiiIRNratio )       ! ariii ir ratio
 
 ! temperature ratios:
         !TODO: try to calculate from atomic data at start
-        CALL get_Tdiag("nii6548    ","nii6584    ","nii5754    ", ILs, DBLE(4.054), DBLE(1.3274), niiTratio)        ! N II
-        CALL get_Tdiag("oiii5007   ","oiii4959   ","oiii4363   ", ILs, DBLE(1.3356), DBLE(3.98), oiiiTratio)        ! O III
-        CALL get_Tdiag("neiii3868  ","neiii3967  ","neiii3342  ", ILs, DBLE(1.3013), DBLE(4.319), neiiiTratio)        ! Ne III
-        CALL get_Tdiag("neiii3868  ","neiii3967  ","neiii15p5um", ILs, DBLE(1.3013), DBLE(4.319), neiiiIRTratio)! Ne III ir
-        CALL get_Tdiag("nev3426    ","nev3345    ","nev2975    ", ILs, DBLE(1.3571), DBLE(3.800), nevTratio)        !!ne v
-        CALL get_Tdiag("siii9069   ","siii9531   ","siii6312   ", ILs, DBLE(3.47), DBLE(1.403), siiiTratio)        !s iii
-        CALL get_Tdiag("ariii7135  ","ariii7751  ","ariii5192  ",ILs, DBLE(1.24), DBLE(5.174), ariiiTratio)        !ar iii
-        CALL get_Tdiag("arv6435    ","arv7005    ","arv4625    ",ILs, DBLE(3.125), DBLE(1.471), arvTratio)        !ar v
-        CALL get_Tdiag("ci9850     ","ci9824     ","ci8727     ",ILs, DBLE(1.337), DBLE(3.965), ciTratio)      !C I
-        CALL get_Tdiag("oi6364     ","oi6300     ","oi5577     ",ILs, DBLE(4.127), DBLE(1.320), oiTratio)      !O I
-        CALL get_Tdiag("oiii4959   ","oiii5007   ","oiii52um   ", ILS, DBLE(1.3356), DBLE(3.98), oiiiIRTratio) ! OIII ir
+        CALL get_Tdiag("nii6548    ","nii6584    ","nii5754    ", DBLE(4.054), DBLE(1.3274), niiTratio)        ! N II
+        CALL get_Tdiag("oiii5007   ","oiii4959   ","oiii4363   ", DBLE(1.3356), DBLE(3.98), oiiiTratio)        ! O III
+        CALL get_Tdiag("neiii3868  ","neiii3967  ","neiii3342  ", DBLE(1.3013), DBLE(4.319), neiiiTratio)        ! Ne III
+        CALL get_Tdiag("neiii3868  ","neiii3967  ","neiii15p5um", DBLE(1.3013), DBLE(4.319), neiiiIRTratio)! Ne III ir
+        CALL get_Tdiag("nev3426    ","nev3345    ","nev2975    ", DBLE(1.3571), DBLE(3.800), nevTratio)        !!ne v
+        CALL get_Tdiag("siii9069   ","siii9531   ","siii6312   ", DBLE(3.47), DBLE(1.403), siiiTratio)        !s iii
+        CALL get_Tdiag("ariii7135  ","ariii7751  ","ariii5192  ", DBLE(1.24), DBLE(5.174), ariiiTratio)        !ar iii
+        CALL get_Tdiag("arv6435    ","arv7005    ","arv4625    ", DBLE(3.125), DBLE(1.471), arvTratio)        !ar v
+        CALL get_Tdiag("ci9850     ","ci9824     ","ci8727     ", DBLE(1.337), DBLE(3.965), ciTratio)      !C I
+        CALL get_Tdiag("oi6364     ","oi6300     ","oi5577     ", DBLE(4.127), DBLE(1.320), oiTratio)      !O I
+        CALL get_Tdiag("oiii4959   ","oiii5007   ","oiii52um   ", DBLE(1.3356), DBLE(3.98), oiiiIRTratio) ! OIII ir
         !Fixed, DJS
 
 ! O II
@@ -1755,9 +1755,8 @@ iteration_result(1)%adf_ne = adfne
 
 contains
 
-        SUBROUTINE get_diag(name1, name2, lines, diag)
-                IMPLICIT NONE
-                TYPE(line), DIMENSION(:), INTENT(IN) :: lines
+        SUBROUTINE get_diag(name1, name2, diag)
+                IMPLICIT NONE 
                 CHARACTER*11 :: name1, name2
                 INTEGER :: ion_no1, ion_no2
                 DOUBLE PRECISION :: diag
@@ -1773,10 +1772,9 @@ contains
 
         END SUBROUTINE
 
-        SUBROUTINE get_Tdiag(name1, name2, name3, lines, factor1, factor2, ratio)
+        SUBROUTINE get_Tdiag(name1, name2, name3, factor1, factor2, ratio)
                                                         !3.47,   1.403   SIII
-                IMPLICIT NONE
-                TYPE(line), DIMENSION(:), INTENT(IN) :: lines
+                IMPLICIT NONE 
                 CHARACTER*11 :: name1, name2, name3
                 INTEGER :: ion_no1, ion_no2, ion_no3
                 DOUBLE PRECISION :: factor1, factor2, ratio, ratio2
