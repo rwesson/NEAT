@@ -116,7 +116,7 @@ subroutine get_He(He_lines, linelist,listlength)
         TYPE(line), DIMENSION(:), INTENT(IN) :: linelist
         INTEGER :: i, j, listlength
         REAL*8 :: HW
-        CHARACTER*10 :: blank
+        CHARACTER*11 :: blank
         !another ugly kludge, but it works.
         do i = 1, 4
                 if(i == 1)then
