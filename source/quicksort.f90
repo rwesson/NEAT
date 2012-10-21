@@ -143,7 +143,7 @@ CONTAINS
 
 ! ***********************************
 ! *
-  Integer Function Locate_IN(X, Xo, Iin)
+  Integer Function Locate_IN(X, Xo)
 ! *
 ! ***********************************
 ! * From an ascendent ordered set
@@ -159,8 +159,6 @@ CONTAINS
     IMPLICIT NONE
 
     Integer, Intent (in) :: X(:), Xo
-    Integer, Intent (in), Optional :: Iin
-
     Integer :: Nmin, Nmax, Nnew, Isize
 
 
@@ -192,7 +190,7 @@ CONTAINS
 
 ! ***********************************
 ! *
-  Integer Function Locate_SP(X, Xo, Iin)
+  Integer Function Locate_SP(X, Xo)
 ! *
 ! ***********************************
 ! * From an ascendent ordered set
@@ -206,8 +204,6 @@ CONTAINS
     IMPLICIT NONE
 
     Real (kind=SP), Intent (in) :: X(:), Xo
-    Integer, Intent (in), Optional :: Iin
-
     Integer :: Nmin, Nmax, Nnew, Isize
 
 
@@ -239,7 +235,7 @@ CONTAINS
 
 ! ***********************************
 ! *
-  Integer Function Locate_DP(X, Xo, Iin)
+  Integer Function Locate_DP(X, Xo)
 ! *
 ! ***********************************
 ! * From an ascendent ordered set
@@ -253,8 +249,6 @@ CONTAINS
     IMPLICIT NONE
 
     Real (kind=DP), Intent (in) :: X(:), Xo
-    Integer, Intent (in), Optional :: Iin
-
     Integer :: Nmin, Nmax, Nnew, Isize
 
 
