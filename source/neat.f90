@@ -30,6 +30,8 @@ program neat
         use mod_recombination_lines
         !use mod_common_data
 
+        IMPLICIT NONE
+
         CHARACTER :: switch_ext !switch for extinction laws
         CHARACTeR :: switch_he  !switch for helium atomic data
         INTEGER :: I, runs, Narg !runs = number of runs for randomiser
@@ -55,6 +57,7 @@ program neat
 
         character*10 :: ionlist(40) !list of ion names
         integer :: iion !# of ions in Ilines
+        integer :: Iint 
         integer :: maxlevs,maxtemps
         type(atomic_data),allocatable :: atomicdata(:)
         double precision, dimension(21,15,44) :: heidata
@@ -470,6 +473,12 @@ program neat
                 write (650,704) "adf_Ne2plus :      ",iteration_result(1)%adf_Ne2plus
 
                 close (650)
+
+                open (650,FILE=trim(filename)//"_dereddened", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                do i=1,listlength
+                   write (650,"(F7.2,X,F8.3,X,F8.3)") linelist(i)%wavelength,linelist(i)%intensity,linelist(i)%int_dered
+                end do
+                close(650)
 
         else if(runs > 1)then
 
