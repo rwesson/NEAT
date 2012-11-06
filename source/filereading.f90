@@ -77,6 +77,7 @@ subroutine element_assign(ILs, linelist, Iint, listlength)
                         if(linelist(j)%wavelength == ILs(i)%wavelength)then
                                 ILs(i)%intensity = linelist(j)%intensity
                                 ILs(i)%int_err   = linelist(j)%int_err
+                                ILs(i)%location = j !recording where the line is in linelist array so that its abundance can be copied back in
                                 cycle
                         endif
                 end do
@@ -142,6 +143,7 @@ subroutine get_He(He_lines, linelist,listlength)
                         if(linelist(j)%wavelength == HW) then
                                 He_lines(i)%intensity = linelist(j)%intensity
                                 He_lines(i)%int_err = linelist(j)%int_err
+                                He_lines(i)%location = j
                         endif
                 end do
         end do

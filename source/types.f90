@@ -10,7 +10,8 @@ TYPE line
         DOUBLE PRECISION :: int_dered
         CHARACTER*20 :: transition
         DOUBLE PRECISION :: abundance
-        CHARACTER*4 :: zone
+        CHARACTER*4 :: zone !high, medium or low ionisation zone 
+        INTEGER :: location !for CELs and He, this indicates the position of the line in the main linelist array, so that when its abundance is calculated it can be copied back into the linelist array for easy outputting
 END TYPE
 
 end module mod_abundtypes

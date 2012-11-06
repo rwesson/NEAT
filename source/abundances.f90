@@ -681,12 +681,21 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
 ! Helium abundances
 
-        call get_heii(REAL(medtemp),REAL(meddens),REAL(He_lines(1)%int_dered),heiiabund)
+        call get_heii(REAL(medtemp),REAL(meddens),real(He_lines(1)%int_dered),heiiabund)
+
         if (switch_he=="S") then
-          call get_hei_smits(REAL(medtemp),REAL(meddens),REAL(He_lines(2)%int_dered),REAL(He_lines(3)%int_dered),REAL(He_lines(4)%int_dered),heiabund)
+          call get_hei_smits(REAL(medtemp),REAL(meddens),He_lines,heiabund)
         else
-          call get_hei_porter(REAL(medtemp),REAL(meddens),REAL(He_lines(2)%int_dered),REAL(He_lines(3)%int_dered),REAL(He_lines(4)%int_dered),heidata, heiabund)
+          call get_hei_porter(REAL(medtemp),REAL(meddens),He_lines,heidata, heiabund)
         endif
+
+        !copy the line abundances back into the main array
+
+        do i=1,4 
+          if (He_lines(i)%location .gt. 0) then
+            linelist(He_lines(i)%location)%abundance = He_lines(i)%abundance
+          endif
+        end do
 
         hetotabund = heiabund + heiiabund
 
@@ -1123,6 +1132,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
           if (abs(linelist(i)%wavelength-oiiRLs(j)%Wave) .le. 0.005) then
             oiiRLs(j)%Obs = linelist(i)%int_dered
             oiiRLs(j)%abundance = oiiRLs(j)%obs/oiiRLs(j)%Int
+            linelist(i)%abundance = oiiRLs(j)%abundance
           endif
          enddo
        enddo
@@ -1136,6 +1146,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
           if (abs(linelist(i)%wavelength-niiRLs(j)%Wave) .le. 0.005) then
             niiRLs(j)%Obs = linelist(i)%int_dered
             niiRLs(j)%abundance = niiRLs(j)%obs/niiRLs(j)%Int
+            linelist(i)%abundance = niiRLs(j)%abundance
           endif
          enddo
        enddo
@@ -1148,6 +1159,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
           if (abs(linelist(i)%wavelength-ciiRLs(j)%Wave) .le. 0.005) then
             ciiRLs(j)%Obs = linelist(i)%int_dered
             ciiRLs(j)%abundance = ciiRLs(j)%obs/ciiRLs(j)%Int
+            linelist(i)%abundance = ciiRLs(j)%abundance
           endif
          enddo
        enddo
@@ -1160,6 +1172,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
           if (abs(linelist(i)%wavelength-neiiRLs(j)%Wave) .le. 0.005) then
             neiiRLs(j)%Obs = linelist(i)%int_dered
             neiiRLs(j)%abundance = neiiRLs(j)%obs/neiiRLs(j)%Int
+            linelist(i)%abundance = neiiRLs(j)%abundance
           endif
          enddo
        enddo
@@ -1172,6 +1185,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
           if (abs(linelist(i)%wavelength-xiiiRLs(j)%Wave) .le. 0.005) then
             xiiiRLs(j)%Obs = linelist(i)%int_dered
             xiiiRLs(j)%abundance = xiiiRLs(j)%obs/xiiiRLs(j)%Int
+            linelist(i)%abundance = xiiiRLs(j)%abundance
           endif
          enddo
        enddo
@@ -1752,6 +1766,13 @@ iteration_result(1)%adf_c = adfc
 iteration_result(1)%adf_ne2plus = adfne2plus
 iteration_result(1)%adf_ne = adfne
 
+!copy CEL abundances back into main linelist array
+
+do i=1,Iint
+  if (ILs(i)%location .gt. 0) then
+    linelist(ILs(i)%location)%abundance = ILs(i)%abundance
+  end if
+end do
 
 contains
 

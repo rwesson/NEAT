@@ -484,8 +484,9 @@ program neat
                 close (650)
 
                 open (650,FILE=trim(filename)//"_dereddened", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                write (650,*) "Wavelength F(line)  I(line)    X(line)/H"
                 do i=1,listlength
-                   write (650,"(F7.2,X,F8.3,X,F8.3)") linelist(i)%wavelength,linelist(i)%intensity,linelist(i)%int_dered
+                   write (650,"(X,F7.2,X,F8.3,X,F8.3,X,ES14.3)") linelist(i)%wavelength,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance
                 end do
                 close(650)
 
