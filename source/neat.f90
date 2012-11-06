@@ -113,6 +113,10 @@ program neat
            print *,"  -i / --input"
            print *,"       Input file"
            print *,"       No default"
+           print *,"  -u / --uncertainties"
+           print *,"       Calculate uncertainties, using 20,000 iterations"
+           print *,"       Default: no calculation of uncertainties"
+           print *,"       If this option is specified, the -n option will be ignored"
            print *,"  -n / --n-iterations"
            print *,"       Number of iterations"
            print *,"       Default: 1"
@@ -165,7 +169,9 @@ program neat
 
         do i=1,Narg
                 if ((trim(options(i))=="-n" .or. trim(options(i))=="--n-iterations") .and. (i+1) .le. Narg) then
-                   read (options(i+1),*) runs
+                   if (runs .ne. 20000) then
+                     read (options(i+1),*) runs
+                   endif
                 endif
                 if ((trim(options(i))=="-i" .or. trim(options(i))=="--input") .and. (i+1) .le. Narg) then
                   filename=trim(options(i+1))
@@ -207,6 +213,9 @@ program neat
                   if (trim(options(i+1))=="P12") then
                     switch_he="P"
                   endif
+                endif
+                if (trim(options(i))=="-u" .or. trim(options(i))=="--uncertainties") then
+                    runs=20000
                 endif
          enddo
 
