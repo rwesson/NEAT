@@ -73,6 +73,7 @@ subroutine element_assign(ILs, linelist, Iint, listlength)
         INTEGER :: i, j
 
         do i = 1, Iint
+                ILs(i)%location = 0 !initialise first to prevent random integers appearing and breaking things
                 do j = 1, listlength
                         if(linelist(j)%wavelength == ILs(i)%wavelength)then
                                 ILs(i)%intensity = linelist(j)%intensity
@@ -139,11 +140,13 @@ subroutine get_He(He_lines, linelist,listlength)
                 He_lines(i)%wavelength = HW
                 He_lines(i)%intensity = 0.0
                 He_lines(i)%int_err = 0.0
+                He_lines(i)%location = 0
                 do j = 1, listlength
                         if(linelist(j)%wavelength == HW) then
                                 He_lines(i)%intensity = linelist(j)%intensity
                                 He_lines(i)%int_err = linelist(j)%int_err
                                 He_lines(i)%location = j
+                                print*,j,He_lines(i)%location
                         endif
                 end do
         end do

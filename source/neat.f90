@@ -485,10 +485,26 @@ program neat
 
                 open (650,FILE=trim(filename)//"_dereddened", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
                 write (650,*) "Wavelength F(line)  I(line)    X(line)/H"
+                open (651,FILE=trim(filename)//"_dereddened.tex", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                write (651,*) "\begin{table}"
+                write (651,*) "\centering"
+                write (651,*) "\small "
+                write (651,*) "\begin{tabular}{cccc}"
+                write (651,*) "\hline"
+                write (651,*) " $ \lambda $ & $F \left( \lambda \right) $ & $I \left( \lambda \right) $ & $\frac{X(line)}{H}$ \\ \hline \hline "
                 do i=1,listlength
                    write (650,"(X,F7.2,X,F8.3,X,F8.3,X,ES14.3)") linelist(i)%wavelength,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance
+                   write (651,"(X,F7.2,X,'&',X,F8.3,X,'&',X,F8.3,X,'&',X,ES14.3,X,'&',X,'\\')") linelist(i)%wavelength,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance
                 end do
+                
+                write (651,*) "\hline"
+                write (651,*) "\end{tabular}"
+                !write (651,*) "\caption{}"
+                write (651,*) "\label{tab:",trim(filename)//"_dered}"
+                write (651,*) "\end{table}"
+                
                 close(650)
+                close(651)
 
         else if(runs > 1)then
 
