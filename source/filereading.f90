@@ -146,7 +146,6 @@ subroutine get_He(He_lines, linelist,listlength)
                                 He_lines(i)%intensity = linelist(j)%intensity
                                 He_lines(i)%int_err = linelist(j)%int_err
                                 He_lines(i)%location = j
-                                print*,j,He_lines(i)%location
                         endif
                 end do
         end do

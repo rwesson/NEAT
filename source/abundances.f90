@@ -693,7 +693,6 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
         do i=1,4 
           if (He_lines(i)%location .gt. 0) then
-            print*,He_lines(i)%location
             linelist(He_lines(i)%location)%abundance = He_lines(i)%abundance
           endif
         end do
