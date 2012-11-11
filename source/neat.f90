@@ -46,6 +46,7 @@ program neat
         LOGICAL :: file_exists
         TYPE(LINE),DIMENSION(:), allocatable :: linelist
         TYPE(LINE),DIMENSION(:), allocatable :: linelist_original
+        TYPE(LINE),dimension(:,:), allocatable :: all_linelists
         CHARACTER*80 :: filename
         CHARACTER*1 :: null
         INTEGER :: IO, listlength
@@ -497,7 +498,10 @@ program neat
                 linelist_original = linelist
 
                 call init_random_seed()!sets seed for randomiser
+
+                !allocate arrays to store all results and line info
                 allocate(all_results(runs))
+                allocate(all_linelists(size(linelist),runs))
 
                 !main loop
 
@@ -511,8 +515,13 @@ program neat
                         call randomizer(linelist, listlength, R)
                         R=3.1 ! no randomisation
                         call abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he)
-                        linelist = linelist_original
+
+                        !store all line and derived quantity in arrays
+                        all_linelists(:,i)=linelist 
                         all_results(i)=iteration_result(1)
+                        !restore the unrandomized line list ready for the next iteration
+                        linelist = linelist_original
+
                 END DO
 
                 ! now process outputs
