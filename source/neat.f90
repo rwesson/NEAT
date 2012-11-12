@@ -500,126 +500,126 @@ program neat
                 write (651,*)
 
                 write (651,*),"Extinction \\"
-                write (651,710) "mean_cHb :         ",iteration_result(1)%mean_cHb
+                write (651,710) "Mean c(H$\beta$) :         ",iteration_result(1)%mean_cHb
                 write (651,*) " \\"
                 write (651,*) " \\"
                 write (651,*),"Diagnostics \\"
-                write (651,715) "OII_density :      ",INT(iteration_result(1)%OII_density), iteration_result(1)%OII_density_ratio
-                write (651,715) "SII_density :      ",INT(iteration_result(1)%SII_density), iteration_result(1)%SII_density_ratio
-                write (651,711) "low_density :      ",INT(iteration_result(1)%low_density)
+                write (651,715) "{[}O~{\sc ii}] density :      ",INT(iteration_result(1)%OII_density), iteration_result(1)%OII_density_ratio
+                write (651,715) "{[}S~{\sc ii}] density :      ",INT(iteration_result(1)%SII_density), iteration_result(1)%SII_density_ratio
+                write (651,711) "low density :      ",INT(iteration_result(1)%low_density)
                 write (651,*) " \\"
-                write (651,715) "OII_temp :         ",INT(iteration_result(1)%OII_temp), iteration_result(1)%OII_temp_ratio
-                write (651,715) "NII_temp :         ",INT(iteration_result(1)%NII_temp), iteration_result(1)%NII_temp_ratio
-                write (651,715) "SII_temp :         ",INT(iteration_result(1)%SII_temp), iteration_result(1)%SII_temp_ratio
-                write (651,715) "OI_temp :          ",INT(iteration_result(1)%OI_temp), iteration_result(1)%OI_temp_ratio
-                write (651,715) "CI_temp :          ",INT(iteration_result(1)%CI_temp), iteration_result(1)%CI_temp_ratio
-                write (651,711) "low_temp :         ",INT(iteration_result(1)%low_temp)
+                write (651,715) "{[}O~{\sc ii}] temperature:         ",INT(iteration_result(1)%OII_temp), iteration_result(1)%OII_temp_ratio
+                write (651,715) "{[}N~{\sc ii}] temperature:         ",INT(iteration_result(1)%NII_temp), iteration_result(1)%NII_temp_ratio
+                write (651,715) "{[}S~{\sc ii}] temperature:         ",INT(iteration_result(1)%SII_temp), iteration_result(1)%SII_temp_ratio
+                write (651,715) "{[}O~{\sc i}] temperature:          ",INT(iteration_result(1)%OI_temp), iteration_result(1)%OI_temp_ratio
+                write (651,715) "{[}C~{\sc i}] temperature:          ",INT(iteration_result(1)%CI_temp), iteration_result(1)%CI_temp_ratio
+                write (651,711) "low temperature:         ",INT(iteration_result(1)%low_temp)
                 write (651,*) " \\"
-                write (651,715) "ClIII_density :    ",INT(iteration_result(1)%ClIII_density), iteration_result(1)%ClIII_density_ratio
-                write (651,715) "ArIV_density :     ",INT(iteration_result(1)%ArIV_density), iteration_result(1)%ArIV_density_ratio
-                write (651,715) "CIII_density :     ",INT(iteration_result(1)%CIII_density), iteration_result(1)%CIII_density_ratio
-                write (651,715) "OIII_IR_density :  ",INT(iteration_result(1)%OIII_IR_density), iteration_result(1)%OIII_IR_density_ratio
-                write (651,715) "SIII_IR_density :  ",INT(iteration_result(1)%SIII_IR_density), iteration_result(1)%SIII_IR_density_ratio
-                write (651,715) "ArIII_IR_density : ",INT(iteration_result(1)%ArIII_IR_density), iteration_result(1)%ArIII_IR_density_ratio
-                write (651,715) "NeIII_IR_density : ",INT(iteration_result(1)%NeIII_IR_density), iteration_result(1)%NeIII_IR_density_ratio
-                write (651,711) "med_density :      ",INT(iteration_result(1)%med_density)
+                write (651,715) "{[}Cl~{\sc iii}] density :    ",INT(iteration_result(1)%ClIII_density), iteration_result(1)%ClIII_density_ratio
+                write (651,715) "{[}Ar~{\sc iv}] density :     ",INT(iteration_result(1)%ArIV_density), iteration_result(1)%ArIV_density_ratio
+                write (651,715) "{[}C~{\sc iii}] density :     ",INT(iteration_result(1)%CIII_density), iteration_result(1)%CIII_density_ratio
+                write (651,715) "{[}O~{\sc iii}] IR density :  ",INT(iteration_result(1)%OIII_IR_density), iteration_result(1)%OIII_IR_density_ratio
+                write (651,715) "{[}S~{\sc iii}] IR density :  ",INT(iteration_result(1)%SIII_IR_density), iteration_result(1)%SIII_IR_density_ratio
+                write (651,715) "{[}Ar~{\sc iii}] IR density : ",INT(iteration_result(1)%ArIII_IR_density), iteration_result(1)%ArIII_IR_density_ratio
+                write (651,715) "{[}Ne~{\sc iii}] IR density : ",INT(iteration_result(1)%NeIII_IR_density), iteration_result(1)%NeIII_IR_density_ratio
+                write (651,711) "medium density :      ",INT(iteration_result(1)%med_density)
                 write (651,*) " \\"
-                write (651,715) "OIII_temp :        ",INT(iteration_result(1)%OIII_temp), iteration_result(1)%OIII_temp_ratio
-                write (651,715) "OIII_IR_temp :     ",INT(iteration_result(1)%OIII_IR_temp), iteration_result(1)%OIII_IR_temp_ratio
-                write (651,715) "NeIII_temp :       ",INT(iteration_result(1)%NeIII_temp), iteration_result(1)%NeIII_temp_ratio
-                write (651,715) "NeIII_IR_temp :    ",INT(iteration_result(1)%NeIII_IR_temp), iteration_result(1)%NeIII_IR_temp_ratio
-                write (651,715) "ArIII_temp :       ",INT(iteration_result(1)%ArIII_temp), iteration_result(1)%ArIII_temp_ratio
-                write (651,715) "SIII_temp :        ",INT(iteration_result(1)%SIII_temp), iteration_result(1)%SIII_temp_ratio
-                write (651,711) "med_temp :         ",INT(iteration_result(1)%med_temp)
+                write (651,715) "{[}O~{\sc iii}] temperature:        ",INT(iteration_result(1)%OIII_temp), iteration_result(1)%OIII_temp_ratio
+                write (651,715) "{[}O~{\sc iii}] IR temperature:     ",INT(iteration_result(1)%OIII_IR_temp), iteration_result(1)%OIII_IR_temp_ratio
+                write (651,715) "{[}Ne~{\sc iii}] temperature:       ",INT(iteration_result(1)%NeIII_temp), iteration_result(1)%NeIII_temp_ratio
+                write (651,715) "{[}Ne~{\sc iii}] IR temperature:    ",INT(iteration_result(1)%NeIII_IR_temp), iteration_result(1)%NeIII_IR_temp_ratio
+                write (651,715) "{[}Ar~{\sc iii}] temperature:       ",INT(iteration_result(1)%ArIII_temp), iteration_result(1)%ArIII_temp_ratio
+                write (651,715) "{[}S~{\sc iii}] temperature:        ",INT(iteration_result(1)%SIII_temp), iteration_result(1)%SIII_temp_ratio
+                write (651,711) "medium temperature:         ",INT(iteration_result(1)%med_temp)
                 write (651,*) " \\"
-                write (651,715) "NeIV_density :     ",INT(iteration_result(1)%NeIV_density), iteration_result(1)%NeIV_density_ratio
-                write (651,711) "high_density :     ",INT(iteration_result(1)%high_density)
+                write (651,715) "{[}Ne~{\sc iv}] density :     ",INT(iteration_result(1)%NeIV_density), iteration_result(1)%NeIV_density_ratio
+                write (651,711) "high density :     ",INT(iteration_result(1)%high_density)
                 write (651,*) " \\"
-                write (651,715) "ArV_temp :         ",INT(iteration_result(1)%ArV_temp), iteration_result(1)%ArV_temp_ratio
-                write (651,715) "NeV_temp :         ",INT(iteration_result(1)%NeV_temp), iteration_result(1)%NeV_temp_ratio
-                write (651,711) "high_temp :        ",INT(iteration_result(1)%high_temp)
+                write (651,715) "{[}Ar~{\sc v}] temperature:         ",INT(iteration_result(1)%ArV_temp), iteration_result(1)%ArV_temp_ratio
+                write (651,715) "{[}Ne~{\sc v}] temperature:         ",INT(iteration_result(1)%NeV_temp), iteration_result(1)%NeV_temp_ratio
+                write (651,711) "high temperature:        ",INT(iteration_result(1)%high_temp)
                 write (651,*) " \\"
-                write (651,711) "Balmer_jump_temp : ",INT(iteration_result(1)%Bal_jump_temp)
+                write (651,711) "Balmer jump temperature: ",INT(iteration_result(1)%Bal_jump_temp)
                 write (651,*) " \\"
                 write (651,*) " \\"
                 write (651,*),"Abundances \\"
                 write (651,*)," \\"
                 write (651,*),"Collisionally excited lines \\"
-                write (651,712) "NC_abund_CEL :     ",iteration_result(1)%NC_abund_CEL
-                write (651,712) "cii_abund_CEL :    ",iteration_result(1)%cii_abund_CEL
-                write (651,712) "ciii_abund_CEL :   ",iteration_result(1)%ciii_abund_CEL
-                write (651,712) "civ_abund_CEL :    ",iteration_result(1)%civ_abund_CEL
-                write (651,714) "C_icf_CEL :        ",iteration_result(1)%C_icf_CEL
-                write (651,712) "C_abund_CEL :      ",iteration_result(1)%C_abund_CEL
-                write (651,712) "Nii_abund_CEL :    ",iteration_result(1)%Nii_abund_CEL
-                write (651,712) "Niii_abund_CEL :   ",iteration_result(1)%Niii_abund_CEL
-                write (651,712) "Niv_abund_CEL :    ",iteration_result(1)%Niv_abund_CEL
-                write (651,712) "Nv_abund_CEL :     ",iteration_result(1)%Nv_abund_CEL
-                write (651,714) "N_icf_CEL :        ",iteration_result(1)%N_icf_CEL
-                write (651,712) "N_abund_CEL :      ",iteration_result(1)%N_abund_CEL
-                write (651,712) "NO_abund_CEL :     ",iteration_result(1)%NO_abund_CEL
-                write (651,712) "Oii_abund_CEL :    ",iteration_result(1)%Oii_abund_CEL
-                write (651,712) "Oiii_abund_CEL :   ",iteration_result(1)%Oiii_abund_CEL
-                write (651,712) "Oiv_abund_CEL :    ",iteration_result(1)%Oiv_abund_CEL
-                write (651,714) "O_icf_CEL :        ",iteration_result(1)%O_icf_CEL
-                write (651,712) "O_abund_CEL :      ",iteration_result(1)%O_abund_CEL
-                write (651,712) "Neii_abund_CEL :   ",iteration_result(1)%Neii_abund_CEL
-                write (651,712) "Neiii_abund_CEL :  ",iteration_result(1)%Neiii_abund_CEL
-                write (651,712) "Neiv_abund_CEL :   ",iteration_result(1)%Neiv_abund_CEL
-                write (651,712) "Nev_abund_CEL :    ",iteration_result(1)%Nev_abund_CEL
-                write (651,714) "Ne_icf_CEL :       ",iteration_result(1)%Ne_icf_CEL
-                write (651,712) "Ne_abund_CEL :     ",iteration_result(1)%Ne_abund_CEL
-                write (651,712) "Ariii_abund_CEL :  ",iteration_result(1)%Ariii_abund_CEL
-                write (651,712) "Ariv_abund_CEL :   ",iteration_result(1)%Ariv_abund_CEL
-                write (651,712) "Arv_abund_CEL :    ",iteration_result(1)%Arv_abund_CEL
-                write (651,714) "Ar_icf_CEL :       ",iteration_result(1)%Ar_icf_CEL
-                write (651,712) "Ar_abund_CEL :     ",iteration_result(1)%Ar_abund_CEL
-                write (651,712) "Sii_abund_CEL :    ",iteration_result(1)%Sii_abund_CEL
-                write (651,712) "Siii_abund_CEL :   ",iteration_result(1)%Siii_abund_CEL
-                write (651,714) "S_icf_CEL :        ",iteration_result(1)%S_icf_CEL
-                write (651,712) "S_abund_CEL :      ",iteration_result(1)%S_abund_CEL
-                write (651,712) "Cliii_abund_CEL :  ",iteration_result(1)%Cliii_abund_CEL
-                write (651,714) "Cl_icf_CEL :       ",iteration_result(1)%Cl_icf_CEL
-                write (651,712) "Cl_abund_CEL :     ",iteration_result(1)%Cl_abund_CEL
+                write (651,712) "C~{\sc i}          :     ",iteration_result(1)%NC_abund_CEL
+                write (651,712) "C~{\sc ii}          :    ",iteration_result(1)%cii_abund_CEL
+                write (651,712) "C~{\sc iii}          :   ",iteration_result(1)%ciii_abund_CEL
+                write (651,712) "C~{\sc iv}          :    ",iteration_result(1)%civ_abund_CEL
+                write (651,714) "C icf     :        ",iteration_result(1)%C_icf_CEL
+                write (651,712) "C           :      ",iteration_result(1)%C_abund_CEL
+                write (651,712) "N~{\sc ii}          :    ",iteration_result(1)%Nii_abund_CEL
+                write (651,712) "N~{\sc iii}          :   ",iteration_result(1)%Niii_abund_CEL
+                write (651,712) "N~{\sc iv}          :    ",iteration_result(1)%Niv_abund_CEL
+                write (651,712) "N~{\sc v}          :     ",iteration_result(1)%Nv_abund_CEL
+                write (651,714) "N icf     :        ",iteration_result(1)%N_icf_CEL
+                write (651,712) "N           :      ",iteration_result(1)%N_abund_CEL
+                write (651,712) "O~{\sc i}          :     ",iteration_result(1)%NO_abund_CEL
+                write (651,712) "O~{\sc ii}          :    ",iteration_result(1)%Oii_abund_CEL
+                write (651,712) "O~{\sc iii}          :   ",iteration_result(1)%Oiii_abund_CEL
+                write (651,712) "O~{\sc iv}          :    ",iteration_result(1)%Oiv_abund_CEL
+                write (651,714) "O icf     :        ",iteration_result(1)%O_icf_CEL
+                write (651,712) "O           :      ",iteration_result(1)%O_abund_CEL
+                write (651,712) "Ne~{\sc ii}          :   ",iteration_result(1)%Neii_abund_CEL
+                write (651,712) "Ne~{\sc iii}          :  ",iteration_result(1)%Neiii_abund_CEL
+                write (651,712) "Ne~{\sc iv}          :   ",iteration_result(1)%Neiv_abund_CEL
+                write (651,712) "Ne~{\sc v}          :    ",iteration_result(1)%Nev_abund_CEL
+                write (651,714) "Ne icf     :       ",iteration_result(1)%Ne_icf_CEL
+                write (651,712) "Ne           :     ",iteration_result(1)%Ne_abund_CEL
+                write (651,712) "Ar~{\sc iii}          :  ",iteration_result(1)%Ariii_abund_CEL
+                write (651,712) "Ar~{\sc iv}          :   ",iteration_result(1)%Ariv_abund_CEL
+                write (651,712) "Ar~{\sc v}          :    ",iteration_result(1)%Arv_abund_CEL
+                write (651,714) "Ar icf     :       ",iteration_result(1)%Ar_icf_CEL
+                write (651,712) "Ar           :     ",iteration_result(1)%Ar_abund_CEL
+                write (651,712) "S~{\sc ii}          :    ",iteration_result(1)%Sii_abund_CEL
+                write (651,712) "S~{\sc iii}          :   ",iteration_result(1)%Siii_abund_CEL
+                write (651,714) "S icf     :        ",iteration_result(1)%S_icf_CEL
+                write (651,712) "S           :      ",iteration_result(1)%S_abund_CEL
+                write (651,712) "Cl~{\sc iii}          :  ",iteration_result(1)%Cliii_abund_CEL
+                write (651,714) "Cl icf     :       ",iteration_result(1)%Cl_icf_CEL
+                write (651,712) "Cl           :     ",iteration_result(1)%Cl_abund_CEL
                 write (651,*) " \\"
                 write (651,*),"Recombination lines \\"
-                write (651,712) "Hei_abund_ORL :    ",iteration_result(1)%Hei_abund_ORL
-                write (651,712) "Heii_abund_ORL :   ",iteration_result(1)%Heii_abund_ORL
-                write (651,712) "He_abund_ORL :     ",iteration_result(1)%He_abund_ORL
-                write (651,712) "Cii_abund_ORL :    ",iteration_result(1)%Cii_abund_ORL
-                write (651,712) "Ciii_abund_ORL :   ",iteration_result(1)%Ciii_abund_ORL
-                write (651,714) "C_icf_ORL :        ",iteration_result(1)%C_icf_ORL
-                write (651,712) "C_abund_ORL :      ",iteration_result(1)%C_abund_ORL
-                write (651,712) "Nii_abund_ORL :    ",iteration_result(1)%Nii_abund_ORL
-                write (651,712) "Niii_abund_ORL :   ",iteration_result(1)%Niii_abund_ORL
-                write (651,714) "N_icf_ORL :        ",iteration_result(1)%N_icf_ORL
-                write (651,712) "N_abund_ORL :      ",iteration_result(1)%N_abund_ORL
-                write (651,712) "Oii_abund_ORL :    ",iteration_result(1)%Oii_abund_ORL
-                write (651,714) "O_icf_ORL :        ",iteration_result(1)%O_icf_ORL
-                write (651,712) "O_abund_ORL :      ",iteration_result(1)%O_abund_ORL
-                write (651,712) "Neii_abund_ORL :   ",iteration_result(1)%Neii_abund_ORL
-                write (651,714) "Ne_icf_ORL :       ",iteration_result(1)%Ne_icf_ORL
-                write (651,712) "Ne_abund_ORL :     ",iteration_result(1)%Ne_abund_ORL
+                write (651,712) "He~{\sc i}:        ",iteration_result(1)%Hei_abund_ORL
+                write (651,712) "He~{\sc ii}:       ",iteration_result(1)%Heii_abund_ORL
+                write (651,712) "He :               ",iteration_result(1)%He_abund_ORL
+                write (651,712) "C~{\sc ii}:        ",iteration_result(1)%Cii_abund_ORL
+                write (651,712) "C~{\sc iii}:       ",iteration_result(1)%Ciii_abund_ORL
+                write (651,714) "C icf     :        ",iteration_result(1)%C_icf_ORL
+                write (651,712) "C :                ",iteration_result(1)%C_abund_ORL
+                write (651,712) "N~{\sc ii}:        ",iteration_result(1)%Nii_abund_ORL
+                write (651,712) "N~{\sc iii}:       ",iteration_result(1)%Niii_abund_ORL
+                write (651,714) "N icf     :        ",iteration_result(1)%N_icf_ORL
+                write (651,712) "N :                ",iteration_result(1)%N_abund_ORL
+                write (651,712) "O~{\sc ii}:        ",iteration_result(1)%Oii_abund_ORL
+                write (651,714) "O icf     :        ",iteration_result(1)%O_icf_ORL
+                write (651,712) "O :                ",iteration_result(1)%O_abund_ORL
+                write (651,712) "Ne~{\sc ii}:       ",iteration_result(1)%Neii_abund_ORL
+                write (651,714) "Ne icf     :       ",iteration_result(1)%Ne_icf_ORL
+                write (651,712) "Ne :               ",iteration_result(1)%Ne_abund_ORL
                 write (651,*) " \\"
                 write (651,*),"Strong line methods \\"
-                write (651,713) "O_R23_upper :      ",iteration_result(1)%O_R23_upper
-                write (651,713) "O_R23_lower :      ",iteration_result(1)%O_R23_lower
-                write (651,713) "O_N2 :             ",iteration_result(1)%O_N2
-                write (651,713) "O_O3N2 :           ",iteration_result(1)%O_O3N2
-                write (651,713) "O_Ar3O3 :          ",iteration_result(1)%O_Ar3O3
-                write (651,713) "O_S3O3 :           ",iteration_result(1)%O_S3O3
+                write (651,713) "O(R23 upper) :      ",iteration_result(1)%O_R23_upper
+                write (651,713) "O(R23 lower) :      ",iteration_result(1)%O_R23_lower
+                write (651,713) "O(N2) :             ",iteration_result(1)%O_N2
+                write (651,713) "O(O3N2) :           ",iteration_result(1)%O_O3N2
+                write (651,713) "O(Ar3O3) :          ",iteration_result(1)%O_Ar3O3
+                write (651,713) "O(S3O3) :           ",iteration_result(1)%O_S3O3
                 write (651,*) " \\"
                 write (651,*) " \\"
                 write (651,*),"Abundance discrepancy factors \\"
                 write (651,*)," \\"
-                write (651,714) "adf_O :            ",iteration_result(1)%adf_O
-                write (651,714) "adf_O2plus :       ",iteration_result(1)%adf_O2plus
-                write (651,714) "adf_N :            ",iteration_result(1)%adf_N
-                write (651,714) "adf_N2plus :       ",iteration_result(1)%adf_N2plus
-                write (651,714) "adf_C :            ",iteration_result(1)%adf_C
-                write (651,714) "adf_C2plus :       ",iteration_result(1)%adf_C2plus
-                write (651,714) "adf_Ne :           ",iteration_result(1)%adf_Ne
-                write (651,714) "adf_Ne2plus :      ",iteration_result(1)%adf_Ne2plus
+                write (651,714) "adf (O) :            ",iteration_result(1)%adf_O
+                write (651,714) "adf (O$^{2+}$) :       ",iteration_result(1)%adf_O2plus
+                write (651,714) "adf (N) :            ",iteration_result(1)%adf_N
+                write (651,714) "adf (N$^{2+}$) :       ",iteration_result(1)%adf_N2plus
+                write (651,714) "adf (C) :            ",iteration_result(1)%adf_C
+                write (651,714) "adf (C$^{2+}$) :       ",iteration_result(1)%adf_C2plus
+                write (651,714) "adf (Ne) :           ",iteration_result(1)%adf_Ne
+                write (651,714) "adf (Ne$^{2+}$) :      ",iteration_result(1)%adf_Ne2plus
                 
                 write (651,*) "\hline"
                 write (651,*) "\end{tabular}"
