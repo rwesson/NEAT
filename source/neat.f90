@@ -490,10 +490,9 @@ program neat
 
                 close (650)
                 
-                write (651,*) "\begin{table}"
                 write (651,*) "\centering"
                 write (651,*) "\small"
-                write (651,*) "\begin{tabular}{lcc}"
+                write (651,*) "\begin{longtable}{lcc}"
                 write (651,*) "\hline"
                 write (651,*) "\multicolumn{3}{c}{Analysis of file ",trim(filename),"} \\"
                 write (651,*) "\hline \hline"
@@ -621,21 +620,19 @@ program neat
                 write (651,714) "adf (Ne) :           ",iteration_result(1)%adf_Ne
                 write (651,714) "adf (Ne$^{2+}$) :      ",iteration_result(1)%adf_Ne2plus
                 
-                write (651,*) "\hline"
-                write (651,*) "\end{tabular}"
+                write (651,*) "\hline" 
                 !write (651,*) "\caption{}"
                 write (651,*) "\label{tab:",trim(filename)//"_summary}"
-                write (651,*) "\end{table}"                
+                write (651,*) "\end{longtable}"                
                 
                 close (651)
 
                 open (650,FILE=trim(filename)//"_dereddened", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
                 write (650,*) "Wavelength F(line)  I(line)    X(line)/H"
                 open (651,FILE=trim(filename)//"_dereddened.tex", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                write (651,*) "\begin{table}"
                 write (651,*) "\centering"
                 write (651,*) "\small "
-                write (651,*) "\begin{tabular}{cccc}"
+                write (651,*) "\begin{longtable}{cccc}"
                 write (651,*) "\hline"
                 write (651,*) " $ \lambda $ & $F \left( \lambda \right) $ & $I \left( \lambda \right) $ & $\frac{X(line)}{H}$ \\ \hline \hline "
                 do i=1,listlength
@@ -644,10 +641,9 @@ program neat
                 end do
                 
                 write (651,*) "\hline"
-                write (651,*) "\end{tabular}"
                 !write (651,*) "\caption{}"
                 write (651,*) "\label{tab:",trim(filename)//"_dered}"
-                write (651,*) "\end{table}"
+                write (651,*) "\end{longtable}"
                 
                 close(650)
                 close(651)
