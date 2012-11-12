@@ -101,12 +101,12 @@ program neat
         702 FORMAT(X,A20,ES14.3) !abundances format
         703 FORMAT(X,A20,F5.2) !strong line format
         704 FORMAT(X,A20,F5.2) !adf format
-        710 FORMAT(X,A20,X,"&",X,F5.3,X,"&  & \\") !latex table version of extinction format
-        711 FORMAT(X,A20,X,"&",X,I5,X,"&  & \\") !as above, diagnostics format
-        715 FORMAT(X,A20,X,"&",X,I5,5X,"&",X,F8.3,X,"& \\") !as above, diagnostics and ratio format
-        712 FORMAT(X,A20,X,"&",X,ES14.3,X,"&  & \\") !as above, abundances format
-        713 FORMAT(X,A20,X,"&",X,F5.2,X,"&  & \\") !as above, strong line format
-        714 FORMAT(X,A20,X,"&",X,F5.2,X,"&  & \\") !as above, adf format
+        710 FORMAT(X,A20,X,"&",X,F5.3,X,"\\") !latex table version of extinction format
+        711 FORMAT(X,A20,X,"&",X,I5,X,"\\") !as above, diagnostics format
+        715 FORMAT(X,A20,X,"&",X,I5,5X,"&",X,F8.3,X,"\\") !as above, diagnostics and ratio format
+        712 FORMAT(X,A20,X,"&",X,ES14.3,X,"\\") !as above, abundances format
+        713 FORMAT(X,A20,X,"&",X,F5.2,X,"\\") !as above, strong line format
+        714 FORMAT(X,A20,X,"&",X,F5.2,X,"\\") !as above, adf format
         R=3.1
 
         !read command line arguments
@@ -493,28 +493,28 @@ program neat
                 write (651,*) "\begin{table}"
                 write (651,*) "\centering"
                 write (651,*) "\small"
-                write (651,*) "\begin{tabular}[lcc]"
+                write (651,*) "\begin{tabular}{lcc}"
                 write (651,*) "\hline"
-                write (651,*) "\multicolumn{3}{c}{Analysis of file ",trim(filename),"} & \\"
+                write (651,*) "\multicolumn{3}{c}{Analysis of file ",trim(filename),"} \\"
                 write (651,*) "\hline \hline"
                 write (651,*)
 
-                write (651,*),"Extinction &  &  & \\"
+                write (651,*),"Extinction \\"
                 write (651,710) "mean_cHb :         ",iteration_result(1)%mean_cHb
-                write (651,*) " &  &  & \\"
-                write (651,*) " &  &  & \\"
-                write (651,*),"Diagnostics &  &  & \\"
+                write (651,*) " \\"
+                write (651,*) " \\"
+                write (651,*),"Diagnostics \\"
                 write (651,715) "OII_density :      ",INT(iteration_result(1)%OII_density), iteration_result(1)%OII_density_ratio
                 write (651,715) "SII_density :      ",INT(iteration_result(1)%SII_density), iteration_result(1)%SII_density_ratio
                 write (651,711) "low_density :      ",INT(iteration_result(1)%low_density)
-                write (651,*) " &  &  & \\"
+                write (651,*) " \\"
                 write (651,715) "OII_temp :         ",INT(iteration_result(1)%OII_temp), iteration_result(1)%OII_temp_ratio
                 write (651,715) "NII_temp :         ",INT(iteration_result(1)%NII_temp), iteration_result(1)%NII_temp_ratio
                 write (651,715) "SII_temp :         ",INT(iteration_result(1)%SII_temp), iteration_result(1)%SII_temp_ratio
                 write (651,715) "OI_temp :          ",INT(iteration_result(1)%OI_temp), iteration_result(1)%OI_temp_ratio
                 write (651,715) "CI_temp :          ",INT(iteration_result(1)%CI_temp), iteration_result(1)%CI_temp_ratio
                 write (651,711) "low_temp :         ",INT(iteration_result(1)%low_temp)
-                write (651,*) " &  &  & \\"
+                write (651,*) " \\"
                 write (651,715) "ClIII_density :    ",INT(iteration_result(1)%ClIII_density), iteration_result(1)%ClIII_density_ratio
                 write (651,715) "ArIV_density :     ",INT(iteration_result(1)%ArIV_density), iteration_result(1)%ArIV_density_ratio
                 write (651,715) "CIII_density :     ",INT(iteration_result(1)%CIII_density), iteration_result(1)%CIII_density_ratio
@@ -523,7 +523,7 @@ program neat
                 write (651,715) "ArIII_IR_density : ",INT(iteration_result(1)%ArIII_IR_density), iteration_result(1)%ArIII_IR_density_ratio
                 write (651,715) "NeIII_IR_density : ",INT(iteration_result(1)%NeIII_IR_density), iteration_result(1)%NeIII_IR_density_ratio
                 write (651,711) "med_density :      ",INT(iteration_result(1)%med_density)
-                write (651,*) " &  &  & \\"
+                write (651,*) " \\"
                 write (651,715) "OIII_temp :        ",INT(iteration_result(1)%OIII_temp), iteration_result(1)%OIII_temp_ratio
                 write (651,715) "OIII_IR_temp :     ",INT(iteration_result(1)%OIII_IR_temp), iteration_result(1)%OIII_IR_temp_ratio
                 write (651,715) "NeIII_temp :       ",INT(iteration_result(1)%NeIII_temp), iteration_result(1)%NeIII_temp_ratio
@@ -531,20 +531,20 @@ program neat
                 write (651,715) "ArIII_temp :       ",INT(iteration_result(1)%ArIII_temp), iteration_result(1)%ArIII_temp_ratio
                 write (651,715) "SIII_temp :        ",INT(iteration_result(1)%SIII_temp), iteration_result(1)%SIII_temp_ratio
                 write (651,711) "med_temp :         ",INT(iteration_result(1)%med_temp)
-                write (651,*) " &  &  & \\"
+                write (651,*) " \\"
                 write (651,715) "NeIV_density :     ",INT(iteration_result(1)%NeIV_density), iteration_result(1)%NeIV_density_ratio
                 write (651,711) "high_density :     ",INT(iteration_result(1)%high_density)
-                write (651,*) " &  &  & \\"
+                write (651,*) " \\"
                 write (651,715) "ArV_temp :         ",INT(iteration_result(1)%ArV_temp), iteration_result(1)%ArV_temp_ratio
                 write (651,715) "NeV_temp :         ",INT(iteration_result(1)%NeV_temp), iteration_result(1)%NeV_temp_ratio
                 write (651,711) "high_temp :        ",INT(iteration_result(1)%high_temp)
-                write (651,*) " &  &  & \\"
+                write (651,*) " \\"
                 write (651,711) "Balmer_jump_temp : ",INT(iteration_result(1)%Bal_jump_temp)
-                write (651,*) " &  &  & \\"
-                write (651,*) " &  &  & \\"
-                write (651,*),"Abundances &  &  & \\"
-                write (651,*)," &  &  & \\"
-                write (651,*),"Collisionally excited lines &  &  & \\"
+                write (651,*) " \\"
+                write (651,*) " \\"
+                write (651,*),"Abundances \\"
+                write (651,*)," \\"
+                write (651,*),"Collisionally excited lines \\"
                 write (651,712) "NC_abund_CEL :     ",iteration_result(1)%NC_abund_CEL
                 write (651,712) "cii_abund_CEL :    ",iteration_result(1)%cii_abund_CEL
                 write (651,712) "ciii_abund_CEL :   ",iteration_result(1)%ciii_abund_CEL
@@ -581,8 +581,8 @@ program neat
                 write (651,712) "Cliii_abund_CEL :  ",iteration_result(1)%Cliii_abund_CEL
                 write (651,714) "Cl_icf_CEL :       ",iteration_result(1)%Cl_icf_CEL
                 write (651,712) "Cl_abund_CEL :     ",iteration_result(1)%Cl_abund_CEL
-                write (651,*) " &  &  & \\"
-                write (651,*),"Recombination lines &  &  & \\"
+                write (651,*) " \\"
+                write (651,*),"Recombination lines \\"
                 write (651,712) "Hei_abund_ORL :    ",iteration_result(1)%Hei_abund_ORL
                 write (651,712) "Heii_abund_ORL :   ",iteration_result(1)%Heii_abund_ORL
                 write (651,712) "He_abund_ORL :     ",iteration_result(1)%He_abund_ORL
@@ -600,18 +600,18 @@ program neat
                 write (651,712) "Neii_abund_ORL :   ",iteration_result(1)%Neii_abund_ORL
                 write (651,714) "Ne_icf_ORL :       ",iteration_result(1)%Ne_icf_ORL
                 write (651,712) "Ne_abund_ORL :     ",iteration_result(1)%Ne_abund_ORL
-                write (651,*) " &  &  & \\"
-                write (651,*),"Strong line methods &  &  & \\"
+                write (651,*) " \\"
+                write (651,*),"Strong line methods \\"
                 write (651,713) "O_R23_upper :      ",iteration_result(1)%O_R23_upper
                 write (651,713) "O_R23_lower :      ",iteration_result(1)%O_R23_lower
                 write (651,713) "O_N2 :             ",iteration_result(1)%O_N2
                 write (651,713) "O_O3N2 :           ",iteration_result(1)%O_O3N2
                 write (651,713) "O_Ar3O3 :          ",iteration_result(1)%O_Ar3O3
                 write (651,713) "O_S3O3 :           ",iteration_result(1)%O_S3O3
-                write (651,*) " &  &  & \\"
-                write (651,*) " &  &  & \\"
-                write (651,*),"Abundance discrepancy factors &  &  & \\"
-                write (651,*)," &  &  & \\"
+                write (651,*) " \\"
+                write (651,*) " \\"
+                write (651,*),"Abundance discrepancy factors \\"
+                write (651,*)," \\"
                 write (651,714) "adf_O :            ",iteration_result(1)%adf_O
                 write (651,714) "adf_O2plus :       ",iteration_result(1)%adf_O2plus
                 write (651,714) "adf_N :            ",iteration_result(1)%adf_N
@@ -640,7 +640,7 @@ program neat
                 write (651,*) " $ \lambda $ & $F \left( \lambda \right) $ & $I \left( \lambda \right) $ & $\frac{X(line)}{H}$ \\ \hline \hline "
                 do i=1,listlength
                    write (650,"(X,F7.2,X,F8.3,X,F8.3,X,ES14.3)") linelist(i)%wavelength,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance
-                   write (651,"(X,F7.2,X,'&',X,F8.3,X,'&',X,F8.3,X,'&',X,ES14.3,X,'&',X,'\\')") linelist(i)%wavelength,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance
+                   write (651,"(X,F7.2,X,'&',X,F8.3,X,'&',X,F8.3,X,'&',X,ES14.3,X,'\\')") linelist(i)%wavelength,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance
                 end do
                 
                 write (651,*) "\hline"
