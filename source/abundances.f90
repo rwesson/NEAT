@@ -277,7 +277,7 @@ implicit none
            call get_diagnostic("sii       ","1,2,1,3/            ","1,4,1,5/            ",siiTratio,"T",lowdens,siiTemp,maxlevs,maxtemps,atomicdata,iion)
            count = count + 1
 
-                if(siitemp .ge. 19999.5)then
+                if(siitemp .ge. 34999.5)then
                         count=count-1
                         siitemp=-1
                  endif
@@ -290,7 +290,7 @@ implicit none
            call get_diagnostic("nii       ","2,4,3,4/            ","4,5/                ",niiTratio,"T",lowdens,niitemp,maxlevs,maxtemps,atomicdata,iion)
            count = count + 5
 
-                 if(niitemp .ge. 19999.5)then
+                 if(niitemp .ge. 34999.5)then
                         count=count-5
                         niitemp=-1
                  endif
@@ -303,7 +303,7 @@ implicit none
            call get_diagnostic("ci        ","2,4,3,4/            ","4,5/                ",ciTratio,"T",lowdens,citemp,maxlevs,maxtemps,atomicdata,iion)
            count = count + 1
 
-                if(citemp .ge. 19999.5)then
+                if(citemp .ge. 34999.5)then
                         count=count-1
                         citemp=-1
                  endif
@@ -316,7 +316,7 @@ implicit none
            call get_diagnostic("oi        ","1,4,2,4/            ","4,5/                ",oiTratio,"T",lowdens,oitemp,maxlevs,maxtemps,atomicdata,iion)
            count = count + 1
 
-         if(oitemp .ge. 19999.5)then
+         if(oitemp .ge. 34999.5)then
                  count=count-1
                  oitemp=-1
          endif
@@ -399,7 +399,7 @@ implicit none
          if (oiiiTratio .gt. 0 .and. oiiiTratio .lt. 1e10) then
            call get_diagnostic("oiii      ","2,4,3,4/            ","4,5/                ",oiiiTratio,"T",meddens,oiiiTemp,maxlevs,maxtemps,atomicdata,iion)
            count = count + 4
-                 if(oiiitemp .ge. 19999.5)then
+                 if(oiiitemp .ge. 34999.5)then
                          count=count-4
                          oiiitemp=-1
                  endif
@@ -423,7 +423,7 @@ implicit none
          if (ariiiTratio .gt. 0 .and. ariiiTratio .lt. 1e10) then
            call get_diagnostic("ariii     ","1,4,2,4/            ","4,5/                ",ariiiTratio,"T",meddens,ariiitemp,maxlevs,maxtemps,atomicdata,iion)
            count = count + 2
-                 if(ariiitemp .ge. 19999.5)then
+                 if(ariiitemp .ge. 34999.5)then
                          count=count-2
                          ariiitemp=-1
                  endif
@@ -434,7 +434,7 @@ implicit none
          if (neiiiTratio .gt. 0 .and. neiiiTratio .lt. 1e10) then
            call get_diagnostic("neiii     ","1,4,2,4/            ","4,5/                ",neiiiTratio,"T",meddens,neiiitemp,maxlevs,maxtemps,atomicdata,iion)
            count = count + 2
-                if(neiiitemp .ge. 19999.5)then
+                if(neiiitemp .ge. 34999.5)then
                          count=count-2
                          neiiitemp=-1
                  endif
@@ -574,7 +574,7 @@ iteration_result(1)%low_density = lowdens
 if(niitemp > 0.2)then
         iteration_result(1)%NII_temp = niitemp
 else if(INT(niitemp) == -1)then
-        iteration_result(1)%NII_temp = 20000
+        iteration_result(1)%NII_temp = 35000.
 endif
 iteration_result(1)%NII_temp_ratio = niiTratio
 
@@ -588,21 +588,21 @@ iteration_result(1)%OII_temp_ratio = oiiTratio
 if(siitemp >0.2 )then
         iteration_result(1)%SII_temp = siitemp
 else if(INT(siitemp) == -1)then
-        iteration_result(1)%SII_temp = 20000
+        iteration_result(1)%SII_temp = 35000.
 endif
 iteration_result(1)%SII_temp_ratio = siiTratio
 
 if(oitemp >0.2 )then
         iteration_result(1)%OI_temp = oitemp
 else if(INT(oitemp) == -1)then
-        iteration_result(1)%OI_temp = 20000
+        iteration_result(1)%OI_temp = 35000.
 endif
 iteration_result(1)%OI_temp_ratio = oiTratio
 
 if(citemp >0.2 )then
         iteration_result(1)%CI_temp = citemp
 else if(INT(citemp) == -1)then
-        iteration_result(1)%CI_temp = 20000
+        iteration_result(1)%CI_temp = 35000.
 endif
 iteration_result(1)%CI_temp_ratio = ciTratio
 
@@ -629,21 +629,21 @@ iteration_result(1)%med_density = meddens
 if(oiiitemp >0.2)then
         iteration_result(1)%OIII_temp = oiiitemp
 else if(INT(oiiitemp) == -1)then
-        iteration_result(1)%OIII_temp = 20000
+        iteration_result(1)%OIII_temp = 35000.
 endif
 iteration_result(1)%OIII_temp_ratio = oiiiTratio
 
 if(neiiitemp>0.2)then
         iteration_result(1)%NeIII_temp = neiiitemp
 else if(INT(neiiitemp) == -1)then
-        iteration_result(1)%NeIII_temp = 20000
+        iteration_result(1)%NeIII_temp = 35000.
 endif
 iteration_result(1)%NeIII_temp_ratio = neiiiTratio
 
 if(ariiitemp>0.2)then
         iteration_result(1)%ArIII_temp = ariiitemp
 else if(INT(ariiitemp) == -1)then
-        iteration_result(1)%ArIII_temp = 20000
+        iteration_result(1)%ArIII_temp = 35000.
 endif
 iteration_result(1)%ArIII_temp_ratio = AriiiTratio
 
@@ -657,14 +657,14 @@ iteration_result(1)%SIII_temp_ratio = siiiTratio
 if(oiiiIRtemp > 0.2)then
         iteration_result(1)%OIII_IR_temp = oiiiIRtemp
 else if(int(oiiiIRtemp) == -1)then
-        iteration_result(1)%OIII_IR_temp = 20000
+        iteration_result(1)%OIII_IR_temp = 35000.
 endif
 iteration_result(1)%OIII_IR_temp_ratio = oiiiIRTratio
 
 if(neiiiIRtemp > 0.2)then
         iteration_result(1)%NeIII_IR_temp = neiiiIRtemp
 else if(int(neiiiIRtemp) == -1)then
-        iteration_result(1)%NeIII_IR_temp = 20000
+        iteration_result(1)%NeIII_IR_temp = 35000.
 endif
 iteration_result(1)%NeIII_IR_temp_ratio = NeiiiTratio
 
