@@ -310,7 +310,7 @@ program neat
 
         call read_ilines(ILs, Iint,iion,ionlist)
 
-        print *,gettime(), ": Reading atomic data"
+        print *,gettime(), ": reading atomic data"
 
         !CELs read, can now read in atomic data
 
@@ -346,7 +346,6 @@ program neat
 
                 !generate outputs
 
-                print *,gettime(),": writing results to file ",trim(filename),"_results"
                 OPEN(650, FILE=trim(filename)//"_results", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
                 OPEN(651, FILE=trim(filename)//"_results.tex", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
 
@@ -647,6 +646,10 @@ program neat
                 
                 close(650)
                 close(651)
+
+                print *, gettime(), ": results summary file ",trim(filename)//"_results written"
+                print *, gettime(), ": linelist file ",trim(filename)//"_dereddened written"
+
 
         else if(runs > 1)then
 
