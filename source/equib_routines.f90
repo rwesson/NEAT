@@ -209,7 +209,7 @@
         endif
 
         INT=4
-        TINC=(15000.)/((INT-1)**(LOOP))
+        TINC=(30000.)/((INT-1)**(LOOP))
 
         densi=fixedq
         dinc=0
