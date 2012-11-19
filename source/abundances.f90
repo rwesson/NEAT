@@ -394,7 +394,7 @@ implicit none
          endif
 
          if (count .eq. 0 .and. diagnostic_array(2) .eq. 0) then
-           meddens = 1000.0
+           meddens = lowdens
          elseif (diagnostic_array(2) .gt. 0.0) then
            meddens = diagnostic_array(2)
          else
