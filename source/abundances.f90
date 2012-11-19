@@ -99,7 +99,14 @@ implicit none
         CALL get_H(H_BS, linelist, listlength)
         call get_He(He_lines, linelist, listlength)
 
-        !aside: normalisation check, correction
+        !is H beta detected? if not, we can't do anything.
+
+        if (H_BS(2)%intensity .eq. 0.D0) then
+          print *,"No H beta found. Can't do any analysis - exiting."
+          stop
+        endif
+
+        !normalisation check, correction
 
         if(H_BS(2)%intensity .ne. 100)then
                 normalise =  DBLE(100) / DBLE(H_BS(2)%intensity)
