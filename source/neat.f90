@@ -34,7 +34,7 @@ program neat
 
         CHARACTER :: switch_ext !switch for extinction laws
         CHARACTeR :: switch_he  !switch for helium atomic data
-        INTEGER :: I, runs, Narg !runs = number of runs for randomiser
+        INTEGER :: I, j, runs, Narg !runs = number of runs for randomiser
 
         !input options
 
@@ -68,9 +68,11 @@ program neat
         logical :: calculate_extinction=.true.
         DOUBLE PRECISION :: temp1,temp2,temp3, meanextinction, R
 
-        !binning
+        !binning and uncertainties
 
         double precision, dimension(3) :: uncertainty_array
+        double precision, dimension (:,:), allocatable :: binned_quantity_result
+        logical :: unusual
 
         !CEL array
 
@@ -1050,6 +1052,50 @@ write (650,*)
                 close (650)
 
                 print *, gettime(), ": results summary file ",trim(filename)//"_results written"
+
+! now write all the lines to a line list file
+
+                open (650,FILE=trim(filename)//"_linelist", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                write (650,*) "Wavelength  Ion    I(dered)  X/H"
+
+                print *, gettime(), ": writing line list"
+                do j=1, listlength
+!line flux - calculate the uncertainties analytically, direct from input if
+!SNR>6, from the equations if SNR<6.
+
+                write (650,"(A11,F7.2)", advance='no') all_linelists(j,1)%name,all_linelists(j,1)%wavelength
+
+!dereddened flux
+                quantity_result = all_linelists(j,:)%int_dered
+                call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual)
+                if (uncertainty_array(1) .ne. uncertainty_array(3)) then
+                  write (650,"(F8.3,A,F8.3,A,F8.3)", advance='no') uncertainty_array(2),"+",uncertainty_array(1),"-",uncertainty_array(3)
+                else
+                  write (650,"(F8.3,A,F8.3)", advance='no') uncertainty_array(2)," +-",uncertainty_array(1)
+                endif
+
+!abundance - write out if there is an abundance for the line, don't write
+!anything except a line break if there is no abundance for the line.
+
+                quantity_result = all_linelists(j,:)%abundance
+                call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual)
+                if (uncertainty_array(2) .ne. 0.D0) then
+                  if (uncertainty_array(1) .ne. uncertainty_array(3)) then
+                    write (650,"(ES9.2,A,ES9.2,A,ES9.2)") uncertainty_array(2),"+",uncertainty_array(1),"-",uncertainty_array(3)
+                  else
+                    write (650,"(ES9.2,A,ES9.2)") uncertainty_array(2)," +-",uncertainty_array(1)
+                  endif
+                else
+                  write (650,*)
+                endif 
+
+if (j==1 .or. j==listlength) print *,gettime(),j
+
+! write the results to a table.  columns for wavelength, ion, intensity,
+! dereddened intensity, abundance, all with uncertainties.
+
+                end do
+                close(650)
 
         else
                 print*, gettime(), ": I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."

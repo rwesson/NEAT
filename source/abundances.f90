@@ -62,7 +62,7 @@ implicit none
 ! strong line variables
         DOUBLE PRECISION :: X23,O_R23upper, O_R23lower, N2,O_N2, O3N2, O_O3N2, Ar3O3, O_Ar3O3, S3O3, O_S3O3, x23temp1, x23temp2, x23temp3, x23temp4
 
-        ! initialise some variables to zero
+        ! initialise some variables
 
         oiiRLabund = 0.d0
         niiRLabund = 0.d0
@@ -74,6 +74,8 @@ implicit none
         CELicfO = 0.d0
         Ar3O3 = 0.D0
         O_Ar3O3 = 0.D0
+
+        linelist%name="           "
 
         linelist_orig = linelist
 
@@ -742,6 +744,9 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
         do i = 1,Iint !This used to be Iint-1 but I think that's corrected in the file reading routine now (RW 25/10/2011)
 !                 print *,ILs(i)%ion,ILs(i)%transition,ILs(i)%int_dered
+! copy the ion name into the linelist array
+           if (ILs(i)%location .ne. 0) linelist(ILs(i)%location)%name=ILs(i)%name
+! then do the abundance calculations
            if (ILs(i)%zone .eq. "low ") then
                 !PRINT*, siiitemp, lowdens
                  call get_abundance(ILs(i)%ion, ILs(i)%transition, lowtemp, lowdens,ILs(i)%int_dered, ILs(i)%abundance,maxlevs,maxtemps,atomicdata,iion)
@@ -1140,6 +1145,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
             oiiRLs(j)%Obs = linelist(i)%int_dered
             oiiRLs(j)%abundance = oiiRLs(j)%obs/oiiRLs(j)%Int
             linelist(i)%abundance = oiiRLs(j)%abundance
+            linelist(i)%name="O II                "
           endif
          enddo
        enddo
@@ -1154,6 +1160,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
             niiRLs(j)%Obs = linelist(i)%int_dered
             niiRLs(j)%abundance = niiRLs(j)%obs/niiRLs(j)%Int
             linelist(i)%abundance = niiRLs(j)%abundance
+            linelist(i)%name="N II                "
           endif
          enddo
        enddo
@@ -1167,6 +1174,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
             ciiRLs(j)%Obs = linelist(i)%int_dered
             ciiRLs(j)%abundance = ciiRLs(j)%obs/ciiRLs(j)%Int
             linelist(i)%abundance = ciiRLs(j)%abundance
+            linelist(i)%name="C II                "
           endif
          enddo
        enddo
@@ -1180,6 +1188,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
             neiiRLs(j)%Obs = linelist(i)%int_dered
             neiiRLs(j)%abundance = neiiRLs(j)%obs/neiiRLs(j)%Int
             linelist(i)%abundance = neiiRLs(j)%abundance
+            linelist(i)%name="Ne II               "
           endif
          enddo
        enddo
@@ -1193,6 +1202,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
             xiiiRLs(j)%Obs = linelist(i)%int_dered
             xiiiRLs(j)%abundance = xiiiRLs(j)%obs/xiiiRLs(j)%Int
             linelist(i)%abundance = xiiiRLs(j)%abundance
+            linelist(i)%name="  III               "! fix this
           endif
          enddo
        enddo
