@@ -1089,12 +1089,10 @@ write (650,*)
                   write (650,*)
                 endif 
 
-if (j==1 .or. j==listlength) print *,gettime(),j
-
-! write the results to a table.  columns for wavelength, ion, intensity,
-! dereddened intensity, abundance, all with uncertainties.
-
                 end do
+
+                print *, gettime(),": linelist written to ",trim(filename)//"_linelist"
+
                 close(650)
 
         else
