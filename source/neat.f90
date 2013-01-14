@@ -33,7 +33,8 @@ program neat
         IMPLICIT NONE
 
         CHARACTER :: switch_ext !switch for extinction laws
-        CHARACTeR :: switch_he  !switch for helium atomic data
+        CHARACTER :: switch_he  !switch for helium atomic data
+        CHARACTER :: switch_icf !switch for which ICF scheme to use
         INTEGER :: I, j, runs, Narg !runs = number of runs for randomiser
 
         !input options
@@ -130,13 +131,13 @@ program neat
            print *,"       Default: 1"
            print *,"  -e / --extinction-law"
            print *,"       Extinction law"
-           print *,"       Default: Howarth (1983, MNRAS, 203, 301)"
            print *,"       Values:"
            print *,"          How:  Galactic law of Howarth (1983, MNRAS, 203, 301)"
            print *,"          CCM:  Galactic law of Cardelli, Clayton, Mathis (1989, ApJ, 345, 245)"
            print *,"          Fitz: Galactic law of Fitzpatrick & Massa (1990, ApJS, 72, 163)"
            print *,"          LMC:  LMC law of Howarth (1983, MNRAS, 203, 301)"
            print *,"          SMC:  SMC law of Prevot et al. (984, A&A, 132, 389)"
+           print *,"       Default: How"
            print *,"  -c"
            print *,"       The logarithmic extinction at H beta"
            print *,"       Default: calculated from Balmer line ratios"
@@ -147,10 +148,16 @@ program neat
            print *,"       Default: calculated from available diagnostics."
            print *,"  -he / --helium-data"
            print *,"       The atomic data to use for He I abundances"
-           print *,"       Default: Smits, 1996, MNRAS, 278, 683"
            print *,"       Values:"
            print *,"          S96: Smits, 1996, MNRAS, 278, 683"
            print *,"          P12: Porter et al., 2012, MNRAS, 425, 28"
+           print *,"       Default: S96"
+           print *,"  -icf / --ionisation-correction-scheme"
+           print *,"       The ICF scheme to be used to correct for unseen ions"
+           print *,"       Values:"
+           print *,"          KB94: Kingsburgh & Barlow (1994, MNRAS, 271, 257)"
+           print *,"          PT92: Peimbert, Torres-Peimbert & Ruiz (1992, RMxAA, 24, 155)"
+           print *,"       Default: KB94"
         !  to be fully implemented:
         !  -R                     : R (default 3.1)
            stop
@@ -167,8 +174,9 @@ program neat
         ! set defaults
 
         runs=1
-        switch_ext="S"
-        switch_he="S"
+        switch_ext="S" !Howarth 1983 Galactic law
+        switch_he="S"  !Smits 1996 data
+        switch_icf="K" !KB94 ICF
         filename=""
         meanextinction=0.D0
         diagnostic_array=0.D0
@@ -224,6 +232,11 @@ program neat
                 endif
                 if (trim(options(i))=="-u" .or. trim(options(i))=="--uncertainties") then
                     runs=20000
+                endif
+                if ((trim(options(i))=="-icf" .or. trim(options(i))=="--ionisation-correction-scheme") .and. (i+1) .le. Narg) then
+                  if (trim(options(i+1))=="PT92") then
+                    switch_icf="P"
+                  endif
                 endif
          enddo
 
@@ -290,6 +303,8 @@ program neat
                 STOP
         endif
 
+        print *
+
         if (switch_ext == "S") then
                 print *,gettime(), ": using Howarth (1983) galactic extinction law"
         elseif (switch_ext == "H") then
@@ -307,6 +322,14 @@ program neat
         else
                 print *,gettime(), ": using Porter et al. (2012) He I emissivities"
         endif
+
+        if (switch_ICF == "K") then
+                print *,gettime(), ": using Kingsburgh & Barlow (1994) ICF"
+        else
+                print *,gettime(), ": using Peimbert et al. (1992) ICF"
+        endif
+
+        print *
 
 ! read the CEL data
 
@@ -344,7 +367,7 @@ program neat
 !single iteration formats
 
         if(runs == 1)then !calculates abundances without uncertainties
-                call abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he)
+                call abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf)
 
                 !generate outputs
 
@@ -676,7 +699,7 @@ program neat
 
                         call randomizer(linelist, listlength, R)
                         R=3.1 ! no randomisation
-                        call abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he)
+                        call abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf)
 
                         !store all line and derived quantity in arrays
                         all_linelists(:,i)=linelist 

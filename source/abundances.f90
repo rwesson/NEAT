@@ -1,5 +1,5 @@
 
-subroutine abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he)
+subroutine abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf)
 use mod_abundmaths
 use mod_abundtypes
 use mod_equib
@@ -17,6 +17,7 @@ implicit none
         TYPE(line), dimension(listlength) :: linelist, linelist_orig
         CHARACTER :: switch_ext !switch for extinction laws
         CHARACTER :: switch_he !switch for helium atomic data
+        CHARACTER :: switch_icf !switch for which ICF to use
         type(resultarray), dimension(1) :: iteration_result
         double precision, dimension(6), intent(in) :: diagnostic_array
 
@@ -26,7 +27,7 @@ implicit none
         DOUBLE PRECISION :: ciiiCELabund, niiCELabund, niiiIRCELabund, niiiUVCELabund, oiiCELabund, oiiiCELabund, oiiiIRCELabund, oivCELabund, neiiIRCELabund, neiiiIRCELabund, neiiiCELabund, neivCELabund, siiCELabund, siiiCELabund, siiiIRCELabund, sivIRCELabund, cliiiCELabund, ariiiCELabund, arivCELabund, ariiiIRCELabund, nivCELabund, niiiCELabund, ciiCELabund, civCELabund, nvCELabund, nevCELabund, arvCELabund, CELabundtemp, ciCELabund, oiCELabund
         DOUBLE PRECISION :: fn4
         DOUBLE PRECISION :: CELicfO, CELicfC, CELicfN, CELicfNe, CELicfAr, CELicfS, CELicfCl
-        DOUBLE PRECISION :: RLicfO, RLicfC, RLicfN, RLicfNe
+        DOUBLE PRECISION :: RLicfO, RLicfC, RLicfN, RLicfNe, RLicfHe
         DOUBLE PRECISION :: CabundRL, CabundCEL, NabundRL, NabundCEL, OabundRL, OabundCEL, NeabundRL, NeabundCEL, SabundCEL, ArabundCEL, NOabundCEL, NCabundCEL, ClabundCEL
         DOUBLE PRECISION :: adfC, adfN, adfO, adfNe, w1, w2, w3, w4
         DOUBLE PRECISION :: adfC2plus, adfN2plus, adfO2plus, adfNe2plus
@@ -1426,17 +1427,33 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         niiiRLabund = 0.0
      endif
 
+! ICFs
+
+! first calculate the helium factor that appears in the ORL ICFs and several KB94 ICFS
+! if no he lines are seen set this factor to zero, so that abundances relying on
+! this ratio are not calculated.
+
+     if (heiabund .gt. 0.) then
+        heICFfactor = (heiabund + heiiabund)/heiabund
+     elseif (heiabund .eq.0. .and. heiiabund .eq.0.0) then
+        heICFfactor = 0.0
+     endif
+
+! now apply the scheme chosen by the user
+
+if (switch_icf .eq. "K") then
+
 ! ICFs (Kingsburgh + Barlow 1994)
 
 ! first calculate the helium factor that appears in several ICFs
 ! if no he lines are seen set this factor to zero, so that abundances relying on
 ! this ratio are not calculated.
 
-if (heiabund .gt. 0.) then
-   heICFfactor = (heiabund + heiiabund)/heiabund
-elseif (heiabund .eq.0. .and. heiiabund .eq.0.0) then
-   heICFfactor = 0.0
-endif
+     if (heiabund .gt. 0.) then
+        heICFfactor = (heiabund + heiiabund)/heiabund
+     elseif (heiabund .eq.0. .and. heiiabund .eq.0.0) then
+        heICFfactor = 0.0
+     endif
 
 ! oxygen - complete
      OabundCEL = 0.
@@ -1559,7 +1576,54 @@ endif
        ClabundCEL = CELicfCl * cliiiCELabund
     endif
 
-!ORLs
+else !PTPR92 ICF - equation numbers in the paper are given in brackets
+
+!CELs
+!Carbon - no ICF specified
+     CabundCEL = 0.
+     CELicfC = 0.
+!Chlorine - no ICF specified
+     ClabundCEL = 0.
+     CELicfCl = 0.
+!Oxygen
+     OabundCEL = 0.
+     OabundCEL = oiiCELabund + oiiiCELabund ! (13)
+
+!Nitrogen
+     NabundCEL = 0.
+     if (oiiCELabund .gt. 1e-20) then 
+       CELicfN = OabundCEL/oiiCELabund
+       NabundCEL = niiCELabund * CELicfN ! (14)
+     endif
+
+!Neon
+     NeabundCEL = 0.
+     if (oiiiCELabund .gt. 1e-20) then
+       CELicfNe = (oiiCELabund + oiiiCELabund)/oiiiCELabund
+       NeabundCEL = CELicfNe * NeiiiCELabund ! (15)
+     endif
+
+!Sulphur - no ICF given in paper, see discussion on P168
+     SabundCEL = SiiCELabund + SiiiCELabund
+
+!Argon - no ICF given in paper, see discussion on P168
+     ArabundCEL = AriiiCELabund + ArivCELabund
+
+!Iron - TODO - to be added once we've added iron ionic abundance calculations
+!     if (niiCELabund .gt. 1.e-20) then
+!       CELicfFe = NabundCEL/niiCELabund
+!       FeabundCEL = CELicfFe * FeiiCELabund ! (16)
+!     endif
+
+!Helium
+     RLicfHe = 1.0
+     if (SabundCEL .gt. 1.e-20 .and. SiiCELabund .gt. 1.e-20) then
+       RLicfHe = 1+(SiiCELabund/(SabundCEL-SiiCELabund))
+       Hetotabund = RLicfHe * Heiabund ! (21)
+     endif
+endif
+
+!ORLs - not from KB94 but based on Liu et al. 2000
 !Oxygen
 
      if (oiiRLabund .ge. 1e-20) then
@@ -1589,8 +1653,6 @@ endif
        RLicfNe = 1.0
        NeabundRL = 0.0
      endif
-
-!finish these TODO
 
 !Printout edited to include weighted averages of Ionic species as these are neccessary for paper tables. DJS
 
