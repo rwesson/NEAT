@@ -652,16 +652,21 @@ program neat
                 close (651)
 
                 open (650,FILE=trim(filename)//"_linelist", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                write (650,*) "Wavelength F(line)  I(line)    X(line)/H"
+                write (650,*) "Lambda  Ion           F(line)  I(line)    X(line)/H"
                 open (651,FILE=trim(filename)//"_linelist.tex", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
                 write (651,*) "\centering"
                 write (651,*) "\small "
                 write (651,*) "\begin{longtable}{cccc}"
                 write (651,*) "\hline"
-                write (651,*) " $ \lambda $ & $F \left( \lambda \right) $ & $I \left( \lambda \right) $ & $\frac{X(line)}{H}$ \\ \hline \hline "
+                write (651,*) " $ \lambda $ & Ion & $F \left( \lambda \right) $ & $I \left( \lambda \right) $ & $\frac{X(line)}{H}$ \\ \hline \hline "
                 do i=1,listlength
-                   write (650,"(X,F7.2,X,F8.3,X,F8.3,X,ES14.3)") linelist(i)%wavelength,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance
-                   write (651,"(X,F7.2,X,'&',X,F8.3,X,'&',X,F8.3,X,'&',X,ES14.3,X,'\\')") linelist(i)%wavelength,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance
+                  if (linelist(i)%abundance .gt. 0.0) then
+                     write (650,"(X,F7.2,X,A11,F8.3,X,F8.3,X,ES14.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance
+                     write (651,"(X,F7.2,X,'&',A11,'&',X,F8.3,X,'&',X,F8.3,X,'&',X,ES14.3,X,'\\')") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance
+                  else
+                     write (650,"(X,F7.2,X,A11,F8.3,X,F8.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered
+                     write (651,"(X,F7.2,X,'&',A11,'&',X,F8.3,X,'&',X,F8.3,X,'&',X,'\\')") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered
+                  endif
                 end do
                 
                 write (651,*) "\hline"
