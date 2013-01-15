@@ -671,7 +671,7 @@ program neat
                 
                 write (651,*) "\hline"
                 !write (651,*) "\caption{}"
-                write (651,*) "\label{tab:",trim(filename)//"_dered}"
+                write (651,*) "\label{tab:",trim(filename)//"_linelist}"
                 write (651,*) "\end{longtable}"
                 
                 close(650)
@@ -1081,25 +1081,35 @@ write (650,*)
 
                 close (650)
 
-! now write all the lines to a line list file
+! now write all the lines to line list files, plain text and latex
 
                 open (650,FILE=trim(filename)//"_linelist", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                write (650,*) "Wavelength  Ion    I(dered)  X/H"
+                open (651,FILE=trim(filename)//"_linelist.tex", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+
+                write (650,*) "Lambda  Ion           I(dered)              X/H"
+                write (651,*) "\centering"
+                write (651,*) "\small "
+                write (651,*) "\begin{longtable}{ccccc}"
+                write (651,*) "\hline"
+                write (651,*) " $ \lambda $ & Ion & $F \left( \lambda \right) $ & $I \left( \lambda \right) $ & $\frac{X(line)}{H}$ \\ \hline \hline "
 
                 print *, gettime(), ": writing line list"
                 do j=1, listlength
 !line flux - calculate the uncertainties analytically, direct from input if
 !SNR>6, from the equations if SNR<6.
 
-                write (650,"(A11,F7.2)", advance='no') all_linelists(j,1)%name,all_linelists(j,1)%wavelength
+                write (650,"(X,F7.2,X,A11)", advance='no') all_linelists(j,1)%wavelength,all_linelists(j,1)%name
+                write (651,"(X,F7.2,' & ',A11,' & ')", advance='no') all_linelists(j,1)%wavelength,all_linelists(j,1)%name
 
 !dereddened flux
                 quantity_result = all_linelists(j,:)%int_dered
                 call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual)
                 if (uncertainty_array(1) .ne. uncertainty_array(3)) then
-                  write (650,"(F8.3,A,F8.3,A,F8.3)", advance='no') uncertainty_array(2),"+",uncertainty_array(1),"-",uncertainty_array(3)
+                  write (650,"(F8.3,SP,F8.3,SP,F8.3)", advance='no') uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
+                  write (651,"(F8.3,'$^{',SP,F8.3,'}_{',SP,F8.3,'}$')", advance='no') uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
                 else
-                  write (650,"(F8.3,A,F8.3)", advance='no') uncertainty_array(2)," +-",uncertainty_array(1)
+                  write (650,"(F8.3,A,F8.3,5X)", advance='no') uncertainty_array(2)," +-",uncertainty_array(1)
+                  write (651,"(F8.3,'$\pm$',F8.3)", advance='no') uncertainty_array(2),uncertainty_array(1)
                 endif
 
 !abundance - write out if there is an abundance for the line, don't write
@@ -1109,27 +1119,35 @@ write (650,*)
                 call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual)
                 if (uncertainty_array(2) .ne. 0.D0) then
                   if (uncertainty_array(1) .ne. uncertainty_array(3)) then
-                    write (650,"(ES9.2,A,ES9.2,A,ES9.2)") uncertainty_array(2),"+",uncertainty_array(1),"-",uncertainty_array(3)
+                    write (650,"(ES10.2,SP,ES10.2,SP,ES10.2)") uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
+                    write (651,"(' & ',ES10.2,'$^{',SP,ES10.2,'}_{',SP,ES10.2,'}$ \\')") uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
                   else
-                    write (650,"(ES9.2,A,ES9.2)") uncertainty_array(2)," +-",uncertainty_array(1)
+                    write (650,"(ES10.2,A,ES10.2)") uncertainty_array(2)," +-",uncertainty_array(1)
+                    write (651,"(' & ',ES10.2,'$\pm$',ES10.2,'\\')") uncertainty_array(2),uncertainty_array(1)
                   endif
                 else
                   write (650,*)
+                  write (651,*) "\\"
                 endif 
 
                 end do
+
+                write (651,*) "\hline"
+                write (651,*) "\label{tab:",trim(filename)//"_linelist}"
+                write (651,*) "\end{longtable}"
+
+                close(650)
+                close(651)
 
                 print *
 
                 print *, gettime(), ": summary files written:"
                 print *, "              ",trim(filename)//"_results"
-                print *, "              ",trim(filename)//"_results.tex"
+!                print *, "              ",trim(filename)//"_results.tex"
                 print *, "              ",trim(filename)//"_linelist"
                 print *, "              ",trim(filename)//"_linelist.tex"
                 print *, gettime(), ": all results written to files with prefix:"
                 print *, "              ",trim(filename)//"_"
-
-                close(650)
 
         else
                 print*, gettime(), ": I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."
