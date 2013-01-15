@@ -651,9 +651,9 @@ program neat
                 
                 close (651)
 
-                open (650,FILE=trim(filename)//"_dereddened", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                open (650,FILE=trim(filename)//"_linelist", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
                 write (650,*) "Wavelength F(line)  I(line)    X(line)/H"
-                open (651,FILE=trim(filename)//"_dereddened.tex", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+                open (651,FILE=trim(filename)//"_linelist.tex", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
                 write (651,*) "\centering"
                 write (651,*) "\small "
                 write (651,*) "\begin{longtable}{cccc}"
@@ -672,9 +672,11 @@ program neat
                 close(650)
                 close(651)
 
-                print *, gettime(), ": results summary file ",trim(filename)//"_results written"
-                print *, gettime(), ": linelist file ",trim(filename)//"_dereddened written"
-
+                print *, gettime(), ": output files written:"
+                print *, "              ",trim(filename)//"_results"
+                print *, "              ",trim(filename)//"_results.tex"
+                print *, "              ",trim(filename)//"_linelist"
+                print *, "              ",trim(filename)//"_linelist.tex"
 
         else if(runs > 1)then
 
@@ -1074,8 +1076,6 @@ write (650,*)
 
                 close (650)
 
-                print *, gettime(), ": results summary file ",trim(filename)//"_results written"
-
 ! now write all the lines to a line list file
 
                 open (650,FILE=trim(filename)//"_linelist", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
@@ -1114,7 +1114,15 @@ write (650,*)
 
                 end do
 
-                print *, gettime(),": linelist written to ",trim(filename)//"_linelist"
+                print *
+
+                print *, gettime(), ": summary files written:"
+                print *, "              ",trim(filename)//"_results"
+                print *, "              ",trim(filename)//"_results.tex"
+                print *, "              ",trim(filename)//"_linelist"
+                print *, "              ",trim(filename)//"_linelist.tex"
+                print *, gettime(), ": all results written to files with prefix:"
+                print *, "              ",trim(filename)//"_"
 
                 close(650)
 
