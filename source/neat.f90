@@ -51,9 +51,14 @@ program neat
         CHARACTER*80 :: filename
         CHARACTER*1 :: null
         INTEGER :: IO, listlength
+
+        !results and result processing
+
         type(resultarray), dimension(:), allocatable :: all_results
         type(resultarray), dimension(1) :: iteration_result
         double precision, dimension(:), allocatable :: quantity_result
+        double precision, dimension(:,:), allocatable :: resultprocessingarray
+        character*40, dimension(:,:), allocatable :: resultprocessingtext
 
         !atomic data
 
@@ -362,326 +367,11 @@ program neat
 !        print*,maxlevs,maxtemps
         !now check number of iterations.  If 1, line list is fine as is.  If more than one, randomize the fluxes
 
-
-!formats for writing output
-!single iteration formats
+        allocate(all_results(runs))
 
         if(runs == 1)then !calculates abundances without uncertainties
                 call abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf)
-
-                !generate outputs
-
-                OPEN(650, FILE=trim(filename)//"_results", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                OPEN(651, FILE=trim(filename)//"_results.tex", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-
-                write (650,*) "NEAT (nebular empirical analysis tool)"
-                write (650,*) "======================================"
-                write (650,*)
-                write (650,*) "Analysis of file ",trim(filename)
-                write (650,*) "Command line: ",trim(commandline)
-                write (650,*)
-
-                write (650,*),"Extinction"
-                write (650,*),"=========="
-                write (650,*)
-                write (650,700) "mean_cHb :         ",iteration_result(1)%mean_cHb
-                write (650,*)
-                write (650,*),"Diagnostics"
-                write (650,*),"==========="
-                write (650,*)
-                write (650,705) "OII_density :      ",INT(iteration_result(1)%OII_density), iteration_result(1)%OII_density_ratio
-                write (650,705) "SII_density :      ",INT(iteration_result(1)%SII_density), iteration_result(1)%SII_density_ratio
-                write (650,701) "low_density :      ",INT(iteration_result(1)%low_density)
-                write (650,*)
-                write (650,705) "OII_temp :         ",INT(iteration_result(1)%OII_temp), iteration_result(1)%OII_temp_ratio
-                write (650,705) "NII_temp :         ",INT(iteration_result(1)%NII_temp), iteration_result(1)%NII_temp_ratio
-                write (650,705) "SII_temp :         ",INT(iteration_result(1)%SII_temp), iteration_result(1)%SII_temp_ratio
-                write (650,705) "OI_temp :          ",INT(iteration_result(1)%OI_temp), iteration_result(1)%OI_temp_ratio
-                write (650,705) "CI_temp :          ",INT(iteration_result(1)%CI_temp), iteration_result(1)%CI_temp_ratio
-                write (650,701) "low_temp :         ",INT(iteration_result(1)%low_temp)
-                write (650,*)
-                write (650,705) "ClIII_density :    ",INT(iteration_result(1)%ClIII_density), iteration_result(1)%ClIII_density_ratio
-                write (650,705) "ArIV_density :     ",INT(iteration_result(1)%ArIV_density), iteration_result(1)%ArIV_density_ratio
-                write (650,705) "CIII_density :     ",INT(iteration_result(1)%CIII_density), iteration_result(1)%CIII_density_ratio
-                write (650,705) "OIII_IR_density :  ",INT(iteration_result(1)%OIII_IR_density), iteration_result(1)%OIII_IR_density_ratio
-                write (650,705) "SIII_IR_density :  ",INT(iteration_result(1)%SIII_IR_density), iteration_result(1)%SIII_IR_density_ratio
-                write (650,705) "ArIII_IR_density : ",INT(iteration_result(1)%ArIII_IR_density), iteration_result(1)%ArIII_IR_density_ratio
-                write (650,705) "NeIII_IR_density : ",INT(iteration_result(1)%NeIII_IR_density), iteration_result(1)%NeIII_IR_density_ratio
-                write (650,701) "med_density :      ",INT(iteration_result(1)%med_density)
-                write (650,*)
-                write (650,705) "OIII_temp :        ",INT(iteration_result(1)%OIII_temp), iteration_result(1)%OIII_temp_ratio
-                write (650,705) "OIII_IR_temp :     ",INT(iteration_result(1)%OIII_IR_temp), iteration_result(1)%OIII_IR_temp_ratio
-                write (650,705) "NeIII_temp :       ",INT(iteration_result(1)%NeIII_temp), iteration_result(1)%NeIII_temp_ratio
-                write (650,705) "NeIII_IR_temp :    ",INT(iteration_result(1)%NeIII_IR_temp), iteration_result(1)%NeIII_IR_temp_ratio
-                write (650,705) "ArIII_temp :       ",INT(iteration_result(1)%ArIII_temp), iteration_result(1)%ArIII_temp_ratio
-                write (650,705) "SIII_temp :        ",INT(iteration_result(1)%SIII_temp), iteration_result(1)%SIII_temp_ratio
-                write (650,701) "med_temp :         ",INT(iteration_result(1)%med_temp)
-                write (650,*)
-                write (650,705) "NeIV_density :     ",INT(iteration_result(1)%NeIV_density), iteration_result(1)%NeIV_density_ratio
-                write (650,701) "high_density :     ",INT(iteration_result(1)%high_density)
-                write (650,*)
-                write (650,705) "ArV_temp :         ",INT(iteration_result(1)%ArV_temp), iteration_result(1)%ArV_temp_ratio
-                write (650,705) "NeV_temp :         ",INT(iteration_result(1)%NeV_temp), iteration_result(1)%NeV_temp_ratio
-                write (650,701) "high_temp :        ",INT(iteration_result(1)%high_temp)
-                write (650,*)
-                write (650,701) "Balmer_jump_temp : ",INT(iteration_result(1)%Bal_jump_temp)
-                write (650,*)
-                write (650,*),"Abundances"
-                write (650,*),"=========="
-                write (650,*)
-                write (650,*),"Collisionally excited lines"
-                write (650,*),"-------------------"
-                write (650,*)
-                write (650,702) "NC_abund_CEL :     ",iteration_result(1)%NC_abund_CEL
-                write (650,702) "cii_abund_CEL :    ",iteration_result(1)%cii_abund_CEL
-                write (650,702) "ciii_abund_CEL :   ",iteration_result(1)%ciii_abund_CEL
-                write (650,702) "civ_abund_CEL :    ",iteration_result(1)%civ_abund_CEL
-                write (650,704) "C_icf_CEL :        ",iteration_result(1)%C_icf_CEL
-                write (650,702) "C_abund_CEL :      ",iteration_result(1)%C_abund_CEL
-                write (650,702) "Nii_abund_CEL :    ",iteration_result(1)%Nii_abund_CEL
-                write (650,702) "Niii_abund_CEL :   ",iteration_result(1)%Niii_abund_CEL
-                write (650,702) "Niv_abund_CEL :    ",iteration_result(1)%Niv_abund_CEL
-                write (650,702) "Nv_abund_CEL :     ",iteration_result(1)%Nv_abund_CEL
-                write (650,704) "N_icf_CEL :        ",iteration_result(1)%N_icf_CEL
-                write (650,702) "N_abund_CEL :      ",iteration_result(1)%N_abund_CEL
-                write (650,702) "NO_abund_CEL :     ",iteration_result(1)%NO_abund_CEL
-                write (650,702) "Oii_abund_CEL :    ",iteration_result(1)%Oii_abund_CEL
-                write (650,702) "Oiii_abund_CEL :   ",iteration_result(1)%Oiii_abund_CEL
-                write (650,702) "Oiv_abund_CEL :    ",iteration_result(1)%Oiv_abund_CEL
-                write (650,704) "O_icf_CEL :        ",iteration_result(1)%O_icf_CEL
-                write (650,702) "O_abund_CEL :      ",iteration_result(1)%O_abund_CEL
-                write (650,702) "Neii_abund_CEL :   ",iteration_result(1)%Neii_abund_CEL
-                write (650,702) "Neiii_abund_CEL :  ",iteration_result(1)%Neiii_abund_CEL
-                write (650,702) "Neiv_abund_CEL :   ",iteration_result(1)%Neiv_abund_CEL
-                write (650,702) "Nev_abund_CEL :    ",iteration_result(1)%Nev_abund_CEL
-                write (650,704) "Ne_icf_CEL :       ",iteration_result(1)%Ne_icf_CEL
-                write (650,702) "Ne_abund_CEL :     ",iteration_result(1)%Ne_abund_CEL
-                write (650,702) "Ariii_abund_CEL :  ",iteration_result(1)%Ariii_abund_CEL
-                write (650,702) "Ariv_abund_CEL :   ",iteration_result(1)%Ariv_abund_CEL
-                write (650,702) "Arv_abund_CEL :    ",iteration_result(1)%Arv_abund_CEL
-                write (650,704) "Ar_icf_CEL :       ",iteration_result(1)%Ar_icf_CEL
-                write (650,702) "Ar_abund_CEL :     ",iteration_result(1)%Ar_abund_CEL
-                write (650,702) "Sii_abund_CEL :    ",iteration_result(1)%Sii_abund_CEL
-                write (650,702) "Siii_abund_CEL :   ",iteration_result(1)%Siii_abund_CEL
-                write (650,704) "S_icf_CEL :        ",iteration_result(1)%S_icf_CEL
-                write (650,702) "S_abund_CEL :      ",iteration_result(1)%S_abund_CEL
-                write (650,702) "Cliii_abund_CEL :  ",iteration_result(1)%Cliii_abund_CEL
-                write (650,704) "Cl_icf_CEL :       ",iteration_result(1)%Cl_icf_CEL
-                write (650,702) "Cl_abund_CEL :     ",iteration_result(1)%Cl_abund_CEL
-                write (650,*)
-                write (650,*),"Recombination lines"
-                write (650,*),"-------------------"
-                write (650,*)
-                write (650,702) "Hei_abund_ORL :    ",iteration_result(1)%Hei_abund_ORL
-                write (650,702) "Heii_abund_ORL :   ",iteration_result(1)%Heii_abund_ORL
-                write (650,702) "He_abund_ORL :     ",iteration_result(1)%He_abund_ORL
-                write (650,702) "Cii_abund_ORL :    ",iteration_result(1)%Cii_abund_ORL
-                write (650,702) "Ciii_abund_ORL :   ",iteration_result(1)%Ciii_abund_ORL
-                write (650,704) "C_icf_ORL :        ",iteration_result(1)%C_icf_ORL
-                write (650,702) "C_abund_ORL :      ",iteration_result(1)%C_abund_ORL
-                write (650,702) "Nii_abund_ORL :    ",iteration_result(1)%Nii_abund_ORL
-                write (650,702) "Niii_abund_ORL :   ",iteration_result(1)%Niii_abund_ORL
-                write (650,704) "N_icf_ORL :        ",iteration_result(1)%N_icf_ORL
-                write (650,702) "N_abund_ORL :      ",iteration_result(1)%N_abund_ORL
-                write (650,702) "Oii_abund_ORL :    ",iteration_result(1)%Oii_abund_ORL
-                write (650,704) "O_icf_ORL :        ",iteration_result(1)%O_icf_ORL
-                write (650,702) "O_abund_ORL :      ",iteration_result(1)%O_abund_ORL
-                write (650,702) "Neii_abund_ORL :   ",iteration_result(1)%Neii_abund_ORL
-                write (650,704) "Ne_icf_ORL :       ",iteration_result(1)%Ne_icf_ORL
-                write (650,702) "Ne_abund_ORL :     ",iteration_result(1)%Ne_abund_ORL
-                write (650,*)
-                write (650,*),"Strong line methods"
-                write (650,*),"-------------------"
-                write (650,*)
-                write (650,703) "O_R23_upper :      ",iteration_result(1)%O_R23_upper
-                write (650,703) "O_R23_lower :      ",iteration_result(1)%O_R23_lower
-                write (650,703) "O_N2 :             ",iteration_result(1)%O_N2
-                write (650,703) "O_O3N2 :           ",iteration_result(1)%O_O3N2
-                write (650,703) "O_Ar3O3 :          ",iteration_result(1)%O_Ar3O3
-                write (650,703) "O_S3O3 :           ",iteration_result(1)%O_S3O3
-                write (650,*)
-                write (650,*),"Abundance discrepancy factors"
-                write (650,*),"-----------------------------"
-                write (650,*)
-                write (650,704) "adf_O :            ",iteration_result(1)%adf_O
-                write (650,704) "adf_O2plus :       ",iteration_result(1)%adf_O2plus
-                write (650,704) "adf_N :            ",iteration_result(1)%adf_N
-                write (650,704) "adf_N2plus :       ",iteration_result(1)%adf_N2plus
-                write (650,704) "adf_C :            ",iteration_result(1)%adf_C
-                write (650,704) "adf_C2plus :       ",iteration_result(1)%adf_C2plus
-                write (650,704) "adf_Ne :           ",iteration_result(1)%adf_Ne
-                write (650,704) "adf_Ne2plus :      ",iteration_result(1)%adf_Ne2plus
-
-                close (650)
-                
-                write (651,*) "\centering"
-                write (651,*) "\small"
-                write (651,*) "\begin{longtable}{lcc}"
-                write (651,*) "\hline"
-                write (651,*) "\multicolumn{3}{c}{Analysis of file ",trim(filename),"} \\"
-                write (651,*) "\hline \hline"
-                write (651,*)
-
-                write (651,*),"Extinction \\"
-                write (651,710) "Mean c(H$\beta$) :         ",iteration_result(1)%mean_cHb
-                write (651,*) " \\"
-                write (651,*) " \\"
-                write (651,*),"Diagnostics \\"
-                write (651,715) "{[}O~{\sc ii}] density :      ",INT(iteration_result(1)%OII_density), iteration_result(1)%OII_density_ratio
-                write (651,715) "{[}S~{\sc ii}] density :      ",INT(iteration_result(1)%SII_density), iteration_result(1)%SII_density_ratio
-                write (651,711) "low density :      ",INT(iteration_result(1)%low_density)
-                write (651,*) " \\"
-                write (651,715) "{[}O~{\sc ii}] temperature:         ",INT(iteration_result(1)%OII_temp), iteration_result(1)%OII_temp_ratio
-                write (651,715) "{[}N~{\sc ii}] temperature:         ",INT(iteration_result(1)%NII_temp), iteration_result(1)%NII_temp_ratio
-                write (651,715) "{[}S~{\sc ii}] temperature:         ",INT(iteration_result(1)%SII_temp), iteration_result(1)%SII_temp_ratio
-                write (651,715) "{[}O~{\sc i}] temperature:          ",INT(iteration_result(1)%OI_temp), iteration_result(1)%OI_temp_ratio
-                write (651,715) "{[}C~{\sc i}] temperature:          ",INT(iteration_result(1)%CI_temp), iteration_result(1)%CI_temp_ratio
-                write (651,711) "low temperature:         ",INT(iteration_result(1)%low_temp)
-                write (651,*) " \\"
-                write (651,715) "{[}Cl~{\sc iii}] density :    ",INT(iteration_result(1)%ClIII_density), iteration_result(1)%ClIII_density_ratio
-                write (651,715) "{[}Ar~{\sc iv}] density :     ",INT(iteration_result(1)%ArIV_density), iteration_result(1)%ArIV_density_ratio
-                write (651,715) "{[}C~{\sc iii}] density :     ",INT(iteration_result(1)%CIII_density), iteration_result(1)%CIII_density_ratio
-                write (651,715) "{[}O~{\sc iii}] IR density :  ",INT(iteration_result(1)%OIII_IR_density), iteration_result(1)%OIII_IR_density_ratio
-                write (651,715) "{[}S~{\sc iii}] IR density :  ",INT(iteration_result(1)%SIII_IR_density), iteration_result(1)%SIII_IR_density_ratio
-                write (651,715) "{[}Ar~{\sc iii}] IR density : ",INT(iteration_result(1)%ArIII_IR_density), iteration_result(1)%ArIII_IR_density_ratio
-                write (651,715) "{[}Ne~{\sc iii}] IR density : ",INT(iteration_result(1)%NeIII_IR_density), iteration_result(1)%NeIII_IR_density_ratio
-                write (651,711) "medium density :      ",INT(iteration_result(1)%med_density)
-                write (651,*) " \\"
-                write (651,715) "{[}O~{\sc iii}] temperature:        ",INT(iteration_result(1)%OIII_temp), iteration_result(1)%OIII_temp_ratio
-                write (651,715) "{[}O~{\sc iii}] IR temperature:     ",INT(iteration_result(1)%OIII_IR_temp), iteration_result(1)%OIII_IR_temp_ratio
-                write (651,715) "{[}Ne~{\sc iii}] temperature:       ",INT(iteration_result(1)%NeIII_temp), iteration_result(1)%NeIII_temp_ratio
-                write (651,715) "{[}Ne~{\sc iii}] IR temperature:    ",INT(iteration_result(1)%NeIII_IR_temp), iteration_result(1)%NeIII_IR_temp_ratio
-                write (651,715) "{[}Ar~{\sc iii}] temperature:       ",INT(iteration_result(1)%ArIII_temp), iteration_result(1)%ArIII_temp_ratio
-                write (651,715) "{[}S~{\sc iii}] temperature:        ",INT(iteration_result(1)%SIII_temp), iteration_result(1)%SIII_temp_ratio
-                write (651,711) "medium temperature:         ",INT(iteration_result(1)%med_temp)
-                write (651,*) " \\"
-                write (651,715) "{[}Ne~{\sc iv}] density :     ",INT(iteration_result(1)%NeIV_density), iteration_result(1)%NeIV_density_ratio
-                write (651,711) "high density :     ",INT(iteration_result(1)%high_density)
-                write (651,*) " \\"
-                write (651,715) "{[}Ar~{\sc v}] temperature:         ",INT(iteration_result(1)%ArV_temp), iteration_result(1)%ArV_temp_ratio
-                write (651,715) "{[}Ne~{\sc v}] temperature:         ",INT(iteration_result(1)%NeV_temp), iteration_result(1)%NeV_temp_ratio
-                write (651,711) "high temperature:        ",INT(iteration_result(1)%high_temp)
-                write (651,*) " \\"
-                write (651,711) "Balmer jump temperature: ",INT(iteration_result(1)%Bal_jump_temp)
-                write (651,*) " \\"
-                write (651,*) " \\"
-                write (651,*),"Abundances \\"
-                write (651,*)," \\"
-                write (651,*),"Collisionally excited lines \\"
-                write (651,712) "C~{\sc i}          :     ",iteration_result(1)%NC_abund_CEL
-                write (651,712) "C~{\sc ii}          :    ",iteration_result(1)%cii_abund_CEL
-                write (651,712) "C~{\sc iii}          :   ",iteration_result(1)%ciii_abund_CEL
-                write (651,712) "C~{\sc iv}          :    ",iteration_result(1)%civ_abund_CEL
-                write (651,714) "C icf     :        ",iteration_result(1)%C_icf_CEL
-                write (651,712) "C           :      ",iteration_result(1)%C_abund_CEL
-                write (651,712) "N~{\sc ii}          :    ",iteration_result(1)%Nii_abund_CEL
-                write (651,712) "N~{\sc iii}          :   ",iteration_result(1)%Niii_abund_CEL
-                write (651,712) "N~{\sc iv}          :    ",iteration_result(1)%Niv_abund_CEL
-                write (651,712) "N~{\sc v}          :     ",iteration_result(1)%Nv_abund_CEL
-                write (651,714) "N icf     :        ",iteration_result(1)%N_icf_CEL
-                write (651,712) "N           :      ",iteration_result(1)%N_abund_CEL
-                write (651,712) "O~{\sc i}          :     ",iteration_result(1)%NO_abund_CEL
-                write (651,712) "O~{\sc ii}          :    ",iteration_result(1)%Oii_abund_CEL
-                write (651,712) "O~{\sc iii}          :   ",iteration_result(1)%Oiii_abund_CEL
-                write (651,712) "O~{\sc iv}          :    ",iteration_result(1)%Oiv_abund_CEL
-                write (651,714) "O icf     :        ",iteration_result(1)%O_icf_CEL
-                write (651,712) "O           :      ",iteration_result(1)%O_abund_CEL
-                write (651,712) "Ne~{\sc ii}          :   ",iteration_result(1)%Neii_abund_CEL
-                write (651,712) "Ne~{\sc iii}          :  ",iteration_result(1)%Neiii_abund_CEL
-                write (651,712) "Ne~{\sc iv}          :   ",iteration_result(1)%Neiv_abund_CEL
-                write (651,712) "Ne~{\sc v}          :    ",iteration_result(1)%Nev_abund_CEL
-                write (651,714) "Ne icf     :       ",iteration_result(1)%Ne_icf_CEL
-                write (651,712) "Ne           :     ",iteration_result(1)%Ne_abund_CEL
-                write (651,712) "Ar~{\sc iii}          :  ",iteration_result(1)%Ariii_abund_CEL
-                write (651,712) "Ar~{\sc iv}          :   ",iteration_result(1)%Ariv_abund_CEL
-                write (651,712) "Ar~{\sc v}          :    ",iteration_result(1)%Arv_abund_CEL
-                write (651,714) "Ar icf     :       ",iteration_result(1)%Ar_icf_CEL
-                write (651,712) "Ar           :     ",iteration_result(1)%Ar_abund_CEL
-                write (651,712) "S~{\sc ii}          :    ",iteration_result(1)%Sii_abund_CEL
-                write (651,712) "S~{\sc iii}          :   ",iteration_result(1)%Siii_abund_CEL
-                write (651,714) "S icf     :        ",iteration_result(1)%S_icf_CEL
-                write (651,712) "S           :      ",iteration_result(1)%S_abund_CEL
-                write (651,712) "Cl~{\sc iii}          :  ",iteration_result(1)%Cliii_abund_CEL
-                write (651,714) "Cl icf     :       ",iteration_result(1)%Cl_icf_CEL
-                write (651,712) "Cl           :     ",iteration_result(1)%Cl_abund_CEL
-                write (651,*) " \\"
-                write (651,*),"Recombination lines \\"
-                write (651,712) "He~{\sc i}:        ",iteration_result(1)%Hei_abund_ORL
-                write (651,712) "He~{\sc ii}:       ",iteration_result(1)%Heii_abund_ORL
-                write (651,712) "He :               ",iteration_result(1)%He_abund_ORL
-                write (651,712) "C~{\sc ii}:        ",iteration_result(1)%Cii_abund_ORL
-                write (651,712) "C~{\sc iii}:       ",iteration_result(1)%Ciii_abund_ORL
-                write (651,714) "C icf     :        ",iteration_result(1)%C_icf_ORL
-                write (651,712) "C :                ",iteration_result(1)%C_abund_ORL
-                write (651,712) "N~{\sc ii}:        ",iteration_result(1)%Nii_abund_ORL
-                write (651,712) "N~{\sc iii}:       ",iteration_result(1)%Niii_abund_ORL
-                write (651,714) "N icf     :        ",iteration_result(1)%N_icf_ORL
-                write (651,712) "N :                ",iteration_result(1)%N_abund_ORL
-                write (651,712) "O~{\sc ii}:        ",iteration_result(1)%Oii_abund_ORL
-                write (651,714) "O icf     :        ",iteration_result(1)%O_icf_ORL
-                write (651,712) "O :                ",iteration_result(1)%O_abund_ORL
-                write (651,712) "Ne~{\sc ii}:       ",iteration_result(1)%Neii_abund_ORL
-                write (651,714) "Ne icf     :       ",iteration_result(1)%Ne_icf_ORL
-                write (651,712) "Ne :               ",iteration_result(1)%Ne_abund_ORL
-                write (651,*) " \\"
-                write (651,*),"Strong line methods \\"
-                write (651,713) "O(R23 upper) :      ",iteration_result(1)%O_R23_upper
-                write (651,713) "O(R23 lower) :      ",iteration_result(1)%O_R23_lower
-                write (651,713) "O(N2) :             ",iteration_result(1)%O_N2
-                write (651,713) "O(O3N2) :           ",iteration_result(1)%O_O3N2
-                write (651,713) "O(Ar3O3) :          ",iteration_result(1)%O_Ar3O3
-                write (651,713) "O(S3O3) :           ",iteration_result(1)%O_S3O3
-                write (651,*) " \\"
-                write (651,*) " \\"
-                write (651,*),"Abundance discrepancy factors \\"
-                write (651,*)," \\"
-                write (651,714) "adf (O) :            ",iteration_result(1)%adf_O
-                write (651,714) "adf (O$^{2+}$) :       ",iteration_result(1)%adf_O2plus
-                write (651,714) "adf (N) :            ",iteration_result(1)%adf_N
-                write (651,714) "adf (N$^{2+}$) :       ",iteration_result(1)%adf_N2plus
-                write (651,714) "adf (C) :            ",iteration_result(1)%adf_C
-                write (651,714) "adf (C$^{2+}$) :       ",iteration_result(1)%adf_C2plus
-                write (651,714) "adf (Ne) :           ",iteration_result(1)%adf_Ne
-                write (651,714) "adf (Ne$^{2+}$) :      ",iteration_result(1)%adf_Ne2plus
-                
-                write (651,*) "\hline" 
-                !write (651,*) "\caption{}"
-                write (651,*) "\label{tab:",trim(filename)//"_summary}"
-                write (651,*) "\end{longtable}"                
-                
-                close (651)
-
-                open (650,FILE=trim(filename)//"_linelist", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                write (650,*) "Lambda  Ion           F(line)  I(line)    X(line)/H"
-                open (651,FILE=trim(filename)//"_linelist.tex", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                write (651,*) "\centering"
-                write (651,*) "\small "
-                write (651,*) "\begin{longtable}{cccc}"
-                write (651,*) "\hline"
-                write (651,*) " $ \lambda $ & Ion & $F \left( \lambda \right) $ & $I \left( \lambda \right) $ & $\frac{X(line)}{H}$ \\ \hline \hline "
-                do i=1,listlength
-                  if (linelist(i)%abundance .gt. 0.0) then
-                     write (650,"(X,F7.2,X,A11,F8.3,X,F8.3,X,ES14.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance
-                     write (651,"(X,F7.2,X,'&',A11,'&',X,F8.3,X,'&',X,F8.3,X,'&',X,ES14.3,X,'\\')") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance
-                  else
-                     write (650,"(X,F7.2,X,A11,F8.3,X,F8.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered
-                     write (651,"(X,F7.2,X,'&',A11,'&',X,F8.3,X,'&',X,F8.3,X,'&',X,'\\')") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered
-                  endif
-                end do
-                
-                write (651,*) "\hline"
-                !write (651,*) "\caption{}"
-                write (651,*) "\label{tab:",trim(filename)//"_linelist}"
-                write (651,*) "\end{longtable}"
-                
-                close(650)
-                close(651)
-
-                print *, gettime(), ": output files written:"
-                print *, "              ",trim(filename)//"_results"
-                print *, "              ",trim(filename)//"_results.tex"
-                print *, "              ",trim(filename)//"_linelist"
-                print *, "              ",trim(filename)//"_linelist.tex"
+                all_results(1)=iteration_result(1) ! copy the iteration result to all_results to simplify the writing out of results later
 
         else if(runs > 1)then
 
@@ -691,8 +381,8 @@ program neat
 
                 call init_random_seed()!sets seed for randomiser
 
-                !allocate arrays to store all results and line info
-                allocate(all_results(runs))
+                !allocate array to store all line info
+
                 allocate(all_linelists(size(linelist),runs))
 
                 !main loop
@@ -716,384 +406,32 @@ program neat
 
                 END DO
 
-                ! now process outputs
-                print *, gettime(), ": processing results"
-
 !XXXX add Cl/H, Niii, cii, ciii, ArIII IR dens, NeIII IR dens, strong line, ICF files to output
-
-                allocate (quantity_result(runs))
-
-                open (650,FILE=trim(filename)//"_results", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-
-                write (650,*) "NEAT (nebular empirical analysis tool)"
-                write (650,*) "======================================"
-                write (650,*)
-                write (650,*) "Analysis of file ",trim(filename)
-                write (650,*) "Command line: ",trim(commandline)
-                write (650,*)
-
-!cHb
-                write (650,*) "Extinction"
-                write (650,*) "=========="
-                write (650,*)
-                quantity_result = all_results%mean_cHb
-                call write_uncertainties(quantity_result, uncertainty_array,"c(Hb) :                 ", extinction_format, filename, "mean_chb                 ")
-
-write (650,*)
-write (650,*) "Diagnostics"
-write (650,*) "==========="
-write (650,*)
-
-!low densities
-
-                quantity_result = all_results%oii_density
-                call write_uncertainties(quantity_result, uncertainty_array, "[OII] density :         ", diagnostic_format, filename, "oii_density              ")
-                quantity_result = all_results%oii_density_ratio
-                call write_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "oii_density_ratio        ")
-
-                quantity_result = all_results%SII_density
-                call write_uncertainties(quantity_result, uncertainty_array, "[SII] density :         ", diagnostic_format, filename, "sii_density              ")
-                quantity_result = all_results%sii_density_ratio
-                call write_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "sii_density_ratio        ")
-
-write (650,*)
-
-                quantity_result = all_results%low_density
-                call write_uncertainties(quantity_result, uncertainty_array, "low density :           ", diagnostic_format, filename, "low_density              ")
-
-!low temperatures
-write (650,*)
-
-                quantity_result = all_results%oii_temp
-                call write_uncertainties(quantity_result, uncertainty_array, "[OII] temperature :     ", diagnostic_format, filename, "oii_temp                 ")
-                quantity_result = all_results%oii_temp_ratio
-                call write_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "oii_temp_ratio           ")
-
-                quantity_result = all_results%SII_temp
-                call write_uncertainties(quantity_result, uncertainty_array, "[SII] temperature :     ", diagnostic_format, filename, "sii_temp                 ")
-                quantity_result = all_results%sii_temp_ratio
-                call write_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "sii_temp_ratio           ")
-
-                quantity_result = all_results%NII_temp
-                call write_uncertainties(quantity_result, uncertainty_array, "[NII] temperature :     ", diagnostic_format, filename, "nii_temp                 ")
-                quantity_result = all_results%nii_temp_ratio
-                call write_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "nii_temp_ratio           ")
-
-                quantity_result = all_results%OI_temp
-                call write_uncertainties(quantity_result, uncertainty_array, "[OI] temperature :      ", diagnostic_format, filename, "oi_temp                  ")
-                quantity_result = all_results%oi_temp_ratio
-                call write_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "oi_temp_ratio            ")
-
-                quantity_result = all_results%CI_temp
-                call write_uncertainties(quantity_result, uncertainty_array, "[CI] temperature :      ", diagnostic_format, filename, "ci_temp                  ")
-                quantity_result = all_results%ci_temp_ratio
-                call write_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "ci_temp_ratio            ")
-
-write (650,*)
-
-                quantity_result = all_results%low_temp
-                call write_uncertainties(quantity_result, uncertainty_array, "low temperature :       ", diagnostic_format, filename, "low_temp                 ")
-
-!medium density
-write (650,*)
-
-                quantity_result = all_results%cliii_density
-                call write_uncertainties(quantity_result, uncertainty_array, "[ClIII] density :       ", diagnostic_format, filename, "cliii_density            ")
-                quantity_result = all_results%cliii_density_ratio
-                call write_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "cliii_density_ratio      ")
-
-                quantity_result = all_results%ArIV_density
-                call write_uncertainties(quantity_result, uncertainty_array, "[ArIV] density :        ", diagnostic_format, filename, "ariv_density             ")
-                quantity_result = all_results%Ariv_density_ratio
-                call write_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "ariv_density_ratio       ")
-
-                quantity_result = all_results%CIII_density
-                call write_uncertainties(quantity_result, uncertainty_array, "[CIII] density :        ", diagnostic_format, filename, "ciii_density             ")
-                quantity_result = all_results%ciii_density_ratio
-                call write_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "ciii_density_ratio       ")
-
-                quantity_result = all_results%OIII_IR_density
-                call write_uncertainties(quantity_result, uncertainty_array, "[OIII] IR density :     ", diagnostic_format, filename, "oiii_ir_density          ")
-                quantity_result = all_results%oiii_ir_density_ratio
-                call write_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "oiii_ir_density_ratio    ")
-
-                quantity_result = all_results%SIII_IR_density
-                call write_uncertainties(quantity_result, uncertainty_array, "[SIII] IR density :     ", diagnostic_format, filename, "siii_ir_density          ")
-                quantity_result = all_results%siii_ir_density_ratio
-                call write_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "siii_ir_density_ratio    ")
-
-                quantity_result = all_results%ArIII_IR_density
-                call write_uncertainties(quantity_result, uncertainty_array, "[ArIII] IR density :    ", diagnostic_format, filename, "ariii_ir_density         ")
-                quantity_result = all_results%ariii_ir_density_ratio
-                call write_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "ariii_ir_density_ratio   ")
-
-                quantity_result = all_results%NeIII_IR_density
-                call write_uncertainties(quantity_result, uncertainty_array, "[NeIII] IR density :    ", diagnostic_format, filename, "neiii_ir_density         ")
-                quantity_result = all_results%neiii_ir_density_ratio
-                call write_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "neiii_ir_density_ratio   ")
-
-write (650,*)
-
-                quantity_result = all_results%med_density
-                call write_uncertainties(quantity_result, uncertainty_array, "medium density :        ", diagnostic_format, filename, "med_density              ")
-
-!medium temperature
-write (650,*)
-
-                quantity_result = all_results%OIII_temp
-                call write_uncertainties(quantity_result, uncertainty_array, "[OIII] temperature :    ", diagnostic_format, filename, "oiii_temp                ")
-                quantity_result = all_results%oiii_temp_ratio
-                call write_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "oiii_temp_ratio          ")
-
-                quantity_result = all_results%OIII_IR_temp
-                call write_uncertainties(quantity_result, uncertainty_array, "[OIII] IR temperature : ", diagnostic_format, filename, "oiii_ir_temp             ")
-                quantity_result = all_results%oiii_ir_temp_ratio
-                call write_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "oiii_ir_temp_ratio       ")
-
-                quantity_result = all_results%NeIII_temp
-                call write_uncertainties(quantity_result, uncertainty_array, "[NeIII] temperature :   ", diagnostic_format, filename, "neiii_temp               ")
-                quantity_result = all_results%neiii_temp_ratio
-                call write_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "neiii_temp_ratio         ")
-
-                quantity_result = all_results%NeIII_IR_temp
-                call write_uncertainties(quantity_result, uncertainty_array, "[NeIII] IR temperature :", diagnostic_format, filename, "neiii_ir_temp            ")
-                quantity_result = all_results%neiii_ir_temp_ratio
-                call write_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "neiii_ir_temp_ratio      ")
-
-                quantity_result = all_results%ArIII_temp
-                call write_uncertainties(quantity_result, uncertainty_array, "[ArIII] temperature :   ", diagnostic_format, filename, "ariii_temp               ")
-                quantity_result = all_results%ariii_temp_ratio
-                call write_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "ariii_temp_ratio         ")
-
-                quantity_result = all_results%SIII_temp
-                call write_uncertainties(quantity_result, uncertainty_array, "[SIII] temperature :    ", diagnostic_format, filename, "siii_temp                ")
-                quantity_result = all_results%siii_temp_ratio
-                call write_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "siii_temp_ratio          ")
-
-write (650,*)
-
-                quantity_result = all_results%med_temp
-                call write_uncertainties(quantity_result, uncertainty_array, "medium temperature :    ", diagnostic_format, filename, "med_temp                 ")
-
-!high density
-write (650,*)
-
-                quantity_result = all_results%neiv_density
-                call write_uncertainties(quantity_result, uncertainty_array, "[NeIV] density :        ", diagnostic_format, filename, "neiv_density             ")
-                quantity_result = all_results%neiv_density_ratio
-                call write_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "neiv_density_ratio       ")
-
-write (650,*)
-
-                quantity_result = all_results%high_density
-                call write_uncertainties(quantity_result, uncertainty_array, "high density :          ", diagnostic_format, filename, "high_density             ")
-
-!high temperature
-
-                quantity_result = all_results%ArV_temp
-                call write_uncertainties(quantity_result, uncertainty_array, "[ArV] temperature :     ", diagnostic_format, filename, "arv_temp                 ")
-                quantity_result = all_results%arv_temp_ratio
-                call write_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "arv_temp_ratio           ")
-
-                quantity_result = all_results%NeV_temp
-                call write_uncertainties(quantity_result, uncertainty_array, "[NeV] temperature :     ", diagnostic_format, filename, "nev_temp                 ")
-                quantity_result = all_results%nev_temp_ratio
-                call write_uncertainties(quantity_result, uncertainty_array, "Ratio :                 ", diagnostic_ratio_format, filename, "nev_temp_ratio           ")
-
-write (650,*)
-
-                quantity_result = all_results%high_temp
-                call write_uncertainties(quantity_result, uncertainty_array, "High temperature :      ", diagnostic_format, filename, "high_temp                ")
-
-write (650,*)
-                
-                quantity_result = all_results%Bal_jump_temp
-                call write_uncertainties(quantity_result, uncertainty_array, "Balmer jump temp :      ", diagnostic_format, filename, "bal_jump_temp            ")
-
-!CEL abundances
-write (650,*)
-write (650,*) "Abundances (collisionally excited lines)"
-write (650,*) "========================================"
-write (650,*)
-
-                quantity_result = all_results%NC_abund_CEL
-                call write_uncertainties(quantity_result, uncertainty_array, "[CI] abundance :        ", abundances_format, filename, "nc_abund_cel             ")
-
-                quantity_result = all_results%cii_abund_CEL
-                call write_uncertainties(quantity_result, uncertainty_array, "[CII] abundance :       ", abundances_format, filename, "cii_abund_cel            ")
-
-                quantity_result = all_results%ciii_abund_CEL
-                call write_uncertainties(quantity_result, uncertainty_array, "[CIII] abundance :      ", abundances_format, filename, "ciii_abund_cel           ")
-
-                quantity_result = all_results%civ_abund_CEL
-                call write_uncertainties(quantity_result, uncertainty_array, "[CIV] abundance :       ", abundances_format, filename, "civ_abund_cel            ")
-
-                quantity_result = all_results%C_abund_CEL
-                call write_uncertainties(quantity_result, uncertainty_array, "C/H abundance :         ", abundances_format, filename, "c_abund_cel              ")
-
-                quantity_result = all_results%nii_abund_CEL
-                call write_uncertainties(quantity_result, uncertainty_array, "[NII] abundance :       ", abundances_format, filename, "nii_abund_cel            ")
-
-                quantity_result = all_results%niii_abund_CEL
-                call write_uncertainties(quantity_result, uncertainty_array, "[NIII] abundance :      ", abundances_format, filename, "niii_abund_cel           ")
-
-                quantity_result = all_results%niv_abund_CEL
-                call write_uncertainties(quantity_result, uncertainty_array, "[NIV] abundance :       ", abundances_format, filename, "niv_abund_cel            ")
-
-                quantity_result = all_results%nv_abund_CEL
-                call write_uncertainties(quantity_result, uncertainty_array, "[NV] abundance :        ", abundances_format, filename, "nv_abund_cel             ")
-
-                quantity_result = all_results%N_abund_CEL
-                call write_uncertainties(quantity_result, uncertainty_array, "N/H abundance :         ", abundances_format, filename, "n_abund_cel              ")
-
-                quantity_result = all_results%NO_abund_CEL
-                call write_uncertainties(quantity_result, uncertainty_array, "[OI] abundance :        ", abundances_format, filename, "no_abund_cel             ")
-
-                quantity_result = all_results%Oii_abund_CEL
-                call write_uncertainties(quantity_result, uncertainty_array, "[OII] abundance :       ", abundances_format, filename, "oii_abund_cel            ")
-
-                quantity_result = all_results%Oiii_abund_CEL
-                call write_uncertainties(quantity_result, uncertainty_array, "[OIII] abundance :      ", abundances_format, filename, "oiii_abund_cel           ")
-
-                quantity_result = all_results%Oiv_abund_CEL
-                call write_uncertainties(quantity_result, uncertainty_array, "[OIV] abundance :       ", abundances_format, filename, "oiv_abund_cel            ")
-
-                quantity_result = all_results%O_abund_CEL
-                call write_uncertainties(quantity_result, uncertainty_array, "O/H abundance :         ", abundances_format, filename, "o_abund_cel              ")
-
-!                quantity_result = all_results%NeII_abund_CEL
-!                call write_uncertainties(quantity_result, uncertainty_array, filename, "neii_abund_cel           ")
-!                write (650,713) "[NeII] abundance :  ",uncertainty_array(2),uncertainty_array(3),-uncertainty_array(1)
-!
-                quantity_result = all_results%NeIII_abund_CEL
-                call write_uncertainties(quantity_result, uncertainty_array, "[NeIII] abundance :     ", abundances_format, filename, "neiii_abund_cel          ")
-
-                quantity_result = all_results%NeIV_abund_CEL
-                call write_uncertainties(quantity_result, uncertainty_array, "[NeIV] abundance :      ", abundances_format, filename, "neiv_abund_cel           ")
-
-                quantity_result = all_results%NeV_abund_CEL
-                call write_uncertainties(quantity_result, uncertainty_array, "[NeV] abundance :       ", abundances_format, filename, "nev_abund_cel            ")
-
-                quantity_result = all_results%Ne_abund_CEL
-                call write_uncertainties(quantity_result, uncertainty_array, "Ne/H abundance :        ", abundances_format, filename, "ne_abund_cel             ")
-
-                quantity_result = all_results%ArIII_abund_CEL
-                call write_uncertainties(quantity_result, uncertainty_array, "[ArIII] abundance :     ", abundances_format, filename, "ariii_abund_cel          ")
-
-                quantity_result = all_results%ArIV_abund_CEL
-                call write_uncertainties(quantity_result, uncertainty_array, "[ArIV] abundance :      ", abundances_format, filename, "ariv_abund_cel           ")
-
-                quantity_result = all_results%ArV_abund_CEL
-                call write_uncertainties(quantity_result, uncertainty_array, "[ArV] abundance :       ", abundances_format, filename, "arv_abund_cel            ")
-
-                quantity_result = all_results%Ar_abund_CEL
-                call write_uncertainties(quantity_result, uncertainty_array, "Ar/H abundance :        ", abundances_format, filename, "ar_abund_cel             ")
-
-                quantity_result = all_results%SII_abund_CEL
-                call write_uncertainties(quantity_result, uncertainty_array, "[SII] abundance :       ", abundances_format, filename, "sii_abund_cel            ")
-
-                quantity_result = all_results%SIII_abund_CEL
-                call write_uncertainties(quantity_result, uncertainty_array, "[SIII] abundance :      ", abundances_format, filename, "siii_abund_cel           ")
-
-                quantity_result = all_results%S_abund_CEL
-                call write_uncertainties(quantity_result, uncertainty_array, "S/H abundance :         ", abundances_format, filename, "s_abund_cel              ")
-
-                quantity_result = all_results%ClIII_abund_CEL
-                call write_uncertainties(quantity_result, uncertainty_array, "[ClIII] abundance :     ", abundances_format, filename, "cliii_abund_cel          ")
-
-                quantity_result = all_results%Cl_abund_CEL
-                call write_uncertainties(quantity_result, uncertainty_array, "Cl/H abundance :        ", abundances_format, filename, "cl_abund_cel             ")
-
-!RL abundances
-write (650,*)
-write (650,*) "Abundances (recombination lines)"
-write (650,*) "================================"
-write (650,*)
-
-                quantity_result = all_results%He_abund_ORL
-                call write_uncertainties(quantity_result, uncertainty_array, "He/H abundance :        ", abundances_format, filename, "he_abund_orl             ")
-
-                quantity_result = all_results%C_abund_ORL
-                call write_uncertainties(quantity_result, uncertainty_array, "C/H abundance :         ", abundances_format, filename, "c_abund_orl              ")
-
-                quantity_result = all_results%N_abund_ORL
-                call write_uncertainties(quantity_result, uncertainty_array, "N/H abundance :         ", abundances_format, filename, "n_abund_orl              ")
-
-                quantity_result = all_results%O_abund_ORL
-                call write_uncertainties(quantity_result, uncertainty_array, "O/H abundance :         ", abundances_format, filename, "o_abund_orl              ")
-
-                quantity_result = all_results%Ne_abund_ORL
-                call write_uncertainties(quantity_result, uncertainty_array, "Ne/H abundance :        ", abundances_format, filename, "ne_abund_orl             ")
-
-!strong line abundances
-write (650,*)
-write (650,*) "Abundances (strong line methods)"
-write (650,*) "================================"
-write (650,*)
-
-                quantity_result = all_results%O_R23_upper
-                call write_uncertainties(quantity_result, uncertainty_array, "O/H (R23 upper) :       ", abundances_format, filename, "o_r23_upper              ")
-
-                quantity_result = all_results%O_R23_lower
-                call write_uncertainties(quantity_result, uncertainty_array, "O/H (R23 lower) :       ", abundances_format, filename, "o_r23_lower              ")
-
-                quantity_result = all_results%O_N2
-                call write_uncertainties(quantity_result, uncertainty_array, "O/H (N2) :              ", abundances_format, filename, "o_n2                     ")
-
-                quantity_result = all_results%O_O3N2
-                call write_uncertainties(quantity_result, uncertainty_array, "O/H (O3N2) :            ", abundances_format, filename, "o_o3n2                   ")
-
-                quantity_result = all_results%O_Ar3O3
-                call write_uncertainties(quantity_result, uncertainty_array, "O/H (Ar3O3) :           ", abundances_format, filename, "o_ar3o3                  ")
-
-                quantity_result = all_results%O_S3O3
-                call write_uncertainties(quantity_result, uncertainty_array, "O/H (S3O3) :            ", abundances_format, filename, "o_s3o3                   ")
-
-!adfs
-write (650,*)
-write (650,*) "Abundance discrepancy factors"
-write (650,*) "============================="
-write (650,*)
-
-                quantity_result = all_results%adf_o2plus
-                call write_uncertainties(quantity_result, uncertainty_array, "adf(O2+/H) :            ", adf_format, filename, "adf_o2plus               ")
-
-                quantity_result = all_results%adf_o
-                call write_uncertainties(quantity_result, uncertainty_array, "adf(O/H+) :             ", adf_format, filename, "adf_o                    ")
-
-                quantity_result = all_results%adf_n2plus
-                call write_uncertainties(quantity_result, uncertainty_array, "adf(N2+/H) :            ", adf_format, filename, "adf_n2plus               ")
-
-                quantity_result = all_results%adf_n
-                call write_uncertainties(quantity_result, uncertainty_array, "adf(N/H) :              ", adf_format, filename, "adf_n                    ")
-
-                quantity_result = all_results%adf_c2plus
-                call write_uncertainties(quantity_result, uncertainty_array, "adf(C2+/H+) :           ", adf_format, filename, "adf_c2plus               ")
-
-                quantity_result = all_results%adf_c
-                call write_uncertainties(quantity_result, uncertainty_array, "adf(C/H) :              ", adf_format, filename, "adf_c                    ")
-
-                quantity_result = all_results%adf_ne2plus
-                call write_uncertainties(quantity_result, uncertainty_array, "adf(Ne2+/H+) :          ", adf_format, filename, "adf_ne2plus              ")
-
-                quantity_result = all_results%adf_ne
-                call write_uncertainties(quantity_result, uncertainty_array, "adf(Ne/H) :             ", adf_format, filename, "adf_ne                   ")
-
-                close (650)
 
 ! now write all the lines to line list files, plain text and latex
 
-                open (650,FILE=trim(filename)//"_linelist", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-                open (651,FILE=trim(filename)//"_linelist.tex", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+        else
+                print*, gettime(), ": I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."
+        endif
 
-                write (650,*) "Lambda  Ion           I(dered)              X/H"
-                write (651,*) "\centering"
-                write (651,*) "\small "
-                write (651,*) "\begin{longtable}{ccccc}"
-                write (651,*) "\hline"
-                write (651,*) " $ \lambda $ & Ion & $F \left( \lambda \right) $ & $I \left( \lambda \right) $ & $\frac{X(line)}{H}$ \\ \hline \hline "
+!output processing
+!linelist first
 
-                print *, gettime(), ": writing line list"
+        print *,gettime(),": Writing line list"
+
+        allocate(quantity_result(runs))
+
+        open (650,FILE=trim(filename)//"_linelist", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+        open (651,FILE=trim(filename)//"_linelist.tex", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+
+        write (650,*) "Lambda  Ion           F(line)  I(line) X(line)/H"
+        write (651,*) "\centering"
+        write (651,*) "\small "
+        write (651,*) "\begin{longtable}{lllll}"
+        write (651,*) "\hline"
+        write (651,*) " $ \lambda $ & Ion & $F \left( \lambda \right) $ & $I \left( \lambda \right) $ & $\frac{X(line)}{H}$ \\ \hline \hline "
+
+        if (runs .gt. 1) then
                 do j=1, listlength
 !line flux - calculate the uncertainties analytically, direct from input if
 !SNR>6, from the equations if SNR<6.
@@ -1120,38 +458,328 @@ write (650,*)
                 if (uncertainty_array(2) .ne. 0.D0) then
                   if (uncertainty_array(1) .ne. uncertainty_array(3)) then
                     write (650,"(ES10.2,SP,ES10.2,SP,ES10.2)") uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
-                    write (651,"(' & ',ES10.2,'$^{',SP,ES10.2,'}_{',SP,ES10.2,'}$ \\')") uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
+                    write (651,"(' & ${',A,'}^{+',A,'}_{',A,'}$ \\')") trim(latex_number(uncertainty_array(2))),trim(latex_number(uncertainty_array(1))),trim(latex_number(-uncertainty_array(3)))
                   else
                     write (650,"(ES10.2,A,ES10.2)") uncertainty_array(2)," +-",uncertainty_array(1)
-                    write (651,"(' & ',ES10.2,'$\pm$',ES10.2,'\\')") uncertainty_array(2),uncertainty_array(1)
+                    write (651,"(' & $',A,'\pm',A,'$\\')") trim(latex_number(uncertainty_array(2))),trim(latex_number(uncertainty_array(1)))
                   endif
                 else
                   write (650,*)
                   write (651,*) "\\"
-                endif 
+                endif
 
                 end do
-
-                write (651,*) "\hline"
-                write (651,*) "\label{tab:",trim(filename)//"_linelist}"
-                write (651,*) "\end{longtable}"
-
-                close(650)
-                close(651)
-
-                print *
-
-                print *, gettime(), ": summary files written:"
-                print *, "              ",trim(filename)//"_results"
-!                print *, "              ",trim(filename)//"_results.tex"
-                print *, "              ",trim(filename)//"_linelist"
-                print *, "              ",trim(filename)//"_linelist.tex"
-                print *, gettime(), ": all results written to files with prefix:"
-                print *, "              ",trim(filename)//"_"
-
         else
-                print*, gettime(), ": I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."
+
+                do i=1,listlength
+                  if (linelist(i)%abundance .gt. 0.0) then
+                     write (650,"(X,F7.2,X,A11,F8.3,X,F8.3,X,ES14.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance
+                     write (651,"(X,F7.2,X,'&',A11,'&',X,F8.3,X,'&',X,F8.3,X,'&',X,A,X,'\\')") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered, trim(latex_number(linelist(i)%abundance))
+                  else
+                     write (650,"(X,F7.2,X,A11,F8.3,X,F8.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered
+                     write (651,"(X,F7.2,X,'&',A11,'&',X,F8.3,X,'&',X,F8.3,X,'&',X,'\\')") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered
+                  endif
+                end do
+        
         endif
+
+        write (651,*) "\hline"
+        !write (651,*) "\caption{}"
+        write (651,*) "\label{tab:",trim(filename)//"_linelist}"
+        write (651,*) "\end{longtable}"
+
+        close(650)
+        close(651)
+
+        print *,gettime(),": Linelist written to files:"
+        print *,"              ",trim(filename),"_linelist"
+        print *,"              ",trim(filename),"_linelist.tex"
+
+!now write out the summary files and all the binned data
+
+        print *
+        print *,gettime(),": Writing summary files"
+
+!open the files and write the headers
+
+        open (650,FILE=trim(filename)//"_results", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+        open (651,FILE=trim(filename)//"_results.tex", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+
+        write (650,*) "NEAT (nebular empirical analysis tool)"
+        write (650,*) "======================================"
+        write (650,*)
+        write (650,*) "Analysis of file ",trim(filename)
+        write (650,*) "Command line: ",trim(commandline)
+        write (650,*)
+
+        write (651,*) "\Large{\sc{neat} (nebular empirical analysis tool)}"
+        write (651,*) "\hrule"
+        write (651,*) "~\newline"
+        write (651,*) "Analysis of file ",trim(filename),"\newline"
+        write (651,*) "Command line: ",trim(commandline),"\newline"
+        write (651,*)
+
+!first, define arrays with links to all the data that needs processing.
+!extinction, diagnostics, cel abundances, orl abundances, strong line
+!abundances, adfs
+
+        allocate(resultprocessingarray(102,runs))
+        allocate(resultprocessingtext(102,4))
+
+!extinction
+
+        resultprocessingarray(1,:) = all_results%mean_cHb
+        resultprocessingtext(1,:) = (/"c(Hb) :                            ","c(H$\beta)$:                       ", extinction_format, "mean_chb                           "/)
+
+!diagnostics
+!low density
+
+        resultprocessingarray(2,:) = all_results%oii_density
+        resultprocessingtext(2,:) = (/"[OII] density :                    ","{}[O~\sc{ii}] density:             ", diagnostic_format, "oii_density                        "/)
+        resultprocessingarray(3,:) = all_results%oii_density_ratio
+        resultprocessingtext(3,:) = (/"Ratio :                            ","Ratio :                            ", diagnostic_ratio_format, "oii_density_ratio                  "/)
+        resultprocessingarray(4,:) = all_results%SII_density
+        resultprocessingtext(4,:) = (/"[SII] density :                    ","{}[S~\sc{ii}] density:             ", diagnostic_format, "sii_density                        "/)
+        resultprocessingarray(5,:) = all_results%sii_density_ratio
+        resultprocessingtext(5,:) = (/"Ratio :                            ","Ratio :                            ", diagnostic_ratio_format, "sii_density_ratio                  "/)
+        resultprocessingarray(6,:) = all_results%low_density
+        resultprocessingtext(6,:) = (/"low density :                      ","Low ionisation density:            ", diagnostic_format, "low_density                        "/)
+
+!low temperature
+
+        resultprocessingarray(7,:) = all_results%oii_temp
+        resultprocessingtext(7,:) = (/"                                   ","                                   ", diagnostic_format, "oii_temp                           "/)
+        resultprocessingarray(8,:) = all_results%oii_temp_ratio
+        resultprocessingtext(8,:) = (/"                                   ","                                   ", diagnostic_ratio_format, "oii_temp_ratio                     "/)
+        resultprocessingarray(9,:) = all_results%SII_temp
+        resultprocessingtext(9,:) = (/"                                   ","                                   ", diagnostic_format, "SII_temp                           "/)
+        resultprocessingarray(10,:) = all_results%sii_temp_ratio
+        resultprocessingtext(10,:) = (/"                                   ","                                   ", diagnostic_ratio_format, "sii_temp_ratio                     "/)
+        resultprocessingarray(11,:) = all_results%NII_temp
+        resultprocessingtext(11,:) = (/"                                   ","                                   ", diagnostic_format, "NII_temp                           "/)
+        resultprocessingarray(12,:) = all_results%nii_temp_ratio
+        resultprocessingtext(12,:) = (/"                                   ","                                   ", diagnostic_ratio_format, "nii_temp_ratio                     "/)
+        resultprocessingarray(13,:) = all_results%OI_temp
+        resultprocessingtext(13,:) = (/"                                   ","                                   ", diagnostic_format, "OI_temp                            "/)
+        resultprocessingarray(14,:) = all_results%oi_temp_ratio
+        resultprocessingtext(14,:) = (/"                                   ","                                   ", diagnostic_ratio_format, "oi_temp_ratio                      "/)
+        resultprocessingarray(15,:) = all_results%CI_temp
+        resultprocessingtext(15,:) = (/"                                   ","                                   ", diagnostic_format, "CI_temp                            "/)
+        resultprocessingarray(16,:) = all_results%ci_temp_ratio
+        resultprocessingtext(16,:) = (/"                                   ","                                   ", diagnostic_ratio_format, "ci_temp_ratio                      "/)
+        resultprocessingarray(17,:) = all_results%low_temp
+        resultprocessingtext(17,:) = (/"                                   ","                                   ", diagnostic_format, "low_temp                           "/)
+
+
+!medium density
+
+        resultprocessingarray(18,:) = all_results%cliii_density
+        resultprocessingtext(18,:) = (/"[ClIII] density :                  ","{}[Cl~\sc{iii}] density:           ", diagnostic_format, "cliii_density                      "/)
+        resultprocessingarray(19,:) = all_results%cliii_density_ratio
+        resultprocessingtext(19,:) = (/"Ratio :                            ","Ratio :                            ", diagnostic_ratio_format, "cliii_density_ratio                "/)
+        resultprocessingarray(20,:) = all_results%ArIV_density
+        resultprocessingtext(20,:) = (/"[ArIV] density :                   ","{}[Ar~\sc{iv}] density:            ", diagnostic_format, "ariv_density                       "/)
+        resultprocessingarray(21,:) = all_results%ariv_density_ratio
+        resultprocessingtext(21,:) = (/"Ratio :                            ","Ratio :                            ", diagnostic_ratio_format, "sii_density_ratio                  "/)
+        resultprocessingarray(22,:) = all_results%CIII_density
+        resultprocessingtext(22,:) = (/"                                   ","                                   ", diagnostic_format, "CIII_density                       "/)
+        resultprocessingarray(23,:) = all_results%ciii_density_ratio
+        resultprocessingtext(23,:) = (/"                                   ","                                   ", diagnostic_ratio_format, "ciii_density_ratio                 "/)
+        resultprocessingarray(24,:) = all_results%OIII_IR_density
+        resultprocessingtext(24,:) = (/"                                   ","                                   ", diagnostic_format, "OIII_IR_density                    "/)
+        resultprocessingarray(25,:) = all_results%oiii_ir_density_ratio
+        resultprocessingtext(25,:) = (/"                                   ","                                   ", diagnostic_ratio_format, "oiii_ir_density_ratio              "/)
+        resultprocessingarray(26,:) = all_results%SIII_IR_density
+        resultprocessingtext(26,:) = (/"                                   ","                                   ", diagnostic_format, "SIII_IR_density                    "/)
+        resultprocessingarray(27,:) = all_results%siii_ir_density_ratio
+        resultprocessingtext(27,:) = (/"                                   ","                                   ", diagnostic_ratio_format, "siii_ir_density_ratio              "/)
+        resultprocessingarray(28,:) = all_results%ArIII_IR_density
+        resultprocessingtext(28,:) = (/"                                   ","                                   ", diagnostic_format, "ArIII_IR_density                   "/)
+        resultprocessingarray(29,:) = all_results%ariii_ir_density_ratio
+        resultprocessingtext(29,:) = (/"                                   ","                                   ", diagnostic_ratio_format, "ariii_ir_density_ratio             "/)
+        resultprocessingarray(30,:) = all_results%NeIII_IR_density
+        resultprocessingtext(30,:) = (/"                                   ","                                   ", diagnostic_format, "NeIII_IR_density                   "/)
+        resultprocessingarray(31,:) = all_results%neiii_ir_density_ratio
+        resultprocessingtext(31,:) = (/"                                   ","                                   ", diagnostic_ratio_format, "neiii_ir_density_ratio             "/)
+        resultprocessingarray(32,:) = all_results%med_density
+        resultprocessingtext(32,:) = (/"                                   ","                                   ", diagnostic_format, "med_density                        "/)
+
+! medium temperature
+
+        resultprocessingarray(33,:) = all_results%OIII_temp
+        resultprocessingtext(33,:) = (/"                                   ","                                   ", diagnostic_format, "OIII_temp                          "/)
+        resultprocessingarray(34,:) = all_results%oiii_temp_ratio
+        resultprocessingtext(34,:) = (/"                                   ","                                   ", diagnostic_ratio_format, "oiii_temp_ratio                    "/)
+        resultprocessingarray(35,:) = all_results%OIII_IR_temp
+        resultprocessingtext(35,:) = (/"                                   ","                                   ", diagnostic_format, "OIII_IR_temp                       "/)
+        resultprocessingarray(36,:) = all_results%oiii_ir_temp_ratio
+        resultprocessingtext(36,:) = (/"                                   ","                                   ", diagnostic_ratio_format, "oiii_ir_temp_ratio                 "/)
+        resultprocessingarray(37,:) = all_results%NeIII_temp
+        resultprocessingtext(37,:) = (/"                                   ","                                   ", diagnostic_format, "NeIII_temp                         "/)
+        resultprocessingarray(38,:) = all_results%neiii_temp_ratio
+        resultprocessingtext(38,:) = (/"                                   ","                                   ", diagnostic_ratio_format, "neiii_temp_ratio                   "/)
+        resultprocessingarray(39,:) = all_results%NeIII_IR_temp
+        resultprocessingtext(39,:) = (/"                                   ","                                   ", diagnostic_format, "NeIII_IR_temp                      "/)
+        resultprocessingarray(40,:) = all_results%neiii_ir_temp_ratio
+        resultprocessingtext(40,:) = (/"                                   ","                                   ", diagnostic_ratio_format, "neiii_ir_temp_ratio                "/)
+        resultprocessingarray(41,:) = all_results%ArIII_temp
+        resultprocessingtext(41,:) = (/"                                   ","                                   ", diagnostic_format, "ArIII_temp                         "/)
+        resultprocessingarray(42,:) = all_results%ariii_temp_ratio
+        resultprocessingtext(42,:) = (/"                                   ","                                   ", diagnostic_ratio_format, "ariii_temp_ratio                   "/)
+        resultprocessingarray(43,:) = all_results%SIII_temp
+        resultprocessingtext(43,:) = (/"                                   ","                                   ", diagnostic_format, "SIII_temp                          "/)
+        resultprocessingarray(44,:) = all_results%siii_temp_ratio
+        resultprocessingtext(44,:) = (/"                                   ","                                   ", diagnostic_ratio_format, "siii_temp_ratio                    "/)
+        resultprocessingarray(45,:) = all_results%med_temp
+        resultprocessingtext(45,:) = (/"                                   ","                                   ", diagnostic_format, "med_temp                           "/)
+
+!high density
+
+        resultprocessingarray(46,:) = all_results%neiv_density
+        resultprocessingtext(46,:) = (/"                                   ","                                   ", diagnostic_format, "neiv_density                       "/)
+        resultprocessingarray(47,:) = all_results%neiv_density_ratio
+        resultprocessingtext(47,:) = (/"                                   ","                                   ", diagnostic_ratio_format, "neiv_density_ratio                 "/)
+        resultprocessingarray(48,:) = all_results%high_density
+        resultprocessingtext(48,:) = (/"                                   ","                                   ", diagnostic_format, "high_density                       "/)
+
+!high temperature
+
+        resultprocessingarray(49,:) = all_results%ArV_temp
+        resultprocessingtext(49,:) = (/"                                   ","                                   ", diagnostic_format, "ArV_temp                           "/)
+        resultprocessingarray(50,:) = all_results%arv_temp_ratio
+        resultprocessingtext(50,:) = (/"                                   ","                                   ", diagnostic_ratio_format, "arv_temp_ratio                     "/)
+        resultprocessingarray(51,:) = all_results%NeV_temp
+        resultprocessingtext(51,:) = (/"                                   ","                                   ", diagnostic_format, "NeV_temp                           "/)
+        resultprocessingarray(52,:) = all_results%nev_temp_ratio
+        resultprocessingtext(52,:) = (/"                                   ","                                   ", diagnostic_ratio_format, "nev_temp_ratio                     "/)
+        resultprocessingarray(53,:) = all_results%high_temp
+        resultprocessingtext(53,:) = (/"                                   ","                                   ", diagnostic_format, "high_temp                          "/)
+
+!balmer jump temperature
+
+        resultprocessingarray(54,:) = all_results%Bal_jump_temp
+        resultprocessingtext(54,:) = (/"                                   ","                                   ", diagnostic_format, "Bal_jump_temp                      "/)
+
+!CEL abundances
+
+        resultprocessingarray(55,:) = all_results%NC_abund_CEL
+        resultprocessingtext(55,:) = (/"                                   ","                                   ", abundances_format, "NC_abund_CEL                       "/)
+        resultprocessingarray(56,:) = all_results%cii_abund_CEL
+        resultprocessingtext(56,:) = (/"                                   ","                                   ", abundances_format, "cii_abund_CEL                      "/)
+        resultprocessingarray(57,:) = all_results%ciii_abund_CEL
+        resultprocessingtext(57,:) = (/"                                   ","                                   ", abundances_format, "ciii_abund_CEL                     "/)
+        resultprocessingarray(58,:) = all_results%civ_abund_CEL
+        resultprocessingtext(58,:) = (/"                                   ","                                   ", abundances_format, "civ_abund_CEL                      "/)
+        resultprocessingarray(59,:) = all_results%C_abund_CEL
+        resultprocessingtext(59,:) = (/"                                   ","                                   ", abundances_format, "C_abund_CEL                        "/)
+        resultprocessingarray(60,:) = all_results%nii_abund_CEL
+        resultprocessingtext(60,:) = (/"                                   ","                                   ", abundances_format, "nii_abund_CEL                      "/)
+        resultprocessingarray(61,:) = all_results%niii_abund_CEL
+        resultprocessingtext(61,:) = (/"                                   ","                                   ", abundances_format, "niii_abund_CEL                     "/)
+        resultprocessingarray(62,:) = all_results%niv_abund_CEL
+        resultprocessingtext(62,:) = (/"                                   ","                                   ", abundances_format, "niv_abund_CEL                      "/)
+        resultprocessingarray(63,:) = all_results%nv_abund_CEL
+        resultprocessingtext(63,:) = (/"                                   ","                                   ", abundances_format, "nv_abund_CEL                       "/)
+        resultprocessingarray(64,:) = all_results%N_abund_CEL
+        resultprocessingtext(64,:) = (/"                                   ","                                   ", abundances_format, "N_abund_CEL                        "/)
+        resultprocessingarray(65,:) = all_results%NO_abund_CEL
+        resultprocessingtext(65,:) = (/"                                   ","                                   ", abundances_format, "NO_abund_CEL                       "/)
+        resultprocessingarray(66,:) = all_results%Oii_abund_CEL
+        resultprocessingtext(66,:) = (/"                                   ","                                   ", abundances_format, "Oii_abund_CEL                      "/)
+        resultprocessingarray(67,:) = all_results%Oiii_abund_CEL
+        resultprocessingtext(67,:) = (/"                                   ","                                   ", abundances_format, "Oiii_abund_CEL                     "/)
+        resultprocessingarray(68,:) = all_results%Oiv_abund_CEL
+        resultprocessingtext(68,:) = (/"                                   ","                                   ", abundances_format, "Oiv_abund_CEL                      "/)
+        resultprocessingarray(69,:) = all_results%O_abund_CEL
+        resultprocessingtext(69,:) = (/"                                   ","                                   ", abundances_format, "O_abund_CEL                        "/)
+        resultprocessingarray(70,:) = all_results%NeII_abund_CEL
+        resultprocessingtext(70,:) = (/"                                   ","                                   ", abundances_format, "NeII_abund_CEL                     "/)
+        resultprocessingarray(71,:) = all_results%NeIII_abund_CEL
+        resultprocessingtext(71,:) = (/"                                   ","                                   ", abundances_format, "NeIII_abund_CEL                    "/)
+        resultprocessingarray(72,:) = all_results%NeIV_abund_CEL
+        resultprocessingtext(72,:) = (/"                                   ","                                   ", abundances_format, "NeIV_abund_CEL                     "/)
+        resultprocessingarray(73,:) = all_results%NeV_abund_CEL
+        resultprocessingtext(73,:) = (/"                                   ","                                   ", abundances_format, "NeV_abund_CEL                      "/)
+        resultprocessingarray(74,:) = all_results%Ne_abund_CEL
+        resultprocessingtext(74,:) = (/"                                   ","                                   ", abundances_format, "Ne_abund_CEL                       "/)
+        resultprocessingarray(75,:) = all_results%ArIII_abund_CEL
+        resultprocessingtext(75,:) = (/"                                   ","                                   ", abundances_format, "ArIII_abund_CEL                    "/)
+        resultprocessingarray(76,:) = all_results%ArIV_abund_CEL
+        resultprocessingtext(76,:) = (/"                                   ","                                   ", abundances_format, "ArIV_abund_CEL                     "/)
+        resultprocessingarray(77,:) = all_results%ArV_abund_CEL
+        resultprocessingtext(77,:) = (/"                                   ","                                   ", abundances_format, "ArV_abund_CEL                      "/)
+        resultprocessingarray(78,:) = all_results%Ar_abund_CEL
+        resultprocessingtext(78,:) = (/"                                   ","                                   ", abundances_format, "Ar_abund_CEL                       "/)
+        resultprocessingarray(79,:) = all_results%SII_abund_CEL
+        resultprocessingtext(79,:) = (/"                                   ","                                   ", abundances_format, "SII_abund_CEL                      "/)
+        resultprocessingarray(80,:) = all_results%SIII_abund_CEL
+        resultprocessingtext(80,:) = (/"                                   ","                                   ", abundances_format, "SIII_abund_CEL                     "/)
+        resultprocessingarray(81,:) = all_results%S_abund_CEL
+        resultprocessingtext(81,:) = (/"                                   ","                                   ", abundances_format, "S_abund_CEL                        "/)
+        resultprocessingarray(82,:) = all_results%ClIII_abund_CEL
+        resultprocessingtext(82,:) = (/"                                   ","                                   ", abundances_format, "ClIII_abund_CEL                    "/)
+        resultprocessingarray(83,:) = all_results%Cl_abund_CEL
+        resultprocessingtext(83,:) = (/"                                   ","                                   ", abundances_format, "Cl_abund_CEL                       "/)
+
+!ORL abundances
+
+        resultprocessingarray(84,:) = all_results%He_abund_ORL
+        resultprocessingtext(84,:) = (/"                                   ","                                   ", abundances_format, "He_abund_ORL                       "/)
+        resultprocessingarray(85,:) = all_results%C_abund_ORL
+        resultprocessingtext(85,:) = (/"                                   ","                                   ", abundances_format, "C_abund_ORL                        "/)
+        resultprocessingarray(86,:) = all_results%N_abund_ORL
+        resultprocessingtext(86,:) = (/"                                   ","                                   ", abundances_format, "N_abund_ORL                        "/)
+        resultprocessingarray(87,:) = all_results%O_abund_ORL
+        resultprocessingtext(87,:) = (/"                                   ","                                   ", abundances_format, "O_abund_ORL                        "/)
+        resultprocessingarray(88,:) = all_results%Ne_abund_ORL
+        resultprocessingtext(88,:) = (/"                                   ","                                   ", abundances_format, "Ne_abund_ORL                       "/)
+
+!strong line abundances
+
+        resultprocessingarray(89,:) = all_results%O_R23_upper
+        resultprocessingtext(89,:) = (/"                                   ","                                   ", abundances_format, "O_R23_upper                        "/)
+        resultprocessingarray(90,:) = all_results%O_R23_lower
+        resultprocessingtext(90,:) = (/"                                   ","                                   ", abundances_format, "O_R23_lower                        "/)
+        resultprocessingarray(91,:) = all_results%O_N2
+        resultprocessingtext(91,:) = (/"                                   ","                                   ", abundances_format, "O_N2                               "/)
+        resultprocessingarray(92,:) = all_results%O_O3N2
+        resultprocessingtext(92,:) = (/"                                   ","                                   ", abundances_format, "O_O3N2                             "/)
+        resultprocessingarray(93,:) = all_results%O_Ar3O3
+        resultprocessingtext(93,:) = (/"                                   ","                                   ", abundances_format, "O_Ar3O3                            "/)
+        resultprocessingarray(94,:) = all_results%O_S3O3
+        resultprocessingtext(94,:) = (/"                                   ","                                   ", abundances_format, "O_S3O3                             "/)
+
+!adfs
+
+        resultprocessingarray(95,:) = all_results%adf_o2plus
+        resultprocessingtext(95,:) = (/"                                   ","                                   ", adf_format, "adf_o2plus                         "/)
+        resultprocessingarray(96,:) = all_results%adf_o
+        resultprocessingtext(96,:) = (/"                                   ","                                   ", adf_format, "adf_o                              "/)
+        resultprocessingarray(97,:) = all_results%adf_n2plus
+        resultprocessingtext(97,:) = (/"                                   ","                                   ", adf_format, "adf_n2plus                         "/)
+        resultprocessingarray(98,:) = all_results%adf_n
+        resultprocessingtext(98,:) = (/"                                   ","                                   ", adf_format, "adf_n                              "/)
+        resultprocessingarray(99,:) = all_results%adf_c2plus
+        resultprocessingtext(99,:) = (/"                                   ","                                   ", adf_format, "adf_c2plus                         "/)
+        resultprocessingarray(100,:) = all_results%adf_c
+        resultprocessingtext(100,:) = (/"                                   ","                                   ", adf_format, "adf_c                              "/)
+        resultprocessingarray(101,:) = all_results%adf_ne2plus
+        resultprocessingtext(101,:) = (/"                                   ","                                   ", adf_format, "adf_ne2plus                        "/)
+        resultprocessingarray(102,:) = all_results%adf_ne
+        resultprocessingtext(102,:) = (/"                                   ","                                   ", adf_format, "adf_ne                             "/)
+
+!next, print out the plain text and latex headers for each section then loop
+!through them, processing and printing out the results.
+
+        do j=1,102
+          quantity_result=resultprocessingarray(j,:)
+          call write_uncertainties(quantity_result, uncertainty_array,resultprocessingtext(j,1),resultprocessingtext(j,3), filename, resultprocessingtext(j,4))
+        enddo
+
+!write ends of files, close
+
+        close(650)
+        close(651)
 
         print *
         print *,gettime(),": Finished."
@@ -1253,42 +881,52 @@ character*80, intent(in) :: filename
 character*25, intent(in) :: suffix
 logical :: unusual
 
-call get_uncertainties(input_array, binned_quantity_result, uncertainty_array, unusual)
+if(size(input_array) .eq. 1) then
+!just one iteration, write out the result without uncertainties
+  write (650,itemformat) itemtext,input_array(1)
+  write (651,*) itemtext," & ", trim(latex_number(input_array(1))),"\\"
+else
+
+  call get_uncertainties(input_array, binned_quantity_result, uncertainty_array, unusual)
 
 !write out the binned results with the mode+-uncertainties at the top
 
-if (allocated(binned_quantity_result) .and. maxval(uncertainty_array) .gt. 0.) then
-  OPEN(850, FILE=trim(filename)//"_"//trim(suffix)//"_binned", STATUS='REPLACE',ACCESS='SEQUENTIAL', ACTION='WRITE')
-  write(unit = 850,FMT=*) uncertainty_array(2),uncertainty_array(2)-uncertainty_array(1),uncertainty_array(3)+uncertainty_array(2)
-  write(unit = 850,FMT=*)
-!  do i=1,ii-1
-  do i=1,size(binned_quantity_result, 1)
-! this hacky condition is because for reasons I can't work out right now, the
-! number of bins allocated to the array is always too large and the last few end
-! up being full of zeros.  to be fixed soon hopefully.  RW 16/11/2012
-    if (binned_quantity_result(i,1) .gt. 0. .and. binned_quantity_result(i,2) .gt. 0) then
-      write(unit = 850,FMT=*) binned_quantity_result(i,1),int(binned_quantity_result(i,2))
-    endif
-  end do
-  close(850)
-endif
+  if (allocated(binned_quantity_result) .and. maxval(uncertainty_array) .gt. 0.) then
+    OPEN(850, FILE=trim(filename)//"_"//trim(suffix)//"_binned", STATUS='REPLACE',ACCESS='SEQUENTIAL', ACTION='WRITE')
+    write(unit = 850,FMT=*) uncertainty_array(2),uncertainty_array(2)-uncertainty_array(1),uncertainty_array(3)+uncertainty_array(2)
+    write(unit = 850,FMT=*)
+  !  do i=1,ii-1
+    do i=1,size(binned_quantity_result, 1)
+  ! this hacky condition is because for reasons I can't work out right now, the
+  ! number of bins allocated to the array is always too large and the last few end
+  ! up being full of zeros.  to be fixed soon hopefully.  RW 16/11/2012
+      if (binned_quantity_result(i,1) .gt. 0. .and. binned_quantity_result(i,2) .gt. 0) then
+        write(unit = 850,FMT=*) binned_quantity_result(i,1),int(binned_quantity_result(i,2))
+      endif
+    end do
+    close(850)
+  endif
 
 !write the unbinned results to file
 
-OPEN(850, FILE=trim(filename)//"_"//trim(suffix), STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-do i=1,size(input_array)
-  write(unit = 850,FMT=*) input_array(i)
-end do
-close(850)
+  OPEN(850, FILE=trim(filename)//"_"//trim(suffix), STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+  do i=1,size(input_array)
+    write(unit = 850,FMT=*) input_array(i)
+  end do
+  close(850)
 
-!write derived value and uncertainties to the summary file
+!write derived value and uncertainties to the summary files
+!todo sort this out so the latex file has nicer number formatting
+  if (maxval(uncertainty_array) .gt. 0.) then !if this condition is not true, array will be full of zeroes
+    if (unusual) write (650,itemformat) "Warning! Unusual probability distribution.  You should inspect this one:"
+    write (650,itemformat) itemtext,uncertainty_array(2),uncertainty_array(3),-uncertainty_array(1)
+    write (651,*) itemtext," & ",trim(latex_number(uncertainty_array(2))),"$^{",trim(latex_number(uncertainty_array(3))),"}_{",trim(latex_number(-uncertainty_array(1))),"}$ \\"
+  else
+    write (650,*) itemtext,"--"
+    write (651,*) itemtext,"& -- \\"
+  endif
 
-if (maxval(uncertainty_array) .gt. 0.) then !if this condition is not true, array will be full of zeroes
-  if (unusual) write (650,itemformat) "Warning! Unusual probability distribution.  You should inspect this one:"
-  write (650,itemformat) itemtext,uncertainty_array(2),uncertainty_array(3),-uncertainty_array(1)
-else
-  write (650,*) itemtext,"--"
-endif
+endif !end of condition checking whether one or more iterations were done
 
 end subroutine write_uncertainties
 
@@ -1453,4 +1091,24 @@ character*10 :: time
 
 end function gettime
 
+character*100 function latex_number(inputnumber)
+! for any number in the form aEx, write it in latex format, ie a$\times$10$^{x}$
+double precision :: inputnumber, mantissa
+integer :: exponent, pos
+
+write (latex_number,"(ES14.6)") inputnumber
+pos = INDEX (latex_number,'E')
+read (latex_number(1:pos-1), '(F6.3)') mantissa
+read (latex_number(pos+1:14), '(I3)') exponent
+
+if (exponent .ge. -2 .and. exponent .le. 1) then
+  write (latex_number,"(F6.3)") inputnumber !just print out normal number if it's between 0.01 & 10
+elseif (exponent .ge. 2 .and. exponent .le. 4) then
+  write (latex_number,"(I5)") 10*nint(inputnumber/10) ! write out integer rounded to nearest 10 if it's between 10 and 10,000
+else !otherwise, write out a formatted exponent
+  write (latex_number,"(F6.3,'\times 10^{',I3,'}')") mantissa,exponent
+endif
+return
+
+end function latex_number
 end program
