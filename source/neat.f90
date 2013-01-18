@@ -524,7 +524,7 @@ program neat
         resultprocessingarray(5,:) = all_results%sii_density_ratio
         resultprocessingtext(5,:) = (/"Ratio :                            ","Ratio :                            ", diagnostic_ratio_format, "sii_density_ratio                  "/)
         resultprocessingarray(6,:) = all_results%low_density
-        resultprocessingtext(6,:) = (/"Low density :                      ","Low ionisation density:            ", diagnostic_format, "low_density                        "/)
+        resultprocessingtext(6,:) = (/"Low ionisation density :           ","Low ionisation density:            ", diagnostic_format, "low_density                        "/)
 
 !low temperature
 
@@ -549,7 +549,7 @@ program neat
         resultprocessingarray(16,:) = all_results%ci_temp_ratio
         resultprocessingtext(16,:) = (/"Ratio :                            ","Ratio :                            ", diagnostic_ratio_format, "ci_temp_ratio                      "/)
         resultprocessingarray(17,:) = all_results%low_temp
-        resultprocessingtext(17,:) = (/"Low temperature :                  ","Low temperature :                  ", diagnostic_format, "low_temp                           "/)
+        resultprocessingtext(17,:) = (/"Low ionisation temperature :       ","Low ionisation temperature :       ", diagnostic_format, "low_temp                           "/)
 
 
 !medium density
@@ -612,7 +612,7 @@ program neat
         resultprocessingarray(44,:) = all_results%siii_temp_ratio
         resultprocessingtext(44,:) = (/"Ratio :                            ","Ratio :                            ", diagnostic_ratio_format, "siii_temp_ratio                    "/)
         resultprocessingarray(45,:) = all_results%med_temp
-        resultprocessingtext(45,:) = (/"[] temperature :                   ","Medium ionisation temperature :    ", diagnostic_format, "med_temp                           "/)
+        resultprocessingtext(45,:) = (/"Medium ionisation temperature :    ","Medium ionisation temperature :    ", diagnostic_format, "med_temp                           "/)
 
 !high density
 
@@ -813,22 +813,42 @@ program neat
 ! here we put some if statements to put things into conveniently separate bits
 
           if (j .eq. 1) then
-            write (650,*) "Extinction"
+            write (650,"(/A,/A/)") "Extinction","=========="
             write (651,*) "\multicolumn{2}{l}{Extinction}\\ \hline"
           elseif (j .eq. 2) then
-            write (650,*) "Diagnostics"
+            write (650,"(/A,/A)") "Diagnostics","==========="
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{Diagnostics}\\ \hline"
+            write (650,"(/A,/A/)") "Low ionisation densities","-----------"
+            write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{Low ionisation densities}\\ \hline"
+          elseif (j .eq. 7) then
+            write (650,"(/A,/A/)") "Low ionisation temperatures","-----------"
+            write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{Low ionisation temperatures}\\ \hline"
+          elseif (j .eq. 18) then
+            write (650,"(/A,/A/)") "Medium ionisation densities","-----------"
+            write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{Medium ionisation densities}\\ \hline"
+          elseif (j .eq. 33) then
+            write (650,"(/A,/A/)") "Medium ionisation temperatures","-----------"
+            write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{Medium ionisation temperatures}\\ \hline"
+          elseif (j .eq. 46) then
+            write (650,"(/A,/A/)") "High ionisation densities","-----------"
+            write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{High ionisation densities}\\ \hline"
+          elseif (j .eq. 49) then
+            write (650,"(/A,/A/)") "High ionisation temperatures","-----------"
+            write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{High ionisation temperatures}\\ \hline"
+          elseif (j .eq. 54) then
+            write (650,"(/A,/A/)") "Balmer jump temperature","-----------"
+            write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{Balmer jump temperature}\\ \hline"
           elseif (j .eq. 55) then
-            write (650,*) "CEL abundances"
+            write (650,"(/A,/A/)") "CEL abundances","=============="
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{CEL abundances}\\ \hline"
-          elseif (j .eq. 84) then
-            write (650,*) "ORL abundances"
+          elseif (j .eq. 91) then
+            write (650,"(/A,/A/)") "ORL abundances","=============="
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{ORL abundances}\\ \hline" 
-          elseif (j .eq. 89) then
-            write (650,*) "Strong line abundances"
+          elseif (j .eq. 108) then
+            write (650,"(/A,/A/)") "Strong line abundances","======================"
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{Strong line abundances}\\ \hline" 
-          elseif (j .eq. 95) then
-            write (650,*) "Abundance discrepancy factors"
+          elseif (j .eq. 114) then
+            write (650,"(/A,/A/)") "Abundance discrepancy factors","============================="
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{Abundance discrepancy factors}\\ \hline"
           endif
 
