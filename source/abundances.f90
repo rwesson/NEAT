@@ -365,7 +365,7 @@ implicit none
            cliiiDens=0
          endif
          if (ciiiNratio .gt. 0 .and. ciiiNratio .lt. 1e10) then
-           call get_diagnostic("ciii      ","1,2/                ","1,3/                ",ciiiNratio,"D",medtemp, ciiiDens,maxlevs,maxtemps,atomicdata,iion)
+           call get_diagnostic("ciii      ","1,3/                ","1,4/                ",ciiiNratio,"D",medtemp, ciiiDens,maxlevs,maxtemps,atomicdata,iion)
            count = count + 1
          else
            ciiiDens=0
