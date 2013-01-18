@@ -779,7 +779,7 @@ program neat
             write (651,*) "\multicolumn{2}{l}{Extinction}\\ \hline"
           elseif (j .eq. 2) then
             write (650,*) "Diagnostics"
-            write (651,*) "\multicolumn{2}{l}{Diagnostics}\\ \hline"
+            write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{Diagnostics}\\ \hline"
           elseif (j .eq. 55) then
             write (650,*) "CEL abundances"
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{CEL abundances}\\ \hline"
@@ -807,6 +807,10 @@ program neat
 
         close(650)
         close(651)
+
+        print *,gettime(),": Results written to files:"
+        print *,"              ",trim(filename),"_results"
+        print *,"              ",trim(filename),"_results.tex"
 
         print *
         print *,gettime(),": Finished."
