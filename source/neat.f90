@@ -406,15 +406,11 @@ program neat
 
                 END DO
 
-!XXXX add Cl/H, Niii, cii, ciii, ArIII IR dens, NeIII IR dens, strong line, ICF files to output
-
-! now write all the lines to line list files, plain text and latex
-
         else
                 print*, gettime(), ": I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."
         endif
 
-!output processing
+!now write all the lines to line list files, plain text and latex
 !linelist first
 
         print *,gettime(),": Writing line list"
