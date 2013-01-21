@@ -96,16 +96,17 @@ subroutine get_H(H_BS, linelist, listlength)
         !another ugly kludge, but it works.
 
         balmerlines = (/ 6562.77D0, 4861.33D0, 4340.47D0, 4101.74D0, 3970.07D0, 3889.05D0, 3835.38D0, 3797.90D0, 3770.63D0, 3750.15D0, 3734.37D0, 3721.94D0, 3711.97D0, 3703.85D0, 3697.15D0, 3691.55D0, 3686.83D0, 3682.81D0, 3679.35D0, 3676.36D0, 3673.76D0, 3671.48D0, 3669.46D0, 3667.68D0, 3666.10D0, 3664.68D0, 3663.40D0, 3662.26D0, 3661.22D0, 3660.28D0, 3659.42D0, 3658.64D0, 3657.92D0, 3657.27D0, 3656.66D0, 3656.11D0, 3655.59D0, 3655.12D0 /)
+        H_BS%location = 0.0
 
         do i = 1, 38
                 HW = balmerlines(i)
 
                 do j = 1, listlength
                          if (linelist(j)%wavelength-HW==0) then
-                                H_BS(i)%name = "Hbalmer    "
                                 H_BS(i)%wavelength = linelist(j)%wavelength
                                 H_BS(i)%intensity = linelist(j)%intensity
                                 H_BS(i)%int_err = linelist(j)%int_err
+                                H_BS(i)%location = j
                         endif
                 end do
         end do
@@ -118,31 +119,15 @@ subroutine get_He(He_lines, linelist,listlength)
         TYPE(line), DIMENSION(:), INTENT(IN) :: linelist
         INTEGER :: i, j, listlength
         REAL*8 :: HW
-        CHARACTER*11 :: blank
-        !another ugly kludge, but it works.
+        double precision, dimension(4) :: he_wavelengths
+
+        he_wavelengths = (/ 4685.68D0, 4471.50D0, 5875.66D0, 6678.16D0 /)
+
         do i = 1, 4
-                if(i == 1)then
-                        blank = "HeII4686   "
-                        HW = 4685.68D0
-                elseif(i == 2)then
-                        blank = "HeI4471    "
-                        HW = 4471.50D0
-                elseif(i == 3)then
-                        blank = "HeI5876    "
-                        HW = 5875.66D0
-                elseif(i == 4)then
-                        blank = "HeI6678    "
-                        HW = 6678.16D0
-                else
-                        PRINT*, "This is an EX-PARROT!!"
-                endif
-                He_lines(i)%name = blank
-                He_lines(i)%wavelength = HW
-                He_lines(i)%intensity = 0.0
-                He_lines(i)%int_err = 0.0
-                He_lines(i)%location = 0
+                HW = he_wavelengths(i)
                 do j = 1, listlength
                         if(linelist(j)%wavelength == HW) then
+                                He_lines(i)%wavelength = linelist(j)%wavelength
                                 He_lines(i)%intensity = linelist(j)%intensity
                                 He_lines(i)%int_err = linelist(j)%int_err
                                 He_lines(i)%location = j

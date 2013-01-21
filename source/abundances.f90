@@ -1853,6 +1853,20 @@ do i=1,Iint
   end if
 end do
 
+!write ion names to array
+
+do i=1,38
+  if (H_BS(i)%location .gt. 0) then
+    linelist(H_BS(i)%location)%name = "H I"
+  endif
+end do
+
+do i=1,4
+  if (He_lines(i)%location .gt. 0) then
+    linelist(He_lines(i)%location)%name = "He"
+  endif
+end do
+
 contains
 
         SUBROUTINE get_diag(name1, name2, diag)
