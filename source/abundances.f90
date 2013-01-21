@@ -1123,8 +1123,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                  oiCELabund = 0.
         weight = 0.
         do i=get_ion("oi5577     ", ILs, Iint), get_ion("oi6364     ", ILs, Iint)
-          if (ILs(i)%abundance .ge. 1e-20) oiCELabund = oiCELabund + ILs(i)%abundance*ILs(i)%intensity
           if (ILs(i)%abundance .ge. 1e-20) then
+            oiCELabund = oiCELabund + ILs(i)%abundance*ILs(i)%intensity
             weight = weight + ILs(i)%intensity
           endif
         enddo
