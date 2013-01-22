@@ -12,13 +12,13 @@ subroutine read_ilines(ILs, Iint,iion,ionlist)
 
         Iint = 1
 
-        301 FORMAT(A11, 1X, A6, 1X, F7.2, 1X, A20,1X,A4)
+        301 FORMAT(A11, 1X, A6, 1X, F7.2, 1X, A20,1X,A4,1X,A15)
         OPEN(201, file="source/Ilines_levs", status='old')
                 READ (201,*) Iread
                 ALLOCATE (ILs(Iread))
                 ILs%intensity=0.D0 !otherwise it seems you can get random very small numbers in the array.
                 DO WHILE (Iint .le. Iread)!(.true.)
-                        READ(201,301) ILs(Iint)%name, ILs(Iint)%ion, ILs(Iint)%wavelength, ILs(Iint)%transition ,ILs(Iint)%zone!end condition breaks loop.
+                        READ(201,301) ILs(Iint)%name, ILs(Iint)%ion, ILs(Iint)%wavelength, ILs(Iint)%transition ,ILs(Iint)%zone, ILs(Iint)%latextext!end condition breaks loop.
                         if(Iint .eq. 1) then
                             Iion = 1
                             Ionlist(iion) = ILs(Iint)%ion(1:10)

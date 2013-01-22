@@ -292,6 +292,7 @@ program neat
                 linelist(i)%wavelength = temp1
                 linelist(i)%intensity = temp2
                 linelist(i)%int_err = temp3
+                linelist(i)%latextext = ""
         END DO
         CLOSE(199)
 
@@ -433,7 +434,7 @@ program neat
 !SNR>6, from the equations if SNR<6.
 
                 write (650,"(X,F7.2,X,A11)", advance='no') all_linelists(j,1)%wavelength,all_linelists(j,1)%name
-                write (651,"(X,F7.2,' & ',A11,' & ')", advance='no') all_linelists(j,1)%wavelength,all_linelists(j,1)%name
+                write (651,"(X,F7.2,' & ',A15,' & ')", advance='no') all_linelists(j,1)%wavelength,all_linelists(j,1)%latextext
 
 !dereddened flux
                 quantity_result = all_linelists(j,:)%int_dered
@@ -465,15 +466,15 @@ program neat
                 endif
 
                 end do
-        else ! runs == 1
+        else ! runs == 1, no uncertainties to write out
 
                 do i=1,listlength
                   if (linelist(i)%abundance .gt. 0.0) then
                      write (650,"(X,F7.2,X,A11,F8.3,X,F8.3,X,ES14.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance
-                     write (651,"(X,F7.2,X,'&',A11,'&',X,F8.3,X,'&',X,F8.3,X,'&',X,'$',A,'$',X,'\\')") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered, trim(latex_number(linelist(i)%abundance))
+                     write (651,"(X,F7.2,X,'&',A15,'&',X,F8.3,X,'&',X,F8.3,X,'&',X,'$',A,'$',X,'\\')") linelist(i)%wavelength,linelist(i)%latextext,linelist(i)%intensity,linelist(i)%int_dered, trim(latex_number(linelist(i)%abundance))
                   else
                      write (650,"(X,F7.2,X,A11,F8.3,X,F8.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered
-                     write (651,"(X,F7.2,X,'&',A11,'&',X,F8.3,X,'&',X,F8.3,X,'&',X,'\\')") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered
+                     write (651,"(X,F7.2,X,'&',A15,'&',X,F8.3,X,'&',X,F8.3,X,'&',X,'\\')") linelist(i)%wavelength,linelist(i)%latextext,linelist(i)%intensity,linelist(i)%int_dered
                   endif
                 end do
         

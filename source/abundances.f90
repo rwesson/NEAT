@@ -1147,6 +1147,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
             oiiRLs(j)%abundance = oiiRLs(j)%obs/oiiRLs(j)%Int
             linelist(i)%abundance = oiiRLs(j)%abundance
             linelist(i)%name="O II                "
+            linelist(i)%latextext="O~{\sc ii}          "
           endif
          enddo
        enddo
@@ -1162,6 +1163,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
             niiRLs(j)%abundance = niiRLs(j)%obs/niiRLs(j)%Int
             linelist(i)%abundance = niiRLs(j)%abundance
             linelist(i)%name="N II                "
+            linelist(i)%latextext="N~{\sc ii}          "
           endif
          enddo
        enddo
@@ -1176,6 +1178,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
             ciiRLs(j)%abundance = ciiRLs(j)%obs/ciiRLs(j)%Int
             linelist(i)%abundance = ciiRLs(j)%abundance
             linelist(i)%name="C II                "
+            linelist(i)%latextext="C~{\sc ii}          "
           endif
          enddo
        enddo
@@ -1190,6 +1193,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
             neiiRLs(j)%abundance = neiiRLs(j)%obs/neiiRLs(j)%Int
             linelist(i)%abundance = neiiRLs(j)%abundance
             linelist(i)%name="Ne II               "
+            linelist(i)%latextext="Ne~{\sc ii}         "
           endif
          enddo
        enddo
@@ -1203,7 +1207,13 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
             xiiiRLs(j)%Obs = linelist(i)%int_dered
             xiiiRLs(j)%abundance = xiiiRLs(j)%obs/xiiiRLs(j)%Int
             linelist(i)%abundance = xiiiRLs(j)%abundance
-            linelist(i)%name="  III               "! fix this
+            if (j .le. 4) then
+              linelist(i)%name="C III               "
+              linelist(i)%latextext="C~{\sc iii}         "
+            else
+              linelist(i)%name="N III               "
+              linelist(i)%latextext="N~{\sc iii}         "
+            endif
           endif
          enddo
        enddo
@@ -1850,6 +1860,7 @@ iteration_result(1)%adf_ne = adfne
 do i=1,Iint
   if (ILs(i)%location .gt. 0) then
     linelist(ILs(i)%location)%abundance = ILs(i)%abundance
+    linelist(ILs(i)%location)%latextext = ILs(i)%latextext
   end if
 end do
 
@@ -1858,12 +1869,14 @@ end do
 do i=1,38
   if (H_BS(i)%location .gt. 0) then
     linelist(H_BS(i)%location)%name = "H I"
+    linelist(H_BS(i)%location)%latextext = "H~{\sc i}"
   endif
 end do
 
 do i=1,4
   if (He_lines(i)%location .gt. 0) then
     linelist(He_lines(i)%location)%name = "He"
+    linelist(He_lines(i)%location)%latextext = "He~{\sc i}"
   endif
 end do
 
