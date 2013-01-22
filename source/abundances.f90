@@ -1889,10 +1889,16 @@ end do
 do i=1,44
   if (HeI_lines(i)%location .gt. 0) then
     linelist(HeI_lines(i)%location)%abundance = HeI_lines(i)%abundance
-    linelist(HeI_lines(i)%location)%name = "He"
+    linelist(HeI_lines(i)%location)%name = "He I"
     linelist(HeI_lines(i)%location)%latextext = "He~{\sc i}"
   endif
 end do
+
+if (HeII_lines(1)%location .gt. 0) then
+    linelist(HeII_lines(i)%location)%abundance = HeII_lines(1)%abundance
+    linelist(HeII_lines(i)%location)%name = "He II"
+    linelist(HeII_lines(i)%location)%latextext = "He~{\sc ii}"
+endif
 
 contains
 
