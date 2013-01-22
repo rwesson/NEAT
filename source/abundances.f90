@@ -83,6 +83,7 @@ implicit none
 
         H_BS%intensity = 0
         HeI_lines%intensity = 0
+        HeII_lines%intensity = 0
 
         !file reading stuff
 
