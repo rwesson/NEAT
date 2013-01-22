@@ -116,18 +116,11 @@ implicit none
         !normalisation check, correction
 
         if(H_BS(2)%intensity .ne. 100)then
-                normalise =  DBLE(100) / DBLE(H_BS(2)%intensity)
-                do i = 1, Iint !normalising important ions
-                        ILs(i)%intensity = ILs(i)%intensity * normalise
-                end do
-                do i = 1, 38 !normalising balmer series
-                        H_BS(i)%intensity = H_BS(i)%intensity*normalise
-                end do
-                do i = 1,44 !normalise helium
-                        HeI_lines(i)%intensity = HeI_lines(i)%intensity * normalise
-                end do
-                !normalise He II
-Heii_lines(1)%intensity = Heii_lines(1)%intensity * normalise
+                normalise =  DBLE(100) / DBLE(H_BS(2)%intensity) 
+                ILs%intensity = ILs%intensity * normalise 
+                H_BS%intensity = H_BS%intensity*normalise 
+                HeI_lines%intensity = HeI_lines%intensity * normalise
+                Heii_lines%intensity = Heii_lines%intensity * normalise
         endif
 
         if (calculate_extinction) then
