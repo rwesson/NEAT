@@ -1,7 +1,7 @@
       module mod_helium
       contains
 
-      subroutine get_heii(te, ne, IHeII4686, heiiabund)
+      subroutine get_heii_abund(te, ne, IHeII4686, heiiabund)
 
       IMPLICIT NONE
       REAL A4686,TE,NE,IHeII4686,heiiabund
@@ -20,21 +20,23 @@
      & em4471, em5876, em6678,             &
      & AB4471,AB5876,AB6678,heiabund 
 
-      type(line), dimension(4) :: he_lines 
+      type(line), dimension(44) :: he_lines 
       double precision, dimension(3) :: weights
       double precision, dimension(21,15,44), intent(in) :: heidata
+      real, dimension(44) :: emissivities
+      integer :: i
 
-      call get_emissivity(te,ne, 10, em4471, heidata)
-      call get_emissivity(te,ne, 15, em5876, heidata)
-      call get_emissivity(te,ne, 16, em6678, heidata)
+!      Porter et al data is for the following lines, in this order: 2945.10,3188.74,3613.64,3888.65,3964.73,4026.21,4120.82,4387.93,4437.55,4471.50,4713.17,4921.93,5015.68,5047.74,5875.66,6678.16,7065.25,7281.35,9463.58,10830.25,11013.07,11969.06,12527.49,12755.69,12784.92,12790.50,12845.98,12968.43,12984.88,13411.69,15083.65,17002.40,18555.57,18685.33,18697.21,19089.36,19543.19,20424.97,20581.28,20601.76,21120.12,21132.03,21607.80,21617.01 /)
 
-      He_lines(2)%abundance = He_lines(2)%int_dered/100. * 10.**(GAMM4861(TE,NE)-em4471)
-      He_lines(3)%abundance = He_lines(3)%int_dered/100. * 10.**(GAMM4861(TE,NE)-em5876)
-      He_lines(4)%abundance = He_lines(4)%int_dered/100. * 10.**(GAMM4861(TE,NE)-em6678)
 
-      AB4471 = He_lines(2)%abundance
-      AB5876 = He_lines(3)%abundance
-      AB6678 = He_lines(4)%abundance
+      do i = 1,44
+        call get_emissivity(te,ne, i, emissivities(i), heidata)
+        He_lines(i)%abundance = He_lines(i)%int_dered/100. * 10.**(GAMM4861(TE,NE)-emissivities(i))
+      end do
+
+      AB4471 = He_lines(10)%abundance
+      AB5876 = He_lines(15)%abundance
+      AB6678 = He_lines(16)%abundance
 
            weights=0.D0
 
@@ -119,8 +121,9 @@
      & C4471,C5876,C6678,                                     &
      & IHeI4471,IHeI5876,IHeI6678,                                      &
      & AB4471,AB5876,AB6678,heiabund 
-      type(line), dimension(4) :: He_lines
+      type(line), dimension(44) :: He_lines
       double precision, dimension(3) :: weights
+      integer :: i,j,k
 
       A4471=10.**(GAMM4861(TEh2,NEh2)-GAMM4471(TEh2,NEh2))
       A5876=10.**(GAMM4861(TEh2,NEh2)-GAMM5876(TEh2,NEh2))
@@ -137,9 +140,9 @@
       C5876=(  6.78*TEh2**(0.07)*exp(-3.776/TEh2)  + 1.67*TEh2**(-0.15)*exp(-4.545/TEh2) + 0.60*TEh2**(-0.34)*exp(-4.901/TEh2)  )/D
       C6678=(  3.15*TEh2**(-0.54)*exp(-3.776/TEh2) + 0.51*TEh2**(-0.51)*exp(-4.545/TEh2) + 0.20*TEh2**(-0.66)*exp(-4.901/TEh2)  )/D
 
-           AB4471=He_lines(2)%int_dered/100.*A4471/(1.+C4471)
-           AB5876=He_lines(3)%int_dered/100.*A5876/(1.+C5876)
-           AB6678=He_lines(4)%int_dered/100.*A6678/(1.+C6678)
+           AB4471=He_lines(10)%int_dered/100.*A4471/(1.+C4471)
+           AB5876=He_lines(15)%int_dered/100.*A5876/(1.+C5876)
+           AB6678=He_lines(16)%int_dered/100.*A6678/(1.+C6678)
 
            weights=0.D0
 
@@ -153,9 +156,9 @@
                heiabund = 0.D0
            endif
 
-      He_lines(2)%abundance=AB4471
-      He_lines(3)%abundance=AB5876
-      He_lines(4)%abundance=AB6678
+      He_lines(10)%abundance=AB4471
+      He_lines(15)%abundance=AB5876
+      He_lines(16)%abundance=AB6678
 
       END subroutine get_hei_smits
 !

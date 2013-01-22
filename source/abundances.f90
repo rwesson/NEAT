@@ -39,7 +39,8 @@ implicit none
 
         TYPE(line), DIMENSION(Iint) :: ILs
         TYPE(line), DIMENSION(38) :: H_BS
-        TYPE(line), DIMENSION(4) :: He_lines
+        TYPE(line), DIMENSION(44) :: HeI_lines
+        TYPE(line), DIMENSION(1) :: HeII_lines
         TYPE(line), DIMENSION(2) :: Balmer_jump
 
         !atomic data
@@ -81,7 +82,7 @@ implicit none
         linelist_orig = linelist
 
         H_BS%intensity = 0
-        He_lines%intensity = 0
+        HeI_lines%intensity = 0
 
         !file reading stuff
 
@@ -95,12 +96,15 @@ implicit none
         ILs%int_dered = 0
         H_BS%abundance = 0
         H_BS%int_dered = 0
-        He_lines%abundance = 0
-        He_lines%int_dered = 0
+        HeI_lines%abundance = 0
+        HeI_lines%int_dered = 0
+        HeII_lines%abundance = 0
+        HeII_lines%int_dered = 0
 
-        !first lets find some hydrogen lines
+        !first find hydrogen and helium lines
         CALL get_H(H_BS, linelist, listlength)
-        call get_He(He_lines, linelist, listlength)
+        call get_Hei(Hei_lines, linelist, listlength)
+        call get_Heii(Heii_lines, linelist, listlength)
 
         !is H beta detected? if not, we can't do anything.
 
@@ -119,9 +123,11 @@ implicit none
                 do i = 1, 38 !normalising balmer series
                         H_BS(i)%intensity = H_BS(i)%intensity*normalise
                 end do
-                do i = 1,4 !normalise helium
-                        He_lines(i)%intensity = He_lines(i)%intensity * normalise
+                do i = 1,44 !normalise helium
+                        HeI_lines(i)%intensity = HeI_lines(i)%intensity * normalise
                 end do
+                !normalise He II
+Heii_lines(1)%intensity = Heii_lines(1)%intensity * normalise
         endif
 
         if (calculate_extinction) then
@@ -137,27 +143,32 @@ implicit none
         if (switch_ext == "S") then
                 CALL deredden(ILs, Iint, meanextinction)
                 CALL deredden(H_BS, 38, meanextinction)
-                call deredden(He_lines, 4, meanextinction)
+                call deredden(HeI_lines, 44, meanextinction)
+                call deredden(HeII_lines, 1, meanextinction)
                 CALL deredden(linelist, listlength, meanextinction)
         elseif (switch_ext == "H") then
                 CALL deredden_LMC(ILs, Iint, meanextinction)
                 CALL deredden_LMC(H_BS, 38, meanextinction)
-                call deredden_LMC(He_lines, 4, meanextinction)
+                call deredden_LMC(HeI_lines, 44, meanextinction)
+                call deredden_LMC(HeII_lines, 1, meanextinction)
                 CALL deredden_LMC(linelist, listlength, meanextinction)
         elseif (switch_ext == "C") then
                 CALL deredden_CCM(ILs, Iint, meanextinction, R)
                 CALL deredden_CCM(H_BS, 38, meanextinction, R)
-                call deredden_CCM(He_lines, 4, meanextinction, R)
+                call deredden_CCM(HeI_lines, 44, meanextinction, R)
+                call deredden_CCM(HeII_lines, 1, meanextinction, R)
                 CALL deredden_CCM(linelist, listlength, meanextinction, R)
         elseif (switch_ext == "P") then
                 CALL deredden_SMC(ILs, Iint, meanextinction)
                 CALL deredden_SMC(H_BS, 38, meanextinction)
-                call deredden_SMC(He_lines, 4, meanextinction)
+                call deredden_SMC(HeI_lines, 44, meanextinction)
+                call deredden_SMC(HeII_lines, 1, meanextinction)
                 CALL deredden_SMC(linelist, listlength, meanextinction)
         elseif (switch_ext == "F") then
                 CALL deredden_Fitz(ILs, Iint, meanextinction)
                 CALL deredden_Fitz(H_BS, 38, meanextinction)
-                call deredden_Fitz(He_lines, 4, meanextinction)
+                call deredden_Fitz(HeI_lines, 44, meanextinction)
+                call deredden_Fitz(HeII_lines, 1, meanextinction)
                 CALL deredden_Fitz(linelist, listlength, meanextinction)
         endif
 
@@ -484,8 +495,8 @@ implicit none
 
           ILs%int_dered = 0
           H_BS%int_dered = 0
-          He_lines%int_dered = 0
-
+          HeI_lines%int_dered = 0
+          HeII_lines%int_dered = 0
 
         !update extinction. DS 22/10/11
           meanextinction=0
@@ -499,27 +510,32 @@ implicit none
           if (switch_ext == "S") then
                   CALL deredden(ILs, Iint, meanextinction)
                   CALL deredden(H_BS, 38, meanextinction)
-                  call deredden(He_lines, 4, meanextinction)
+                  call deredden(HeI_lines, 44, meanextinction)
+                  call deredden(HeII_lines, 1, meanextinction)
                   CALL deredden(linelist, listlength, meanextinction)
           elseif (switch_ext == "H") then
                   CALL deredden_LMC(ILs, Iint, meanextinction)
                   CALL deredden_LMC(H_BS, 38, meanextinction)
-                  call deredden_LMC(He_lines, 4, meanextinction)
+                  call deredden_LMC(HeI_lines, 44, meanextinction)
+                  call deredden_LMC(HeII_lines, 1, meanextinction)
                   CALL deredden_LMC(linelist, listlength, meanextinction)
           elseif (switch_ext == "C") then
                   CALL deredden_CCM(ILs, Iint, meanextinction, R)
                   CALL deredden_CCM(H_BS, 38, meanextinction, R)
-                  call deredden_CCM(He_lines, 4, meanextinction, R)
+                  call deredden_CCM(HeI_lines, 44, meanextinction, R)
+                  call deredden_CCM(HeII_lines, 1, meanextinction, R)
                   CALL deredden_CCM(linelist, listlength, meanextinction, R)
           elseif (switch_ext == "P") then
                   CALL deredden_SMC(ILs, Iint, meanextinction)
                   CALL deredden_SMC(H_BS, 38, meanextinction)
-                  call deredden_SMC(He_lines, 4, meanextinction)
+                  call deredden_SMC(HeI_lines, 44, meanextinction)
+                  call deredden_SMC(HeII_lines, 1, meanextinction)
                   CALL deredden_SMC(linelist, listlength, meanextinction)
           elseif (switch_ext == "F") then
                   CALL deredden_Fitz(ILs, Iint, meanextinction)
                   CALL deredden_Fitz(H_BS, 38, meanextinction)
-                  call deredden_Fitz(He_lines, 4, meanextinction)
+                  call deredden_Fitz(HeI_lines, 44, meanextinction)
+                  call deredden_Fitz(HeII_lines, 1, meanextinction)
                   CALL deredden_Fitz(linelist, listlength, meanextinction)
           endif
         endif ! end of exinction calculating
@@ -690,20 +706,24 @@ iteration_result(1)%ArV_temp_ratio = arvTratio
 iteration_result(1)%NeV_temp_ratio = nevTratio
 
 ! Helium abundances
+! He II 
 
-        call get_heii(REAL(medtemp),REAL(meddens),real(He_lines(1)%int_dered),heiiabund)
+        call get_heii_abund(REAL(medtemp),REAL(meddens),real(Heii_lines(1)%int_dered),heiiabund)
+        Heii_lines(1)%abundance = heiiabund
+
+! He I 
 
         if (switch_he=="S") then
-          call get_hei_smits(REAL(medtemp),REAL(meddens),He_lines,heiabund)
+          call get_hei_smits(REAL(medtemp),REAL(meddens),HeI_lines,heiabund)
         else
-          call get_hei_porter(REAL(medtemp),REAL(meddens),He_lines,heidata, heiabund)
+          call get_hei_porter(REAL(medtemp),REAL(meddens),HeI_lines,heidata, heiabund)
         endif
 
         !copy the line abundances back into the main array
 
         do i=1,4 
-          if (He_lines(i)%location .gt. 0) then
-            linelist(He_lines(i)%location)%abundance = He_lines(i)%abundance
+          if (HeI_lines(i)%location .gt. 0) then
+            linelist(HeI_lines(i)%location)%abundance = HeI_lines(i)%abundance
           endif
         end do
 
@@ -746,7 +766,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         do i = 1,Iint !This used to be Iint-1 but I think that's corrected in the file reading routine now (RW 25/10/2011)
 !                 print *,ILs(i)%ion,ILs(i)%transition,ILs(i)%int_dered
 ! copy the ion name into the linelist array
-           if (ILs(i)%location .ne. 0) linelist(ILs(i)%location)%name=ILs(i)%name
+           if (ILs(i)%location .ne. 0) linelist(ILs(i)%location)%name=ILs(i)%ion
 ! then do the abundance calculations
            if (ILs(i)%zone .eq. "low ") then
                 !PRINT*, siiitemp, lowdens
@@ -1873,10 +1893,11 @@ do i=1,38
   endif
 end do
 
-do i=1,4
-  if (He_lines(i)%location .gt. 0) then
-    linelist(He_lines(i)%location)%name = "He"
-    linelist(He_lines(i)%location)%latextext = "He~{\sc i}"
+do i=1,44
+  if (HeI_lines(i)%location .gt. 0) then
+    linelist(HeI_lines(i)%location)%abundance = HeI_lines(i)%abundance
+    linelist(HeI_lines(i)%location)%name = "He"
+    linelist(HeI_lines(i)%location)%latextext = "He~{\sc i}"
   endif
 end do
 
