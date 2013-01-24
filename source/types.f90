@@ -141,6 +141,25 @@ TYPE resultarray
         double precision :: ArV_temp_ratio
         double precision :: NeV_temp_ratio
         double precision :: Bal_jump_temp
+        double precision :: oii_v1_abund_orl
+        double precision :: oii_v2_abund_orl
+        double precision :: oii_v5_abund_orl
+        double precision :: oii_v10_abund_orl
+        double precision :: oii_v11_abund_orl
+        double precision :: oii_v12_abund_orl
+        double precision :: oii_v19_abund_orl
+        double precision :: oii_v20_abund_orl
+        double precision :: oii_v25_abund_orl
+        double precision :: oii_v28_abund_orl
+        double precision :: oii_v33_abund_orl
+        double precision :: oii_3d4f_abund_orl
+        double precision :: nii_v3_abund_orl
+        double precision :: nii_v5_abund_orl
+        double precision :: nii_v8_abund_orl
+        double precision :: nii_v12_abund_orl 
+        double precision :: nii_v20_abund_orl 
+        double precision :: nii_v28_abund_orl
+        double precision :: nii_3d4f_abund_orl
 end type
 
 end module mod_resultarrays

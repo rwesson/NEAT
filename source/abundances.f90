@@ -1744,6 +1744,28 @@ endif
         iteration_result(1)%Ne_icf_ORL = RLicfNe
         iteration_result(1)%Ne_abund_ORL = NeabundRL
 
+!multiplet abundances
+
+        iteration_result(1)%oii_v1_abund_orl = oiimultiplets(1)%abundance
+        iteration_result(1)%oii_v2_abund_orl = oiimultiplets(2)%abundance
+        iteration_result(1)%oii_v5_abund_orl = oiimultiplets(3)%abundance
+        iteration_result(1)%oii_v10_abund_orl = oiimultiplets(4)%abundance
+        iteration_result(1)%oii_v11_abund_orl = oiimultiplets(5)%abundance
+        iteration_result(1)%oii_v12_abund_orl = oiimultiplets(6)%abundance
+        iteration_result(1)%oii_v19_abund_orl = oiimultiplets(7)%abundance
+        iteration_result(1)%oii_v20_abund_orl = oiimultiplets(8)%abundance
+        iteration_result(1)%oii_v25_abund_orl = oiimultiplets(9)%abundance
+        iteration_result(1)%oii_v28_abund_orl = oiimultiplets(10)%abundance
+        iteration_result(1)%oii_v33_abund_orl = oiimultiplets(11)%abundance
+        iteration_result(1)%oii_3d4f_abund_orl = oiimultiplets(12)%abundance
+        iteration_result(1)%nii_v3_abund_orl = niimultiplets(1)%abundance
+        iteration_result(1)%nii_v5_abund_orl = niimultiplets(2)%abundance
+        iteration_result(1)%nii_v8_abund_orl = niimultiplets(3)%abundance
+        iteration_result(1)%nii_v12_abund_orl = niimultiplets(4)%abundance
+        iteration_result(1)%nii_v20_abund_orl = niimultiplets(5)%abundance
+        iteration_result(1)%nii_v28_abund_orl = niimultiplets(6)%abundance
+        iteration_result(1)%nii_3d4f_abund_orl = niimultiplets(7)%abundance
+
 !Strong line methods
 
 !O R23 Pilyugin 2000
