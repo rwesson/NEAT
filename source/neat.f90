@@ -67,7 +67,7 @@ program neat
         integer :: Iint 
         integer :: maxlevs,maxtemps
         type(atomic_data),allocatable :: atomicdata(:)
-        double precision, dimension(21,15,44) :: heidata
+        double precision, dimension(:,:,:), allocatable :: heidata
 
         !extinction
 
@@ -354,8 +354,17 @@ program neat
         !read ORL data
         call read_orl_data
 
-        !read Porter et al helium emissivities
-        call read_porter(heidata)
+        !read helium emissivities
+
+        if (switch_he .eq. "P") then
+          allocate(heidata(21,15,44))
+          heidata = 0.D0
+          call read_porter(heidata)
+        elseif (switch_he .eq. "S") then
+          allocate(heidata(7,3,44))
+          heidata = 0.D0
+          call read_smits(heidata)
+        endif
 
         !find maximum #levels and temperatures - pass to equib to reduce footprint
 

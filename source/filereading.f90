@@ -118,15 +118,14 @@ subroutine get_HeI(HeI_lines, linelist,listlength)
         TYPE(line), DIMENSION(44), INTENT(OUT) :: HeI_lines
         TYPE(line), DIMENSION(:), INTENT(IN) :: linelist
         INTEGER :: i, j, listlength
-        REAL*8 :: HW
         double precision, dimension(44) :: hei_wavelengths
 
         hei_wavelengths = (/ 2945.10D0,3188.74D0,3613.64D0,3888.65D0,3964.73D0,4026.21D0,4120.82D0,4387.93D0,4437.55D0,4471.50D0,4713.17D0,4921.93D0,5015.68D0,5047.74D0,5875.66D0,6678.16D0,7065.25D0,7281.35D0,9463.58D0,10830.25D0,11013.07D0,11969.06D0,12527.49D0,12755.69D0,12784.92D0,12790.50D0,12845.98D0,12968.43D0,12984.88D0,13411.69D0,15083.65D0,17002.40D0,18555.57D0,18685.33D0,18697.21D0,19089.36D0,19543.19D0,20424.97D0,20581.28D0,20601.76D0,21120.12D0,21132.03D0,21607.80D0,21617.01D0 /)
 
         do i = 1, 44
-                HW = hei_wavelengths(i)
+                HeI_lines(i)%wavelength = hei_wavelengths(i)
                 do j = 1, listlength
-                        if(linelist(j)%wavelength == HW) then
+                        if(linelist(j)%wavelength == HeI_lines(i)%wavelength) then
                                 Hei_lines(i)%wavelength = linelist(j)%wavelength
                                 Hei_lines(i)%intensity = linelist(j)%intensity
                                 Hei_lines(i)%int_err = linelist(j)%int_err
@@ -288,13 +287,42 @@ OPEN(100, file='Atomic-data/RHei_porter2012.dat', iostat=IO, status='old')
 
 do i=1,294
   read (100,*) temp
-  tpos=int((temp(1)/1000)-4)
-  npos=int(temp(2))
+  tpos=nint((temp(1)/1000)-4)
+  npos=nint(temp(2))
   do j=1,44
     heidata(tpos,npos,j)=temp(j+2)
   end do
 end do
 
+close(100)
+
 end subroutine
+
+subroutine read_smits(heidata)
+
+implicit none
+double precision, dimension(7,3,44) :: heidata
+integer :: i,j,tpos,npos,io
+double precision, dimension(46) :: temp
+
+!read data
+
+OPEN(100, file='Atomic-data/RHei_smits1996.dat', iostat=IO, status='old')
+
+! read in the data
+
+do i=1,21
+  read (100,*) temp
+  tpos=nint(log(20000./temp(1))/log(2.))+1
+  npos=nint(temp(2)/2)
+  do j=1,44
+    heidata(tpos,npos,j)=temp(j+2)
+  end do
+end do
+
+close(100)
+
+end subroutine
+
 
 end module mod_atomic_read
