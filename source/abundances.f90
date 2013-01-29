@@ -714,14 +714,6 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
           call get_hei_porter(REAL(medtemp),REAL(meddens),HeI_lines,heidata, heiabund)
         endif
 
-        !copy the line abundances back into the main array
-
-        do i=1,4 
-          if (HeI_lines(i)%location .gt. 0) then
-            linelist(HeI_lines(i)%location)%abundance = HeI_lines(i)%abundance
-          endif
-        end do
-
         hetotabund = heiabund + heiiabund
 
 !  Calculate T_e from Balmer Jump
