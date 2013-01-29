@@ -361,7 +361,7 @@ program neat
           heidata = 0.D0
           call read_porter(heidata)
         elseif (switch_he .eq. "S") then
-          allocate(heidata(7,3,44))
+          allocate(heidata(3,6,44))
           heidata = 0.D0
           call read_smits(heidata)
         endif

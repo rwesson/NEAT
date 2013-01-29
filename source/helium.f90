@@ -125,19 +125,34 @@
 
       type(line), dimension(44) :: he_lines 
       double precision, dimension(3) :: weights
-      double precision, dimension(7,3,44), intent(in) :: heidata
-      real, dimension(44) :: emissivities
-      integer :: i
+      double precision, dimension(3,6,44), intent(in) :: heidata
+      real, dimension(44,3) :: emissivities
+      real :: interpolatedemissivity
+      integer :: i,j
 
 !      data is for the following lines, in this order: 2945.10,3188.74,3613.64,3888.65,3964.73,4026.21,4120.82,4387.93,4437.55,4471.50,4713.17,4921.93,5015.68,5047.74,5875.66,6678.16,7065.25,7281.35,9463.58,10830.25,11013.07,11969.06,12527.49,12755.69,12784.92,12790.50,12845.98,12968.43,12984.88,13411.69,15083.65,17002.40,18555.57,18685.33,18697.21,19089.36,19543.19,20424.97,20581.28,20601.76,21120.12,21132.03,21607.80,21617.01 /)
 
       do i = 1,44
-        call get_emissivity_smits(te,ne, i, emissivities(i), heidata)
-        if (emissivities(i).ne. 0.D0) then
-          He_lines(i)%abundance = He_lines(i)%int_dered/100. * 10.**(GAMM4861(TE,NE)-emissivities(i))
+        do j = 1,3
+          emissivities(i,j)=heidata(j,1,i) + heidata(j,2,i)*log10(te) + heidata(j,3,i)*log10(te)**2 + heidata(j,4,i)*log10(te)**3 + heidata(j,5,i)*log10(te)**4 + heidata(j,6,i)
+        end do
+
+        if (log10(ne).lt.2) then
+          interpolatedemissivity=emissivities(i,1)
+        elseif (log10(ne).ge.2..and.log10(ne).lt.4) then
+          interpolatedemissivity=emissivities(i,1) + (emissivities(i,2) - emissivities(i,1)) * (log10(ne) - 2)
+        elseif (log10(ne).ge.4..and.log10(ne).lt.6) then
+          interpolatedemissivity=emissivities(i,2) + (emissivities(i,3) - emissivities(i,2)) * (log10(ne) - 4)
+        else
+          interpolatedemissivity=emissivities(i,3)
+        endif
+
+        if (interpolatedemissivity.ne. 0.D0) then
+          He_lines(i)%abundance = He_lines(i)%int_dered/100. * 10.**(GAMM4861(TE,NE)-interpolatedemissivity)
         else
           He_lines(i)%abundance = 0.D0
         endif
+emissivities(i,1)=interpolatedemissivity
       end do
 
       tereduced = te/10000.
@@ -171,69 +186,6 @@
 
       end subroutine get_hei_smits_new
 
-        subroutine get_emissivity_smits(te, ne, line, emissivity, heidata)
-
-        implicit none
-        real :: te, ne, testart, nestart, logne
-        real :: interp_factor_te, interp_factor_ne, interp_t1, interp_t2, emissivity
-        double precision, dimension(7,3,44), intent(in) :: heidata
-        integer :: i,j, line
-
-        ! ne needs to be logarithmic, input is linear
-
-        logne=log10(ne)
-
-        ! check that data is within the ranges calculated by Porter
-
-        if (te .lt. 312.5) te=312.5
-        if (te .gt. 20000) te=20000.
-        if (logne .lt. 2.) logne=2.
-        if (logne .gt. 6.) logne=6.
-
-        !do bilinear interpolation of the log values
-        !find starting values
-
-        testart=20000.
-        nestart=6.
-
-        !find temperature box
-        do i=7,1,-1
-          if (te .lt. dble(20000/(2**(i-1)))) then
-            testart=dble((20000/(2**(i))))
-            exit
-          endif
-        end do
-
-        !find density box
-        do j=1,3
-          if (logne .lt. dble(2*j)) then
-            nestart=dble(2*j-2)
-            exit
-          endif
-        end do
-
-        i=i+1
-        j=j-1
-
-        !now we have the array positions in i and j and the values in nestart and
-        !testart
-
-        !now interpolate first in T and then in ne
-!linear interpolation in t
-!        interp_factor_te = (te-testart)/(10000./(2**dble(i-2)))
-!logarithmic interpolation in t
-        interp_factor_te = 1-( log(te) - log(testart+(10000./(2**dble(i-2)))) ) / ( log(testart) - (log(testart+(10000./(2**dble(i-2))))) )
-        interp_factor_ne = (logne-nestart)/2
-
-        !get two interpolated values for each ne, then interpolate between those
-
-        interp_t1 = heidata(i,j,line)-interp_factor_te*(heidata(i+1,j,line)-heidata(i,j,line))
-        interp_t2 = heidata(i,j+1,line)-interp_factor_te*(heidata(i+1,j+1,line)-heidata(i,j+1,line))
-
-        emissivity = interp_t1+(interp_factor_ne*(interp_t2-interp_t1))
-
-      end subroutine get_emissivity_smits
-
       subroutine get_hei_smits(TEh2,NEh2,He_lines,Heiabund)
       use mod_abundtypes
 
@@ -249,6 +201,7 @@
       A4471=10.**(GAMM4861(TEh2,NEh2)-GAMM4471(TEh2,NEh2))
       A5876=10.**(GAMM4861(TEh2,NEh2)-GAMM5876(TEh2,NEh2))
       A6678=10.**(GAMM4861(TEh2,NEh2)-GAMM6678(TEh2,NEh2))
+
 
 !     Correction factors C/R for HeI (Kingdon J., Ferland G. J., 1995, A
 !     10830 line from Peimbert M., Luridiana V., Torres-Peimbert S, 1995

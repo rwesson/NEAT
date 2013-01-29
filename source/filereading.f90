@@ -301,22 +301,24 @@ end subroutine
 subroutine read_smits(heidata)
 
 implicit none
-double precision, dimension(7,3,44) :: heidata
-integer :: i,j,tpos,npos,io
-double precision, dimension(46) :: temp
+double precision, dimension(3,6,44) :: heidata
+integer :: i,j,k,io
+double precision, dimension(18) :: temp
 
 !read data
+!fitted fourth order polynomials to the Smits 1996 emissivities
+!the data file contains the coefficients for log(ne)=2,4,6
 
-OPEN(100, file='Atomic-data/RHei_smits1996.dat', iostat=IO, status='old')
+OPEN(100, file='Atomic-data/RHei_smits1996_coeffs.dat', iostat=IO, status='old')
 
 ! read in the data
 
-do i=1,21
+do i=1,44
   read (100,*) temp
-  tpos=nint(log(20000./temp(1))/log(2.))+1
-  npos=nint(temp(2)/2)
-  do j=1,44
-    heidata(tpos,npos,j)=temp(j+2)
+  do j=1,3
+    do k=1,6
+      heidata(j,k,i)=temp(k+((j-1)*6))
+    end do
   end do
 end do
 
