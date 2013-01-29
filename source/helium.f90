@@ -152,7 +152,7 @@
         else
           He_lines(i)%abundance = 0.D0
         endif
-emissivities(i,1)=interpolatedemissivity
+
       end do
 
       tereduced = te/10000.
