@@ -1153,8 +1153,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
             oiiRLs(j)%Obs = linelist(i)%int_dered
             oiiRLs(j)%abundance = oiiRLs(j)%obs/oiiRLs(j)%Int
             linelist(i)%abundance = oiiRLs(j)%abundance
-            linelist(i)%name="O II                "
-            linelist(i)%latextext="O~{\sc ii}          "
+            linelist(i)%name="O II       "
+            linelist(i)%latextext="O~{\sc ii}     "
           endif
          enddo
        enddo
@@ -1169,8 +1169,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
             niiRLs(j)%Obs = linelist(i)%int_dered
             niiRLs(j)%abundance = niiRLs(j)%obs/niiRLs(j)%Int
             linelist(i)%abundance = niiRLs(j)%abundance
-            linelist(i)%name="N II                "
-            linelist(i)%latextext="N~{\sc ii}          "
+            linelist(i)%name="N II       "
+            linelist(i)%latextext="N~{\sc ii}     "
           endif
          enddo
        enddo
@@ -1184,8 +1184,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
             ciiRLs(j)%Obs = linelist(i)%int_dered
             ciiRLs(j)%abundance = ciiRLs(j)%obs/ciiRLs(j)%Int
             linelist(i)%abundance = ciiRLs(j)%abundance
-            linelist(i)%name="C II                "
-            linelist(i)%latextext="C~{\sc ii}          "
+            linelist(i)%name="C II       "
+            linelist(i)%latextext="C~{\sc ii}     "
           endif
          enddo
        enddo
@@ -1199,8 +1199,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
             neiiRLs(j)%Obs = linelist(i)%int_dered
             neiiRLs(j)%abundance = neiiRLs(j)%obs/neiiRLs(j)%Int
             linelist(i)%abundance = neiiRLs(j)%abundance
-            linelist(i)%name="Ne II               "
-            linelist(i)%latextext="Ne~{\sc ii}         "
+            linelist(i)%name="Ne II      "
+            linelist(i)%latextext="Ne~{\sc ii}    "
           endif
          enddo
        enddo
@@ -1215,11 +1215,11 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
             xiiiRLs(j)%abundance = xiiiRLs(j)%obs/xiiiRLs(j)%Int
             linelist(i)%abundance = xiiiRLs(j)%abundance
             if (j .le. 4) then
-              linelist(i)%name="C III               "
-              linelist(i)%latextext="C~{\sc iii}         "
+              linelist(i)%name="C III      "
+              linelist(i)%latextext="C~{\sc iii}    "
             else
-              linelist(i)%name="N III               "
-              linelist(i)%latextext="N~{\sc iii}         "
+              linelist(i)%name="N III      "
+              linelist(i)%latextext="N~{\sc iii}    "
             endif
           endif
          enddo
