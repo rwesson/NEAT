@@ -102,20 +102,6 @@ program neat
         abundances_format = "(X,A,ES14.3,SP,ES14.3,ES14.3,S)"
         adf_format = "(X,A,F8.2,SP,F8.2,F8.2,S)"
 
-        !single iteration formats defined as normal format statements
-
-        700 FORMAT(X,A20,F5.3) !extinction format
-        701 FORMAT(X,A20,I5) !diagnostics format
-        705 FORMAT(X,A20,I5,5X,F8.3) !diagnostics and ratio format
-        702 FORMAT(X,A20,ES14.3) !abundances format
-        703 FORMAT(X,A20,F5.2) !strong line format
-        704 FORMAT(X,A20,F5.2) !adf format
-        710 FORMAT(X,A20,X,"&",X,F5.3,X,"\\") !latex table version of extinction format
-        711 FORMAT(X,A20,X,"&",X,I5,X,"\\") !as above, diagnostics format
-        715 FORMAT(X,A20,X,"&",X,I5,5X,"&",X,F8.3,X,"\\") !as above, diagnostics and ratio format
-        712 FORMAT(X,A20,X,"&",X,ES14.3,X,"\\") !as above, abundances format
-        713 FORMAT(X,A20,X,"&",X,F5.2,X,"\\") !as above, strong line format
-        714 FORMAT(X,A20,X,"&",X,F5.2,X,"\\") !as above, adf format
         R=3.1
 
         !read command line arguments
