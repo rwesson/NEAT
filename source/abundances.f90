@@ -1634,9 +1634,9 @@ else !PTPR92 ICF - equation numbers in the paper are given in brackets
 
 !Helium
      RLicfHe = 1.0
-     if (SabundCEL .gt. 1.e-20 .and. SiiCELabund .gt. 1.e-20) then
+     if (SabundCEL - SiiCELabund .gt. 1.e-20) then
        RLicfHe = 1+(SiiCELabund/(SabundCEL-SiiCELabund))
-       Hetotabund = RLicfHe * Heiabund ! (21)
+       Hetotabund = RLicfHe * Heiabund ! (21) - note that this icf is not meaningful if only S+ is seen
      endif
 endif
 
