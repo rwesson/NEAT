@@ -15,10 +15,8 @@
       use mod_abundtypes
 
       IMPLICIT NONE
-      real :: te, ne, logne
-      real :: A4471,A5876,A6678,                         & 
-     & em4471, em5876, em6678,             &
-     & AB4471,AB5876,AB6678,heiabund 
+      real :: te, ne
+      real :: AB4471,AB5876,AB6678,heiabund 
 
       type(line), dimension(44) :: he_lines 
       double precision, dimension(3) :: weights
@@ -118,9 +116,7 @@
 
       IMPLICIT NONE
       real :: te, ne, tereduced
-      real :: A4471,A5876,A6678,                         & 
-     & em4471, em5876, em6678,             &
-     & AB4471,AB5876,AB6678,heiabund 
+      real :: AB4471,AB5876,AB6678,heiabund 
       real :: c4471, c5876, c6678, d ! corrections for collisional excitation
 
       type(line), dimension(44) :: he_lines 
@@ -186,57 +182,6 @@
 
       end subroutine get_hei_smits_new
 
-      subroutine get_hei_smits(TEh2,NEh2,He_lines,Heiabund)
-      use mod_abundtypes
-
-      IMPLICIT NONE
-      REAL A4471,A5876,A6678,TEh2,NEh2,D,                         &
-     & C4471,C5876,C6678,                                     &
-     & IHeI4471,IHeI5876,IHeI6678,                                      &
-     & AB4471,AB5876,AB6678,heiabund 
-      type(line), dimension(44) :: He_lines
-      double precision, dimension(3) :: weights
-      integer :: i,j,k
-
-      A4471=10.**(GAMM4861(TEh2,NEh2)-GAMM4471(TEh2,NEh2))
-      A5876=10.**(GAMM4861(TEh2,NEh2)-GAMM5876(TEh2,NEh2))
-      A6678=10.**(GAMM4861(TEh2,NEh2)-GAMM6678(TEh2,NEh2))
-
-
-!     Correction factors C/R for HeI (Kingdon J., Ferland G. J., 1995, A
-!     10830 line from Peimbert M., Luridiana V., Torres-Peimbert S, 1995
-
-
-      TEh2=TEh2/10000.
-
-      D=1.+3130.*TEh2**(-0.50)/NEh2
-      C4471=(  6.95*TEh2**(0.15)*exp(-4.545/TEh2)  + 0.22*TEh2**(-0.55)*exp(-4.884/TEh2)  )/D
-      C5876=(  6.78*TEh2**(0.07)*exp(-3.776/TEh2)  + 1.67*TEh2**(-0.15)*exp(-4.545/TEh2) + 0.60*TEh2**(-0.34)*exp(-4.901/TEh2)  )/D
-      C6678=(  3.15*TEh2**(-0.54)*exp(-3.776/TEh2) + 0.51*TEh2**(-0.51)*exp(-4.545/TEh2) + 0.20*TEh2**(-0.66)*exp(-4.901/TEh2)  )/D
-
-           AB4471=He_lines(10)%int_dered/100.*A4471/(1.+C4471)
-           AB5876=He_lines(15)%int_dered/100.*A5876/(1.+C5876)
-           AB6678=He_lines(16)%int_dered/100.*A6678/(1.+C6678)
-
-           weights=0.D0
-
-           if (AB4471 .gt. 0) weights(1) = 1.
-           if (AB5876 .gt. 0) weights(2) = 3.
-           if (AB6678 .gt. 0) weights(3) = 1.
-
-           if (weights(1)+weights(2)+weights(3).gt.0.0) then
-               heiabund = ((weights(1)*AB4471) + (weights(2)*AB5876) + (weights(3)*AB6678)) / (weights(1) + weights(2) + weights(3))
-           else
-               heiabund = 0.D0
-           endif
-
-      He_lines(10)%abundance=AB4471
-      He_lines(15)%abundance=AB5876
-      He_lines(16)%abundance=AB6678
-
-      END subroutine get_hei_smits
-!
-!
       REAL FUNCTION GAMM4861(TE,NE)
 !     This function determines the value of Log10 (gamm(H Beta))
 !     = Log10( 4*Pai*j(HBeta)/NpNe) at temperature Te and density Ne
@@ -472,148 +417,5 @@
 !
       GAMM6683=AEFF + HCLL
       END function gamm6683
-!
-!
-      REAL FUNCTION GAMM4471(TE,NE)
-!     This function determines the value of Log10 (gamm(HeI4471))
-!     = Log10( 4*Pai*j(HeI 4471)/N(He+)Ne) at temperature Te and density
-!     Smits D. P., 1996, MNRAS, 278, 683
-!
-      IMPLICIT NONE
-      REAL TE,NE,AE2,AE4,AE6,AEFF,HCLL
-      REAL LNE, LTE
 
-                     ! = Log10 ( h * c / lambda(4471) ) - [ cgs units ]
-      HCLL=-11.35232
-      LNE = ALOG10(NE)
-      LTE = ALOG10(TE)
-!
-      AE2 =(-9.30490E-01)+                                              &
-     &     (-1.28811E+01)* LTE +                                        &
-     &       5.44045E+00 * LTE ** 2 +                                   &
-     &     (-1.05083E+00)* LTE ** 3 +                                   &
-     &       7.34328E-02 * LTE ** 4
-!
-      AE4 =(-8.05262E+00)+                                              &
-     &     (-3.93732E+00)* LTE +                                        &
-     &       1.35092E+00 * LTE ** 2 +                                   &
-     &     (-2.38452E-01)* LTE ** 3 +                                   &
-     &       1.40227E-02 * LTE ** 4
-!
-      AE6 =(-2.51030E+00)+                                              &
-     &     (-9.39634E+00)* LTE +                                        &
-     &       3.40142E+00 * LTE ** 2 +                                   &
-     &     (-5.85564E-01)* LTE ** 3 +                                   &
-     &       3.63021E-02 * LTE ** 4
-!
-!
-!
-      IF (LNE.LT.2) THEN
-        AEFF=AE2
-      ELSEIF (LNE.GE.2..AND.LNE.LT.4) THEN
-        AEFF=AE2 + (AE4 - AE2) * (LNE - 2)
-      ELSEIF (LNE.GE.4..AND.LNE.LT.6) THEN
-        AEFF=AE4 + (AE6 - AE4) * (LNE - 4)
-      ELSE
-        AEFF=AE6
-      ENDIF
-!
-      GAMM4471=AEFF + HCLL
-      END function gamm4471
-!
-!
-      REAL FUNCTION GAMM5876(TE,NE)
-!     This function determines the value of Log10 (gamm(HeI5876))
-!     = Log10( 4*Pai*j(HeI 5876)/N(He+)Ne) at temperature Te and density
-!     Smits D. P., 1996, MNRAS, 278, 683
-!
-      IMPLICIT NONE
-      REAL TE,NE,AE2,AE4,AE6,AEFF,HCLL
-      REAL LNE, LTE
-
-                     ! = Log10 ( h * c / lambda(5876) ) - [ cgs units ]
-      HCLL=-11.47100
-      LNE = ALOG10(NE)
-      LTE = ALOG10(TE)
-!
-      AE2 =(-1.16882E+00)+                                              &
-     &     (-1.15777E+01)* LTE +                                        &
-     &       4.88616E+00 * LTE ** 2 +                                   &
-     &     (-9.61210E-01)* LTE ** 3 +                                   &
-     &       6.84051E-02 * LTE ** 4
-!
-      AE4 =(-1.00479E+01)+                                              &
-     &     (-7.40127E-01)* LTE +                                        &
-     &       1.97511E-02 * LTE ** 2 +                                   &
-     &     (-6.27010E-03)* LTE ** 3 +                                   &
-     &     (-8.27660E-04)* LTE ** 4
-!
-      AE6 =(-1.80976E+00)+                                              &
-     &     (-9.58712E+00)* LTE +                                        &
-     &       3.59820E+00 * LTE ** 2 +                                   &
-     &     (-6.51241E-01)* LTE ** 3 +                                   &
-     &       4.28049E-02 * LTE ** 4
-!
-!
-!
-      IF (LNE.LT.2) THEN
-        AEFF=AE2
-      ELSEIF (LNE.GE.2..AND.LNE.LT.4) THEN
-        AEFF=AE2 + (AE4 - AE2) * (LNE - 2)
-      ELSEIF (LNE.GE.4..AND.LNE.LT.6) THEN
-        AEFF=AE4 + (AE6 - AE4) * (LNE - 4)
-      ELSE
-        AEFF=AE6
-      ENDIF
-!
-      GAMM5876=AEFF + HCLL
-      END function gamm5876
-!
-!
-      REAL FUNCTION GAMM6678(TE,NE)
-!     This function determines the value of Log10 (gamm(HeI6678))
-!     = Log10( 4*Pai*j(HeI 6678)/N(He+)Ne) at temperature Te and density
-!     Smits D. P., 1996, MNRAS, 278, 683
-!
-      IMPLICIT NONE
-      REAL TE,NE,AE2,AE4,AE6,AEFF,HCLL
-      REAL LNE, LTE
-
-                        ! = Log10 ( h * c / lambda(6678) ) - [ cgs units
-      HCLL=-11.52656174
-      LNE = ALOG10(NE)
-      LTE = ALOG10(TE)
-!
-      AE2 =(-1.68178E+00)+                                              &
-     &     (-1.15272E+01)* LTE +                                        &
-     &       4.85778E+00 * LTE ** 2 +                                   &
-     &     (-9.54148E-01)* LTE ** 3 +                                   &
-     &       6.77132E-02 * LTE ** 4
-!
-      AE4 =(-9.41509E+00)+                                              &
-     &     (-2.03360E+00)* LTE +                                        &
-     &       5.74928E-01 * LTE ** 2 +                                   &
-     &     (-1.10548E-01)* LTE ** 3 +                                   &
-     &       6.36538E-03 * LTE ** 4
-!
-      AE6 =(-1.75898E+00)+                                              &
-     &     (-1.01895E+01)* LTE +                                        &
-     &       3.85106E+00 * LTE ** 2 +                                   &
-     &     (-6.97624E-01)* LTE ** 3 +                                   &
-     &       4.58953E-02 * LTE ** 4
-!
-!
-!
-      IF (LNE.LT.2) THEN
-        AEFF=AE2
-      ELSEIF (LNE.GE.2..AND.LNE.LT.4) THEN
-        AEFF=AE2 + (AE4 - AE2) * (LNE - 2)
-      ELSEIF (LNE.GE.4..AND.LNE.LT.6) THEN
-        AEFF=AE4 + (AE6 - AE4) * (LNE - 4)
-      ELSE
-        AEFF=AE6
-      ENDIF
-!
-      GAMM6678=AEFF + HCLL
-      END function gamm6678
       end module mod_helium
