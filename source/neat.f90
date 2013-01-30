@@ -79,6 +79,7 @@ program neat
         double precision, dimension(3) :: uncertainty_array
         double precision, dimension (:,:), allocatable :: binned_quantity_result
         logical :: unusual
+        integer :: verbosity
 
         !CEL array
 
@@ -163,6 +164,14 @@ program neat
            print *,"          KB94: Kingsburgh & Barlow (1994, MNRAS, 271, 257)"
            print *,"          PT92: Peimbert, Torres-Peimbert & Ruiz (1992, RMxAA, 24, 155)"
            print *,"       Default: KB94"
+           print *,"  -v / --verbosity"
+           print *,"       Amount of output to write for each derived quantity"
+           print *,"       This option has no effect unless -n or -u is specified"
+           print *,"       Values:"
+           print *,"         1: write out summary files, binned results and complete results"
+           print *,"         2: write out summary files and binned results"
+           print *,"         3: write out summary files only"
+           print *,"       Default: 1"
         !  to be fully implemented:
         !  -R                     : R (default 3.1)
            stop
@@ -241,6 +250,13 @@ program neat
                 if ((trim(options(i))=="-icf" .or. trim(options(i))=="--ionisation-correction-scheme") .and. (i+1) .le. Narg) then
                   if (trim(options(i+1))=="PT92") then
                     switch_icf="P"
+                  endif
+                endif
+                if ((trim(options(i))=="-v" .or.  trim(options(i))=="--verbosity") .and. (i+1) .le. Narg) then
+                  read (options(i+1),*) verbosity
+                  if (verbosity .lt. 1 .or. verbosity .gt. 3) then
+                    print *,"Error: verbosity outside allowed range of 1-3"
+                    stop
                   endif
                 endif
          enddo
@@ -902,7 +918,7 @@ program neat
 ! this writes the results to the plain text and latex summary files
 
           quantity_result=resultprocessingarray(j,:)
-          call write_uncertainties(quantity_result,uncertainty_array,resultprocessingtext(j,1),resultprocessingtext(j,2),resultprocessingtext(j,3),filename, resultprocessingtext(j,4))
+          call write_uncertainties(quantity_result,uncertainty_array,resultprocessingtext(j,1),resultprocessingtext(j,2),resultprocessingtext(j,3),filename, resultprocessingtext(j,4), verbosity)
 
         enddo
 
@@ -1002,7 +1018,7 @@ contains
             DEALLOCATE(seed)
           END SUBROUTINE
 
-subroutine write_uncertainties(input_array, uncertainty_array, plaintext, latextext, itemformat, filename, suffix)
+subroutine write_uncertainties(input_array, uncertainty_array, plaintext, latextext, itemformat, filename, suffix, verbosity)
 
 !wrapper for the get_uncertainties routine, if called it will do the
 !uncertainty calculation and also write the binned and unbinned results to files
@@ -1016,6 +1032,7 @@ character*35, intent(in) :: itemformat
 character*80, intent(in) :: filename
 character*25, intent(in) :: suffix
 logical :: unusual
+integer :: verbosity !1 = write summaries, binned and full results; 2=write summaries and binned results; 3=write summaries only
 
 if(size(input_array) .eq. 1) then
 !just one iteration, write out the result without uncertainties
@@ -1028,9 +1045,11 @@ if(size(input_array) .eq. 1) then
   endif
 else
 
-  call get_uncertainties(input_array, binned_quantity_result, uncertainty_array, unusual)
+call get_uncertainties(input_array, binned_quantity_result, uncertainty_array, unusual)
 
 !write out the binned results with the mode+-uncertainties at the top
+
+if (verbosity .lt. 3) then
 
   if (allocated(binned_quantity_result) .and. maxval(uncertainty_array) .gt. 0.) then
     OPEN(850, FILE=trim(filename)//"_"//trim(suffix)//"_binned", STATUS='REPLACE',ACCESS='SEQUENTIAL', ACTION='WRITE')
@@ -1048,13 +1067,19 @@ else
     close(850)
   endif
 
+endif
+
 !write the unbinned results to file
+
+if (verbosity .lt. 2) then
 
   OPEN(850, FILE=trim(filename)//"_"//trim(suffix), STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
   do i=1,size(input_array)
     write(unit = 850,FMT=*) input_array(i)
   end do
   close(850)
+
+endif
 
 !write derived value and uncertainties to the summary files
 
