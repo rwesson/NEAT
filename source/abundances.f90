@@ -1151,7 +1151,11 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
          do j = 1,415
           if (abs(linelist(i)%wavelength-oiiRLs(j)%Wave) .le. 0.005) then
             oiiRLs(j)%Obs = linelist(i)%int_dered
-            oiiRLs(j)%abundance = oiiRLs(j)%obs/oiiRLs(j)%Int
+            if (oiiRLs(j)%Int .eq. 0.0) then
+              oiiRLs(j)%abundance = 0.D0
+            else
+              oiiRLs(j)%abundance = oiiRLs(j)%obs/oiiRLs(j)%Int
+            endif
             linelist(i)%abundance = oiiRLs(j)%abundance
             linelist(i)%name="O II       "
             linelist(i)%latextext="O~{\sc ii}     "
