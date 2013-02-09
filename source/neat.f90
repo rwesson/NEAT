@@ -180,6 +180,7 @@ program neat
         filename=""
         meanextinction=0.D0
         diagnostic_array=0.D0
+        verbosity=1
 
         ! process command line arguments
 
