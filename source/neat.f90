@@ -289,6 +289,9 @@ program neat
         allocate (linelist(listlength))
         allocate (linelist_original(listlength))
 
+        linelist%intensity = 0.D0
+        linelist%abundance = 0.D0
+
         REWIND (199)
         DO I=1,listlength
                 READ(199,*,end=110) temp1, temp2, temp3
