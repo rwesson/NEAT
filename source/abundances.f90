@@ -1145,7 +1145,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
 ! now get abundances for ORLs
 ! o2+
-       call oii_rec_lines(oiiiTemp,oiiDens,DBLE(1),oiiRLs)
+       call oii_rec_lines(medtemp,meddens,DBLE(1),oiiRLs)
 
        do i = 1,listlength
          do j = 1,415
@@ -1165,7 +1165,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
 !N2+
 
-       call nii_rec_lines(oiiiTemp,oiiDens,DBLE(1),niiRLs)
+       call nii_rec_lines(medtemp,meddens,DBLE(1),niiRLs)
 
        do i = 1,listlength
          do j = 1,99
@@ -1180,7 +1180,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
        enddo
 
 !C2+
-       call cii_rec_lines(oiiiTemp,oiiDens,DBLE(1),ciiRLs)
+       call cii_rec_lines(medtemp,meddens,DBLE(1),ciiRLs)
 
        do i = 1,listlength
          do j = 1,57
@@ -1195,7 +1195,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
        enddo
 
 !Ne2+
-       call neii_rec_lines(oiiiTemp,oiiDens,DBLE(1),neiiRLs)
+       call neii_rec_lines(medtemp,meddens,DBLE(1),neiiRLs)
 
        do i = 1,listlength
          do j = 1,38
@@ -1210,7 +1210,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
        enddo
 
 !C3+, N3+
-       call xiii_rec_lines(oiiiTemp,oiiDens,DBLE(1),xiiiRLs)
+       call xiii_rec_lines(medtemp,meddens,DBLE(1),xiiiRLs)
 
        do i = 1,listlength
          do j = 1,6
