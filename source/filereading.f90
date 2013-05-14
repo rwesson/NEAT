@@ -121,6 +121,7 @@ subroutine get_HeI(HeI_lines, linelist,listlength)
         double precision, dimension(44) :: hei_wavelengths
 
         hei_wavelengths = (/ 2945.10D0,3188.74D0,3613.64D0,3888.65D0,3964.73D0,4026.21D0,4120.82D0,4387.93D0,4437.55D0,4471.50D0,4713.17D0,4921.93D0,5015.68D0,5047.74D0,5875.66D0,6678.16D0,7065.25D0,7281.35D0,9463.58D0,10830.25D0,11013.07D0,11969.06D0,12527.49D0,12755.69D0,12784.92D0,12790.50D0,12845.98D0,12968.43D0,12984.88D0,13411.69D0,15083.65D0,17002.40D0,18555.57D0,18685.33D0,18697.21D0,19089.36D0,19543.19D0,20424.97D0,20581.28D0,20601.76D0,21120.12D0,21132.03D0,21607.80D0,21617.01D0 /)
+        HeI_lines%location = 0 !initialise to prevent bugs!
 
         do i = 1, 44
                 HeI_lines(i)%wavelength = hei_wavelengths(i)
@@ -145,6 +146,7 @@ subroutine get_HeII(HeII_lines, linelist,listlength)
         double precision, dimension(1) :: heii_wavelengths
 
         heii_wavelengths = (/ 4685.68D0 /)
+        heii_lines%location = 0
 
         do i = 1, 1
                 HW = heii_wavelengths(i)
