@@ -21,7 +21,7 @@ implicit none
         type(resultarray), dimension(1) :: iteration_result
         double precision, dimension(6), intent(in) :: diagnostic_array
 
-        DOUBLE PRECISION :: normalise, oiiNratio, oiiDens, oiiiTratio, oiiiTemp, oiiiIRNratio, oiiiIRTratio, oiiiIRtemp, oiiiIRdens, niiTratio, niiTemp, ariiiIRNratio, ariiiIRdens, arivNratio, arivDens, cliiiNratio, cliiiDens, siiNratio, siiDens, siiTratio, siiTemp, siiiIRNratio, siiiIRdens, oiiTratio, oiiTemp, neiiiTratio, neiiiIRTratio, neiiiIRNratio, neiiiIRdens, neiiiTemp, neiiiIRTemp, oitemp, citemp
+        DOUBLE PRECISION :: normalise, oiiNratio, oiiDens, oiiiTratio, oiiiTemp, oiiiIRNratio, oiiiIRTratio, oiiiIRtemp, oiiiUVTratio, oiiiUVtemp, oiiiIRdens, niiTratio, niiTemp, ariiiIRNratio, ariiiIRdens, arivNratio, arivDens, cliiiNratio, cliiiDens, siiNratio, siiDens, siiTratio, siiTemp, siiiIRNratio, siiiIRdens, oiiTratio, oiiTemp, neiiiTratio, neiiiIRTratio, neiiiIRNratio, neiiiIRdens, neiiiTemp, neiiiIRTemp, oitemp, citemp
         DOUBLE PRECISION :: ciiiNratio,neivNratio,nevTratio,siiiTratio,ariiiTratio,arvTratio,lowtemp,lowdens,medtemp,ciiidens,meddens,siiitemp,ariiitemp,hightemp,neivdens,highdens,arvtemp,nevtemp,oiTratio,ciTratio
         DOUBLE PRECISION :: oiiRLabund, niiRLabund, ciiRLabund, cii4267rlabund, neiiRLabund, ciiiRLabund, niiiRLabund, RLabundtemp, weight
         DOUBLE PRECISION :: ciiiCELabund, niiCELabund, niiiIRCELabund, niiiUVCELabund, oiiCELabund, oiiiCELabund, oiiiIRCELabund, oivCELabund, neiiIRCELabund, neiiiIRCELabund, neiiiCELabund, neivCELabund, siiCELabund, siiiCELabund, siiiIRCELabund, sivIRCELabund, cliiiCELabund, ariiiCELabund, arivCELabund, ariiiIRCELabund, nivCELabund, niiiCELabund, ciiCELabund, civCELabund, nvCELabund, nevCELabund, arvCELabund, CELabundtemp, ciCELabund, oiCELabund
@@ -180,7 +180,11 @@ implicit none
         call get_diag("ariii9um   ","ariii21p8um", ariiiIRNratio )       ! ariii ir ratio
 
 ! temperature ratios:
-        !TODO: try to calculate from atomic data at start
+        !For diagnostic ratios with the sum of two lines on top, the get_Tdiag
+        !subroutine will properly calculate the ratio if one of the two lines is
+        !missing, from the theoretical expected line strengths.
+        !TODO: calculate line ratios from atomic data at start instead of
+        !hardcoding
         CALL get_Tdiag("nii6548    ","nii6584    ","nii5754    ", DBLE(4.054), DBLE(1.3274), niiTratio)        ! N II
         CALL get_Tdiag("oiii5007   ","oiii4959   ","oiii4363   ", DBLE(1.3356), DBLE(3.98), oiiiTratio)        ! O III
         CALL get_Tdiag("neiii3868  ","neiii3967  ","neiii3342  ", DBLE(1.3013), DBLE(4.319), neiiiTratio)        ! Ne III
@@ -192,6 +196,8 @@ implicit none
         CALL get_Tdiag("ci9850     ","ci9824     ","ci8727     ", DBLE(1.337), DBLE(3.965), ciTratio)      !C I
         CALL get_Tdiag("oi6364     ","oi6300     ","oi5577     ", DBLE(4.127), DBLE(1.320), oiTratio)      !O I
         CALL get_Tdiag("oiii4959   ","oiii5007   ","oiii52um   ", DBLE(1.3356), DBLE(3.98), oiiiIRTratio) ! OIII ir
+        CALL get_Tdiag("oiii4959   ","oiii5007   ","oiii1666   ", DBLE(1.3356), DBLE(3.98), oiiiUVTratio) ! OIII UV
+
         !Fixed, DJS
 
 ! O II
@@ -472,6 +478,13 @@ implicit none
            oiiiIRtemp = 0.0
          endif
 
+!oiii UV temperature, also not included in the average at the moment
+
+         if (oiiiUVTratio .gt. 0 .and. oiiiUVTratio .lt. 1.e10) then
+           call get_diagnostic("oiii      ","2,4,3,4/            ","3,6/                ",oiiiUVTratio,"T",oiidens,oiiiUVtemp,maxlevs,maxtemps,atomicdata,iion)
+         else
+           oiiiUVtemp = 0.0
+         endif
 
 !averaging
 
@@ -680,6 +693,13 @@ else if(int(oiiiIRtemp) == -1)then
         iteration_result(1)%OIII_IR_temp = 35000.
 endif
 iteration_result(1)%OIII_IR_temp_ratio = oiiiIRTratio
+
+if(oiiiUVtemp > 0.2)then
+        iteration_result(1)%OIII_UV_temp = oiiiUVtemp
+else if(int(oiiiUVtemp) == -1)then
+        iteration_result(1)%OIII_UV_temp = 35000.
+endif
+iteration_result(1)%OIII_UV_temp_ratio = oiiiUVTratio
 
 if(neiiiIRtemp > 0.2)then
         iteration_result(1)%NeIII_IR_temp = neiiiIRtemp

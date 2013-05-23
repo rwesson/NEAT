@@ -92,6 +92,7 @@ TYPE resultarray
         double precision :: med_density
         double precision :: OIII_temp
         double precision :: OIII_IR_temp
+        double precision :: OIII_UV_temp
         double precision :: NeIII_temp
         double precision :: NeIII_IR_temp
         double precision :: ArIII_temp
@@ -136,6 +137,7 @@ TYPE resultarray
         double precision :: ArIII_temp_ratio
         double precision :: SIII_temp_ratio
         double precision :: OIII_IR_temp_ratio
+        double precision :: OIII_UV_temp_ratio
         double precision :: NeIII_IR_temp_ratio
         double precision :: NeIV_density_ratio
         double precision :: ArV_temp_ratio
