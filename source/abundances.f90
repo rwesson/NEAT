@@ -122,6 +122,8 @@ implicit none
                 H_BS%intensity = H_BS%intensity*normalise 
                 HeI_lines%intensity = HeI_lines%intensity * normalise
                 Heii_lines%intensity = Heii_lines%intensity * normalise
+                linelist%intensity = linelist%intensity * normalise
+                linelist_orig%intensity = linelist_orig%intensity * normalise
         endif
 
         if (calculate_extinction) then
