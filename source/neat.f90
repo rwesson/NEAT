@@ -1239,8 +1239,13 @@ if (binsize .gt. 0) then
   deallocate(bintemp)
 
 else !all results are identical
+     !or, almost all of the results are an upper or lower limit with a few
+     !actual measurements
+     !to account for this second possibility, take the value from the middle of
+     !the array as the output quantity.  This will be a useful value in all
+     !cases.
   uncertainty_array(1) = 0.D0
-  uncertainty_array(2) = input_array(1)
+  uncertainty_array(2) = input_array(size(input_array)/2)
   uncertainty_array(3) = 0.D0
 endif
 
