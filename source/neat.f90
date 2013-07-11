@@ -182,6 +182,15 @@ program neat
         diagnostic_array=0.D0
         verbosity=1
 
+        ! start the logging output to terminal
+
+        print *,"NEAT, the Nebular Empirical Analysis Tool"
+        print *,"-----------------------------------------"
+
+        print *
+        print *,gettime(),": starting code"
+        print *,gettime(),": command line: ",trim(commandline)
+
         ! process command line arguments
 
         do i=1,Narg
@@ -242,7 +251,7 @@ program neat
                 if ((trim(options(i))=="-v" .or.  trim(options(i))=="--verbosity") .and. (i+1) .le. Narg) then
                   read (options(i+1),*) verbosity
                   if (verbosity .lt. 1 .or. verbosity .gt. 3) then
-                    print *,gettime(),"Error: verbosity outside allowed range of 1-3. Set to 1."
+                    print *,gettime(),": warning: verbosity outside allowed range of 1-3. Set to 1."
                   endif
                 endif
          enddo
@@ -252,26 +261,20 @@ program neat
          endif
 
          if (filename=="") then
-                print *,"Error: No input file specified"
+                print *,gettime(),": error: No input file specified"
                 stop
          endif
 
          inquire(file=filename, exist=file_exists) ! see if the input file is present
 
          if (.not. file_exists) then
-                print *,"Error: input file ",trim(filename)," does not exist"
+                print *,gettime(),": error: input file ",trim(filename)," does not exist"
                 stop
          endif
 
         !first, read in the line list
 
-        print *,"NEAT, the Nebular Empirical Analysis Tool"
-        print *,"-----------------------------------------"
-
-        print *
-        print *,gettime(),": starting code"
-        print *,gettime(),": command line: ",trim(commandline)
-        if (runs .gt. 1 .and. runs .lt. 5000) print *,gettime(),": number of iterations is low.  At least 5000 is recommended for good sampling of probability distributions"
+        if (runs .gt. 1 .and. runs .lt. 5000) print *,gettime(),": warning: number of iterations is low.  At least 5000 is recommended for good sampling of probability distributions"
 
         deallocate(options)
 
