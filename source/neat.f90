@@ -242,8 +242,7 @@ program neat
                 if ((trim(options(i))=="-v" .or.  trim(options(i))=="--verbosity") .and. (i+1) .le. Narg) then
                   read (options(i+1),*) verbosity
                   if (verbosity .lt. 1 .or. verbosity .gt. 3) then
-                    print *,"Error: verbosity outside allowed range of 1-3"
-                    stop
+                    print *,gettime(),"Error: verbosity outside allowed range of 1-3. Set to 1."
                   endif
                 endif
          enddo
