@@ -253,6 +253,10 @@ program neat
                     print *,gettime(),": warning: verbosity outside allowed range of 1-3. Set to 1."
                   endif
                 endif
+                if ((trim(options(i))=="-R") .and. (i+1) .le. Narg) then
+                  read (options(i+1),*) R
+                endif
+
          enddo
 
          if (Narg .eq. 1) then
