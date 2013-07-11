@@ -102,8 +102,6 @@ program neat
         abundances_format = "(X,A,ES14.3,SP,ES14.3,ES14.3,S)"
         adf_format = "(X,A,F8.2,SP,F8.2,F8.2,S)"
 
-        R=3.1
-
         !read command line arguments
 
         Narg = IARGC() !count input arguments
@@ -181,6 +179,7 @@ program neat
         meanextinction=0.D0
         diagnostic_array=0.D0
         verbosity=1
+        R=3.1
 
         ! start the logging output to terminal
 
@@ -412,8 +411,7 @@ program neat
                          if ( (10.0*dble(i)/dble(runs)) == int(10*i/runs) ) print *,gettime(),": completed ",100*i/runs,"%"
 !                        print*, "iteration ", i, "of", runs
 
-                        call randomizer(linelist, listlength, R)
-                        R=3.1 ! no randomisation
+                        call randomizer(linelist, listlength)
                         call abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf)
 
                         !store all line and derived quantity in arrays
@@ -934,11 +932,11 @@ program neat
 
 contains
 
-        subroutine randomizer(linelist, listlength, R)
+        subroutine randomizer(linelist, listlength)
 
                 TYPE(line), dimension(listlength) :: linelist
                 INTEGER :: IO, I, j, listlength
-                DOUBLE PRECISION :: temp4, R
+                DOUBLE PRECISION :: temp4
 
                 REAL :: fn_val
 
