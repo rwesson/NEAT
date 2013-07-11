@@ -28,7 +28,6 @@ end type spectrum
 type(neat_line), dimension(:), allocatable :: neatlines
 type(user_line), dimension(:), allocatable :: userlines
 type(assigned_line), dimension(:), allocatable :: assignedlines
-type(spectrum), dimension(10000) :: refspec, obsspec
 double precision, dimension(10) :: xcorr_lines
 double precision, dimension(2001) :: xcorr
 
@@ -38,8 +37,6 @@ character*1 :: null
 character*5 :: temp_ion1, temp_ion2
 character*1024 :: filename
 
-obsspec%flux = 0.D0
-refspec%flux = 0.D0
 xcorr = 0.D0
 
 I = IARGC()
