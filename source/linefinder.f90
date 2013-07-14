@@ -13,20 +13,7 @@ TYPE neat_line
         CHARACTER*20 :: ion
 END TYPE
 
-TYPE assigned_line
-        double precision :: wavelength
-        double precision :: flux
-        double precision :: uncertainty
-        double precision :: diff
-end type assigned_line
-
-type spectrum
-        double precision :: wavelength
-        double precision :: flux
-end type spectrum
-
 type(neat_line), dimension(:), allocatable :: neatlines
-type(assigned_line), dimension(:), allocatable :: assignedlines
 double precision, dimension(10) :: xcorr_reference
 double precision, dimension(2001) :: xcorr
 integer, intent(in) :: listlength
