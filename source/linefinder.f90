@@ -8,13 +8,19 @@ use mod_quicksort
 
 implicit none
 
+TYPE xcorrarray
+        double precision :: restwavelength
+        double precision :: observedwavelength
+        integer :: match ! 0 if the reference line is not observed, 1 if it is
+end TYPE
+
 TYPE neat_line
         double precision :: wavelength 
         CHARACTER*20 :: ion
 END TYPE
 
 type(neat_line), dimension(:), allocatable :: neatlines
-double precision, dimension(10) :: xcorr_reference
+type(xcorrarray), dimension(10) :: xcorr_array
 double precision, dimension(2001) :: xcorr
 integer, intent(in) :: listlength
 TYPE(line), dimension(listlength) :: linelist
@@ -27,6 +33,9 @@ character*1 :: null
 character*5 :: temp_ion1, temp_ion2
 
 xcorr = 0.D0
+xcorr_array%restwavelength = 0.D0
+xcorr_array%observedwavelength = 0.D0
+xcorr_array%match = 0.D0
 
 !algorithm:
 
@@ -56,7 +65,7 @@ xcorr = 0.D0
 
 !use these lines for cross correlation - H I, He I, OIII and ArIII as they will almost always be present in spectra covering their wavelengths
 
-xcorr_reference = (/4101.74, 4340.47, 4471.50, 4861.33, 5006.84, 5875.66, 6562.77, 6678.16, 7065.25, 7751.43/)
+xcorr_array%restwavelength = (/4101.74, 4340.47, 4471.50, 4861.33, 5006.84, 5875.66, 6562.77, 6678.16, 7065.25, 7751.43/)
 
 ! find the 20 strongest lines in the observed line list which have wavelengths within the range of reference lines
 
@@ -65,7 +74,7 @@ linelist_copy = linelist
 ! first, remove lines outside the range of reference lines
 
 do i=1,listlength
-  if (linelist_copy(i)%wavelength .lt. minval(xcorr_reference)-10 .or. linelist_copy(i)%wavelength .gt. maxval(xcorr_reference)+10) then
+  if (linelist_copy(i)%wavelength .lt. minval(xcorr_array%restwavelength)-10 .or. linelist_copy(i)%wavelength .gt. maxval(xcorr_array%restwavelength)+10) then
     linelist_copy(i)%intensity = 0.D0
   end if
 end do
@@ -83,6 +92,15 @@ end do
 
 call qsort(linelist_compare)
 
+!find nearest observed line within maximum shift range of the reference lines
+
+do i=1,10
+  if (minval(abs(linelist_compare - xcorr_array(i)%restwavelength)) .lt. 10) then
+    xcorr_array(i)%observedwavelength = linelist_compare(minloc(abs(linelist_compare - xcorr_array(i)%restwavelength),1))
+    xcorr_array(i)%match = 1.D0
+  endif
+enddo
+
 !calculate cross correlation function
 !find closest observed line to each rest line for a given shift, calculate sum
 !of differences as means of quantifying the match over all lines
@@ -90,28 +108,24 @@ xcorr = 0.D0
 
 do i=-1000,1000
   do j=1,10
-    xcorr(i+1001)=xcorr(i+1001)+minval(abs(linelist_compare - xcorr_reference(j) - 0.01*dble(i)))
+    xcorr(i+1001)=xcorr(i+1001)+(abs(xcorr_array(j)%observedwavelength - xcorr_array(j)%restwavelength - 0.01*dble(i)) * xcorr_array(j)%match)
   end do
 end do
 
 shift=(minloc(xcorr,1)-1001)*0.01
-linelist_compare = linelist_compare + shift
+linelist_compare = linelist_compare - shift
 
 print "(A28,F7.3)", "estimated wavelength shift: ",shift
 
-!now calculate a tolerance from the scatter among closely identified lines
-!if difference to a recognised line after shift applied is less than 2, then
-!include the difference in calculation of RMS difference
-!this value can then be used as a tolerance
+!now calculate the rms scatter between rest wavelengths and observed after shift
+!this value can then be used as a tolerance when assigning line IDs
 
 rms= 0.D0
 count=0
 
 do j=1,10
-  if (minval(abs(linelist_compare + shift - xcorr_reference(j))) .lt. 2.0) then
-    rms = rms + (minval(abs(linelist%wavelength + shift - xcorr_reference(j))))**2
-    count = count + 1
-  endif
+    rms = rms + (xcorr_array(j)%match*(xcorr_array(j)%observedwavelength - shift - xcorr_array(j)%restwavelength)**2)
+    count = count + xcorr_array(j)%match
 end do
 
 if (count .gt. 0) then
@@ -132,8 +146,8 @@ count=0
 do I=1,listlength
   diff = 1.e10
   do j=1,n_neatlines
-    if (abs(linelist(i)%wavelength+shift-neatlines(j)%wavelength).lt.diff) then
-      diff = abs(linelist(i)%wavelength+shift-neatlines(j)%wavelength)
+    if (abs(linelist(i)%wavelength-shift-neatlines(j)%wavelength).lt.diff) then
+      diff = abs(linelist(i)%wavelength-shift-neatlines(j)%wavelength)
       assign_1 = i
       assign_2 = j
     endif 
