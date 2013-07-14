@@ -28,6 +28,7 @@ program neat
         use mod_atomicdata
         use mod_atomic_read
         use mod_recombination_lines
+        use mod_linefinder
         !use mod_common_data
 
         IMPLICIT NONE
@@ -45,6 +46,7 @@ program neat
         !file reading variables
 
         LOGICAL :: file_exists
+        LOGICAL :: identifylines
         TYPE(LINE),DIMENSION(:), allocatable :: linelist
         TYPE(LINE),DIMENSION(:), allocatable :: linelist_original
         TYPE(LINE),dimension(:,:), allocatable :: all_linelists
@@ -180,6 +182,7 @@ program neat
         diagnostic_array=0.D0
         verbosity=1
         R=3.1
+        identifylines=.false.
 
         ! start the logging output to terminal
 
@@ -253,10 +256,12 @@ program neat
                     print *,gettime(),": warning: verbosity outside allowed range of 1-3. Set to 1."
                   endif
                 endif
+                if ((trim(options(i))=="-id" .or. trim(options(i))=="--identify") .and. (filename.ne."")) then
+                  identifylines=.true.
+                endif
                 if ((trim(options(i))=="-R") .and. (i+1) .le. Narg) then
                   read (options(i+1),*) R
                 endif
-
          enddo
 
          if (Narg .eq. 1) then
@@ -310,7 +315,7 @@ program neat
         110 PRINT "(X,A9,A11,I4,A15,I4,A9)", gettime(),": read in ", I - 1," lines (out of ",listlength," in file)"
 
         if (I - 1 .ne. listlength) then
-                print *,gettime(),": line list reading failed"
+                print *,gettime(),": error: line list reading failed"
                 print *,"This can happen if it doesn't have three columns"
                 stop
         endif
@@ -318,6 +323,17 @@ program neat
         if(linelist(1)%wavelength == 0)then
                 PRINT*, gettime(),": cheese shop error - no inputs"
                 STOP
+        endif
+
+! run line identifier if required
+
+        if (identifylines) then
+                print *,gettime()," : identifying lines"
+                call linefinder(linelist, listlength)
+                print *
+                print *,gettime()," : WARNING!!!  The line finding algorithm is intended as an aid only and is not designed to be highly robust"
+                print *,gettime()," : check your line list very carefully for potentially wrongly identified lines!!"
+                !check for errors
         endif
 
         print *
