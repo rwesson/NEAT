@@ -58,7 +58,7 @@ xcorr_array%match = 0.D0
                 neatlines(i)%wavelength = temp_wave
                 neatlines(i)%ion = temp_ion1//temp_ion2 
         END DO
-        102 print *,n_neatlines," read from NEAT database"
+        102 print *
         CLOSE(100)
 
 !first, find shift
@@ -115,8 +115,6 @@ end do
 shift=(minloc(xcorr,1)-1001)*0.01
 linelist_compare = linelist_compare - shift
 
-print "(A28,F7.3)", "estimated wavelength shift: ",shift
-
 !now calculate the rms scatter between rest wavelengths and observed after shift
 !this value can then be used as a tolerance when assigning line IDs
 
@@ -136,8 +134,14 @@ if (rms .lt. 0.05) then
   rms = 0.05
 endif
 
-print *,count," reference lines detected"
-print "(A54,F6.3)","RMS difference between observed and rest wavelengths: ",rms
+print "(I2,A25)",count," reference lines detected"
+print "(X,A54,F5.3)","Average offset between observed and rest wavelengths: ",shift
+print "(X,A74,F6.3)","RMS difference between rest wavelengths and shifted observed wavelengths: ",rms
+print *
+print *,"The following line IDs are suggested:"
+print *
+print *,"Obs         rest    ID         offset"
+print *,"-------------------------------------"
 
 count=0
 
@@ -172,7 +176,8 @@ do I=1,listlength
     print "(F8.2,A30,F8.2,1X,A10,A21)",linelist(assign_1)%wavelength," unrecognised. nearest known: ",neatlines(assign_2)
   endif
 enddo
-
+print *,"-------------------------------------"
+print *
 print *,count," lines identified; ",listlength-count," unidentified"
 print *,"Wavelengths of identified lines changed as necessary"
 

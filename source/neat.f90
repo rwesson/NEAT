@@ -328,12 +328,16 @@ program neat
 ! run line identifier if required
 
         if (identifylines) then
-                print *,gettime()," : identifying lines"
+                print *,"---------------------------------"
+                print *,gettime()," : running line finder"
+
                 call linefinder(linelist, listlength)
                 print *
+                print *,gettime()," : line finder finished"
                 print *,gettime()," : WARNING!!!  The line finding algorithm is intended as an aid only and is not designed to be highly robust"
                 print *,gettime()," : check your line list very carefully for potentially wrongly identified lines!!"
-                !check for errors
+                print *,"---------------------------------"
+                !get confirmation to continue
         endif
 
         print *
