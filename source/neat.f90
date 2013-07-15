@@ -328,9 +328,8 @@ program neat
 ! run line identifier if required
 
         if (identifylines) then
-                print *,"---------------------------------"
                 print *,gettime()," : running line finder"
-
+                print *,"---------------------------------"
                 call linefinder(linelist, listlength)
                 print *
                 print *,gettime()," : line finder finished"
