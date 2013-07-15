@@ -110,8 +110,16 @@ implicit none
         !is H beta detected? if not, we can't do anything.
 
         if (H_BS(2)%intensity .eq. 0.D0) then
-          print *,"No H beta found. Can't do any analysis - exiting."
-          stop
+          print *,"   No H beta found"
+          if (H_BS(1)%intensity .gt. 0.D0 .and. calculate_extinction .eqv. .false.) then
+            print *, "   Estimating from observed H alpha and specified c(Hb)"
+!todo: make this select the right flambda according to the specified extinction law
+            print "(4X,F6.2,A5,F6.3,A13)",H_BS(1)%intensity," and ",meanextinction," respectively"
+            print "(4X,A9,F6.2)","H beta = ",(H_BS(1)%intensity/2.85)*10**(meanextinction*flambda(dble(1.524),5))
+          else
+            print *,"   Specify the extinction from the command line with the -c option to proceed"
+            stop
+          endif
         endif
 
         !normalisation check, correction
