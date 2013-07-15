@@ -446,7 +446,8 @@ program neat
                 END DO
 
         else
-                print*, gettime(), ": I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."
+                print*, gettime(), ": error: I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."
+                stop
         endif
 
 !now write all the lines to line list files, plain text and latex
