@@ -325,6 +325,22 @@ program neat
                 STOP
         endif
 
+! check for and remove negative line fluxes and uncertainties
+
+        if (minval(linelist%intensity) .lt. 0.) then
+          where (linelist%intensity .lt. 0)
+            linelist%intensity = 0.D0
+          endwhere
+        print *,gettime(),": warning: negative line fluxes set to zero"
+        endif
+
+        if (minval(linelist%int_err) .lt. 0.) then
+          where (linelist%int_err .lt. 0)
+            linelist%int_err = abs(linelist%int_err)
+          endwhere
+        print *,gettime(),": warning: negative flux uncertainties converted to positive"
+        endif
+
 ! run line identifier if required
 
         if (identifylines) then
