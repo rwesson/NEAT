@@ -1415,7 +1415,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
       rlabundtemp = 0.0
       weight = 0
-      do i = 1,7
+      do i = 1,12
         rlabundtemp = rlabundtemp + oiimultiplets(i)%abundance
         if (oiimultiplets(i)%abundance .ge. 1e-20) then
           weight = weight + 1
