@@ -135,12 +135,21 @@ implicit none
                 linelist_orig%intensity = linelist_orig%intensity * normalise
         endif
 
+! note that extinction is recalculated later on after diagnostics are known, so
+! changes here may also need to be made in the subsequent section too
+
         if (calculate_extinction) then
                 CALL calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction, switch_ext, DBLE(10000.),DBLE(1000.), R)
 
-                if (meanextinction .lt. 0.0) then
+                if (meanextinction .lt. 0.0 .or. isnan(meanextinction)) then
                    meanextinction = 0.0
                 endif
+! NaN can happen if the code tries to calculate the extinction but there is no
+! H alpha line
+! ideally an error message should be written here, but as it's inside the loop
+! this would result in 10,000 error messages when uncertainties are being
+! calculated
+! to be improved...
 
         endif
         !actual dereddening
@@ -520,7 +529,7 @@ implicit none
           meanextinction=0
           CALL calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction, switch_ext, medtemp, lowdens, R)
 
-          if (meanextinction .lt. 0.0) then
+          if (meanextinction .lt. 0.0 .or. isnan(meanextinction)) then
              meanextinction = 0.0
           endif
 
