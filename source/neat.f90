@@ -158,6 +158,10 @@ program neat
            print *,"         2: write out summary files and binned results"
            print *,"         3: write out summary files only"
            print *,"       Default: 1"
+           print *,"  -id / --identify"
+           print *,"       This option triggers an algorithm which attempts to convert observed wavelengths into rest wavelengths"
+           print *,"       If the option is not present, NEAT assumes that the input line list already has rest wavelengths in the first column"
+           print *,"       No default"
         !  to be fully implemented:
         !  -R                     : R (default 3.1)
            stop
