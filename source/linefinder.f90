@@ -28,7 +28,7 @@ TYPE(line), dimension(listlength) :: linelist_copy
 double precision, dimension(20) :: linelist_compare
 
 integer :: I, J, n_neatlines, IO, assign_1, assign_2, count
-double precision :: temp_wave, temp_flux, temp_unc, diff, shift, rms
+double precision :: temp_wave, diff, shift, rms
 character*1 :: null
 character*5 :: temp_ion1, temp_ion2
 
@@ -144,8 +144,6 @@ print *,"Obs         rest    ID         offset"
 print *,"-------------------------------------"
 
 count=0
-
-105 format (F8.2,1X,F15.3,1X,F15.3)
 
 do I=1,listlength
   diff = 1.e10
