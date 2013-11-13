@@ -480,30 +480,35 @@ program neat
         open (650,FILE=trim(filename)//"_linelist", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
         open (651,FILE=trim(filename)//"_linelist.tex", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
 
-        write (650,*) "Lambda  Ion           F(line)  I(line) X(line)/H"
+        write (650,*) "Lambda  Ion           F(line)  I(line) Abundance"
         write (651,*) "\centering"
         write (651,*) "\small "
-        write (651,*) "\begin{longtable}{lllll}"
+        write (651,*) "\begin{longtable}{llrlrlrl}"
         write (651,*) "\hline"
-        write (651,*) " $ \lambda $ & Ion & $F \left( \lambda \right) $ & $I \left( \lambda \right) $ & $\frac{X(line)}{H}$ \\ \hline \hline "
+        write (651,*) " $ \lambda $ & Ion & $F \left( \lambda \right) $ && $I \left( \lambda \right) $ && Abundance \\ \hline \hline "
 
         if (runs .gt. 1) then
                 do j=1, listlength
-!line flux - calculate the uncertainties analytically, direct from input if
-!SNR>6, from the equations if SNR<6.
+
+!rest wavelength and ion name
 
                 write (650,"(X,F7.2,X,A11)", advance='no') all_linelists(j,1)%wavelength,all_linelists(j,1)%name
                 write (651,"(X,F7.2,' & ',A15,' & ')", advance='no') all_linelists(j,1)%wavelength,all_linelists(j,1)%latextext
+
+!line flux - todo: calculate the corrected flux and uncertainties for SNR<6.
+
+               write (650,"(F7.2,A,F7.2,3X)", advance='no') linelist_original(j)%intensity," +-",linelist_original(j)%int_err
+               write (651,"(F7.2,'& $\pm$',F7.2, '&')", advance='no') linelist_original(j)%intensity,linelist_original(j)%int_err
 
 !dereddened flux
                 quantity_result = all_linelists(j,:)%int_dered
                 call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual)
                 if (uncertainty_array(1) .ne. uncertainty_array(3)) then
-                  write (650,"(F8.3,SP,F8.3,SP,F8.3)", advance='no') uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
-                  write (651,"(F8.3,'$^{',SP,F8.3,'}_{',SP,F8.3,'}$')", advance='no') uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
+                  write (650,"(F7.2,SP,F7.2,SP,F7.2)", advance='no') uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
+                  write (651,"(F7.2,'& $^{',SP,F7.2,'}_{',SP,F7.2,'}$')", advance='no') uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
                 else
-                  write (650,"(F8.3,A,F8.3,5X)", advance='no') uncertainty_array(2)," +-",uncertainty_array(1)
-                  write (651,"(F8.3,'$\pm$',F8.3)", advance='no') uncertainty_array(2),uncertainty_array(1)
+                  write (650,"(F7.2,A,F7.2,5X)", advance='no') uncertainty_array(2)," +-",uncertainty_array(1)
+                  write (651,"(F7.2,'& $\pm$',F7.2)", advance='no') uncertainty_array(2),uncertainty_array(1)
                 endif
 
 !abundance - write out if there is an abundance for the line, don't write
@@ -514,10 +519,10 @@ program neat
                 if (uncertainty_array(2) .ne. 0.D0) then
                   if (uncertainty_array(1) .ne. uncertainty_array(3)) then
                     write (650,"(ES10.2,SP,ES10.2,SP,ES10.2)") uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
-                    write (651,"(' & ${',A,'}^{+',A,'}_{',A,'}$ \\')") trim(latex_number(uncertainty_array(2))),trim(latex_number(uncertainty_array(1))),trim(latex_number(-uncertainty_array(3)))
+                    write (651,"(' & ${',A,'}$ & $^{+',A,'}_{',A,'}$ \\')") trim(latex_number(uncertainty_array(2))),trim(latex_number(uncertainty_array(1))),trim(latex_number(-uncertainty_array(3)))
                   else
                     write (650,"(ES10.2,A,ES10.2)") uncertainty_array(2)," +-",uncertainty_array(1)
-                    write (651,"(' & $',A,'\pm',A,'$\\')") trim(latex_number(uncertainty_array(2))),trim(latex_number(uncertainty_array(1)))
+                    write (651,"(' & $',A,'$ & $\pm',A,'$\\')") trim(latex_number(uncertainty_array(2))),trim(latex_number(uncertainty_array(1)))
                   endif
                 else
                   write (650,*)
@@ -529,11 +534,11 @@ program neat
 
                 do i=1,listlength
                   if (linelist(i)%abundance .gt. 0.0) then
-                     write (650,"(X,F7.2,X,A11,F8.3,X,F8.3,X,ES14.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance
-                     write (651,"(X,F7.2,X,'&',A15,'&',X,F8.3,X,'&',X,F8.3,X,'&',X,'$',A,'$',X,'\\')") linelist(i)%wavelength,linelist(i)%latextext,linelist(i)%intensity,linelist(i)%int_dered, trim(latex_number(linelist(i)%abundance))
+                     write (650,"(X,F7.2,X,A11,F7.2,X,F7.2,X,ES14.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance
+                     write (651,"(X,F7.2,X,'&',A15,'&',X,F7.2,X,'&',X,F7.2,X,'&',X,'$',A,'$',X,'\\')") linelist(i)%wavelength,linelist(i)%latextext,linelist(i)%intensity,linelist(i)%int_dered, trim(latex_number(linelist(i)%abundance))
                   else
-                     write (650,"(X,F7.2,X,A11,F8.3,X,F8.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered
-                     write (651,"(X,F7.2,X,'&',A15,'&',X,F8.3,X,'&',X,F8.3,X,'&',X,'\\')") linelist(i)%wavelength,linelist(i)%latextext,linelist(i)%intensity,linelist(i)%int_dered
+                     write (650,"(X,F7.2,X,A11,F7.2,X,F7.2)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered
+                     write (651,"(X,F7.2,X,'&',A15,'&',X,F7.2,X,'&',X,F7.2,X,'&',X,'\\')") linelist(i)%wavelength,linelist(i)%latextext,linelist(i)%intensity,linelist(i)%int_dered
                   endif
                 end do
         
@@ -1186,7 +1191,7 @@ if (binsize .gt. 0) then
 
   allocate(bintemp(arraysize))
   bintemp = binsize*nint(input_array/binsize)
-  nbins=nint((maxval(bintemp)-minval(bintemp))/binsize)+1
+  nbins=abs(nint((maxval(bintemp)-minval(bintemp))/binsize))+1
   allocate(binned_quantity_result(nbins,2))
   binned_quantity_result=0.D0
 
