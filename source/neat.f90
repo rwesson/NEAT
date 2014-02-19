@@ -1150,15 +1150,15 @@ implicit none
 double precision :: input_array(:)
 double precision, intent(out) :: uncertainty_array(3)
 double precision, dimension(:), allocatable :: bintemp
-double precision :: binsize, comp
+double precision :: binsize=0d0, comp=0d0
 double precision, dimension (:,:), allocatable, intent(out) :: binned_quantity_result
 integer :: ii, bincount, arraysize, abovepos, belowpos, nbins
 integer, dimension(1) :: maxpos
-double precision :: mean, sd
-double precision :: mean_log, sd_log
-double precision :: mean_exp, sd_exp
-double precision, dimension(3,3) :: sds
-double precision :: tolerance
+double precision :: mean=0d0, sd=0d0
+double precision :: mean_log=0d0, sd_log=0d0
+double precision :: mean_exp=0d0, sd_exp=0d0
+double precision, dimension(3,3) :: sds=0d0
+double precision :: tolerance=0d0
 logical :: unusual !if not true, then the distribution is normal, log normal or exp normal
 
 unusual = .false.
