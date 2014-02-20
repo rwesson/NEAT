@@ -78,7 +78,7 @@ program neat
 
         !binning and uncertainties
 
-        double precision, dimension(3) :: uncertainty_array
+        double precision, dimension(3) :: uncertainty_array=0d0
         double precision, dimension (:,:), allocatable :: binned_quantity_result
         logical :: unusual
         integer :: verbosity,nbins,nperbin
@@ -314,6 +314,16 @@ program neat
 
         linelist%intensity = 0.D0
         linelist%abundance = 0.D0
+        linelist%freq=0d0
+        linelist%wavelength=0d0
+        linelist%int_dered=0d0
+        linelist%int_err=0d0
+        linelist%zone='    '
+        linelist%name='           '
+        linelist%transition='                    '
+        linelist%location=0
+        linelist%ion='                   '
+        linelist%latextext='               '
 
         REWIND (199)
         DO I=1,listlength
@@ -485,7 +495,7 @@ program neat
         print *,gettime(),": Writing line list"
 
         allocate(quantity_result(runs))
-
+        quantity_result=0d0
         open (650,FILE=trim(filename)//"_linelist", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
         open (651,FILE=trim(filename)//"_linelist.tex", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
 
@@ -577,6 +587,7 @@ program neat
 !abundances, adfs
 
         allocate(resultprocessingarray(142,runs))
+        resultprocessingarray=0d0
         allocate(resultprocessingtext(142,4))
 
 !extinction
@@ -970,7 +981,7 @@ program neat
           endif
 
 ! this writes the results to the plain text and latex summary files
-
+          
           quantity_result=resultprocessingarray(j,:)
           call write_uncertainties(quantity_result,uncertainty_array,resultprocessingtext(j,1),resultprocessingtext(j,2),resultprocessingtext(j,3),filename, resultprocessingtext(j,4), verbosity,nbins,nperbin)
 
@@ -1198,9 +1209,9 @@ call qsort(input_array)
 ! bin the array
 
 arraysize = size(input_array)
-binsize=(input_array(nint(0.841*arraysize)) - input_array(nint(0.159*arraysize)))/5
+binsize=(input_array(nint(0.841*arraysize)) - input_array(nint(0.159*arraysize)))/5d0
 
-if (binsize .gt. 0) then
+if (binsize .gt. 0d0) then
 
 !quantize the input array by taking the integer of each value divided by the binsize, and multiplying by the binsize.
 
