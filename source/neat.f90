@@ -1116,7 +1116,7 @@ if (verbosity .lt. 3) then
   ! number of bins allocated to the array is always too large and the last few end
   ! up being full of zeros.  to be fixed soon hopefully.  RW 16/11/2012
       if (binned_quantity_result(i,1) .gt. 0. .and. binned_quantity_result(i,2) .gt. 0) then
-        write(unit = 850,FMT=*) binned_quantity_result(i,1),int(binned_quantity_result(i,2))
+        write(unit = 850,FMT=*) binned_quantity_result(i,1),binned_quantity_result(i,2)
       endif
     end do
     close(850)
@@ -1214,13 +1214,13 @@ if (binsize .gt. 0) then
   do i=1,nbins
      if(i.eq.1) then
         binstart=input_array(1)/2d0
-        binend=input_array(1+(i)*nperbin)+input_array((i)*nperbin)/2d0
+        binend=(input_array(1+(i)*nperbin)+input_array((i)*nperbin))/2d0
      elseif(i.eq.nbins) then
-        binstart=input_array(1+(i-1)*nperbin)+input_array((i-1)*nperbin)/2d0
+        binstart=(input_array(1+(i-1)*nperbin)+input_array((i-1)*nperbin))/2d0
         binend=input_array(arraysize)*2d0
      else
-        binstart=input_array(1+(i-1)*nperbin)+input_array((i-1)*nperbin)/2d0
-        binend=input_array(1+(i)*nperbin)+input_array((i)*nperbin)/2d0
+        binstart=(input_array(1+(i-1)*nperbin)+input_array((i-1)*nperbin))/2d0
+        binend=(input_array(1+(i)*nperbin)+input_array((i)*nperbin))/2d0
      endif
      binwidth=binend-binstart
      binned_quantity_result(i,1)=(binstart+binend)/2d0
@@ -1317,7 +1317,7 @@ if (binsize .gt. 0) then
     unusual = .true.
   endif
 
-!  deallocate(bintemp)
+  deallocate(bintemp)
 
 else !all results are identical
      !or, almost all of the results are an upper or lower limit with a few
