@@ -987,15 +987,19 @@
       A0=XX(2)-XX(1)
       AN1=XX(NPT)-XX(NPT-1)
       NPM=NPT-2
+      hmh=0d0
       DO I=1,NPM
         H1=6./(XX(I+1)-XX(I))
         H2=6./(XX(I+2)-XX(I+1))
-        DO J=1,NPT
-          HMH(I,J)=0.
-          IF(J.EQ.I) HMH(I,J)=H1
-          IF(J.EQ.I+2) HMH(I,J)=H2
-          IF(J.EQ.I+1) HMH(I,J)=-H1-H2
-        ENDDO
+        HMH(I,I)=H1
+        HMH(I,I+1)=-H1-H2
+        HMH(I,I+2)=H2
+!        DO J=1,NPT
+!          HMH(I,J)=0.
+!          IF(J.EQ.I) HMH(I,J)=H1
+!          IF(J.EQ.I+2) HMH(I,J)=H2
+!          IF(J.EQ.I+1) HMH(I,J)=-H1-H2
+!        ENDDO
       ENDDO
                                                  !Correct matrix for case of
       IF(IOPT.EQ.1.OR.IOPT.EQ.2) THEN
@@ -1028,9 +1032,11 @@
           INDX=INDX-3
           Y(K)=(Y(K)-GH(INDX+1)*Y(K+1))/GH(INDX)
         ENDDO
-        DO J=1,NPM
-        HMH(J+1,I)=Y(J)
-        ENDDO
+
+        HMH(2:npm+1,I)=Y(1:npm)
+!        DO J=1,NPM
+!        HMH(J+1,I)=Y(J)
+!        ENDDO
                                     !Insert values for second derivative at end
         HMH(1,I)=0.
                                     !points: first and last rows of the matrix
