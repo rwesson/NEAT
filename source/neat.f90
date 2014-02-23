@@ -269,6 +269,9 @@ program neat
                 if ((trim(options(i))=="-R") .and. (i+1) .le. Narg) then
                   read (options(i+1),*) R
                 endif
+                if ((trim(options(i))=="-nbins") .and. (i+1).le. Narg) then
+                   read (options(i+1),*) nbins
+                endif
          enddo
 
          if (Narg .eq. 1) then
@@ -292,9 +295,10 @@ program neat
         if (runs .gt. 1 .and. runs .lt. 5000) print *,gettime(),": warning: number of iterations is low.  At least 5000 is recommended for good sampling of probability distributions"
         if (runs .gt. 1) nperbin=runs/nbins
         if (mod(runs,nbins) .gt. 0) then
-           print*,'Number of iterations does not divide exactly by number of bins'
+           print*,'error: number of iterations does not divide exactly by number of bins'
            print*,'Please set number of iterations to an exact multiple of ',nbins
-           stop 'bad binning'
+           print*,'or modify the number of bins using -nbins'
+           stop
         endif
 
         deallocate(options)
@@ -522,7 +526,7 @@ program neat
 !dereddened flux
                 quantity_result = all_linelists(j,:)%int_dered
 
-                call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins,nperbin)
+                call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins,nperbin,runs)
 
                 if (uncertainty_array(1) .ne. uncertainty_array(3)) then
                   write (650,"(F7.2,SP,F7.2,SP,F7.2)", advance='no') uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
@@ -536,7 +540,7 @@ program neat
 !anything except a line break if there is no abundance for the line.
 
                 quantity_result = all_linelists(j,:)%abundance
-                call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins,nperbin)
+                call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins,nperbin,runs)
                 if (uncertainty_array(2) .ne. 0.D0) then
                   if (uncertainty_array(1) .ne. uncertainty_array(3)) then
                     write (650,"(ES10.2,SP,ES10.2,SP,ES10.2)") uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
@@ -983,7 +987,7 @@ program neat
 ! this writes the results to the plain text and latex summary files
           
           quantity_result=resultprocessingarray(j,:)
-          call write_uncertainties(quantity_result,uncertainty_array,resultprocessingtext(j,1),resultprocessingtext(j,2),resultprocessingtext(j,3),filename, resultprocessingtext(j,4), verbosity,nbins,nperbin)
+          call write_uncertainties(quantity_result,uncertainty_array,resultprocessingtext(j,1),resultprocessingtext(j,2),resultprocessingtext(j,3),filename, resultprocessingtext(j,4), verbosity,nbins,nperbin,runs)
 
         enddo
 
@@ -1083,7 +1087,7 @@ contains
             DEALLOCATE(seed)
           END SUBROUTINE
 
-subroutine write_uncertainties(input_array, uncertainty_array, plaintext, latextext, itemformat, filename, suffix, verbosity,nbins,nperbin)
+subroutine write_uncertainties(input_array, uncertainty_array, plaintext, latextext, itemformat, filename, suffix, verbosity,nbins,nperbin,runs)
 
 !wrapper for the get_uncertainties routine, if called it will do the
 !uncertainty calculation and also write the binned and unbinned results to files
@@ -1098,7 +1102,7 @@ character*80, intent(in) :: filename
 character*25, intent(in) :: suffix
 logical :: unusual
 integer :: verbosity !1 = write summaries, binned and full results; 2=write summaries and binned results; 3=write summaries only
-integer :: nbins,nperbin
+integer :: nbins,nperbin,runs
 
 if(size(input_array) .eq. 1) then
 !just one iteration, write out the result without uncertainties
@@ -1111,7 +1115,7 @@ if(size(input_array) .eq. 1) then
   endif
 else
 
-call get_uncertainties(input_array, binned_quantity_result, uncertainty_array, unusual,nbins,nperbin)
+call get_uncertainties(input_array, binned_quantity_result, uncertainty_array, unusual,nbins,nperbin,runs)
 
 !write out the binned results with the mode+-uncertainties at the top
 
@@ -1167,7 +1171,7 @@ endif !end of condition checking whether one or more iterations were done
 
 end subroutine write_uncertainties
 
-subroutine get_uncertainties(input_array, binned_quantity_result, uncertainty_array, unusual,nbins,nperbin)
+subroutine get_uncertainties(input_array, binned_quantity_result, uncertainty_array, unusual,nbins,nperbin,runs)
 
 implicit none
 double precision :: input_array(:)
@@ -1176,7 +1180,7 @@ double precision, dimension(:), allocatable :: bintemp
 double precision :: binsize=0d0, comp=0d0
 double precision, dimension (:,:), allocatable, intent(out) :: binned_quantity_result
 integer :: ii, bincount, arraysize, abovepos, belowpos
-integer :: nbins, nperbin
+integer :: nbins, nperbin, runs
 integer, dimension(1) :: maxpos
 double precision :: mean=0d0, sd=0d0
 double precision :: mean_log=0d0, sd_log=0d0
@@ -1235,7 +1239,7 @@ if (binsize .gt. 0d0) then
      endif
      binwidth=binend-binstart
      binned_quantity_result(i,1)=(binstart+binend)/2d0
-     binned_quantity_result(i,2)=dble(nperbin)/binwidth
+     binned_quantity_result(i,2)=dble(nperbin)/dble(runs)/binwidth !probability density in the current bin
   enddo
 
 !then, go through the quantized array and count the number of occurrences of each value
