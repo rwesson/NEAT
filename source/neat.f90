@@ -294,10 +294,10 @@ program neat
 
         if (runs .gt. 1 .and. runs .lt. 5000) print *,gettime(),": warning: number of iterations is low.  At least 5000 is recommended for good sampling of probability distributions"
         if (runs .gt. 1) nperbin=runs/nbins
-        if (mod(runs,nbins) .gt. 0) then
-           print*,'error: number of iterations does not divide exactly by number of bins'
-           print*,'Please set number of iterations to an exact multiple of ',nbins
-           print*,'or modify the number of bins using -nbins'
+        if (mod(runs,nbins) .gt. 0 .and. runs .gt. 1) then
+           print*,gettime(),': error: number of iterations does not divide exactly by number of bins'
+           print*,'            Please set number of iterations to an exact multiple of ',nbins
+           print*,'            or modify the number of bins using -nbins'
            stop
         endif
 
