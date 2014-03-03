@@ -133,6 +133,16 @@ implicit none
                 Heii_lines%intensity = Heii_lines%intensity * normalise
                 linelist%intensity = linelist%intensity * normalise
                 linelist_orig%intensity = linelist_orig%intensity * normalise
+
+!scale the uncertainties as well
+
+                ILs%int_err = ILs%int_err * normalise
+                H_BS%int_err = H_BS%int_err*normalise
+                HeI_lines%int_err = HeI_lines%int_err * normalise
+                Heii_lines%int_err = Heii_lines%int_err * normalise
+                linelist%int_err = linelist%int_err * normalise
+                linelist_orig%int_err = linelist_orig%int_err * normalise
+
         endif
 
 ! note that extinction is recalculated later on after diagnostics are known, so

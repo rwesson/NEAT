@@ -78,10 +78,10 @@ program neat
 
         !binning and uncertainties
 
-        double precision, dimension(3) :: uncertainty_array
+        double precision, dimension(3) :: uncertainty_array=0d0
         double precision, dimension (:,:), allocatable :: binned_quantity_result
         logical :: unusual
-        integer :: verbosity
+        integer :: verbosity,nbins,nperbin
 
         !CEL array
 
@@ -164,6 +164,8 @@ program neat
            print *,"       No default"
         !  to be fully implemented:
         !  -R                     : R (default 3.1)
+        !  --nbins                : user can set number of bins for routine
+        !  -b                     : batch mode
            stop
         endif
 
@@ -187,6 +189,7 @@ program neat
         verbosity=1
         R=3.1
         identifylines=.false.
+        nbins=25
 
         ! start the logging output to terminal
 
@@ -266,6 +269,9 @@ program neat
                 if ((trim(options(i))=="-R") .and. (i+1) .le. Narg) then
                   read (options(i+1),*) R
                 endif
+                if ((trim(options(i))=="-nbins") .and. (i+1).le. Narg) then
+                   read (options(i+1),*) nbins
+                endif
          enddo
 
          if (Narg .eq. 1) then
@@ -287,6 +293,13 @@ program neat
         !first, read in the line list
 
         if (runs .gt. 1 .and. runs .lt. 5000) print *,gettime(),": warning: number of iterations is low.  At least 5000 is recommended for good sampling of probability distributions"
+        if (runs .gt. 1) nperbin=runs/nbins
+        if (mod(runs,nbins) .gt. 0 .and. runs .gt. 1) then
+           print*,gettime(),': error: number of iterations does not divide exactly by number of bins'
+           print*,'            Please set number of iterations to an exact multiple of ',nbins
+           print*,'            or modify the number of bins using -nbins'
+           stop
+        endif
 
         deallocate(options)
 
@@ -305,6 +318,16 @@ program neat
 
         linelist%intensity = 0.D0
         linelist%abundance = 0.D0
+        linelist%freq=0d0
+        linelist%wavelength=0d0
+        linelist%int_dered=0d0
+        linelist%int_err=0d0
+        linelist%zone='    '
+        linelist%name='           '
+        linelist%transition='                    '
+        linelist%location=0
+        linelist%ion='                   '
+        linelist%latextext='               '
 
         REWIND (199)
         DO I=1,listlength
@@ -476,48 +499,55 @@ program neat
         print *,gettime(),": Writing line list"
 
         allocate(quantity_result(runs))
-
+        quantity_result=0d0
         open (650,FILE=trim(filename)//"_linelist", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
         open (651,FILE=trim(filename)//"_linelist.tex", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
 
-        write (650,*) "Lambda  Ion           F(line)  I(line) X(line)/H"
+        write (650,*) "Lambda  Ion           F(line)  I(line) Abundance"
         write (651,*) "\centering"
         write (651,*) "\small "
-        write (651,*) "\begin{longtable}{lllll}"
+        write (651,*) "\begin{longtable}{llrlrlrl}"
         write (651,*) "\hline"
-        write (651,*) " $ \lambda $ & Ion & $F \left( \lambda \right) $ & $I \left( \lambda \right) $ & $\frac{X(line)}{H}$ \\ \hline \hline "
+        write (651,*) " $ \lambda $ & Ion & $F \left( \lambda \right) $ && $I \left( \lambda \right) $ && Abundance \\ \hline \hline "
 
         if (runs .gt. 1) then
                 do j=1, listlength
-!line flux - calculate the uncertainties analytically, direct from input if
-!SNR>6, from the equations if SNR<6.
+
+!rest wavelength and ion name
 
                 write (650,"(X,F7.2,X,A11)", advance='no') all_linelists(j,1)%wavelength,all_linelists(j,1)%name
                 write (651,"(X,F7.2,' & ',A15,' & ')", advance='no') all_linelists(j,1)%wavelength,all_linelists(j,1)%latextext
 
+!line flux - todo: calculate the corrected flux and uncertainties for SNR<6.
+
+               write (650,"(F7.2,A,F7.2,3X)", advance='no') linelist_original(j)%intensity," +-",linelist_original(j)%int_err
+               write (651,"(F7.2,'& $\pm$',F7.2, '&')", advance='no') linelist_original(j)%intensity,linelist_original(j)%int_err
+
 !dereddened flux
                 quantity_result = all_linelists(j,:)%int_dered
-                call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual)
+
+                call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins,nperbin,runs)
+
                 if (uncertainty_array(1) .ne. uncertainty_array(3)) then
-                  write (650,"(F8.3,SP,F8.3,SP,F8.3)", advance='no') uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
-                  write (651,"(F8.3,'$^{',SP,F8.3,'}_{',SP,F8.3,'}$')", advance='no') uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
+                  write (650,"(F7.2,SP,F7.2,SP,F7.2)", advance='no') uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
+                  write (651,"(F7.2,'& $^{',SP,F7.2,'}_{',SP,F7.2,'}$')", advance='no') uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
                 else
-                  write (650,"(F8.3,A,F8.3,5X)", advance='no') uncertainty_array(2)," +-",uncertainty_array(1)
-                  write (651,"(F8.3,'$\pm$',F8.3)", advance='no') uncertainty_array(2),uncertainty_array(1)
+                  write (650,"(F7.2,A,F7.2,5X)", advance='no') uncertainty_array(2)," +-",uncertainty_array(1)
+                  write (651,"(F7.2,'& $\pm$',F7.2)", advance='no') uncertainty_array(2),uncertainty_array(1)
                 endif
 
 !abundance - write out if there is an abundance for the line, don't write
 !anything except a line break if there is no abundance for the line.
 
                 quantity_result = all_linelists(j,:)%abundance
-                call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual)
+                call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins,nperbin,runs)
                 if (uncertainty_array(2) .ne. 0.D0) then
                   if (uncertainty_array(1) .ne. uncertainty_array(3)) then
                     write (650,"(ES10.2,SP,ES10.2,SP,ES10.2)") uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
-                    write (651,"(' & ${',A,'}^{+',A,'}_{',A,'}$ \\')") trim(latex_number(uncertainty_array(2))),trim(latex_number(uncertainty_array(1))),trim(latex_number(-uncertainty_array(3)))
+                    write (651,"(' & ${',A,'}$ & $^{+',A,'}_{',A,'}$ \\')") trim(latex_number(uncertainty_array(2))),trim(latex_number(uncertainty_array(1))),trim(latex_number(-uncertainty_array(3)))
                   else
                     write (650,"(ES10.2,A,ES10.2)") uncertainty_array(2)," +-",uncertainty_array(1)
-                    write (651,"(' & $',A,'\pm',A,'$\\')") trim(latex_number(uncertainty_array(2))),trim(latex_number(uncertainty_array(1)))
+                    write (651,"(' & $',A,'$ & $\pm',A,'$\\')") trim(latex_number(uncertainty_array(2))),trim(latex_number(uncertainty_array(1)))
                   endif
                 else
                   write (650,*)
@@ -529,11 +559,11 @@ program neat
 
                 do i=1,listlength
                   if (linelist(i)%abundance .gt. 0.0) then
-                     write (650,"(X,F7.2,X,A11,F8.3,X,F8.3,X,ES14.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance
-                     write (651,"(X,F7.2,X,'&',A15,'&',X,F8.3,X,'&',X,F8.3,X,'&',X,'$',A,'$',X,'\\')") linelist(i)%wavelength,linelist(i)%latextext,linelist(i)%intensity,linelist(i)%int_dered, trim(latex_number(linelist(i)%abundance))
+                     write (650,"(X,F7.2,X,A11,F7.2,X,F7.2,X,ES14.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance
+                     write (651,"(X,F7.2,X,'&',A15,'&',X,F7.2,X,'&',X,F7.2,X,'&',X,'$',A,'$',X,'\\')") linelist(i)%wavelength,linelist(i)%latextext,linelist(i)%intensity,linelist(i)%int_dered, trim(latex_number(linelist(i)%abundance))
                   else
-                     write (650,"(X,F7.2,X,A11,F8.3,X,F8.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered
-                     write (651,"(X,F7.2,X,'&',A15,'&',X,F8.3,X,'&',X,F8.3,X,'&',X,'\\')") linelist(i)%wavelength,linelist(i)%latextext,linelist(i)%intensity,linelist(i)%int_dered
+                     write (650,"(X,F7.2,X,A11,F7.2,X,F7.2)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered
+                     write (651,"(X,F7.2,X,'&',A15,'&',X,F7.2,X,'&',X,F7.2,X,'&',X,'\\')") linelist(i)%wavelength,linelist(i)%latextext,linelist(i)%intensity,linelist(i)%int_dered
                   endif
                 end do
         
@@ -561,6 +591,7 @@ program neat
 !abundances, adfs
 
         allocate(resultprocessingarray(142,runs))
+        resultprocessingarray=0d0
         allocate(resultprocessingtext(142,4))
 
 !extinction
@@ -954,9 +985,9 @@ program neat
           endif
 
 ! this writes the results to the plain text and latex summary files
-
+          
           quantity_result=resultprocessingarray(j,:)
-          call write_uncertainties(quantity_result,uncertainty_array,resultprocessingtext(j,1),resultprocessingtext(j,2),resultprocessingtext(j,3),filename, resultprocessingtext(j,4), verbosity)
+          call write_uncertainties(quantity_result,uncertainty_array,resultprocessingtext(j,1),resultprocessingtext(j,2),resultprocessingtext(j,3),filename, resultprocessingtext(j,4), verbosity,nbins,nperbin,runs)
 
         enddo
 
@@ -1056,7 +1087,7 @@ contains
             DEALLOCATE(seed)
           END SUBROUTINE
 
-subroutine write_uncertainties(input_array, uncertainty_array, plaintext, latextext, itemformat, filename, suffix, verbosity)
+subroutine write_uncertainties(input_array, uncertainty_array, plaintext, latextext, itemformat, filename, suffix, verbosity,nbins,nperbin,runs)
 
 !wrapper for the get_uncertainties routine, if called it will do the
 !uncertainty calculation and also write the binned and unbinned results to files
@@ -1071,6 +1102,7 @@ character*80, intent(in) :: filename
 character*25, intent(in) :: suffix
 logical :: unusual
 integer :: verbosity !1 = write summaries, binned and full results; 2=write summaries and binned results; 3=write summaries only
+integer :: nbins,nperbin,runs
 
 if(size(input_array) .eq. 1) then
 !just one iteration, write out the result without uncertainties
@@ -1083,7 +1115,7 @@ if(size(input_array) .eq. 1) then
   endif
 else
 
-call get_uncertainties(input_array, binned_quantity_result, uncertainty_array, unusual)
+call get_uncertainties(input_array, binned_quantity_result, uncertainty_array, unusual,nbins,nperbin,runs)
 
 !write out the binned results with the mode+-uncertainties at the top
 
@@ -1099,7 +1131,7 @@ if (verbosity .lt. 3) then
   ! number of bins allocated to the array is always too large and the last few end
   ! up being full of zeros.  to be fixed soon hopefully.  RW 16/11/2012
       if (binned_quantity_result(i,1) .gt. 0. .and. binned_quantity_result(i,2) .gt. 0) then
-        write(unit = 850,FMT=*) binned_quantity_result(i,1),int(binned_quantity_result(i,2))
+        write(unit = 850,FMT=*) binned_quantity_result(i,1),binned_quantity_result(i,2)
       endif
     end do
     close(850)
@@ -1139,22 +1171,25 @@ endif !end of condition checking whether one or more iterations were done
 
 end subroutine write_uncertainties
 
-subroutine get_uncertainties(input_array, binned_quantity_result, uncertainty_array, unusual)
+subroutine get_uncertainties(input_array, binned_quantity_result, uncertainty_array, unusual,nbins,nperbin,runs)
 
 implicit none
 double precision :: input_array(:)
 double precision, intent(out) :: uncertainty_array(3)
 double precision, dimension(:), allocatable :: bintemp
-double precision :: binsize, comp
+double precision :: binsize=0d0, comp=0d0
 double precision, dimension (:,:), allocatable, intent(out) :: binned_quantity_result
-integer :: ii, bincount, arraysize, abovepos, belowpos, nbins
+integer :: ii, bincount, arraysize, abovepos, belowpos
+integer :: nbins, nperbin, runs
 integer, dimension(1) :: maxpos
-double precision :: mean, sd
-double precision :: mean_log, sd_log
-double precision :: mean_exp, sd_exp
-double precision, dimension(3,3) :: sds
-double precision :: tolerance
+double precision :: mean=0d0, sd=0d0
+double precision :: mean_log=0d0, sd_log=0d0
+double precision :: mean_exp=0d0, sd_exp=0d0
+double precision, dimension(3,3) :: sds=0d0
+double precision :: tolerance=0d0
+double precision :: binstart,binend,binwidth
 logical :: unusual !if not true, then the distribution is normal, log normal or exp normal
+
 
 unusual = .false.
 
@@ -1178,34 +1213,51 @@ call qsort(input_array)
 ! bin the array
 
 arraysize = size(input_array)
-binsize=(input_array(nint(0.841*arraysize)) - input_array(nint(0.159*arraysize)))/5
+binsize=(input_array(nint(0.841*arraysize)) - input_array(nint(0.159*arraysize)))/5d0
 
-if (binsize .gt. 0) then
+if (binsize .gt. 0d0) then
 
 !quantize the input array by taking the integer of each value divided by the binsize, and multiplying by the binsize.
 
   allocate(bintemp(arraysize))
-  bintemp = binsize*nint(input_array/binsize)
-  nbins=nint((maxval(bintemp)-minval(bintemp))/binsize)+1
+!  bintemp = binsize*nint(input_array/binsize)
+!  nbins=abs(nint((maxval(bintemp)-minval(bintemp))/binsize))+1
   allocate(binned_quantity_result(nbins,2))
+
   binned_quantity_result=0.D0
 
-!then, go through the quantized array and count the number of occurrences of each value
-
-  comp=bintemp(1)
-  bincount=0
-  ii=1
-
-  do i=1,arraysize
-    if (bintemp(i).eq.comp) then
-      bincount=bincount+1 
-    else 
-      binned_quantity_result(ii,:)=(/comp, dble(bincount)/) 
-      comp=bintemp(i)
-      bincount=0
-      ii=ii+1 
-    endif
+  do i=1,nbins
+     if(i.eq.1) then
+        binstart=input_array(1)/2d0
+        binend=(input_array(1+(i)*nperbin)+input_array((i)*nperbin))/2d0
+     elseif(i.eq.nbins) then
+        binstart=(input_array(1+(i-1)*nperbin)+input_array((i-1)*nperbin))/2d0
+        binend=input_array(arraysize)*2d0
+     else
+        binstart=(input_array(1+(i-1)*nperbin)+input_array((i-1)*nperbin))/2d0
+        binend=(input_array(1+(i)*nperbin)+input_array((i)*nperbin))/2d0
+     endif
+     binwidth=binend-binstart
+     binned_quantity_result(i,1)=(binstart+binend)/2d0
+     binned_quantity_result(i,2)=dble(nperbin)/dble(runs)/binwidth !probability density in the current bin
   enddo
+
+!then, go through the quantized array and count the number of occurrences of each value
+!!$
+!!$  comp=bintemp(1)
+!!$  bincount=0
+!!$  ii=1
+!!$
+!!$  do i=1,arraysize
+!!$    if (bintemp(i).eq.comp) then
+!!$      bincount=bincount+1 
+!!$    else 
+!!$      binned_quantity_result(ii,:)=(/comp, dble(bincount)/) 
+!!$      comp=bintemp(i)
+!!$      bincount=0
+!!$      ii=ii+1 
+!!$    endif
+!!$  enddo
 
 !mode of distribution is the value with the highest bin count
 
