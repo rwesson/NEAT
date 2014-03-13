@@ -33,7 +33,13 @@ FFLAGS=-ffree-line-length-0 -fbounds-check
 ifeq ($(FC),gfortran)
   FFLAGS = -ffree-line-length-0
   ifeq ($(CO),debug)
+    FFLAGS = -ffree-line-length-0 -fbounds-check -Wall -Wuninitialized #-ffpe-trap=zero,overflow,invalid,underflow,denormal 
+  endif
+  ifeq ($(CO),debug2)
     FFLAGS = -g -pg -ffree-line-length-0 -fbounds-check -Wall -Wuninitialized #-ffpe-trap=zero,overflow,invalid,underflow,denormal 
+  endif
+  ifeq ($(CO),debug3)
+    FFLAGS = -g -pg -ffree-line-length-0 -fbounds-check -Wall -Wuninitialized -ffpe-trap=zero,overflow,invalid,underflow,denormal 
   endif
   ifeq ($(CO),pedantic)
     FFLAGS = -g -pg -ffree-line-length-0 -fbounds-check -Wall -Wuninitialized -Werror -pedantic -ffpe-trap=zero,overflow,invalid,underflow,denormal
