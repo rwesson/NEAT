@@ -468,6 +468,7 @@
                 valtest(:)=results(:,INT-1)
             else
                 print*,"Valtest failed"
+                print*,ion,levu,levl,results,loop,inratio,diagtype
                 STOP
             endif
         elseif(test .eq. 0 .and. loop .eq. 9) then !test fails if no change of sign
@@ -478,6 +479,7 @@
                 valtest(:)=results(:,INT)
             else
                 print*,"Valtest failed"
+                print*,ion,levu,levl,results,loop,inratio,diagtype
                 STOP
             endif
         endif
