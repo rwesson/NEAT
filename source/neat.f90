@@ -76,6 +76,10 @@ program neat
         logical :: calculate_extinction=.true.
         DOUBLE PRECISION :: temp1,temp2,temp3, meanextinction, R
 
+        !RP effect switch
+
+        logical :: norp=.false.
+
         !binning and uncertainties
 
         double precision, dimension(3) :: uncertainty_array=0d0
@@ -162,6 +166,9 @@ program neat
            print *,"       This option triggers an algorithm which attempts to convert observed wavelengths into rest wavelengths"
            print *,"       If the option is not present, NEAT assumes that the input line list already has rest wavelengths in the first column"
            print *,"       No default"
+           print *,"  -norp"
+           print *,"       When calculating Monte Carlo uncertatinties, NEAT's default behaviour is to compensate for the upward bias"
+           print *,"       affecting weak lines described by Rola and Pelat (1994).  This option overrides that and no compensation is calculated."
         !  to be fully implemented:
         !  -R                     : R (default 3.1)
         !  --nbins                : user can set number of bins for routine
@@ -271,6 +278,9 @@ program neat
                 endif
                 if ((trim(options(i))=="-nbins") .and. (i+1).le. Narg) then
                    read (options(i+1),*) nbins
+                endif
+                if (trim(options(i))=="-norp") then
+                   norp=.true.
                 endif
          enddo
 
@@ -477,7 +487,7 @@ program neat
                          if ( (10.0*dble(i)/dble(runs)) == int(10*i/runs) ) print *,gettime(),": completed ",100*i/runs,"%"
 !                        print*, "iteration ", i, "of", runs
 
-                        call randomizer(linelist, listlength)
+                        call randomizer(linelist, listlength, norp)
                         call abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf)
 
                         !store all line and derived quantity in arrays
@@ -1007,11 +1017,12 @@ program neat
 
 contains
 
-        subroutine randomizer(linelist, listlength)
+        subroutine randomizer(linelist, listlength, norp)
 
                 TYPE(line), dimension(listlength) :: linelist
                 INTEGER :: IO, I, j, listlength
                 DOUBLE PRECISION :: temp4
+                LOGICAL, intent(in) :: norp
 
                 REAL :: fn_val
 
@@ -1045,7 +1056,7 @@ contains
 
 !                                if (j==1) R=3.1+(0.15*fn_val)
 
-                                if (linelist(j)%intensity/linelist(j)%int_err .gt. 6.0) then !normal distribution
+                                if (linelist(j)%intensity/linelist(j)%int_err .gt. 6.0 .or. norp) then !normal distribution
 
                                         temp4=linelist(j)%intensity+(fn_val*linelist(j)%int_err)
                                         if(temp4 < 0) temp4 = 0.D0
