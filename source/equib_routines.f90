@@ -466,11 +466,16 @@
                 valtest(:)=results(:,1)
             elseif(abs(results(3,INT)) .lt. abs(results(3,1))) then
                 valtest(:)=results(:,INT-1)
-            else
-                print*,"Valtest failed"
-                print*,ion,levu,levl,loop,inratio,diagtype
-                print*,results
-                STOP
+            else                   !A simplistic work-around for this problem:
+                result = -1d0      !it flags the value as ill-defined so that it
+                deallocate(results)!can be dealt with without breaking the code.
+                return             !It's set to zero later and excluded from
+                                   !the averaging. Turns out long train rides
+                                   !are good for sorting such problems. 
+                !print*,"Valtest failed"
+                !print*,ion,levu,levl,loop,inratio,diagtype
+                !print*,results
+                !STOP
             endif
         elseif(test .eq. 0 .and. loop .eq. 9) then !test fails if no change of sign
                              !this kicks in then, and checks if it should be upper or lower limit
@@ -479,10 +484,13 @@
             elseif(abs(results(3,INT)) .lt. abs(results(3,1))) then
                 valtest(:)=results(:,INT)
             else
-                print*,"Valtest failed"
-                print*,ion,levu,levl,loop,inratio,diagtype
-                print*,results
-                STOP
+                result = -1d0
+                deallocate(results)
+                return
+                !print*,"Valtest failed"
+                !print*,ion,levu,levl,loop,inratio,diagtype
+                !print*,results
+                !STOP
             endif
         endif
 
