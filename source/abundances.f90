@@ -112,7 +112,7 @@ implicit none
         if (H_BS(2)%intensity .eq. 0.D0) then
           print *,"   No H beta found"
           if (H_BS(1)%intensity .gt. 0.D0 .and. calculate_extinction .eqv. .false.) then
-            print *, "   Estimating from observed H alpha and specified c(Hb)"
+            print *, "   Estimating from observed H alpha and specified c(Hb)" !do we really want this to be printed out 10000 times?
 !todo: make this select the right flambda according to the specified extinction law
             print "(4X,F6.2,A5,F6.3,A13)",H_BS(1)%intensity," and ",meanextinction," respectively"
             H_BS(2)%intensity=(H_BS(1)%intensity/2.85)*10**(meanextinction*flambda(dble(1.524),5))
