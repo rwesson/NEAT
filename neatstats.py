@@ -9,6 +9,8 @@ import os
 import argparse
 
 class fitdata:
+    average=np.zeros(1,dtype=np.float64)
+    CI=np.zeros(2,dtype=np.float64)
     mode=np.zeros(1,dtype=np.float64)
     imode=np.zeros(1,dtype=np.int)
     sigmamode=np.zeros(2,dtype=np.float64)
@@ -23,11 +25,12 @@ class fitdata:
     pdf=np.ndarray([])
     flags=""
 
-def statsfit(data,cdf,niter,smooth=0.0075):
+def statsfit(data,cdf,niter,average,smooth=0.0075):
     #create object to contain correct values
     fits=fitdata()
     #first compute cubic spline fit
     splinefit=interpol.splrep(data,cdf,s=smooth)
+    fits.CI=getci(data,cdf,0.683)
     #now find maxima
     firstderivative=interpol.splev(data,splinefit,der=1) 
     secondderivative=interpol.splev(data,splinefit,der=2)
@@ -42,21 +45,30 @@ def statsfit(data,cdf,niter,smooth=0.0075):
     #check which root has maximum value = mode
 
     #find 1-sigma interval
-    sigmamode=getinterval(data,cdf,mode,0.683)
-    fits.sigmamode=sigmamode
-    fits.sigmamean=getinterval(data,cdf,fits.mean,0.683)
+#    sigmamode=getinterval(data,cdf,mode,0.683)
+#    fits.sigmamode=sigmamode
+#    fits.sigmamean=getinterval(data,cdf,fits.mean,0.683)
     imed=niter/2 #check how python does int divison
     if (niter % 2) == 0: #find median
         median=(data[imed]+data[imed+1])/2.
     else:
         median=data[imed]
-    fits.sigmamedian=getinterval(data,cdf,median,0.683)
+#    fits.sigmamedian=getinterval(data,cdf,median,0.683)
     fits.median=median
-    fits.sigmasymmetric=[data[imed - niter*0.3415],data[imed + niter*0.3415]]#getintervalsym(data,cdf,0.683)
-    if fits.sigmamode[0] == fits.mode:
+#    fits.sigmasymmetric=[data[imed - niter*0.3415],data[imed + niter*0.3415]]#getintervalsym(data,cdf,0.683)
+    #if fits.sigmamode[0] == fits.mode:
+    if fits.CI[0] == np.min(data):
         fits.flags+='l'
-    if fits.sigmamode[1] == fits.mode:
+    #if fits.sigmamode[1] == fits.mode:
+    if fits.CI[1] == np.min(data):
         fits.flags+='u'
+    fits.average=fits.mode
+    if average == 1:
+        fits.average=fits.median
+    if average == 2:
+        fits.average=fits.mean
+    if (average == 0) & (np.isnan(fits.pdf[0])):
+        fits.average=fits.median
     #return only the important stuff :)
     return fits
 
@@ -89,6 +101,28 @@ def getinterval(data,cdf,point,fraction):
 
     return interval
 
+def getci(data,cdf,fraction):
+    #finds the smallest interval of data that contains fraction fraction of the cdf.
+    interval=np.array([np.min(data),np.max(data)])
+    #print interval
+    width=interval[1]-interval[0]#len(data)
+    #ipoint=np.argmin(np.abs(data-point)) #get location of value that must lie within interval interval
+    #print ipoint
+    for i in range(int((1.-fraction)*len(data))): #range(len(data))
+        integ=np.float64(0)
+        #j=ipoint
+        #while ((integ < fraction) & (j < len(data))):
+        #   integ=cdf[j]-cdf[i]
+        #   j=j+1
+        j=np.argmin(np.abs(cdf-cdf[i]-np.float64(fraction)))
+        if ((j < len(data)) & (j > i)):
+            newwidth=data[j]-data[i]#j-i#
+            if newwidth < width:
+                width=newwidth
+                interval=[data[i],data[j]]
+
+    return interval
+
 def readcdf(infile,niter):
     data=np.zeros(niter, np.float64)
     cdf=np.float64(np.linspace(1./np.float64(niter),1.,niter,endpoint=True))
@@ -100,11 +134,11 @@ def readcdf(infile,niter):
 if __name__=="__main__":
     #lookup argparse to add lots of arguments and options :)
     #including outline of argument parsing now so i don't forget how it works, even though it won't do anything useful just yet.
-    parser=argparse.ArgumentParser(description='Reads the output from NEAT (using maxmimum verbosity) and attempts to approximate the cumulative distribution and probability density functions of the output quantities using spline fits. It then extracts an average (default: mode) and the smallest 68.3% confidence interval that contains the average.')
+    parser=argparse.ArgumentParser(description='Reads the output from NEAT (using maxmimum verbosity) and attempts to approximate the cumulative distribution and probability density functions of the output quantities using spline fits. It then extracts an average (default: mode) and the smallest 68.3% confidence interval.')
     parser.add_argument('infilepattern',help='The name of the linelist analysed with NEAT. This can contain wildcards.',metavar='Linelist')
     parser.add_argument('niter',type=int,help='The number of Monte Carlo iterations used when running NEAT on the above linelist')
     parser.add_argument('-s','--smooth',default=0.0075,type=float,help='The value of the smoothing co-efficient to use in the spline fitting. Increasing this reduces oscillations in the derivatives of the spline, giving a smoother pdf. (Default: %(default)s)')
-    parser.add_argument('-a','--average',default=0,type=int,choices=[0,1,2],help='To be implemented. (Default: %(default)s)')
+    parser.add_argument('-a','--average',default=0,type=int,choices=[0,1,2],help='Selects whether to use the mode (0), the median (1), or the mean (2) as the represenative average. If the mode has been chosen, but the pdf (and hence the mode) is not well defined it will default to the median. (Default: %(default)s)')
     parser.add_argument('-p','--plots',default=0,type=int,choices=[0,1,2],help='Controls whether plots of the CDF and PDF are generated. 0=No plots, 1=Only flagged distributions are plotted, 2=Plot everything. (Default: %(default)s)')
     parser.add_argument('-v','--verb',default=0,type=int,choices=[0,1,2],help='To be implemented. (Default: %(default)s)')
     args=parser.parse_args()
@@ -136,9 +170,9 @@ if __name__=="__main__":
         data, cdf =readcdf(infile,niter)
         print np.max(data),np.min(data)
         #fit data with cubic spline
-        fit=statsfit(data,cdf,niter,smooth)
+        fit=statsfit(data,cdf,niter,avg,smooth)
         #print
-        outline='{:<45} {:>10.5g} {:>+10.5g} {:>+10.5g} {:>} \n'.format(infile,fit.mode,fit.sigmamode[1]-fit.mode,fit.sigmamode[0]-fit.mode,fit.flags)
+        outline='{:<45} {:>10.5g} {:>+10.5g} {:>+10.5g} {:>} \n'.format(infile,fit.average,fit.CI[1]-fit.average,fit.CI[0]-fit.average,fit.flags)
         output.write(outline)
 
         #begin plotting :)
