@@ -123,6 +123,10 @@ def getci(data,cdf,fraction):
 
     return interval
 
+def progressbar(percent):
+    sys.stdout.write("%3d%%\r" % percent)
+    sys.stdout.flush()
+
 def readcdf(infile,niter):
     data=np.zeros(niter, np.float64)
     cdf=np.float64(np.linspace(1./np.float64(niter),1.,niter,endpoint=True))
@@ -164,11 +168,12 @@ if __name__=="__main__":
     i=-1
     for infile in infilelist:
         i+=1
+        progressbar(100.*np.float(i)/np.float(len(infilelist)))
         infile=infile[:-7] #remove '_binned' from file name to get unbinned data
-        print infile
+        #print infile
         #read data
         data, cdf =readcdf(infile,niter)
-        print np.max(data),np.min(data)
+        #print np.max(data),np.min(data)
         #fit data with cubic spline
         fit=statsfit(data,cdf,niter,avg,smooth)
         #print
@@ -178,7 +183,7 @@ if __name__=="__main__":
         #begin plotting :)
         if plots > 0:
             if (plots == 2) | (len(fit.flags) > 0):
-                print np.max(fit.pdf),np.min(fit.pdf)
+                #print np.max(fit.pdf),np.min(fit.pdf)
                 plotfile=PdfPages(infile+'_plot.pdf')
                 fig=plt.figure()
                 cdfplot=fig.add_subplot(1,1,1)
@@ -198,4 +203,5 @@ if __name__=="__main__":
                 plt.close('all')
 
     output.close
-    
+#    progressbar(100.)
+    print "Done."
