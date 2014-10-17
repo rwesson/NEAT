@@ -225,7 +225,7 @@ program neat
                     switch_ext = "C"
                   elseif (trim(options(i+1)) == "SMC")then
                     switch_ext = "P"
-                  elseif (trim(options(i+1)) == "Fit")then
+                  elseif (trim(options(i+1)) == "Fitz")then
                     switch_ext = "F"
                   endif
                 endif
