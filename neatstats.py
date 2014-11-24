@@ -15,7 +15,10 @@ class fitdata:
     imode=np.zeros(1,dtype=np.int)
     sigmamode=np.zeros(2,dtype=np.float64)
     median=np.zeros(1,dtype=np.float64)
+    imed=np.zeros(1,dtype=np.int)
+    iavg=np.zeros(1,dtype=np.int)
     mean=np.zeros(1,dtype=np.float64)
+    imean=np.zeros(1,dtype=np.int)
 #    imean=np.zeros(1,dtype=np.int)
     sigmamean=np.zeros(2,dtype=np.float64)
     sigmasymmetric=np.zeros(2,dtype=np.float64)
@@ -40,6 +43,7 @@ def statsfit(data,cdf,niter,average,smooth=0.0075):
     fits.imode=imode
     fits.pdf=firstderivative
     fits.mean=np.mean(data)
+    fits.imean=np.abs(data-fits.mean).argmin()
     #check which roots are maxima & count them?
     
     #check which root has maximum value = mode
@@ -55,20 +59,25 @@ def statsfit(data,cdf,niter,average,smooth=0.0075):
         median=data[imed]
 #    fits.sigmamedian=getinterval(data,cdf,median,0.683)
     fits.median=median
+    fits.imed=imed
 #    fits.sigmasymmetric=[data[imed - niter*0.3415],data[imed + niter*0.3415]]#getintervalsym(data,cdf,0.683)
     #if fits.sigmamode[0] == fits.mode:
     if fits.CI[0] == np.min(data):
         fits.flags+='l'
     #if fits.sigmamode[1] == fits.mode:
-    if fits.CI[1] == np.min(data):
+    if fits.CI[1] == np.max(data):
         fits.flags+='u'
     fits.average=fits.mode
+    fits.iavg=fits.imode
     if average == 1:
         fits.average=fits.median
+        fits.iavg=fits.imed
     if average == 2:
         fits.average=fits.mean
+        fits.iavg=fits.imean
     if (average == 0) & (np.isnan(fits.pdf[0])):
         fits.average=fits.median
+        fits.iavg=fits.imed
     #return only the important stuff :)
     return fits
 
@@ -136,8 +145,7 @@ def readcdf(infile,niter):
     return data, cdf
 
 if __name__=="__main__":
-    #lookup argparse to add lots of arguments and options :)
-    #including outline of argument parsing now so i don't forget how it works, even though it won't do anything useful just yet.
+    #use argparse to add lots of arguments and options :)
     parser=argparse.ArgumentParser(description='Reads the output from NEAT (using maxmimum verbosity) and attempts to approximate the cumulative distribution and probability density functions of the output quantities using spline fits. It then extracts an average (default: mode) and the smallest 68.3% confidence interval.')
     parser.add_argument('infilepattern',help='The name of the linelist analysed with NEAT. This can contain wildcards.',metavar='Linelist')
     parser.add_argument('niter',type=int,help='The number of Monte Carlo iterations used when running NEAT on the above linelist')
@@ -188,16 +196,16 @@ if __name__=="__main__":
                 fig=plt.figure()
                 cdfplot=fig.add_subplot(1,1,1)
                 cdfplot.plot(data,cdf,color='blue')
-                cdfplot.fill_between(data, cdf, 0, where=((data > fit.sigmamode[0])&(data < fit.sigmamode[1])), facecolor='blue', label='1 sigma region',alpha=0.35)
-                cdfplot.plot(data[fit.imode]*ones,cdf[fit.imode]*scale,'--',color='black')
-                cdfplot.plot(data[fit.imode],cdf[fit.imode],'o',color='black')
+                cdfplot.fill_between(data, cdf, 0, where=((data > fit.CI[0])&(data < fit.CI[1])), facecolor='blue', label='1 sigma region',alpha=0.35)
+                cdfplot.plot(data[fit.iavg]*ones,cdf[fit.iavg]*scale,'--',color='black')
+                cdfplot.plot(data[fit.iavg],cdf[fit.iavg],'o',color='black')
                 plotfile.savefig()
                 fig=plt.figure()
                 pdfplot=fig.add_subplot(1,1,1)
                 pdfplot.plot(data,fit.pdf,color='blue')
-                pdfplot.fill_between(data, fit.pdf, 0, where=((data > fit.sigmamode[0])&(data < fit.sigmamode[1])), facecolor='blue', label='1 sigma region',alpha=0.35)
-                pdfplot.plot(data[fit.imode]*ones,fit.pdf[fit.imode]*scale,'--',color='black')
-                pdfplot.plot(data[fit.imode],fit.pdf[fit.imode],'o',color='black')
+                pdfplot.fill_between(data, fit.pdf, 0, where=((data > fit.CI[0])&(data < fit.CI[1])), facecolor='blue', label='1 sigma region',alpha=0.35)
+                pdfplot.plot(data[fit.iavg]*ones,fit.pdf[fit.iavg]*scale,'--',color='black')
+                pdfplot.plot(data[fit.iavg],fit.pdf[fit.iavg],'o',color='black')
                 plotfile.savefig()
                 plotfile.close()
                 plt.close('all')
