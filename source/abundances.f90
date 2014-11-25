@@ -24,7 +24,7 @@ implicit none
         DOUBLE PRECISION :: normalise, oiiNratio, oiiDens, oiiiTratio, oiiiTemp, oiiiIRNratio, oiiiIRTratio, oiiiIRtemp, oiiiUVTratio, oiiiUVtemp, oiiiIRdens, niiTratio, niiTemp, ariiiIRNratio, ariiiIRdens, arivNratio, arivDens, cliiiNratio, cliiiDens, siiNratio, siiDens, siiTratio, siiTemp, siiiIRNratio, siiiIRdens, oiiTratio, oiiTemp, neiiiTratio, neiiiIRTratio, neiiiIRNratio, neiiiIRdens, neiiiTemp, neiiiIRTemp, oitemp, citemp
         DOUBLE PRECISION :: ciiiNratio,neivNratio,nevTratio,siiiTratio,ariiiTratio,arvTratio,lowtemp,lowdens,medtemp,ciiidens,meddens,siiitemp,ariiitemp,hightemp,neivdens,highdens,arvtemp,nevtemp,oiTratio,ciTratio
         DOUBLE PRECISION :: oiiRLabund, niiRLabund, ciiRLabund, cii4267rlabund, neiiRLabund, ciiiRLabund, niiiRLabund, RLabundtemp, weight
-        DOUBLE PRECISION :: ciiiCELabund, niiCELabund, niiiIRCELabund, niiiUVCELabund, oiiCELabund, oiiiCELabund, oiiiIRCELabund, oivCELabund, neiiIRCELabund, neiiiIRCELabund, neiiiCELabund, neivCELabund, siiCELabund, siiiCELabund, siiiIRCELabund, sivIRCELabund, cliiiCELabund, ariiiCELabund, arivCELabund, ariiiIRCELabund, nivCELabund, niiiCELabund, ciiCELabund, civCELabund, nvCELabund, nevCELabund, arvCELabund, CELabundtemp, ciCELabund, oiCELabund
+        DOUBLE PRECISION :: ciiiCELabund, niiCELabund, niiiIRCELabund, niiiUVCELabund, oiiCELabund, oiiiCELabund, oiiiIRCELabund, oivCELabund, neiiIRCELabund, neiiiIRCELabund, neiiiCELabund, neivCELabund, siiCELabund, siiiCELabund, siiiIRCELabund, sivIRCELabund, cliiCELabund, cliiiCELabund, clivCELabund, ariiiCELabund, arivCELabund, ariiiIRCELabund, nivCELabund, niiiCELabund, ciiCELabund, civCELabund, nvCELabund, nevCELabund, arvCELabund, CELabundtemp, ciCELabund, oiCELabund
         DOUBLE PRECISION :: fn4
         DOUBLE PRECISION :: CELicfO, CELicfC, CELicfN, CELicfNe, CELicfAr, CELicfS, CELicfCl
         DOUBLE PRECISION :: RLicfO, RLicfC, RLicfN, RLicfNe, RLicfHe
@@ -32,7 +32,7 @@ implicit none
         DOUBLE PRECISION :: adfC, adfN, adfO, adfNe, w1, w2, w3, w4
         DOUBLE PRECISION :: adfC2plus, adfN2plus, adfO2plus, adfNe2plus
         DOUBLE PRECISION :: c1, c2, c3, meanextinction, R
-        REAL :: heiabund,heiiabund,Hetotabund, heICFfactor
+        REAL :: heiabund,heiiabund,Hetotabund, heICFfactor, OICFfactor, upsilon, upsilonprime
         REAL :: bajtemp
 
         logical :: calculate_extinction
@@ -115,7 +115,7 @@ implicit none
             print *, "   Estimating from observed H alpha and specified c(Hb)" !do we really want this to be printed out 10000 times?
 !todo: make this select the right flambda according to the specified extinction law
             print "(4X,F6.2,A5,F6.3,A13)",H_BS(1)%intensity," and ",meanextinction," respectively"
-            H_BS(2)%intensity=(H_BS(1)%intensity/2.85)*10**(meanextinction*flambda(dble(1.524),5))
+            H_BS(2)%intensity=(H_BS(1)%intensity/2.85)*10.**(meanextinction*flambda(dble(1.524),5))
             print "(4X,A9,F6.2)","H beta = ",(H_BS(2)%intensity)
           else
             print *,"   Specify the extinction from the command line with the -c option to proceed"
@@ -1147,7 +1147,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         celabundtemp = 0.
                 ariiiCELabund = 0.
         weight = 0.
-        do i=get_ion("ariii7135  ", ILs, Iint), get_ion("ariii7751  ", ILs, Iint)
+        do i=get_ion("ariii5192  ", ILs, Iint), get_ion("ariii7751  ", ILs, Iint)
           if (ILs(i)%abundance .ge. 1e-20) ariiiCELabund = ariiiCELabund + ILs(i)%abundance*ILs(i)%intensity
           if (ILs(i)%abundance .ge. 1e-20) then
             weight = weight + ILs(i)%intensity
@@ -1591,7 +1591,10 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
      endif
 
 ! now apply the scheme chosen by the user
-
+! todo : make ICFs consistent so that they are always the factor by which you
+! multiply the sum of the observed ions to get the elemental abundance.  Some of
+! the DI14 ICFs are presented as corrections to an X/O ratio so that the ICF can
+! be less than 1.
 if (switch_icf .eq. "K") then
 
 ! ICFs (Kingsburgh + Barlow 1994)
@@ -1727,7 +1730,8 @@ if (switch_icf .eq. "K") then
        ClabundCEL = CELicfCl * cliiiCELabund
     endif
 
-else !PTPR92 ICF - equation numbers in the paper are given in brackets
+elseif (switch_icf=="P") then
+ !PTPR92 ICF - equation numbers in the paper are given in brackets
 
 !CELs
 !Carbon - no ICF specified
@@ -1772,6 +1776,123 @@ else !PTPR92 ICF - equation numbers in the paper are given in brackets
        RLicfHe = 1+(SiiCELabund/(SabundCEL-SiiCELabund))
        Hetotabund = RLicfHe * Heiabund ! (21) - note that this icf is not meaningful if only S+ is seen
      endif
+
+elseif (switch_icf .eq. "D") then
+!Delgado-Inglada 2014
+
+!starting definitions
+
+!Equation 4:
+  if (heiabund+heiiabund .gt. 0.D0) then
+    heICFfactor = heiiabund/(heiabund+heiiabund)
+  else
+    heICFfactor=0.0
+  endif
+!Equation 5:
+  if (oiiCELabund + oiiiCELabund .gt. 0.D0) then
+    OICFfactor = oiiiCELabund/(oiiCELabund + oiiiCELabund)
+  else
+    oICFfactor = 0.0
+  endif
+
+!helium - no ICF for neutral so it's already been calculated earlier in this
+!routine
+
+!oxygen
+!equation 12:
+
+  if (oiiCELabund .gt. 0.D0 .and. oiiiCELabund .gt. 0.D0) then
+    celICFO = 10.**((0.08*heICFfactor + 0.006*heICFfactor**2)/(0.34-0.27*heICFfactor)) !should check if upsilon is greater than 0.95 before using
+    oabundCEL = celICFO * (oiiCELabund + oiiiCELabund)
+  else
+    celICFO = 1.0
+    oabundCEL = 0.D0
+  endif
+
+!nitrogen
+!equation 14:
+
+  if (niiCELabund .gt. 0.D0 .and. oiiCELabund .gt. 0.D0 .and. heICFfactor .gt. 0.D0) then
+    CELicfN = 10.**(-0.16*oICFfactor*(1+log10(heICFfactor)))
+    nabundCEL = CELicfN * niiCELabund * OabundCEL / oiiCELabund
+  elseif (niiCELabund .gt. 0.D0 .and. oiiCELabund .gt. 0.D0 .and. heICFfactor .eq. 0.D0) then
+    CELicfN = 0.64*Oicffactor
+    nabundCEL = CELicfN * niiCELabund * OabundCEL / oiiCELabund
+  else
+    CELicfN = 1.0
+    nabundCEL = 0.D0
+  endif
+
+!neon
+
+  if (neiiiCELabund .gt. 0.D0 .and. oiiiCELabund .gt. 0.D0 .and. nevCELabund .eq. 0.D0) then
+    if (heiiabund .eq. 0.D0) then
+      upsilonprime = 0.01
+    elseif (heiiabund .gt. 0.D0 .and. upsilon .lt. 0.015) then
+      upsilonprime = 0.015
+    else
+      upsilonprime = upsilon
+    endif
+!equation 17:
+    CELicfNe = oICFfactor + ((0.014/upsilonprime + 2*upsilonprime**2.7)**3 * (0.7 + 0.2*oICFfactor-0.8*oICFfactor**2))
+    NeabundCEL = CELicfne * OabundCEL * (neiiiCELabund / oiiiCELabund)
+!equation 20:
+  elseif (neiiiCELabund .gt. 0.D0 .and. nevCELabund .gt. 0.D0) then
+    CELicfNe = (1.31+12.68*heICFfactor**2.57)**0.27
+    NeabundCEL = CELicfNe * OabundCEL * (neiiiCELabund + nevCELabund)
+  else
+    NeabundCEL = 0.D0
+    CELicfNe = 1.0
+  endif
+
+!sulphur
+
+  if (siiiCELabund .eq. 0.D0 .and. siiCELabund .gt. 0.D0) then !equation 23:
+    CELicfS = 10.**(0.31-0.51*heICFfactor)
+    SabundCEL = CELicfS * OabundCEL * siiCELabund
+  elseif (siiiCELabund .gt. 0.D0 .and. siiCELabund .gt. 0.D0) then !equation 26:
+    CELicfS = 10.**((-0.02 - 0.03*OICFfactor - 2.31*OICFfactor**2 + 2.19*OICFfactor**3) / (90.69 + 2.09*OICFfactor - 2.69*OICFfactor**2))
+    SabundCEL = CELicfS * OabundCEL * (siiCELabund+siiiCELabund)/oiiCELabund
+  else
+    CELicfS = 1.0
+    SabundCEL = 0.D0
+  endif
+
+!chlorine
+
+  if (cliiCELabund .gt. 0.D0 .and. cliiiCELabund .gt. 0.D0 .and. clivCELabund .gt. 0.D0) then !equation 32:
+    CELicfCl = 0.98+(0.56-0.57*HeICFfactor)**7.64
+    ClabundCEL = CELicfCl * (cliiCELabund + cliiiCELabund + clivCELabund)
+  elseif (OICFfactor .le. 0.02 .and. cliiCELabund .gt. 0.D0 .and. cliiiCELabund .gt. 0.D0) then
+    CELicfCl = 1.0
+    ClabundCEL = cliiCELabund + cliiiCELabund
+  elseif (OICFfactor .gt. 0.02 .and. OICFfactor .lt. 0.95 .and. cliiiCELabund .gt. 0.D0 .and. oiiCELabund .gt. 0.D0) then !equation 29:
+    CELicfCL = (4.1620 - (4.1622*OICFfactor**0.21))**0.75
+    ClabundCEL = CELicfCL * (cliiiCELabund / oiiCELabund)
+  else
+    CELicfCl = 1.0
+    CLabundCEL = 0.D0
+  endif
+
+!argon
+
+  if ((oiiCELabund+oiiiCELabund) .gt. 0.D0 .and. ariiiCELabund .gt. 0.D0 .and. OICFfactor .le. 0.5) then !equation 35
+    CELicfAr = 10.**(0.05/(0.06+OICFfactor) - 0.07)
+    ArabundCEL = CELicfAr * OabundCEL * ariiiCELabund/(oiiCELabund+oiiiCELabund)
+  elseif ((oiiCELabund+oiiiCELabund) .gt. 0.D0 .and. ariiiCELabund .gt. 0.D0 .and. OICFfactor .gt. 0.5) then !equation 36
+    CELicfAr = 10.**(0.03/(0.4-0.3*OICFfactor) - 0.05)
+    ArabundCEL = CELicfAr * OabundCEL * ariiiCELabund/(oiiCELabund+oiiiCELabund)
+  else
+    CELicfAr = 1.0
+    ArabundCEL = 0.D0
+  endif
+
+!carbon
+!none given for CELs, D-I 2014 is for optical lines only
+
+    celICFC = 1.0
+    cabundCEL = 0.D0
+
 endif
 
 !ORLs - not from KB94 but based on Liu et al. 2000
@@ -1792,8 +1913,13 @@ endif
 
 !Carbon
 
-     RLicfC = 1.0
-     CabundRL = ciiRLabund + ciiiRLabund
+     if (switch_icf .eq. "D") then !equation 39
+       RLicfC = 0.05 + 2.21*OICFfactor - 2.77*OICFfactor**2 + 1.74*OICFfactor**3
+       CabundRL = RLicfC * ciiRLabund / oiiRLabund
+     else
+       RLicfC = 1.0
+       CabundRL = ciiRLabund + ciiiRLabund
+     endif
 
 !Neon
 

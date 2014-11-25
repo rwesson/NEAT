@@ -153,6 +153,7 @@ program neat
            print *,"       Values:"
            print *,"          KB94: Kingsburgh & Barlow (1994, MNRAS, 271, 257)"
            print *,"          PT92: Peimbert, Torres-Peimbert & Ruiz (1992, RMxAA, 24, 155)"
+           print *,"          DI14: Delgado-Inglada, Morisset & Stasinska (2014, MNRAS, 440, 536)"
            print *,"       Default: KB94"
            print *,"  -v / --verbosity"
            print *,"       Amount of output to write for each derived quantity"
@@ -262,6 +263,8 @@ program neat
                 if ((trim(options(i))=="-icf" .or. trim(options(i))=="--ionisation-correction-scheme") .and. (i+1) .le. Narg) then
                   if (trim(options(i+1))=="PT92") then
                     switch_icf="P"
+                  elseif (trim(options(i+1))=="DI14") then
+                    switch_icf="D"
                   endif
                 endif
                 if ((trim(options(i))=="-v" .or.  trim(options(i))=="--verbosity") .and. (i+1) .le. Narg) then
@@ -414,6 +417,8 @@ program neat
 
         if (switch_ICF == "K") then
                 print *,gettime(), ": using Kingsburgh & Barlow (1994) ICF"
+        elseif (switch_ICF == "D") then
+                print *,gettime(), ": using Delgado-Inglada et al. (2014) ICF"
         else
                 print *,gettime(), ": using Peimbert et al. (1992) ICF"
         endif
