@@ -1,12 +1,22 @@
- 25
-** Atomic data from version 5.2 of the CHIANTI database **
+ 35
+** Atomic data from version 7 of the CHIANTI database **
 %observed energies: Fuhr, J.R., et al., "NIST Atomic Spectra Database" Ver. 2.0, March 1999, NIST Physical Reference Data
 %theoretical energies: Berrington, K.A., private communication, 13-Mar-2003
 % produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
 %
 %  P.R.Young - 13-Mar-2003
+%filename: o_5.wgfa
 %observed energies: Fuhr, J.R., et al., "NIST Atomic Spectra Database" Ver. 2.0, March 1999, NIST Physical Reference Data
 %A-values and oscillator strengths for all transitions involving levels > 20, and also transitions 3-9, 4-9,
+     5-13, 8-13, 4-14, 3-15, 4-15, 10-15, 12-15, 2-16, 3-16, 4-16 and 1-20: Hibbert, A., 1980, J.Phys.B, 13, 1721
+$A-values and oscillator strengths for all other transitions: Tachiev, G., Froese Fischer, C., J.Phys.B, 32, 5805, 1999
+%Comment: The gf values were not published by Hibbert and so they were derived from
+     the published A-values, making use of the calculated energies in Hibbert's Table 2.
+     Note that a number of E2 transitions are important for depopulating some
+     of the n=3 levels (Hibbert's Table 4).
+% produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
+%
+%  P.R. Young - 28-May-2003
 
 %filename: o_5.splups
 %theoretical energies: Berrington, K.A., private communication, 13-Mar-03
@@ -24,7 +34,7 @@
 % produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
 %
 %  P.R. Young - 19-May-03
-10 23 0
+10 23
   1  2s2 1S0
   2  2s.2p 3P0
   3  2s.2p 3P1

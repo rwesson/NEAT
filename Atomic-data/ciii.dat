@@ -1,5 +1,5 @@
- 25
-** Atomic data from version 5.2 of the CHIANTI database **
+ 26
+** Atomic data from version 7 of the CHIANTI database **
 %observed energy levels: Martin, W.C., Sugar, J., Musgrove, A., Dalton, G.R., 1995,
   NIST Database for Atomic Spectroscopy, Version 1.0, NIST Standard Reference Database 61.
 %theoretical energy level: levels 1 to 10: Berrington et al., ADNDT, 33, 195, 1985
@@ -7,6 +7,7 @@
 %produced as part of the Arcetri/Cambridge/NRL atomic data base collaboration 'CHIANTI'
 %
 % Enrico Landi 1996
+%filename: c_3.wgfa
 %observed energy levels: Martin, W.C., Sugar, J., Musgrove, A., Dalton, G.R., 1995,
   NIST Database for Atomic Spectroscopy, Version 1.0, NIST Standard Reference Database 61
 %theoretical energy level (levels 1 to 10): Berrington et al., ADNDT, 33, 195, 1985
@@ -24,7 +25,7 @@
 %produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
 %
 %Enrico Landi 1996
-10 23 0
+10 23
   1  2s2 1S0
   2  2s.2p 3P0
   3  2s.2p 3P1

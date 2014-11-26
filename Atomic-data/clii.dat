@@ -1,10 +1,11 @@
- 36
-** Atomic data from version 5.2 of the CHIANTI database **
+ 37
+** Atomic data from version 7 of the CHIANTI database **
 %observed energy levels: Fuhr, J.R., et al., "NIST Atomic Spectra Database" Ver. 2.0, March 1999, NIST Physical Reference Data
 %theoretical energy levels: Wilson, N.J., Bell, K.L. 2002, MNRAS 331, 389
 % produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
 %
 %  P.R. Young - 20-May-02
+%filename: cl_2.wgfa
 %observed energy levels: Fuhr, J.R., et al., "NIST Atomic Spectra Database" Ver. 2.0, March 1999, NIST Physical Reference Data
 %A-values: From SSTRUCT calculation. See comments below.
 %comments: The A-values were derived using the code SSTRUCT, with a model of the 
@@ -35,7 +36,7 @@
 % produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
 %
 %  P.R. Young - 23-Jan-03
- 5 23 0
+ 5 23
   1  3s2.3p4 3P2
   2  3s2.3p4 3P1
   3  3s2.3p4 3P0

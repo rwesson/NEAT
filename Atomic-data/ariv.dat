@@ -1,5 +1,5 @@
- 48
-** Atomic data from version 5.2 of the CHIANTI database **
+ 49
+** Atomic data from version 7 of the CHIANTI database **
 %experimental energy levels: Fuhr, J.R., Kelleher, D.E., Martin, W.C., Musgrove, A., Sugar, J., Wiese, W.L.,
         Dalton, G.R., Dragoset, R.A., Mohr, P.J., Olsen, K., Reader, J., Saloman, E.B., Sansonetti, C.J.,
         Wiersma, G., "NIST Atomic Spectra Database" Ver. 2.0, March 1999, NIST Physical Reference Data.
@@ -7,6 +7,7 @@
 %produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
 %
 % E.Landi - Aug 2001
+%filename: ar_4.wgfa
 %experimental energy levels: Fuhr, J.R., et al., "NIST Atomic Spectra Database" Ver. 2.0, 
       March 1999, NIST Physical Reference Data.
 % Theoretical energy levels: Ramsbottom et al 1997, MNRAS, 284, 754
@@ -47,7 +48,7 @@
 % produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
 %
 % Enrico Landi - Jun 2003
- 5 23 0
+ 5 23
   1  3s2.3p3 4S3/2
   2  3s2.3p3 2D3/2
   3  3s2.3p3 2D5/2

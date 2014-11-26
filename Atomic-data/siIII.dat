@@ -1,11 +1,12 @@
- 23
-** Atomic data from version 5.2 of the CHIANTI database **
+ 24
+** Atomic data from version 7 of the CHIANTI database **
 %energy levels: Martin, W.C., Sugar, J., Musgrove, A., Dalton, G.R., 1995, 
    NIST Database for Atomic Spectroscopy, Version 1.0, NIST Standard Reference Database 61.
 %theoretical energy levels: Baluja,K.L.,Hibbert,A., J.Phis.B, 1980, 13, L327
 %produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
 %
 % E. Landi 1995
+%filename: si_3.wgfa
 %energy levels: Martin, W.C., Sugar, J., Musgrove, A., Dalton, G.R., 1995,
   NIST Database for Atomic Spectroscopy, Version 1.0, NIST Standard Reference Database 61
 %oscillator strengths: Dufton P.L., Hibbert A., Kingston A.E., Doschek G.A., 1983, ApJ, 274, 420
@@ -22,7 +23,7 @@
 %produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
 %
 % E. Landi 1995
- 5 23 0
+ 5 23
   1  3s2 1S0
   2  3s.3p 3P0
   3  3s.3p 3P1
