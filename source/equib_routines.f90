@@ -203,7 +203,7 @@
       if (diagtype .eq. "t" .or. diagtype .eq. "T") then
 
         if (LOOP .eq. 1) then
-                TEMPI=5000
+                TEMPI=5000.
         else
                 TEMPI= valtest(1)
         endif

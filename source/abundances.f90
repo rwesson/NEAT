@@ -326,7 +326,7 @@ implicit none
                  if (oiitemp .lt. 0d0) then
                     count=count-1
                     oiitemp=0d0
-                 elseif(oiitemp .ge. 19999.5)then !shouldn't this be 34999.5 like all the others?
+                 elseif(oiitemp .ge. 34999.5)then !same value as the other diagnostics now that atomic data has been updated
                         count=count-1
                         oiitemp=-1
                  endif
