@@ -37,7 +37,7 @@ def statsfit(data,datap,cdf,niter,average,smooth=0.0075):
     fits.fit=interpol.splev(datap,splinefit)
     firstderivative=interpol.splev(datap,splinefit,der=1)  #stick with old routinefor now, pchip doesn't help,
     secondderivative=interpol.splev(datap,splinefit,der=2) #but at some point need to find a way to constrain the
-    mode=data[np.argmax(firstderivative)]                  #spline such that the first derivative is non-negative
+    mode=datap[np.argmax(firstderivative)]                  #spline such that the first derivative is non-negative
     imode=np.argmax(firstderivative)
     fits.mode=mode
     fits.imode=imode
