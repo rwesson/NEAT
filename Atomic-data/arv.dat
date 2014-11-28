@@ -1,40 +1,30 @@
- 30
-** Atomic data from version 5.2 of the CHIANTI database **
-%prepared for the CHIANTI database
-%observed energy levels:
-   Version 3.0.3 of the NIST online database.
-   http://physics.nist.gov/PhysRefData/ASD/index.html
-%theoretical energy levels
-   Not available for this ion.
-%history:
-   Ver.1, Peter Young, 19-Jun-2006
-%prepared for the CHIANTI database
-%A-values:
-   Biemont, E., & Bromage, G.E., 1983, MNRAS, 205, 1085
-%wavelengths:
-   derived from energies in .elvlc file
-%history:
-   Ver.1, 19-Jun-2006, Peter Young
+ 20
+** Atomic data from version 7 of the CHIANTI database **
+%observed energy levels: Version 3.0.3 of the NIST online database. http://physics.nist.gov/PhysRefData/ASD/index.html
+%theoretical energy levels: Not available for this ion.
+% produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
+%
+%   Peter Young   -   19-Jun-2006
+%filename: ar_5.wgfa
+%observed energy levels: Version 3.0.3 of the NIST online database. http://physics.nist.gov/PhysRefData/ASD/index.html
+%A-values: Biemont, E., & Bromage, G.E., 1983, MNRAS, 205, 1085
+% produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
+%
+%  Peter Young  - 19-Jun-2006
 
-%file:  ar_5.splups
-%prepared for the CHIANTI database
-%Upsilons: 
-    Galavis, M.E., Mendoza, C., Zeippen, C.J. 1995,
-      A&ASS 111, 347
-%Theoretical energies:
-    No theoretical energies available - observed energies from
-    .elvlc file used instead.
-%comment:
-    The fits are accurate to within 0.59% over the temperature range 
-    3.0 <= logT <= 5.0.
-%history
-    Ver.1, 20-Jun-2006, Peter Young
- 5 23 0
-  1  3s2 3p2 3P0
-  2  3s2 3p2 3P1
-  3  3s2 3p2 3P2
-  4  3s2 3p2 1D2
-  5  3s2 3p2 1S0
+%filename: ar_5.splups
+%Upsilons: Galavis, M.E., Mendoza, C., Zeippen, C.J. 1995, A&ASS 111, 347
+%Theoretical energies: No theoretical energies available - observed energies from .elvlc file used instead.
+%comment: The fits are accurate to within 0.59% over the temperature range 3.0 <= logT <= 5.0.
+% produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
+%
+%    Peter Young   -    20-Jun-2006
+ 5 23
+  1  3s2.3p2 3P0
+  2  3s2.3p2 3P1
+  3  3s2.3p2 3P2
+  4  3s2.3p2 1D2
+  5  3s2.3p2 1S0
      100.0
      158.5
      251.2

@@ -1,10 +1,11 @@
- 23
-** Atomic data from version 5.2 of the CHIANTI database **
+ 24
+** Atomic data from version 7 of the CHIANTI database **
 %observed energy levels: Kelly, R. L., 1987, J.Phys.Chem.Ref.Data 16, Suppl. 1.     
 %theoretical energy levels: Bhatia, private communications
 % produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
 %
 % K.P.Dere 1994
+%filename: ne_2.wgfa
 %observed energy levels: Martin, W.C., Sugar, J., Musgrove, A., Dalton, G.R., 1995, 
    NIST Standard Reference Database 61, NIST Database for Atomic Spectroscopy, Version 1.0
 %transition probabilities (1-2): Martin, W.C., Sugar, J., Musgrove, A., Dalton, G.R., 1995, 
@@ -22,7 +23,7 @@
 %produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
 %
 % K.P. Dere - 1995
- 2 23 0
+ 2 23
   1  2s2.2p5 2P3/2
   2  2s2.2p5 2P1/2
      100.0

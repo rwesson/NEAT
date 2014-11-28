@@ -1,27 +1,25 @@
- 22
-** Atomic data from version 5.2 of the CHIANTI database **
-%Prepared for CHIANTI by Peter Young, 3-Jun-2006
-%Observed energies:
-   Ver. 3.0.3 of the online NIST database.
-   http://physics.nist.gov/PhysRefData/ASD/index.html
-%Theoretical energies:
-   No theoretical energies available.
-%Prepared for CHIANTI by Peter Young, 5-Jun-2006
-%A-values:
-    Biemont, E., & Hansen, J.E., 1986, Physica Scripta, 34, 116
-%Observed energies:
-    From ar_3.elvlc file.
+ 20
+** Atomic data from version 7 of the CHIANTI database **
+%Observed energies: Ver. 3.0.3 of the online NIST database. http://physics.nist.gov/PhysRefData/ASD/index.html
+%Theoretical energies: No theoretical energies available.
+% produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
+%
+%  Peter Young   -   3-Jun-2006 
+%filename: ar_3.wgfa
+%Observed energies: Ver. 3.0.3 of the online NIST database. http://physics.nist.gov/PhysRefData/ASD/index.html
+%A-values: Biemont, E., & Hansen, J.E., 1986, Physica Scripta, 34, 116
+% produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
+%
+%    Peter Young   -   5-Jun-2006
 
-%file:  ar_3.splups
-%Prepared for CHIANTI by Peter Young, 5-Jun-2006
-%Upsilons:
-   Galavis, M.E., Mendoza, C., Zeippen, C.J., 1995, A&AS, 111, 347
-%Energies:
-   Observed energies from the CHIANTI .elvlc file were used.
-%comment:
-   The original upsilons were tabulated over the range 10^3 - 10^5 K. The
-   CHIANTI fits reproduce the data to within 0.28 %.
- 5 23 0
+%filename: ar_3.splups
+%Theoretical energies: No theoretical energies available - observed energies from .elvlc file used instead.
+%Upsilons: Galavis, M.E., Mendoza, C., Zeippen, C.J., 1995, A&AS, 111, 347
+%comment: The original upsilons were tabulated over the range 10^3 - 10^5 K. The CHIANTI fits reproduce the data to within 0.28 %.
+% produced as part of the Arcetri/Cambridge/NRL 'CHIANTI' atomic data base collaboration
+%
+%    Peter Young  -  5-Jun-2006
+ 5 23
   1  3s2.3p4 3P2
   2  3s2.3p4 3P1
   3  3s2.3p4 3P0
