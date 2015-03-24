@@ -194,7 +194,7 @@ program neat
         filename=""
         meanextinction=0.D0
         diagnostic_array=0.D0
-        verbosity=1
+        verbosity=3
         R=3.1
         identifylines=.false.
         nbins=25
