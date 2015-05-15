@@ -127,25 +127,7 @@ def readcdf(infile,niter):
     cdf=np.float64(cdf)/np.float64(niter) #convert counter to cdf
     return data,datap, cdf
 
-if __name__=="__main__":
-    #use argparse to add lots of arguments and options :)
-    parser=argparse.ArgumentParser(description='Reads the output from NEAT (using maxmimum verbosity) and attempts to approximate the cumulative distribution and probability density functions of the output quantities using spline fits. It then extracts an average (default: mode) and the smallest 68.3% confidence interval.')
-    parser.add_argument('infilepattern',help='The name of the linelist analysed with NEAT. This can contain wildcards.',metavar='Linelist')
-    parser.add_argument('niter',type=int,help='The number of Monte Carlo iterations used when running NEAT on the above linelist')
-    parser.add_argument('-s','--smooth',default=0.0075,type=float,help='The value of the smoothing co-efficient to use in the spline fitting. Increasing this reduces oscillations in the derivatives of the spline, giving a smoother pdf. (Default: %(default)s)')
-    parser.add_argument('-a','--average',default=0,type=int,choices=[0,1,2],help='Selects whether to use the mode (0), the median (1), or the mean (2) as the represenative average. If the mode has been chosen, but the pdf (and hence the mode) is not well defined it will default to the median. (Default: %(default)s)')
-    parser.add_argument('-p','--plots',default=0,type=int,choices=[0,1,2],help='Controls whether plots of the CDF and PDF are generated. 0=No plots, 1=Only flagged distributions are plotted, 2=Plot everything. (Default: %(default)s)')
-    parser.add_argument('-v','--verb',default=0,type=int,choices=[0,1],help='Controls output verbosity. For a value of 0, only a summary file is generated, while higher values produce ascii output of the cdf and fitted pdf in case you wish to generate your own plots of the distributions. (Default: %(default)s)')
-    args=parser.parse_args()
-
-    #arguments
-    plots=args.plots
-    smooth=args.smooth
-    verb=args.verb
-    avg=args.average
-    infilepattern=args.infilepattern
-    niter=args.niter
-
+def neatstats(infilepattern,niter,smooth=0.0075,avg=0,plots=0,verb=0):
     scale=np.linspace(0,1,num=101)
     ones=np.ones(101,dtype=np.float64)
     infilelist=glob.glob(infilepattern+'*_binned') 
@@ -205,3 +187,25 @@ if __name__=="__main__":
 
     output.close
     print "Done."
+    return 1 #replace with a proper status variable at some point :)
+
+if __name__=="__main__":
+    #use argparse to add lots of arguments and options :)
+    parser=argparse.ArgumentParser(description='Reads the output from NEAT (using maxmimum verbosity) and attempts to approximate the cumulative distribution and probability density functions of the output quantities using spline fits. It then extracts an average (default: mode) and the smallest 68.3% confidence interval.')
+    parser.add_argument('infilepattern',help='The name of the linelist analysed with NEAT. This can contain wildcards.',metavar='Linelist')
+    parser.add_argument('niter',type=int,help='The number of Monte Carlo iterations used when running NEAT on the above linelist')
+    parser.add_argument('-s','--smooth',default=0.0075,type=float,help='The value of the smoothing co-efficient to use in the spline fitting. Increasing this reduces oscillations in the derivatives of the spline, giving a smoother pdf. (Default: %(default)s)')
+    parser.add_argument('-a','--average',default=0,type=int,choices=[0,1,2],help='Selects whether to use the mode (0), the median (1), or the mean (2) as the represenative average. If the mode has been chosen, but the pdf (and hence the mode) is not well defined it will default to the median. (Default: %(default)s)')
+    parser.add_argument('-p','--plots',default=0,type=int,choices=[0,1,2],help='Controls whether plots of the CDF and PDF are generated. 0=No plots, 1=Only flagged distributions are plotted, 2=Plot everything. (Default: %(default)s)')
+    parser.add_argument('-v','--verb',default=0,type=int,choices=[0,1],help='Controls output verbosity. For a value of 0, only a summary file is generated, while higher values produce ascii output of the cdf and fitted pdf in case you wish to generate your own plots of the distributions. (Default: %(default)s)')
+    args=parser.parse_args()
+
+    #arguments
+    plots=args.plots
+    smooth=args.smooth
+    verb=args.verb
+    avg=args.average
+    infilepattern=args.infilepattern
+    niter=args.niter
+
+    a=neatstats(infilepattern,niter,smooth,avg,plots,verb)
