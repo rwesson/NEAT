@@ -21,7 +21,7 @@ implicit none
         type(resultarray), dimension(1) :: iteration_result
         double precision, dimension(6), intent(in) :: diagnostic_array
 
-        DOUBLE PRECISION :: normalise, oiiNratio, oiiDens, oiiiTratio, oiiiTemp, oiiiIRNratio, oiiiIRTratio, oiiiIRtemp, oiiiUVTratio, oiiiUVtemp, oiiiIRdens, niiTratio, niiTemp, ariiiIRNratio, ariiiIRdens, arivNratio, arivDens, cliiiNratio, cliiiDens, siiNratio, siiDens, siiTratio, siiTemp, siiiIRNratio, siiiIRdens, oiiTratio, oiiTemp, neiiiTratio, neiiiIRTratio, neiiiIRNratio, neiiiIRdens, neiiiTemp, neiiiIRTemp, oitemp, citemp
+        DOUBLE PRECISION :: oiiNratio, oiiDens, oiiiTratio, oiiiTemp, oiiiIRNratio, oiiiIRTratio, oiiiIRtemp, oiiiUVTratio, oiiiUVtemp, oiiiIRdens, niiTratio, niiTemp, ariiiIRNratio, ariiiIRdens, arivNratio, arivDens, cliiiNratio, cliiiDens, siiNratio, siiDens, siiTratio, siiTemp, siiiIRNratio, siiiIRdens, oiiTratio, oiiTemp, neiiiTratio, neiiiIRTratio, neiiiIRNratio, neiiiIRdens, neiiiTemp, neiiiIRTemp, oitemp, citemp
         DOUBLE PRECISION :: ciiiNratio,neivNratio,nevTratio,siiiTratio,ariiiTratio,arvTratio,lowtemp,lowdens,medtemp,ciiidens,meddens,siiitemp,ariiitemp,hightemp,neivdens,highdens,arvtemp,nevtemp,oiTratio,ciTratio
         DOUBLE PRECISION :: oiiRLabund, niiRLabund, ciiRLabund, cii4267rlabund, neiiRLabund, ciiiRLabund, niiiRLabund, RLabundtemp, weight
         DOUBLE PRECISION :: ciiiCELabund, niiCELabund, niiiIRCELabund, niiiUVCELabund, oiiCELabund, oiiiCELabund, oiiiIRCELabund, oivCELabund, neiiIRCELabund, neiiiIRCELabund, neiiiCELabund, neivCELabund, siiCELabund, siiiCELabund, siiiIRCELabund, sivIRCELabund, cliiCELabund, cliiiCELabund, clivCELabund, ariiiCELabund, arivCELabund, ariiiIRCELabund, nivCELabund, niiiCELabund, ciiCELabund, civCELabund, nvCELabund, nevCELabund, arvCELabund, CELabundtemp, ciCELabund, oiCELabund
@@ -108,6 +108,7 @@ implicit none
         call get_Heii(Heii_lines, linelist, listlength)
 
         !is H beta detected? if not, we can't do anything.
+        !todo: the calculation of expected Hbeta from Halpha and c(Hb) needs fixing as Hb=0 now triggers an error outside the loop - 15/05/2015
 
         if (H_BS(2)%intensity .eq. 0.D0) then
           print *,"   No H beta found"
@@ -121,28 +122,6 @@ implicit none
             print *,"   Specify the extinction from the command line with the -c option to proceed"
             stop
           endif
-        endif
-
-        !normalisation check, correction
-
-        if(H_BS(2)%intensity .ne. 100)then
-                normalise =  DBLE(100) / DBLE(H_BS(2)%intensity) 
-                ILs%intensity = ILs%intensity * normalise 
-                H_BS%intensity = H_BS%intensity*normalise 
-                HeI_lines%intensity = HeI_lines%intensity * normalise
-                Heii_lines%intensity = Heii_lines%intensity * normalise
-                linelist%intensity = linelist%intensity * normalise
-                linelist_orig%intensity = linelist_orig%intensity * normalise
-
-!scale the uncertainties as well
-
-                ILs%int_err = ILs%int_err * normalise
-                H_BS%int_err = H_BS%int_err*normalise
-                HeI_lines%int_err = HeI_lines%int_err * normalise
-                Heii_lines%int_err = Heii_lines%int_err * normalise
-                linelist%int_err = linelist%int_err * normalise
-                linelist_orig%int_err = linelist_orig%int_err * normalise
-
         endif
 
 ! note that extinction is recalculated later on after diagnostics are known, so
@@ -1470,11 +1449,13 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
 !     print "(ES9.2)",rlabundtemp/weight
 
-      oiimultiplets%Multiplet = (/" V1    "," V2    "," V5    " ," V10   "," V11   "," V12   "," V19   "," V20   "," V25   "," V28   "," V33   "," 3d-4f "/)
+! temp XXXX
+      oiimultiplets%Multiplet = (/" V1    "," V2    "," V5    " ," V10   "," V12   "," V19   "," V25   "," V28   "," V33   "," 3d-4f ", "       ","       "/)
+!      oiimultiplets%Multiplet = (/" V1    "," V2    "," V5    " ," V10   "," V11   "," V12   "," V19   "," V20   "," V25   "," V28   "," V33   "," 3d-4f "/)
 
 ! get multiplet abundances from coadded intensity
 
-      do j = 1,11
+      do j = 1,10
         rlabundtemp = 0.
         weight = 0.
         do i = 1,415

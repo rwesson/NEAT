@@ -53,6 +53,7 @@ program neat
         CHARACTER*80 :: filename
         CHARACTER*1 :: null
         INTEGER :: IO, listlength
+        double precision :: normalise
 
         !results and result processing
 
@@ -170,6 +171,8 @@ program neat
            print *,"  -norp"
            print *,"       When calculating Monte Carlo uncertatinties, NEAT's default behaviour is to compensate for the upward bias"
            print *,"       affecting weak lines described by Rola and Pelat (1994).  This option overrides that and no compensation is calculated."
+           print *,"  -a / --alfa"
+           print *,"       Use output line list from ALFA.  In this case, full atomic transition data is copied into the final line list table"
         !  to be fully implemented:
         !  -R                     : R (default 3.1)
         !  --nbins                : user can set number of bins for routine
@@ -342,15 +345,21 @@ program neat
         linelist%ion='                   '
         linelist%latextext='               '
 
+        normalise = 0.d0
+
         REWIND (199)
         DO I=1,listlength
-                READ(199,*,end=110) temp1, temp2, temp3
+                READ(199,'(D8.1,D12.5,D12.5)',end=110) temp1, temp2, temp3
                 linelist(i)%wavelength = temp1
                 linelist(i)%intensity = temp2
                 linelist(i)%int_err = temp3
                 linelist(i)%latextext = ""
+                if (abs(linelist(i)%wavelength - 4861.33) .lt. 0.001) normalise = 100.d0/linelist(i)%intensity
         END DO
         CLOSE(199)
+
+        linelist%intensity = linelist%intensity * normalise
+        linelist%int_err = linelist%int_err * normalise
 
         110 PRINT "(X,A9,A11,I4,A15,I4,A9)", gettime(),": read in ", I - 1," lines (out of ",listlength," in file)"
 
@@ -360,9 +369,15 @@ program neat
                 stop
         endif
 
-        if(linelist(1)%wavelength == 0)then
+        if (linelist(1)%wavelength == 0) then
                 PRINT*, gettime(),": cheese shop error - no inputs"
                 STOP
+        endif
+
+        if (normalise .eq. 0.d0) then
+          print *,gettime(),": error: no H beta detected"
+          print *,"            no further analysis possible"
+          stop
         endif
 
 ! check for and remove negative line fluxes and uncertainties
