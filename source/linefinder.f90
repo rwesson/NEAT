@@ -16,7 +16,7 @@ end TYPE
 
 TYPE neat_line
         double precision :: wavelength 
-        CHARACTER*20 :: ion
+        CHARACTER(len=20) :: ion
 END TYPE
 
 type(neat_line), dimension(:), allocatable :: neatlines
@@ -29,8 +29,8 @@ double precision, dimension(20) :: linelist_compare
 
 integer :: I, J, n_neatlines, IO, assign_1, assign_2, count
 double precision :: temp_wave, diff, shift, rms
-character*1 :: null
-character*5 :: temp_ion1, temp_ion2
+character(len=1) :: null
+character(len=5) :: temp_ion1, temp_ion2
 
 xcorr = 0.D0
 xcorr_array%restwavelength = 0.D0

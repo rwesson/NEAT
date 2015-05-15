@@ -40,8 +40,8 @@ program neat
 
         !input options
 
-        CHARACTER*2048, DIMENSION(:), allocatable :: options
-        CHARACTER*2048 :: commandline
+        CHARACTER(len=2048), DIMENSION(:), allocatable :: options
+        CHARACTER(len=2048) :: commandline
 
         !file reading variables
 
@@ -50,8 +50,8 @@ program neat
         TYPE(LINE),DIMENSION(:), allocatable :: linelist
         TYPE(LINE),DIMENSION(:), allocatable :: linelist_original
         TYPE(LINE),dimension(:,:), allocatable :: all_linelists
-        CHARACTER*80 :: filename
-        CHARACTER*1 :: null
+        CHARACTER(len=80) :: filename
+        CHARACTER(len=1) :: null
         INTEGER :: IO, listlength
         double precision :: normalise
 
@@ -61,11 +61,11 @@ program neat
         type(resultarray), dimension(1) :: iteration_result
         double precision, dimension(:), allocatable :: quantity_result
         double precision, dimension(:,:), allocatable :: resultprocessingarray
-        character*40, dimension(:,:), allocatable :: resultprocessingtext
+        character(len=40), dimension(:,:), allocatable :: resultprocessingtext
 
         !atomic data
 
-        character*10 :: ionlist(40) !list of ion names
+        character(len=10) :: ionlist(40) !list of ion names
         integer :: iion !# of ions in Ilines
         integer :: Iint 
         integer :: maxlevs,maxtemps
@@ -98,7 +98,7 @@ program neat
 
         !output formats
 
-        character*35 :: extinction_format, diagnostic_format, diagnostic_ratio_format, abundances_format, adf_format
+        character(len=35) :: extinction_format, diagnostic_format, diagnostic_ratio_format, abundances_format, adf_format
 
         !multiple output formats defined as variables so they can be passed to
         !the printout subroutine
@@ -1127,10 +1127,10 @@ implicit none
 double precision :: input_array(:)
 double precision, intent(out) :: uncertainty_array(3)
 double precision, dimension (:,:), allocatable :: binned_quantity_result
-character*35, intent(in) :: plaintext, latextext
-character*35, intent(in) :: itemformat
-character*80, intent(in) :: filename
-character*25, intent(in) :: suffix
+character(len=35), intent(in) :: plaintext, latextext
+character(len=35), intent(in) :: itemformat
+character(len=80), intent(in) :: filename
+character(len=25), intent(in) :: suffix
 logical :: unusual
 integer :: verbosity !1 = write summaries, binned and full results; 2=write summaries and binned results; 3=write summaries only
 integer :: nbins,nperbin,runs
@@ -1378,9 +1378,9 @@ endif
 
 end subroutine get_uncertainties
 
-character*10 function gettime()
+character(len=10) function gettime()
 implicit none
-character*10 :: time
+character(len=10) :: time
 
   call DATE_AND_TIME(TIME=time)
   gettime = time(1:2)//":"//time(3:4)//":"//time(5:6)
@@ -1388,7 +1388,7 @@ character*10 :: time
 
 end function gettime
 
-character*100 function latex_number(inputnumber)
+character(len=100) function latex_number(inputnumber)
 ! for any number in the form aEx, write it in latex format, ie a$\times$10$^{x}$
 double precision :: inputnumber, mantissa
 integer :: exponent, pos

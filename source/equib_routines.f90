@@ -58,8 +58,8 @@
      & ROOTT(NDIM1), X(NDIM2,NDIM2), Y(NDIM2),                          &
      & X2(NDIM2,NDIM2), XKEEP(NDIM2,NDIM2), Y2(NDIM2), YKEEP(NDIM2),    &
      & HMH(NDIM1,NDIM1), D(NDIM1)
-      CHARACTER*20 LABEL(NDIM2)
-      CHARACTER*10 ION 
+      CHARACTER(len=20) LABEL(NDIM2)
+      CHARACTER(len=10) ION 
       INTEGER I, I1, I2, J, KK, LL, JT, JJD,                            &
      & NLEV, NTEMP, IBIG, IRATS,                                        &
      & NLEV1, INT, IND, IOPT, IT, IM1, JM1, IP1,                        &
@@ -70,8 +70,8 @@
 
       DOUBLE PRECISION :: fixedq
       REAL*8 inratio,result
-      CHARACTER*20 levu,levl
-      CHARACTER*1 diagtype
+      CHARACTER(len=20) levu,levl
+      CHARACTER(len=1) diagtype
       REAL*8, DIMENSION(:,:), ALLOCATABLE :: RESULTS
       REAL*8 valtest(3)
       integer test
@@ -537,7 +537,7 @@
      & ROOTT(NDIM1), X(NDIM2,NDIM2), Y(NDIM2),                          &
      & X2(NDIM2,NDIM2), XKEEP(NDIM2,NDIM2), Y2(NDIM2), YKEEP(NDIM2),    &
      & HMH(NDIM1,NDIM1), D(NDIM1)
-      CHARACTER*20 LABEL(NDIM2), ION 
+      CHARACTER(len=20) LABEL(NDIM2), ION 
       INTEGER I, I1, I2, J, KK, LL, JT, JJD,                            &
      & NLEV, NTEMP, IBIG, IRATS,                                        &
      & NLEV1, INT, IND, IOPT, IT, IM1, JM1, IP1,                        &
@@ -546,7 +546,7 @@
      & TEMP2, DD, DELTEK, EXPE, VALUE, SUMN, TTT, TTP, AHB, EJI, WAV,   &
      & RLINT, FINT, SUMA, SUMB, SUMC, FRAT, DEE
 
-      CHARACTER*20 levels
+      CHARACTER(len=20) levels
       real*8 iobs, abund
 !
       ndim1t3=3*ndim1

@@ -4,22 +4,22 @@
       module mod_recombination_lines
 
       TYPE oiiRL
-            CHARACTER*1 :: Hyb
-            CHARACTER*1 :: n_E1
-            CHARACTER*1 :: n_E1GA
-            CHARACTER*1 :: n_E2
-            CHARACTER*1 :: n_E2GA
-            CHARACTER*1 :: n_g1
-            CHARACTER*1 :: n_g2
-            CHARACTER*1 :: Rem1
-            CHARACTER*1 :: Rem2
-            CHARACTER*1 :: Rem3
-            CHARACTER*1 :: Rem4
-            CHARACTER*3 :: q_gf1
-            CHARACTER*3 :: q_gf2
-            CHARACTER*7 :: Mult
-            CHARACTER*9 :: Term1
-            CHARACTER*9 :: Term2
+            CHARACTER(len=1) :: Hyb
+            CHARACTER(len=1) :: n_E1
+            CHARACTER(len=1) :: n_E1GA
+            CHARACTER(len=1) :: n_E2
+            CHARACTER(len=1) :: n_E2GA
+            CHARACTER(len=1) :: n_g1
+            CHARACTER(len=1) :: n_g2
+            CHARACTER(len=1) :: Rem1
+            CHARACTER(len=1) :: Rem2
+            CHARACTER(len=1) :: Rem3
+            CHARACTER(len=1) :: Rem4
+            CHARACTER(len=3) :: q_gf1
+            CHARACTER(len=3) :: q_gf2
+            CHARACTER(len=7) :: Mult
+            CHARACTER(len=9) :: Term1
+            CHARACTER(len=9) :: Term2
             INTEGER :: g1
             INTEGER :: g2
             INTEGER :: ION
@@ -40,22 +40,22 @@
       TYPE(oiiRL), DIMENSION(415) :: oiiRLs
 
       TYPE niiRL
-            CHARACTER*1 :: Hyb
-            CHARACTER*1 :: n_E1
-            CHARACTER*1 :: n_E1GA
-            CHARACTER*1 :: n_E2
-            CHARACTER*1 :: n_E2GA
-            CHARACTER*1 :: n_g1
-            CHARACTER*1 :: n_g2
-            CHARACTER*1 :: Rem1
-            CHARACTER*1 :: Rem2
-            CHARACTER*1 :: Rem3
-            CHARACTER*1 :: Rem4
-            CHARACTER*3 :: q_gf1
-            CHARACTER*3 :: q_gf2
-            CHARACTER*7 :: Mult
-            CHARACTER*9 :: Term1
-            CHARACTER*9 :: Term2
+            CHARACTER(len=1) :: Hyb
+            CHARACTER(len=1) :: n_E1
+            CHARACTER(len=1) :: n_E1GA
+            CHARACTER(len=1) :: n_E2
+            CHARACTER(len=1) :: n_E2GA
+            CHARACTER(len=1) :: n_g1
+            CHARACTER(len=1) :: n_g2
+            CHARACTER(len=1) :: Rem1
+            CHARACTER(len=1) :: Rem2
+            CHARACTER(len=1) :: Rem3
+            CHARACTER(len=1) :: Rem4
+            CHARACTER(len=3) :: q_gf1
+            CHARACTER(len=3) :: q_gf2
+            CHARACTER(len=7) :: Mult
+            CHARACTER(len=9) :: Term1
+            CHARACTER(len=9) :: Term2
             INTEGER :: g1
             INTEGER :: g2
             INTEGER :: ION
@@ -105,7 +105,7 @@
       TYPE(neiiRL), DIMENSION(38) :: neiiRLs
 
       TYPE xiiiRL
-            CHARACTER*3      :: Ion
+            CHARACTER(len=3) :: Ion
             DOUBLE PRECISION :: Wave
             DOUBLE PRECISION :: a
             DOUBLE PRECISION :: b

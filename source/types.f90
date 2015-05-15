@@ -1,18 +1,20 @@
 module mod_abundtypes
 
 TYPE line
-        CHARACTER*11 :: name
-        CHARACTER*20 :: ion
+        CHARACTER(len=11) :: name
+        CHARACTER(len=20) :: ion
         DOUBLE PRECISION :: wavelength
+        DOUBLE PRECISION :: wavelength_observed !for use with output from ALFA
         DOUBLE PRECISION :: intensity
         DOUBLE PRECISION :: int_err
         DOUBLE PRECISION :: freq
         DOUBLE PRECISION :: int_dered
-        CHARACTER*20 :: transition
+        CHARACTER(len=20) :: transition
         DOUBLE PRECISION :: abundance
-        CHARACTER*4 :: zone !high, medium or low ionisation zone 
+        CHARACTER(len=4) :: zone !high, medium or low ionisation zone 
         INTEGER :: location !for CELs and He, this indicates the position of the line in the main linelist array, so that when its abundance is calculated it can be copied back into the linelist array for easy outputting
-        CHARACTER*15 :: latextext ! ion name in latex format
+        CHARACTER(len=15) :: latextext ! ion name in latex format
+        CHARACTER(len=85) :: linedatainput
 END TYPE
 
 end module mod_abundtypes
@@ -173,14 +175,14 @@ type atomic_data
         integer :: NTEMPS
         integer :: NLEVS
         integer :: irats
-        character*10 :: ion
-        real*8,allocatable :: temps(:)
-        real*8,allocatable :: roott(:)
-        character*20,allocatable :: labels(:)
-        real*8,allocatable :: G(:)
-        real*8,allocatable :: waveno(:)
-        real*8,allocatable :: A_coeffs(:,:)
-        real*8,allocatable :: col_str(:,:,:)
+        character(len=10) :: ion
+        real(kind=8),allocatable :: temps(:)
+        real(kind=8),allocatable :: roott(:)
+        character(len=20),allocatable :: labels(:)
+        real(kind=8),allocatable :: G(:)
+        real(kind=8),allocatable :: waveno(:)
+        real(kind=8),allocatable :: A_coeffs(:,:)
+        real(kind=8),allocatable :: col_str(:,:,:)
 
 end type
 

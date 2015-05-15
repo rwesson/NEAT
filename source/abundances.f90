@@ -54,7 +54,7 @@ implicit none
 ! recombination line variables
 
         TYPE RLabund
-           CHARACTER*7 :: Multiplet
+           CHARACTER(len=7) :: Multiplet
            REAL*8 :: Abundance
         END TYPE
 
@@ -2161,7 +2161,7 @@ contains
 
         SUBROUTINE get_diag(name1, name2, diag)
                 IMPLICIT NONE 
-                CHARACTER*11 :: name1, name2
+                CHARACTER(len=11) :: name1, name2
                 INTEGER :: ion_no1, ion_no2
                 DOUBLE PRECISION :: diag
 
@@ -2179,7 +2179,7 @@ contains
         SUBROUTINE get_Tdiag(name1, name2, name3, factor1, factor2, ratio)
                                                         !3.47,   1.403   SIII
                 IMPLICIT NONE 
-                CHARACTER*11 :: name1, name2, name3
+                CHARACTER(len=11) :: name1, name2, name3
                 INTEGER :: ion_no1, ion_no2, ion_no3
                 DOUBLE PRECISION :: factor1, factor2, ratio, ratio2
 

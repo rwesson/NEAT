@@ -8,7 +8,7 @@ subroutine read_ilines(ILs, Iint,iion,ionlist)
         IMPLICIT NONE
         TYPE(line), DIMENSION(:), allocatable :: ILs
         INTEGER :: Iint, Iread,iion
-        character*10 :: ionlist(40)
+        character(len=10) :: ionlist(40)
 
         Iint = 1
 
@@ -55,7 +55,7 @@ contains
 
 integer function get_ion(ionname, iontable, Iint)
         IMPLICIT NONE
-        CHARACTER*11 :: ionname
+        CHARACTER(len=11) :: ionname
         TYPE(line), DIMENSION(:) :: iontable
         INTEGER :: i
         INTEGER, INTENT(IN) :: Iint
@@ -220,9 +220,9 @@ use mod_atomicdata
     IMPLICIT NONE
     type(atomic_data) :: ion
     integer :: I,J,K,L,N,NCOMS,ID(2),JD(2),KP1,NLEV1,ionl,dummy
-    character*1 :: comments(78)
-    character*10 :: ionname
-    character*25 :: filename
+    character(len=1) :: comments(78)
+    character(len=10) :: ionname
+    character(len=25) :: filename
     real*8 :: GX,WN,AX,QX
 
     id = 0
