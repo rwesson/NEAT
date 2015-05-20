@@ -1455,7 +1455,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
 ! get multiplet abundances from coadded intensity
 
-      do j = 1,10
+      do j = 1,9 !10 XXX
         rlabundtemp = 0.
         weight = 0.
         do i = 1,415

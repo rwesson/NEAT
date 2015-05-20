@@ -51,9 +51,11 @@ program neat
         TYPE(LINE),DIMENSION(:), allocatable :: linelist_original
         TYPE(LINE),dimension(:,:), allocatable :: all_linelists
         CHARACTER(len=80) :: filename
-        CHARACTER(len=1) :: null
+        CHARACTER(len=1) :: blank
         INTEGER :: IO, listlength
         double precision :: normalise
+        character(len=85) :: linedatainput
+        DOUBLE PRECISION :: temp1,temp2,temp3,temp4
 
         !results and result processing
 
@@ -75,11 +77,15 @@ program neat
         !extinction
 
         logical :: calculate_extinction=.true.
-        DOUBLE PRECISION :: temp1,temp2,temp3, meanextinction, R
+        DOUBLE PRECISION :: meanextinction, R
 
         !RP effect switch
 
         logical :: norp=.false.
+
+        !read input from alfa output switch
+
+        logical :: alfa=.false.
 
         !binning and uncertainties
 
@@ -288,6 +294,9 @@ program neat
                 if (trim(options(i))=="-norp") then
                    norp=.true.
                 endif
+                if (trim(options(i))=="-a" .or. trim(options(i))=="--alfa") then
+                   alfa=.true.
+                endif
          enddo
 
          if (Narg .eq. 1) then
@@ -322,11 +331,15 @@ program neat
         I = 0
         OPEN(199, file=filename, iostat=IO, status='old')
                 DO WHILE (IO >= 0)
-                        READ(199,*,end=111) null
+                        READ(199,*,end=111) blank
                         I = I + 1
                 END DO
         111 print *
-        listlength=I
+        if (alfa) then
+          listlength=I-1 !first line is table heading if reading from ALFA output
+        else
+          listlength=I
+        endif
 
 !then allocate and read
         allocate (linelist(listlength))
@@ -336,6 +349,7 @@ program neat
         linelist%abundance = 0.D0
         linelist%freq=0d0
         linelist%wavelength=0d0
+        linelist%wavelength_observed=0d0
         linelist%int_dered=0d0
         linelist%int_err=0d0
         linelist%zone='    '
@@ -344,18 +358,27 @@ program neat
         linelist%location=0
         linelist%ion='                   '
         linelist%latextext='               '
-
+        linelist%linedata='                                                                           '
         normalise = 0.d0
 
         REWIND (199)
-        DO I=1,listlength
-                READ(199,'(D8.1,D12.5,D12.5)',end=110) temp1, temp2, temp3
-                linelist(i)%wavelength = temp1
-                linelist(i)%intensity = temp2
-                linelist(i)%int_err = temp3
-                linelist(i)%latextext = ""
-                if (abs(linelist(i)%wavelength - 4861.33) .lt. 0.001) normalise = 100.d0/linelist(i)%intensity
-        END DO
+
+        if (alfa) then
+          print *,gettime(),": reading line list from ALFA output"
+          read(199,*) blank !ignore first line which has table heading
+          DO I=1,listlength
+            READ(199,'(F7.2,A3,F7.2,A3,F12.5,A3,F12.5,A3,A85)',end=110) linelist(i)%wavelength_observed,blank,linelist(i)%wavelength, blank, linelist(i)%intensity, blank, linelist(i)%int_err, blank, linelist(i)%linedata
+            linelist(i)%latextext = ""
+            if (abs(linelist(i)%wavelength - 4861.33) .lt. 0.001) normalise = 100.d0/linelist(i)%intensity
+          end do
+        else
+          DO I=1,listlength
+            READ(199,*,end=110) linelist(i)%wavelength, linelist(i)%intensity, linelist(i)%int_err
+            linelist(i)%latextext = ""
+            if (abs(linelist(i)%wavelength - 4861.33) .lt. 0.001) normalise = 100.d0/linelist(i)%intensity
+          END DO
+        endif
+
         CLOSE(199)
 
         linelist%intensity = linelist%intensity * normalise
@@ -544,9 +567,15 @@ program neat
                 do j=1, listlength
 
 !rest wavelength and ion name
+!if line list was read in from ALFA then write out the observed and rest wavelength, transition data will be written out at the end of the table row
 
-                write (650,"(X,F7.2,X,A11)", advance='no') all_linelists(j,1)%wavelength,all_linelists(j,1)%name
-                write (651,"(X,F7.2,' & ',A15,' & ')", advance='no') all_linelists(j,1)%wavelength,all_linelists(j,1)%latextext
+                if (alfa) then
+                  write (650,"(X,F7.2,X,F7.2)", advance='no') all_linelists(j,1)%wavelength_observed,all_linelists(j,1)%wavelength
+                  write (651,"(X,F7.2,' & ',F7.2,' & ')", advance='no') all_linelists(j,1)%wavelength_observed,all_linelists(j,1)%wavelength
+                else
+                  write (650,"(X,F7.2,X,A11)", advance='no') all_linelists(j,1)%wavelength,all_linelists(j,1)%name
+                  write (651,"(X,F7.2,' & ',A15,' & ')", advance='no') all_linelists(j,1)%wavelength,all_linelists(j,1)%latextext
+                endif
 
 !line flux - todo: calculate the corrected flux and uncertainties for SNR<6.
 
@@ -566,8 +595,16 @@ program neat
                   write (651,"(F7.2,'& $\pm$',F7.2)", advance='no') uncertainty_array(2),uncertainty_array(1)
                 endif
 
+
+!transition data if read from ALFA output
+
+                if (alfa) then
+                  write (651,"(A85)", advance='no') all_linelists(j,1)%linedata
+                endif
+
 !abundance - write out if there is an abundance for the line, don't write
 !anything except a line break if there is no abundance for the line.
+!todo: add an option to choose whether or not to put abundances in the line list table
 
                 quantity_result = all_linelists(j,:)%abundance
                 call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins,nperbin,runs)
@@ -587,15 +624,27 @@ program neat
                 end do
         else ! runs == 1, no uncertainties to write out
 
-                do i=1,listlength
-                  if (linelist(i)%abundance .gt. 0.0) then
-                     write (650,"(X,F7.2,X,A11,F7.2,X,F7.2,X,ES14.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance
-                     write (651,"(X,F7.2,X,'&',A15,'&',X,F7.2,X,'&',X,F7.2,X,'&',X,'$',A,'$',X,'\\')") linelist(i)%wavelength,linelist(i)%latextext,linelist(i)%intensity,linelist(i)%int_dered, trim(latex_number(linelist(i)%abundance))
-                  else
-                     write (650,"(X,F7.2,X,A11,F7.2,X,F7.2)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered
-                     write (651,"(X,F7.2,X,'&',A15,'&',X,F7.2,X,'&',X,F7.2,X,'&',X,'\\')") linelist(i)%wavelength,linelist(i)%latextext,linelist(i)%intensity,linelist(i)%int_dered
-                  endif
-                end do
+                if (alfa) then
+                  do i=1,listlength
+                    if (linelist(i)%abundance .gt. 0.0) then
+                       write (650,"(X,F7.2,X,F7.2,X,F7.2,X,F7.2,X,ES14.3,X,'&',A85)") linelist(i)%wavelength_observed,linelist(i)%wavelength,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance, linelist(i)%linedata
+                       write (651,"(X,F7.2,X,'&',F7.2,X,'&',X,F7.2,X,'&',X,F7.2,X,'&',X,'$',A,'$',X,'&',A85)") linelist(i)%wavelength_observed,linelist(i)%wavelength,linelist(i)%intensity,linelist(i)%int_dered,trim(latex_number(linelist(i)%abundance)), linelist(i)%linedata
+                    else
+                       write (650,"(X,F7.2,X,F7.2,X,F7.2,X,F7.2,X,'                        & ',X,A85)") linelist(i)%wavelength_observed,linelist(i)%wavelength,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%linedata
+                       write (651,"(X,F7.2,X,'&',F7.2,X,'&',X,F7.2,X,'&',X,F7.2,X,'&',X,'                        & ',X,A85)") linelist(i)%wavelength_observed,linelist(i)%wavelength,linelist(i)%intensity,linelist(i)%int_dered,linelist(i)%linedata
+                    endif
+                  end do
+                else
+                  do i=1,listlength
+                    if (linelist(i)%abundance .gt. 0.0) then
+                       write (650,"(X,F7.2,X,A11,F7.2,X,F7.2,X,ES14.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance
+                       write (651,"(X,F7.2,X,'&',A15,'&',X,F7.2,X,'&',X,F7.2,X,'&',X,'$',A,'$',X,'\\')") linelist(i)%wavelength,linelist(i)%latextext,linelist(i)%intensity,linelist(i)%int_dered, trim(latex_number(linelist(i)%abundance))
+                    else
+                       write (650,"(X,F7.2,X,A11,F7.2,X,F7.2)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered
+                       write (651,"(X,F7.2,X,'&',A15,'&',X,F7.2,X,'&',X,F7.2,X,'&',X,'\\')") linelist(i)%wavelength,linelist(i)%latextext,linelist(i)%intensity,linelist(i)%int_dered
+                    endif
+                  end do
+                endif
         
         endif
 
