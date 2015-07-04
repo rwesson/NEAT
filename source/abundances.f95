@@ -1449,13 +1449,11 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
 !     print "(ES9.2)",rlabundtemp/weight
 
-! temp XXXX
-      oiimultiplets%Multiplet = (/" V1    "," V2    "," V5    " ," V10   "," V12   "," V19   "," V25   "," V28   "," V33   "," 3d-4f ", "       ","       "/)
-!      oiimultiplets%Multiplet = (/" V1    "," V2    "," V5    " ," V10   "," V11   "," V12   "," V19   "," V20   "," V25   "," V28   "," V33   "," 3d-4f "/)
+      oiimultiplets%Multiplet = (/" V1    "," V2    "," V5    " ," V10   "," V11   "," V12   "," V19   "," V20   "," V25   "," V28   "," V33   "," 3d-4f ","       "/)
 
 ! get multiplet abundances from coadded intensity
 
-      do j = 1,9 !10 XXX
+      do j = 1,11 !10 XXX
         rlabundtemp = 0.
         weight = 0.
         do i = 1,415
@@ -1485,9 +1483,9 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
       enddo
 
       if ( isnan( (rlabundtemp/weight) ) ) then
-      oiimultiplets(12)%abundance = 0
+        oiimultiplets(12)%abundance = 0
       else
-      oiimultiplets(12)%abundance = rlabundtemp/weight
+        oiimultiplets(12)%abundance = rlabundtemp/weight
       endif
 
 !      print *,"3d-4f :"
