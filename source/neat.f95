@@ -50,7 +50,7 @@ program neat
         TYPE(LINE),DIMENSION(:), allocatable :: linelist
         TYPE(LINE),DIMENSION(:), allocatable :: linelist_original
         TYPE(LINE),dimension(:,:), allocatable :: all_linelists
-        CHARACTER(len=80) :: filename
+        CHARACTER(len=512) :: filename
         CHARACTER(len=1) :: blank
         INTEGER :: IO, listlength
         double precision :: normalise
@@ -267,7 +267,7 @@ program neat
                   endif
                 endif
                 if (trim(options(i))=="-u" .or. trim(options(i))=="--uncertainties") then
-                    runs=20000
+                    runs=10000
                 endif
                 if ((trim(options(i))=="-icf" .or. trim(options(i))=="--ionisation-correction-scheme") .and. (i+1) .le. Narg) then
                   if (trim(options(i+1))=="PT92") then
@@ -599,7 +599,7 @@ program neat
 !transition data if read from ALFA output
 
                 if (alfa) then
-                  write (651,"(A85)", advance='no') all_linelists(j,1)%linedata
+                  write (651,"(' & ',A85,'\\')") all_linelists(j,1)%linedata
                 endif
 
 !abundance - write out if there is an abundance for the line, don't write
@@ -611,14 +611,14 @@ program neat
                 if (uncertainty_array(2) .ne. 0.D0) then
                   if (uncertainty_array(1) .ne. uncertainty_array(3)) then
                     write (650,"(ES10.2,SP,ES10.2,SP,ES10.2)") uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
-                    write (651,"(' & ${',A,'}$ & $^{+',A,'}_{',A,'}$ \\')") trim(latex_number(uncertainty_array(2))),trim(latex_number(uncertainty_array(1))),trim(latex_number(-uncertainty_array(3)))
+!                    write (651,"(' & ${',A,'}$ & $^{+',A,'}_{',A,'}$ \\')") trim(latex_number(uncertainty_array(2))),trim(latex_number(uncertainty_array(1))),trim(latex_number(-uncertainty_array(3)))
                   else
                     write (650,"(ES10.2,A,ES10.2)") uncertainty_array(2)," +-",uncertainty_array(1)
-                    write (651,"(' & $',A,'$ & $\pm',A,'$\\')") trim(latex_number(uncertainty_array(2))),trim(latex_number(uncertainty_array(1)))
+!                    write (651,"(' & $',A,'$ & $\pm',A,'$\\')") trim(latex_number(uncertainty_array(2))),trim(latex_number(uncertainty_array(1)))
                   endif
                 else
                   write (650,*)
-                  write (651,*) "\\"
+!                  write (651,*) "\\"
                 endif
 
                 end do
@@ -1178,7 +1178,7 @@ double precision, intent(out) :: uncertainty_array(3)
 double precision, dimension (:,:), allocatable :: binned_quantity_result
 character(len=35), intent(in) :: plaintext, latextext
 character(len=35), intent(in) :: itemformat
-character(len=80), intent(in) :: filename
+character(len=512), intent(in) :: filename
 character(len=25), intent(in) :: suffix
 logical :: unusual
 integer :: verbosity !1 = write summaries, binned and full results; 2=write summaries and binned results; 3=write summaries only
