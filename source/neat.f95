@@ -369,17 +369,39 @@ program neat
           DO I=1,listlength
             READ(199,'(F7.2,A3,F7.2,A3,F12.5,A3,F12.5,A3,A85)',end=110) linelist(i)%wavelength_observed,blank,linelist(i)%wavelength, blank, linelist(i)%intensity, blank, linelist(i)%int_err, blank, linelist(i)%linedata
             linelist(i)%latextext = ""
-            if (abs(linelist(i)%wavelength - 4861.33) .lt. 0.001) normalise = 100.d0/linelist(i)%intensity
           end do
         else
           DO I=1,listlength
             READ(199,*,end=110) linelist(i)%wavelength, linelist(i)%intensity, linelist(i)%int_err
             linelist(i)%latextext = ""
-            if (abs(linelist(i)%wavelength - 4861.33) .lt. 0.001) normalise = 100.d0/linelist(i)%intensity
           END DO
         endif
 
         CLOSE(199)
+
+! run line identifier if required
+
+        if (identifylines) then
+                print *,gettime()," : running line finder"
+                print *,"---------------------------------"
+                call linefinder(linelist, listlength)
+                print *
+                print *,gettime()," : line finder finished"
+                print *,gettime()," : WARNING!!!  The line finding algorithm is intended as an aid only and is not designed to be highly robust"
+                print *,gettime()," : check your line list very carefully for potentially wrongly identified lines!!"
+                print *,"---------------------------------"
+                !get confirmation to continue
+        endif
+
+! normalise to Hbeta
+
+        if (minval(abs(linelist(:)%wavelength - 4861.33)) .lt. 0.001) then
+          normalise = 100.d0/linelist(minloc(abs(linelist(:)%wavelength - 4861.33),1))%intensity
+        else
+          print *,gettime(),": error: no H beta detected"
+          print *,"            no further analysis possible"
+          stop
+        endif
 
         linelist%intensity = linelist%intensity * normalise
         linelist%int_err = linelist%int_err * normalise
@@ -397,12 +419,6 @@ program neat
                 STOP
         endif
 
-        if (normalise .eq. 0.d0) then
-          print *,gettime(),": error: no H beta detected"
-          print *,"            no further analysis possible"
-          stop
-        endif
-
 ! check for and remove negative line fluxes and uncertainties
 
         if (minval(linelist%intensity) .lt. 0.) then
@@ -417,20 +433,6 @@ program neat
             linelist%int_err = abs(linelist%int_err)
           endwhere
         print *,gettime(),": warning: negative flux uncertainties converted to positive"
-        endif
-
-! run line identifier if required
-
-        if (identifylines) then
-                print *,gettime()," : running line finder"
-                print *,"---------------------------------"
-                call linefinder(linelist, listlength)
-                print *
-                print *,gettime()," : line finder finished"
-                print *,gettime()," : WARNING!!!  The line finding algorithm is intended as an aid only and is not designed to be highly robust"
-                print *,gettime()," : check your line list very carefully for potentially wrongly identified lines!!"
-                print *,"---------------------------------"
-                !get confirmation to continue
         endif
 
         print *
