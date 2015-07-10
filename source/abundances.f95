@@ -76,6 +76,8 @@ implicit none
         CELicfO = 0.d0
         Ar3O3 = 0.D0
         O_Ar3O3 = 0.D0
+        oiimultiplets(:)%abundance = 0.d0
+        niimultiplets(:)%abundance = 0.d0
 
         linelist%name="           "
 
@@ -1449,7 +1451,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
 !     print "(ES9.2)",rlabundtemp/weight
 
-      oiimultiplets%Multiplet = (/" V1    "," V2    "," V5    " ," V10   "," V11   "," V12   "," V19   "," V20   "," V25   "," V28   "," V33   "," 3d-4f ","       "/)
+      oiimultiplets%Multiplet = (/" V1    "," V2    "," V5    " ," V10   "," V11   "," V12   "," V19   "," V20   "," V25   "," V28   "," V33   "," 3d-4f "/)
 
 ! get multiplet abundances from coadded intensity
 
@@ -1910,6 +1912,16 @@ endif
        NeabundRL = 0.0
      endif
 
+!rewrite all the ICFs so that they are simply the factor by which the summed ionic abundances are multipled to get the total elemental abundance
+
+if (ciiCELabund + ciiiCELabund + civCELabund .gt. 0.d0) CELicfC = CabundCEL/(ciiCELabund + ciiiCELabund + civCELabund)
+if (niiCELabund + niiiCELabund + nivCELabund + nvCELabund .gt. 0.d0) CELicfN = NabundCEL/(niiCELabund + niiiCELabund + nivCELabund + nvCELabund)
+if (oiiCELabund + oiiiCELabund + oiiiIRCELabund + oivCELabund .gt. 0.d0) CELicfO = OabundCEL/(oiiCELabund + oiiiCELabund + oiiiIRCELabund + oivCELabund)
+if (neiiiCELabund + neivCELabund + nevCELabund .gt. 0.d0) CELicfNe = NeabundCEL/(neiiiCELabund + neivCELabund + nevCELabund)
+if (siiCELabund + siiiCELabund + siiiIRCELabund + sivIRCELabund .gt. 0.d0) CELicfS = SabundCEL/(siiCELabund + siiiCELabund + siiiIRCELabund + sivIRCELabund)
+if (cliiCELabund + cliiiCELabund + clivCELabund .gt. 0.d0) CELicfCl = ClabundCEL/(cliiCELabund + cliiiCELabund + clivCELabund)
+if (ariiiCELabund + arivCELabund + arvCELabund .gt. 0.d0) CELicfAr = ArabundCEL/(ariiiCELabund + arivCELabund + arvCELabund)
+
 !Printout edited to include weighted averages of Ionic species as these are neccessary for paper tables. DJS
 
 !carbon
@@ -2033,7 +2045,7 @@ endif
 !O O3N2 Pettini + Pagel 2004
 
 ion_no2 = get_ion("oiii5007   ",ILs, Iint)
-if (ILS(ion_no1)%int_dered .gt. 0 .and. ILs(ion_no2)%int_dered .gt. 0) then
+if (ILS(ion_no1)%int_dered .gt. 0 .and. ILs(ion_no2)%int_dered .gt. 0 .and. H_BS(1)%int_dered .gt. 0) then
   O3N2 = log10((ILS(ion_no2)%int_dered*H_BS(1)%int_dered)/(ILS(ion_no1)%int_dered * H_BS(2)%int_dered))
   O_O3N2 = 8.73 - (0.32*O3N2)
   iteration_result(1)%O_O3N2 = O_O3N2
