@@ -367,7 +367,7 @@ program neat
           print *,gettime(),": reading line list from ALFA output"
           read(199,*) blank !ignore first line which has table heading
           DO I=1,listlength
-            READ(199,'(F7.2,A3,F7.2,A3,F12.5,A3,F12.5,A3,A85)',end=110) linelist(i)%wavelength_observed,blank,linelist(i)%wavelength, blank, linelist(i)%intensity, blank, linelist(i)%int_err, blank, linelist(i)%linedata
+            READ(199,'(F8.2,A3,F8.2,A3,F12.5,A3,F12.5,A3,A85)',end=110) linelist(i)%wavelength_observed,blank,linelist(i)%wavelength, blank, linelist(i)%intensity, blank, linelist(i)%int_err, blank, linelist(i)%linedata
             linelist(i)%latextext = ""
           end do
         else
