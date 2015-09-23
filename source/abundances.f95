@@ -258,6 +258,9 @@ implicit none
 
       if (ILs(ion_no1)%int_dered .gt. 0 .and. ILs(ion_no2)%int_dered .gt. 0 .and. ILs(ion_no3)%int_dered .gt. 0 .and. ILs(ion_no4)%int_dered .gt. 0) then
            siiTratio = (ILs(ion_no1)%int_dered+ILs(ion_no2)%int_dered)/(ILs(ion_no3)%int_dered+ILs(ion_no4)%int_dered)
+      elseif (ILs(ion_no1)%int_dered .gt. 0 .and. ILs(ion_no2)%int_dered .gt. 0 .and. ILs(ion_no3)%int_dered .gt. 0 .and. ILs(ion_no4)%int_dered .eq. 0.d0) then
+! if 4076 is not seen, assume that 4076/4068 = 0.338.  This is not an exact value but for 5000<Te<15000 and 0<ne<1e5 it varies by less than 5%
+           siiTratio = (ILs(ion_no1)%int_dered+ILs(ion_no2)%int_dered)/(1.338*ILs(ion_no3)%int_dered)
       else
            siiTratio = 0.0
       endif
