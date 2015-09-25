@@ -51,6 +51,7 @@ program neat
         TYPE(LINE),DIMENSION(:), allocatable :: linelist_original
         TYPE(LINE),dimension(:,:), allocatable :: all_linelists
         CHARACTER(len=512) :: filename
+        CHARACTER(len=15) :: invar1, invar2 !line fluxes and uncertainties are read as strings into these variables
         CHARACTER(len=1) :: blank
         INTEGER :: IO, listlength
         double precision :: normalise
@@ -351,7 +352,14 @@ program neat
         REWIND (199)
 
         DO I=1,listlength
-          READ(199,*,end=110) linelist(i)%wavelength, linelist(i)%intensity, linelist(i)%int_err
+          READ(199,*,end=110) linelist(i)%wavelength, invar1, invar2 
+          if (invar1(1:1) .eq. "*") then
+            linelist(i)%intensity = 0.d0
+            linelist(i)%int_err = 0.d0
+          else
+            read (invar1,*) linelist(i)%intensity
+            read (invar2,*) linelist(i)%int_err
+          endif
           linelist(i)%latextext = ""
         END DO
 
@@ -554,22 +562,31 @@ program neat
 
 !line flux - todo: calculate the corrected flux and uncertainties for SNR<6.
 
-               write (650,"(F7.2,A,F7.2,3X)", advance='no') linelist_original(j)%intensity," +-",linelist_original(j)%int_err
-               write (651,"(F7.2,'& $\pm$',F7.2, '&')", advance='no') linelist_original(j)%intensity,linelist_original(j)%int_err
+               if (linelist_original(j)%intensity .eq. 0.d0) then
+                 write (650,*) " * "
+                 write (651,*) " *     &        &"
+               else
+                 write (650,"(F7.2,A,F7.2,3X)", advance='no') linelist_original(j)%intensity," +-",linelist_original(j)%int_err
+                 write (651,"(F7.2,'& $\pm$',F7.2, '&')", advance='no') linelist_original(j)%intensity,linelist_original(j)%int_err
+               endif
 
 !dereddened flux
                 quantity_result = all_linelists(j,:)%int_dered
 
                 call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins,nperbin,runs)
 
-                if (uncertainty_array(1) .ne. uncertainty_array(3)) then
-                  write (650,"(F7.2,SP,F7.2,SP,F7.2)", advance='no') uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
-                  write (651,"(F7.2,'& $^{',SP,F7.2,'}_{',SP,F7.2,'}$')", advance='no') uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
+                if (linelist_original(j)%intensity .ne. 0.d0) then
+                  if (uncertainty_array(1) .ne. uncertainty_array(3)) then
+                    write (650,"(F7.2,SP,F7.2,SP,F7.2)", advance='no') uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
+                    write (651,"(F7.2,'& $^{',SP,F7.2,'}_{',SP,F7.2,'}$')", advance='no') uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
+                  else
+                    write (650,"(F7.2,A,F7.2,5X)", advance='no') uncertainty_array(2)," +-",uncertainty_array(1)
+                    write (651,"(F7.2,'& $\pm$',F7.2)", advance='no') uncertainty_array(2),uncertainty_array(1)
+                  endif
                 else
-                  write (650,"(F7.2,A,F7.2,5X)", advance='no') uncertainty_array(2)," +-",uncertainty_array(1)
-                  write (651,"(F7.2,'& $\pm$',F7.2)", advance='no') uncertainty_array(2),uncertainty_array(1)
+                  write (650,*) " * "
+                  write (651,*) " *     &        &"
                 endif
-
 
 !abundance - write out if there is an abundance for the line, don't write
 !anything except a line break if there is no abundance for the line.
@@ -594,12 +611,17 @@ program neat
         else ! runs == 1, no uncertainties to write out
 
                 do i=1,listlength
-                  if (linelist(i)%abundance .gt. 0.0) then
-                     write (650,"(X,F7.2,X,A11,F7.2,X,F7.2,X,ES14.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance
-                     write (651,"(X,F7.2,X,'&',A15,'&',X,F7.2,X,'&',X,F7.2,X,'&',X,'$',A,'$',X,'\\')") linelist(i)%wavelength,linelist(i)%latextext,linelist(i)%intensity,linelist(i)%int_dered, trim(latex_number(linelist(i)%abundance))
+                  if (linelist(i)%intensity .ne. 0.d0) then
+                    if (linelist(i)%abundance .gt. 0.0) then
+                      write (650,"(X,F7.2,X,A11,F7.2,X,F7.2,X,ES14.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance
+                      write (651,"(X,F7.2,X,'&',A15,'&',X,F7.2,X,'&',X,F7.2,X,'&',X,'$',A,'$',X,'\\')") linelist(i)%wavelength,linelist(i)%latextext,linelist(i)%intensity,linelist(i)%int_dered, trim(latex_number(linelist(i)%abundance))
+                    else
+                      write (650,"(X,F7.2,X,A11,F7.2,X,F7.2)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered
+                      write (651,"(X,F7.2,X,'&',A15,'&',X,F7.2,X,'&',X,F7.2,X,'&',X,'\\')") linelist(i)%wavelength,linelist(i)%latextext,linelist(i)%intensity,linelist(i)%int_dered
+                    endif
                   else
-                     write (650,"(X,F7.2,X,A11,F7.2,X,F7.2)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered
-                     write (651,"(X,F7.2,X,'&',A15,'&',X,F7.2,X,'&',X,F7.2,X,'&',X,'\\')") linelist(i)%wavelength,linelist(i)%latextext,linelist(i)%intensity,linelist(i)%int_dered
+                    write (650,"(X,F7.2,X,A11,A7,X,A7)") linelist(i)%wavelength,linelist(i)%name,"*      ","*      "
+                    write (651,"(X,F7.2,X,'&',A15,'&',X,A7,X,'&',X,A7,X,'&',X,'\\')") linelist(i)%wavelength,linelist(i)%latextext,"*      ","*      "
                   endif
                 end do
 
