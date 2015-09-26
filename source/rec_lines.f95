@@ -296,7 +296,7 @@
             aeff = 1.e-14*a*te ** (b + c*log(te))
       endif
 !
-     do i = 184,219
+      do i = 184,219
         oiiRLs(i)%Em = aeff*1.98648E-08 / oiiRLs(i)%Wave*&
       & oiiRLs(i)%g2*oiiRLs(i)%Br_B
         oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
@@ -334,7 +334,7 @@
             aeff = 1.e-14*a*te ** (b + c*log(te))
       endif
 !
-     do i = 220,310
+      do i = 220,310
         oiiRLs(i)%Em = aeff*1.98648E-08 / oiiRLs(i)%Wave*&
       & oiiRLs(i)%g2*oiiRLs(i)%Br_B
         oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
@@ -372,7 +372,7 @@
             aeff = 1.e-14*a*te ** (b + c*log(te))
       endif
 !
-     do i = 311,328
+      do i = 311,328
         oiiRLs(i)%Em = aeff*1.98648E-08 / oiiRLs(i)%Wave*&
       & oiiRLs(i)%g2*oiiRLs(i)%Br_A
         oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
@@ -409,7 +409,7 @@
             aeff = 1.e-14*a*te ** (b + c*log(te))
       endif
 !
-     do i = 329,358
+      do i = 329,358
         oiiRLs(i)%Em = aeff*1.98648E-08 / oiiRLs(i)%Wave*&
       & oiiRLs(i)%g2*oiiRLs(i)%Br_A
         oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
@@ -446,7 +446,7 @@
             aeff = 1.e-14*a*te ** (b + c*log(te))
       endif
 !
-     do i = 359,388
+      do i = 359,388
         oiiRLs(i)%Em = aeff*1.98648E-08 / oiiRLs(i)%Wave*&
       & oiiRLs(i)%g2*oiiRLs(i)%Br_A
         oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
@@ -488,7 +488,7 @@
             aeff = 1.e-14*a*te ** (b + c*log(te) + d* log(te) ** 2)
       endif
 !
-     do i = 389,396
+      do i = 389,396
         oiiRLs(i)%Em = aeff*1.98648E-08 / oiiRLs(i)%Wave*&
       & oiiRLs(i)%g2*oiiRLs(i)%Br_B
         oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
@@ -530,7 +530,7 @@
             aeff = 1.e-14*a*te ** (b + c*log(te) + d* log(te) ** 2)
       endif
 !
-     do i = 397,403
+      do i = 397,403
         oiiRLs(i)%Em = aeff*1.98648E-08 / oiiRLs(i)%Wave*&
       & oiiRLs(i)%g2*oiiRLs(i)%Br_B
         oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
@@ -572,7 +572,7 @@
             aeff = 1.e-14*a*te ** (b + c*log(te) + d* log(te) ** 2)
       endif
 !
-     do i = 404,406
+      do i = 404,406
         oiiRLs(i)%Em = aeff*1.98648E-08 / oiiRLs(i)%Wave*&
       & oiiRLs(i)%g2*oiiRLs(i)%Br_B
         oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
@@ -614,7 +614,7 @@
             aeff = 1.e-14*a*te ** (b + c*log(te) + d* log(te) ** 2)
       endif
 !
-     do i = 407,409
+      do i = 407,409
         oiiRLs(i)%Em = aeff*1.98648E-08 / oiiRLs(i)%Wave*&
       & oiiRLs(i)%g2*oiiRLs(i)%Br_A
         oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
@@ -656,7 +656,7 @@
             aeff = 1.e-14*a*te ** (b + c*log(te) + d* log(te) ** 2)
       endif
 !
-     do i = 410,413
+      do i = 410,413
         oiiRLs(i)%Em = aeff*1.98648E-08 / oiiRLs(i)%Wave*&
       & oiiRLs(i)%g2*oiiRLs(i)%Br_A
         oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
