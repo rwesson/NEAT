@@ -1,0 +1,16 @@
+1. improve the reading of line list.  should do the following:
+
+  - check for 2, 3 or 4 columns.
+    - 2 columns = rest wavelength + flux, no uncertainty
+    - 3 columns = rest wavelength + flux + uncertainty
+    - 4 columns = obs, rest, flux, uncertainty
+  - read and identify before the loop
+  - identify blends and treat them sensibly, eg 7320/7330, use blended line wavelength
+
+2. include atomic data in output table
+3. use configuration files to determine which diagnostics will be used and which multiplets included in OII and NII abundances
+
+bug investigations
+
+1. check ashkbiz run, why does it report an O ORL abundance and why do some ICFs end up inf?  
+2. get all data types consistent, avoid real=4 <--> real=8 conversions
