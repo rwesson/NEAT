@@ -751,10 +751,10 @@
       c = 0.022005
 !
       aeff = 10. ** (a + b * log10(te) + c * log10(te) ** 2)
-      do ii = 1,6
-        niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
-        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
-      enddo
+      where (niiRLs%Mult .eq. "V3         ")
+        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
+      endwhere
 !
 !       2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 3P* - 3S     M04 transitions
 !      i = 0004     !case A
@@ -764,10 +764,10 @@
       c = -0.028944
 !
       aeff = 10. ** (a + b * log10(te) + c * log10(te) ** 2)
-      do ii = 7,9
-        niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
-        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
-      enddo
+      where (niiRLs%Mult .eq. "V4         ")
+        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
+      endwhere
 !
 !       2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 3P* - 3P     M05 transitions
 !      i = 0006     !case A
@@ -777,10 +777,11 @@
       c = -0.0251909
 !
       aeff = 10. ** (a + b * log10(te) + c * log10(te) ** 2)
-      do ii = 10,15
-        niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
-        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
-      enddo
+
+      where (niiRLs%Mult .eq. "V5         ")
+        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
+      endwhere
 !
 !       2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 1P* - 1P     M08 transitions
       i = 0008     !case A
@@ -790,10 +791,10 @@
       c = 0.0362301
 !
       aeff = 10. ** (a + b * log10(te) + c * log10(te) ** 2)
-      do ii = 16,16
-        niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
-        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
-      enddo
+      where (niiRLs%Mult .eq. "V8         ")
+        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
+      endwhere
 !
 !       2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 1P* - 1D     M12 transitions
       i = 0010     !case A
@@ -803,10 +804,10 @@
       c = 0.0255685
 !
       aeff = 10. ** (a + b * log10(te) + c * log10(te) ** 2)
-      do ii = 17,17
-        niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
-        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
-      enddo
+      where (niiRLs%Mult .eq. "V12        ")
+        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
+      endwhere
 !
 !       2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 1P* - 1S     M13 transitions
       i = 0012     !case A
@@ -816,10 +817,10 @@
       c = 0.0100966
 !
       aeff = 10. ** (a + b * log10(te) + c * log10(te) ** 2)
-      do ii = 18,18
-        niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
-        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
-      enddo
+      where (niiRLs%Mult .eq. "V13        ")
+        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
+      endwhere
 !
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 1P - 1D*     M15 transitions
       i = 0014     !case A
@@ -829,10 +830,10 @@
       c = -0.0525855
 !
       aeff = 10. ** (a + b * log10(te) + c * log10(te) ** 2)
-      do ii = 19,19
-        niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
-        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
-      enddo
+      where (niiRLs%Mult .eq. "V15        ")
+        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
+      endwhere
 !
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 1P - 1P*     M17 transitions
       i = 0016     !case A
@@ -842,10 +843,10 @@
       c = -0.0581789
 !
       aeff = 10. ** (a + b * log10(te) + c * log10(te) ** 2)
-      do ii = 20,20
-        niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
-        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
-      enddo
+      where (niiRLs%Mult .eq. "V17        ")
+        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
+      endwhere
 !
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3D - 3F*     M19 transitions
 !      i = 0018     !case A
@@ -855,10 +856,10 @@
       c = -0.0229685
 !
       aeff = 10. ** (a + b * log10(te) + c * log10(te) ** 2)
-      do ii = 21,26
-        niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
-        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
-      enddo
+      where (niiRLs%Mult .eq. "V19        ")
+        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
+      endwhere
 !
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3D - 3D*     M20 transitions
 !      i = 0020     !case A
@@ -868,10 +869,10 @@
       c = -0.0512093
 !
       aeff = 10. ** (a + b * log10(te) + c * log10(te) ** 2)
-      do ii = 27,33
-        niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
-        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
-      enddo
+      where (niiRLs%Mult .eq. "V20        ")
+        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
+      endwhere
 !
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3D - 3P*     M21 transitions
 !      i = 0022     !case A
@@ -881,10 +882,10 @@
       c = -0.0552785
 !
       aeff = 10. ** (a + b * log10(te) + c * log10(te) ** 2)
-      do ii = 34,39
-        niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
-        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
-      enddo
+      where (niiRLs%Mult .eq. "V21        ")
+        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
+      endwhere
 !
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).4s 3D - 3P*     M22 transitions
 !      i = 0024     !case A
@@ -894,10 +895,10 @@
       c = 0.0354135
 !
       aeff = 10. ** (a + b * log10(te) + c * log10(te) ** 2)
-      do ii = 40,45
-        niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
-        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
-      enddo
+      where (niiRLs%Mult .eq. "V22        ")
+        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
+      endwhere
 !
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3S - 3P*     M24 transitions
 !      i = 0026     !case A
@@ -907,10 +908,10 @@
       c = -0.0557112
 !
       aeff = 10. ** (a + b * log10(te) + c * log10(te) ** 2)
-      do ii = 46,48
-        niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
-        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
-      enddo
+      where (niiRLs%Mult .eq. "V24        ")
+        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
+      endwhere
 !
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).4s 3S - 3P*     M26 transitions
 !      i = 0028     !case A
@@ -920,10 +921,10 @@
       c = 0.0358261
 !
       aeff = 10. ** (a + b * log10(te) + c * log10(te) ** 2)
-      do ii = 49,51
-        niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
-        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
-      enddo
+      where (niiRLs%Mult .eq. "V26        ")
+        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
+      endwhere
 !
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3P - 3D*     M28 transitions
 !      i = 0030     !case A
@@ -933,10 +934,10 @@
       c = -0.0506882
 !
       aeff = 10. ** (a + b * log10(te) + c * log10(te) ** 2)
-      do ii = 52,57
-        niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
-        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
-      enddo
+      where (niiRLs%Mult .eq. "V28        ")
+        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
+      endwhere
 !
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3P - 3P*     M29 transitions
 !      i = 0032     !case A
@@ -946,10 +947,10 @@
       c = -0.0557583
 !
       aeff = 10. ** (a + b * log10(te) + c * log10(te) ** 2)
-      do ii = 58,63
-        niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
-        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
-      enddo
+      where (niiRLs%Mult .eq. "V29        ")
+        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
+      endwhere
 !
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).4s 3P - 3P*     M30 transitions
 !      i = 0034     !case A
@@ -959,10 +960,10 @@
       c = 0.0355516
 !
       aeff = 10. ** (a + b * log10(te) + c * log10(te) ** 2)
-      do ii = 64,69
-        niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
-        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
-      enddo
+      where (niiRLs%Mult .eq. "V30        ")
+        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
+      endwhere
 !
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 1D - 1F*     M31 transitions
       i = 0036     !case A
@@ -972,10 +973,10 @@
       c = -0.0588371
 !
       aeff = 10. ** (a + b * log10(te) + c * log10(te) ** 2)
-      do ii = 70,70
-        niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
-        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
-      enddo
+      where (niiRLs%Mult .eq. "V31        ")
+        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
+      endwhere
 !
 !       2s2.2p.(2P*).3d - 2s2.2p.(2P*).4p 3F* - 3D     M36 transitions
 !      i = 0038     !case A
@@ -985,10 +986,10 @@
       c = 0.0068655
 !
       aeff = 10. ** (a + b * log10(te) + c * log10(te) ** 2)
-      do ii = 71,76
-        niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
-        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
-      enddo
+      where (niiRLs%Mult .eq. "V36        ")
+        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
+      endwhere
 !
 !       2s2.2p.(2P*).3d - 2s2.2p.(2P*<3/2>).4f 3F* - 3G M39 transitions
 !      i = 0040     !case A
@@ -998,10 +999,10 @@
       c = -0.10642
 !
       aeff = 10. ** (a + b * log10(te) + c * log10(te) ** 2)
-      do ii = 77,82
-        niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
-        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
-      enddo
+      where (niiRLs%Mult(1:3) .eq. "V39")
+        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
+      endwhere
 !
 !       2s2.2p.(2P*).3d - 2s2.2p.(2P*<3/2>).4f 1F* - 1G M58 transitions
       i = 0042     !case A
@@ -1011,10 +1012,10 @@
       c = -0.105123
 !
       aeff = 10. ** (a + b * log10(te) + c * log10(te) ** 2)
-      do ii = 83,83
-        niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
-        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
-      enddo
+      where (niiRLs%Mult(1:3) .eq. "V58")
+        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
+      endwhere
 !
 !       3d 3D* - 4f 3F 4242 M48 transitions
 !      i = 0044     !case A
@@ -1024,10 +1025,10 @@
       c = -0.110368
 !
       aeff = 10. ** (a + b * log10(te) + c * log10(te) ** 2)
-      do ii = 84,89
-        niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
-        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
-      enddo
+      where (niiRLs%Mult(1:3) .eq. "V48")
+        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
+      endwhere
 !
 !       3d 3P* - 4f 3D 4435 M55 transitions
 !      i = 0046     !case A
@@ -1037,10 +1038,10 @@
       c = -0.105818
 !
       aeff = 10. ** (a + b * log10(te) + c * log10(te) ** 2)
-      do ii = 90,95
-        niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
-        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
-      enddo
+      where (niiRLs%Mult(1:3) .eq. "V55")
+        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
+      endwhere
 !
 !       3d 1D* - 4f 1F 4176 M43 (RMT M42) transitions
       i = 0048     !case A
@@ -1050,10 +1051,10 @@
       c = -0.111146
 !
       aeff = 10. ** (a + b * log10(te) + c * log10(te) ** 2)
-      do ii = 96,96
-        niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
-        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
-      enddo
+      where (niiRLs%Mult(1:3) .eq. "V43")
+        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
+      endwhere
 !
 !       3d 1P* - 4f 1D 4677 M61 (RMT M62) transitions
       i = 0049     !case A
@@ -1063,10 +1064,10 @@
       c = -0.108158
 !
       aeff = 10. ** (a + b * log10(te) + c * log10(te) ** 2)
-      do ii = 97,97
-        niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
-        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
-      enddo
+      where (niiRLs%Mult(1:3) .eq. "V61")
+        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
+      endwhere
 !
 !       3d 3F* - 4f 1G 4026 M39b transitions
 !      case A (PPB):
@@ -1079,10 +1080,10 @@
 !
       aeff = 1.e-13 * z * a  * (te/z**2) ** (b)
       aeff = aeff / (1. + c * (te/z**2) ** (d)) * Br_term
-      do ii = 98,98
-        niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
-        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
-      enddo
+      where (niiRLs%Mult(1:4) .eq. "V39b")
+        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
+      endwhere
 !
 !       3d 1F* - 4f 3G 4552 M58a transitions
 !      case A (PPB):
@@ -1095,10 +1096,10 @@
 !
       aeff = 1.e-13 * z * a  * (te/z**2) ** (b)
       aeff = aeff / (1. + c * (te/z**2) ** (d)) * Br_term
-      do ii = 99,99
-        niiRLs(ii)%Em = aeff * 1.98648E-08 / niiRLs(ii)%Wave * niiRLs(ii)%Br_LS
-        niiRLs(ii)%Int = 100 * niiRLs(ii)%Em / Em_Hb * abund
-      enddo
+      where (niiRLs%Mult(1:4) .eq. "V58a")
+        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
+      endwhere
 
       te = te * 10000
 
