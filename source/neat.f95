@@ -165,7 +165,7 @@ program neat
            print *,"         1: write out summary files, binned results and complete results"
            print *,"         2: write out summary files and binned results"
            print *,"         3: write out summary files only"
-           print *,"       Default: 1"
+           print *,"       Default: 3"
            print *,"  -id / --identify"
            print *,"       This option triggers an algorithm which attempts to convert observed wavelengths into rest wavelengths"
            print *,"       If the option is not present, NEAT assumes that the input line list already has rest wavelengths in the first column"
@@ -273,7 +273,8 @@ program neat
                 if ((trim(options(i))=="-v" .or.  trim(options(i))=="--verbosity") .and. (i+1) .le. Narg) then
                   read (options(i+1),*) verbosity
                   if (verbosity .lt. 1 .or. verbosity .gt. 3) then
-                    print *,gettime(),": warning: verbosity outside allowed range of 1-3. Set to 1."
+                    print *,gettime(),": warning: verbosity outside allowed range of 1-3. Set to 3."
+                    verbosity=3
                   endif
                 endif
                 if ((trim(options(i))=="-id" .or. trim(options(i))=="--identify") .and. (filename.ne."")) then
