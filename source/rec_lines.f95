@@ -260,11 +260,11 @@
         aeff = 1.e-14 * a * te ** (b + c * log(te))
       endif
 
-      do i = 1,183
-        oiiRLs(i)%Em = aeff * 1.98648E-08 /oiiRLs(i)%Wave * &
-        & oiiRLs(i)%g2 * oiiRLs(i)%Br_B
-        oiiRLs(i)%Int = 100. * oiiRLs(i)%Em / Em_hb * abund
-      enddo
+      where (oiiRLs%Term1(4:5) .eq. "3d" .and. oiiRLs%Term2(3:4) .eq. "4f")
+        oiiRLs%Em = aeff * 1.98648E-08 /oiiRLs%Wave * &
+        & oiiRLs%g2 * oiiRLs%Br_B
+        oiiRLs%Int = 100. * oiiRLs%Em / Em_hb * abund
+      endwhere
 
 ! 3d-3p ^4F transitions (Case A=B=C for a,b,c,d; Br diff. slightly, adopt Case B)
       a =  0.876
@@ -296,11 +296,11 @@
             aeff = 1.e-14*a*te ** (b + c*log(te))
       endif
 !
-      do i = 184,219
-        oiiRLs(i)%Em = aeff*1.98648E-08 / oiiRLs(i)%Wave*&
-      & oiiRLs(i)%g2*oiiRLs(i)%Br_B
-        oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
-      enddo
+      where (oiiRLs%Mult .eq. " V10       " .or. oiiRLs%Mult .eq. " V18       ")
+        oiiRLs%Em = aeff*1.98648E-08 / oiiRLs%Wave*&
+      & oiiRLs%g2*oiiRLs%Br_B
+        oiiRLs%Int = 100.*oiiRLs%Em / Em_hb*abund
+      endwhere
 !
 ! 3d-3p ^4D, ^4P transitions
       a =  0.745
@@ -334,11 +334,11 @@
             aeff = 1.e-14*a*te ** (b + c*log(te))
       endif
 !
-      do i = 220,310
-        oiiRLs(i)%Em = aeff*1.98648E-08 / oiiRLs(i)%Wave*&
-      & oiiRLs(i)%g2*oiiRLs(i)%Br_B
-        oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
-      enddo
+      where (oiiRLs%Term1(4:5) .eq. "3p" .and. (oiiRLs%Term2 .eq. "  3d  4D " .or. oiiRLs%Term2 .eq. "  3d  4P "))! same coeffs for 3d 4D and 3d 4P
+        oiiRLs%Em = aeff*1.98648E-08 / oiiRLs%Wave*&
+      & oiiRLs%g2*oiiRLs%Br_B
+        oiiRLs%Int = 100.*oiiRLs%Em / Em_hb*abund
+      endwhere
 !
 ! 3d-3p ^2F transitions
       a =  0.745
@@ -372,11 +372,11 @@
             aeff = 1.e-14*a*te ** (b + c*log(te))
       endif
 !
-      do i = 311,328
-        oiiRLs(i)%Em = aeff*1.98648E-08 / oiiRLs(i)%Wave*&
-      & oiiRLs(i)%g2*oiiRLs(i)%Br_A
-        oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
-      enddo
+      where (oiiRLs%Term1(4:5) .eq. "3p" .and. oiiRLs%Term2 .eq. "  3d  2F   ")
+        oiiRLs%Em = aeff*1.98648E-08 / oiiRLs%Wave*&
+      & oiiRLs%g2*oiiRLs%Br_A
+        oiiRLs%Int = 100.*oiiRLs%Em / Em_hb*abund
+      endwhere
 !
 ! 3d-3p ^2D transitions
       a =  0.601
@@ -409,11 +409,11 @@
             aeff = 1.e-14*a*te ** (b + c*log(te))
       endif
 !
-      do i = 329,358
-        oiiRLs(i)%Em = aeff*1.98648E-08 / oiiRLs(i)%Wave*&
-      & oiiRLs(i)%g2*oiiRLs(i)%Br_A
-        oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
-      enddo
+      where (oiiRLs%Term1(4:5) .eq. "3d" .and. oiiRLs%Term2 .eq. "  3d  2D   ")
+        oiiRLs%Em = aeff*1.98648E-08 / oiiRLs%Wave*&
+      & oiiRLs%g2*oiiRLs%Br_A
+        oiiRLs%Int = 100.*oiiRLs%Em / Em_hb*abund
+      endwhere
 !
 ! 3d-3p ^2P transitions
       a =  0.524
@@ -446,11 +446,11 @@
             aeff = 1.e-14*a*te ** (b + c*log(te))
       endif
 !
-      do i = 359,388
-        oiiRLs(i)%Em = aeff*1.98648E-08 / oiiRLs(i)%Wave*&
-      & oiiRLs(i)%g2*oiiRLs(i)%Br_A
-        oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
-      enddo
+      where (oiiRLs%Term1(4:5) .eq. "3p" .and. oiiRLs%Term2 .eq. "  3d  2P   ")
+        oiiRLs%Em = aeff*1.98648E-08 / oiiRLs%Wave*&
+      & oiiRLs%g2*oiiRLs%Br_A
+        oiiRLs%Int = 100.*oiiRLs%Em / Em_hb*abund
+      endwhere
 !
 ! 3p-3s ^4D - ^4P transitions
 !      an = (/34.7,34.9,35.1,35.0/) !a for logNe = 2,4,5,6 Case A
@@ -488,11 +488,11 @@
             aeff = 1.e-14*a*te ** (b + c*log(te) + d* log(te) ** 2)
       endif
 !
-      do i = 389,396
-        oiiRLs(i)%Em = aeff*1.98648E-08 / oiiRLs(i)%Wave*&
-      & oiiRLs(i)%g2*oiiRLs(i)%Br_B
-        oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
-      enddo
+      where (oiiRLs%Mult .eq. " V1        ")
+        oiiRLs%Em = aeff*1.98648E-08 / oiiRLs%Wave*&
+      & oiiRLs%g2*oiiRLs%Br_B
+        oiiRLs%Int = 100.*oiiRLs%Em / Em_hb*abund
+      endwhere
 !
 ! 3p-3s ^4P - ^4P transitions
 !      an = (/10.4,10.4,10.5,10.4/) !a for logNe = 2,4,5,6 Case A
@@ -530,11 +530,11 @@
             aeff = 1.e-14*a*te ** (b + c*log(te) + d* log(te) ** 2)
       endif
 !
-      do i = 397,403
-        oiiRLs(i)%Em = aeff*1.98648E-08 / oiiRLs(i)%Wave*&
-      & oiiRLs(i)%g2*oiiRLs(i)%Br_B
-        oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
-      enddo
+      where (oiiRLs%Mult .eq. " V2        ")
+        oiiRLs%Em = aeff*1.98648E-08 / oiiRLs%Wave*&
+      & oiiRLs%g2*oiiRLs%Br_B
+        oiiRLs%Int = 100.*oiiRLs%Em / Em_hb*abund
+      endwhere
 !
 ! 3p-3s ^4S - ^4P transitions
 !      an = (/0.90,0.90,0.90,1.00/) !a for logNe = 2,4,5,6 Case A
@@ -572,11 +572,11 @@
             aeff = 1.e-14*a*te ** (b + c*log(te) + d* log(te) ** 2)
       endif
 !
-      do i = 404,406
-        oiiRLs(i)%Em = aeff*1.98648E-08 / oiiRLs(i)%Wave*&
-      & oiiRLs(i)%g2*oiiRLs(i)%Br_B
-        oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
-      enddo
+      where (oiiRLs%Mult .eq. " V3        ")
+        oiiRLs%Em = aeff*1.98648E-08 / oiiRLs%Wave*&
+      & oiiRLs%g2*oiiRLs%Br_B
+        oiiRLs%Int = 100.*oiiRLs%Em / Em_hb*abund
+      endwhere
 !
 ! 3p-3s ^2D - ^2P transitions
       an = (/2.40,2.40,2.50,2.60/) !a for logNe = 2,4,5,6 Case A
@@ -614,11 +614,11 @@
             aeff = 1.e-14*a*te ** (b + c*log(te) + d* log(te) ** 2)
       endif
 !
-      do i = 407,409
-        oiiRLs(i)%Em = aeff*1.98648E-08 / oiiRLs(i)%Wave*&
-      & oiiRLs(i)%g2*oiiRLs(i)%Br_A
-        oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
-      enddo
+      where (oiiRLs%Mult .eq. " V5        ")
+        oiiRLs%Em = aeff*1.98648E-08 / oiiRLs%Wave*&
+      & oiiRLs%g2*oiiRLs%Br_A
+        oiiRLs%Int = 100.*oiiRLs%Em / Em_hb*abund
+      endwhere
 !
 ! 3p-3s ^2P - ^2P transitions
       an = (/1.10,1.20,1.20,1.20/) !a for logNe = 2,4,5,6 Case A
@@ -656,11 +656,11 @@
             aeff = 1.e-14*a*te ** (b + c*log(te) + d* log(te) ** 2)
       endif
 !
-      do i = 410,413
-        oiiRLs(i)%Em = aeff*1.98648E-08 / oiiRLs(i)%Wave*&
-      & oiiRLs(i)%g2*oiiRLs(i)%Br_A
-        oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
-      enddo
+      where (oiiRLs%Mult .eq. " V6        ")
+        oiiRLs%Em = aeff*1.98648E-08 / oiiRLs%Wave*&
+      & oiiRLs%g2*oiiRLs%Br_A
+        oiiRLs%Int = 100.*oiiRLs%Em / Em_hb*abund
+      endwhere
 !
 ! 3p-3s ^2S - ^2P transitions
       an = (/0.40,0.40,0.40,0.40/) !a for logNe = 2,4,5,6 Case A
@@ -698,11 +698,11 @@
             aeff = 1.e-14*a*te ** (b + c*log(te) + d* log(te) ** 2)
       endif
 !
-      do i = 414,415
-        oiiRLs(i)%Em = aeff*1.98648E-08 / oiiRLs(i)%Wave*&
-      & oiiRLs(i)%g2*oiiRLs(i)%Br_A
-        oiiRLs(i)%Int = 100.*oiiRLs(i)%Em / Em_hb*abund
-      enddo
+      where (oiiRLs%Mult .eq. " V4        ")
+        oiiRLs%Em = aeff*1.98648E-08 / oiiRLs%Wave*&
+      & oiiRLs%g2*oiiRLs%Br_A
+        oiiRLs%Int = 100.*oiiRLs%Em / Em_hb*abund
+      endwhere
 
       te = te * 10000
 
