@@ -1130,14 +1130,12 @@
 
       te = te/10000
 
-      do i = 1,57
-        ciiRLs(i)%aeff = 1e-14 * (ciiRLs(i)%a*(te**ciiRLs(i)%f)) * (1 &
-        &+ (ciiRLs(i)%b*(1-te)) &
-        &+ (ciiRLs(i)%c * ((1-te)**2) ) &
-        &+ (ciiRLs(i)%d * ((1-te)**3) ) &
-        &)
-        ciiRLs(i)%Int = 100 * (ciiRLs(i)%aeff/aeff_hb) * (4861.33/ciiRLs(i)%Wave) * abund
-      enddo
+      ciiRLs%aeff = 1e-14 * (ciiRLs%a*(te**ciiRLs%f)) * (1 &
+      &+ (ciiRLs%b*(1-te)) &
+      &+ (ciiRLs%c * ((1-te)**2) ) &
+      &+ (ciiRLs%d * ((1-te)**3) ) &
+      &)
+      ciiRLs%Int = 100 * (ciiRLs%aeff/aeff_hb) * (4861.33/ciiRLs%Wave) * abund
 
       te = te * 10000
 
@@ -1168,15 +1166,15 @@
 
       te = te/10000
 
-      do i = 1,38
-        neiiRLs(i)%aeff = neiiRLs(i)%Br * 1e-14 * &
-        &(neiiRLs(i)%a*(te**neiiRLs(i)%f)) * (1 &
-        &+ (neiiRLs(i)%b*(1-te)) &
-        &+ (neiiRLs(i)%c * ((1-te)**2) ) &
-        &+ (neiiRLs(i)%d * ((1-te)**3) ) &
-        &)
-        neiiRLs(i)%Int = 100 * (neiiRLs(i)%aeff/aeff_hb) * (4861.33/neiiRLs(i)%Wave) * abund
-      enddo
+
+      neiiRLs%aeff = neiiRLs%Br * 1e-14 * &
+      &(neiiRLs%a*(te**neiiRLs%f)) * (1 &
+      &+ (neiiRLs%b*(1-te)) &
+      &+ (neiiRLs%c * ((1-te)**2) ) &
+      &+ (neiiRLs%d * ((1-te)**3) ) &
+      &)
+      neiiRLs%Int = 100 * (neiiRLs%aeff/aeff_hb) * (4861.33/neiiRLs%Wave) * abund
+
 
       te = te * 10000
 
@@ -1206,19 +1204,10 @@
 
       te = te/90000 !ionic charge=3 so divide by 9
 
-      do i = 1,4
-        xiiiRLs(i)%aeff = xiiiRLs(i)%Br * 1e-13 * 3 * &
-      & (xiiiRLs(i)%a*(te**xiiiRLs(i)%b)) / &
-      & (1 + (xiiiRLs(i)%c * (te**xiiiRLs(i)%d)))
-        xiiiRLs(i)%Int = 100 * (xiiiRLs(i)%aeff/aeff_hb) * (4861.33/xiiiRLs(i)%Wave) * abund
-      enddo
-
-      do i = 5,6
-        xiiiRLs(i)%aeff = xiiiRLs(i)%Br * 1e-13 * 3 * &
-      & (xiiiRLs(i)%a*(te**xiiiRLs(i)%b)) / &
-      & (1 + (xiiiRLs(i)%c * (te**xiiiRLs(i)%d)))
-        xiiiRLs(i)%Int = 100 * (xiiiRLs(i)%aeff/aeff_hb) * (4861.33/xiiiRLs(i)%Wave) * abund
-      enddo
+      xiiiRLs%aeff = xiiiRLs%Br * 1e-13 * 3 * &
+      & (xiiiRLs%a*(te**xiiiRLs%b)) / &
+      & (1 + (xiiiRLs%c * (te**xiiiRLs%d)))
+      xiiiRLs%Int = 100 * (xiiiRLs%aeff/aeff_hb) * (4861.33/xiiiRLs%Wave) * abund
 
       te = te * 90000
 
