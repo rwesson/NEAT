@@ -37,7 +37,7 @@
             DOUBLE PRECISION :: abundance
       END TYPE
 
-      TYPE(oiiRL), DIMENSION(415) :: oiiRLs
+      TYPE(oiiRL), DIMENSION(:), allocatable :: oiiRLs
 
       TYPE niiRL
             CHARACTER(len=1) :: Hyb
@@ -71,7 +71,7 @@
             DOUBLE PRECISION :: abundance
       END TYPE
 
-      TYPE(niiRL), DIMENSION(99) :: niiRLs
+      TYPE(niiRL), DIMENSION(:),allocatable :: niiRLs
 
       TYPE ciiRL
             DOUBLE PRECISION :: Wave
@@ -86,7 +86,7 @@
             DOUBLE PRECISION :: abundance
       END TYPE
 
-      TYPE(ciiRL), DIMENSION(57) :: ciiRLs
+      TYPE(ciiRL), DIMENSION(:),allocatable :: ciiRLs
 
       TYPE neiiRL
             DOUBLE PRECISION :: Wave
@@ -102,7 +102,7 @@
             DOUBLE PRECISION :: abundance
       END TYPE
 
-      TYPE(neiiRL), DIMENSION(38) :: neiiRLs
+      TYPE(neiiRL), DIMENSION(:),allocatable :: neiiRLs
 
       TYPE xiiiRL
             CHARACTER(len=3) :: Ion
@@ -118,14 +118,14 @@
             DOUBLE PRECISION :: abundance
       END TYPE
 
-      TYPE(xiiiRL), DIMENSION(6) :: xiiiRLs
+      TYPE(xiiiRL), DIMENSION(:),allocatable :: xiiiRLs
 
       contains
 
       subroutine read_orl_data
 
         IMPLICIT NONE
-        integer :: i
+        integer :: i, nlines
         ! read in OII data
 
             301 FORMAT (I5, 1X, F9.4, 1X, A1, A1, A1, A1, A1, F7.4,     &
@@ -133,7 +133,12 @@
      &1X, A1, 1X, A9, 1X, F13.4, 1X, A1, A1, 1X, I2, 1X, A1, 1X, A9, 1X,&
      & F7.4, 1X, F7.4, 1X, F7.4)!, 1X, E10.4, 1X, E10.4, 1X)
             OPEN(201, file="Atomic-data/Roii.dat", status='old')
-            DO i = 1,415
+            read(201,*) nlines
+            allocate(oiiRLs(nlines))
+            oiiRLs%Int = 0.d0
+            oiiRLs%Obs=0.d0
+            oiiRLs%abundance=0.d0
+            DO i = 1,nlines
             READ(201,301) oiiRLs(i)%ION, oiiRLs(i)%Wave, oiiRLs(i)%Hyb, &
      &oiiRLs(i)%Rem1, oiiRLs(i)%Rem2, oiiRLs(i)%Rem3, oiiRLs(i)%Rem4,   &
      &oiiRLs(i)%gf1, oiiRLs(i)%q_gf1, oiiRLs(i)%gf2, oiiRLs(i)%q_gf2,   &
@@ -151,7 +156,12 @@
      &1X, A1, 1X, A9, 1X, F13.4, 1X, A1, A1, 1X, I2, 1X, A1, 1X, A9, 1X,&
      & F7.4, 1X, F7.4, 1X, F7.4)!, 1X, E10.4, 1X, E10.4, 1X)
             OPEN(201, file="Atomic-data/Rnii.dat", status='old')
-            DO i = 1,99
+            read(201,*) nlines
+            allocate(niiRLs(nlines))
+            niiRLs%Int = 0.d0
+            niiRLs%Obs=0.d0
+            niiRLs%abundance=0.d0
+            DO i = 1,nlines
             READ(201,302) niiRLs(i)%ION, niiRLs(i)%Wave, niiRLs(i)%Hyb, &
      &niiRLs(i)%Rem1, niiRLs(i)%Rem2, niiRLs(i)%Rem3, niiRLs(i)%Rem4,   &
      &niiRLs(i)%gf1, niiRLs(i)%q_gf1, niiRLs(i)%gf2, niiRLs(i)%q_gf2,   &
@@ -164,34 +174,48 @@
 
 ! read in CII data
 
-       303 FORMAT (F7.2, 1X, F6.4, 1X, F7.4, 1X, F7.4, 1X, F7.4, 1X, F7.4)
-       OPEN(201, file="Atomic-data/Rcii.dat", status='old')
-       DO i = 1,57
-         READ(201,303) ciiRLs(i)%Wave, ciiRLs(i)%a, ciiRLs(i)%b, &
-         & ciiRLs(i)%c, ciiRLs(i)%d, ciiRLs(i)%f
-       END DO
-       CLOSE(201)
+      303 FORMAT (F7.2, 1X, F6.4, 1X, F7.4, 1X, F7.4, 1X, F7.4, 1X, F7.4)
+      OPEN(201, file="Atomic-data/Rcii.dat", status='old')
+      read(201,*) nlines
+      allocate(ciiRLs(nlines))
+      ciiRLs%Int = 0.d0
+      ciiRLs%Obs=0.d0
+      ciiRLs%abundance=0.d0
+      DO i = 1,nlines
+        READ(201,303) ciiRLs(i)%Wave, ciiRLs(i)%a, ciiRLs(i)%b, &
+        & ciiRLs(i)%c, ciiRLs(i)%d, ciiRLs(i)%f
+      END DO
+      CLOSE(201)
 
-           ! read in NeII data
+          ! read in NeII data
 
-       304 FORMAT (F7.2, 1X, F6.3, 1X, F6.3, 1X, F6.3, 1X, F6.3, 1X, F7.4, 1X, F6.3)
-       OPEN(201, file="Atomic-data/Rneii.dat", status='old')
-       DO i = 1,38
-         READ(201,304) neiiRLs(i)%Wave, neiiRLs(i)%a, neiiRLs(i)%b, &
-         & neiiRLs(i)%c, neiiRLs(i)%d, neiiRLs(i)%f, neiiRLs(i)%Br
-       END DO
-       CLOSE(201)
+      304 FORMAT (F7.2, 1X, F6.3, 1X, F6.3, 1X, F6.3, 1X, F6.3, 1X, F7.4, 1X, F6.3)
+      OPEN(201, file="Atomic-data/Rneii.dat", status='old')
+      read(201,*) nlines
+      allocate(neiiRLs(nlines))
+      neiiRLs%Int = 0.d0
+      neiiRLs%Obs=0.d0
+      neiiRLs%abundance=0.d0
+      DO i = 1,nlines
+        READ(201,304) neiiRLs(i)%Wave, neiiRLs(i)%a, neiiRLs(i)%b, &
+        & neiiRLs(i)%c, neiiRLs(i)%d, neiiRLs(i)%f, neiiRLs(i)%Br
+      END DO
+      CLOSE(201)
 
         ! read in XIII data
 
-       305 FORMAT (A3,1X,F7.2, 1X, F5.3, 1X, F6.3, 1X, F5.3, 1X, F5.3, 1X, F5.4)
-       OPEN(201, file="Atomic-data/Rxiii.dat", status='old')
-       DO i = 1,6
-         READ(201,305) xiiiRLs(i)%ion, xiiiRLs(i)%Wave, xiiiRLs(i)%a, &
-         & xiiiRLs(i)%b, xiiiRLs(i)%c, xiiiRLs(i)%d, xiiiRLs(i)%Br
-       END DO
-       CLOSE(201)
-
+      305 FORMAT (A3,1X,F7.2, 1X, F5.3, 1X, F6.3, 1X, F5.3, 1X, F5.3, 1X, F5.4)
+      OPEN(201, file="Atomic-data/Rxiii.dat", status='old')
+      read(201,*) nlines
+      allocate(xiiiRLs(nlines))
+      xiiiRLs%Int = 0.d0
+      xiiiRLs%Obs=0.d0
+      xiiiRLs%abundance=0.d0
+      DO i = 1,nlines
+        READ(201,305) xiiiRLs(i)%ion, xiiiRLs(i)%Wave, xiiiRLs(i)%a, &
+        & xiiiRLs(i)%b, xiiiRLs(i)%c, xiiiRLs(i)%d, xiiiRLs(i)%Br
+      END DO
+      CLOSE(201)
 
       end subroutine
 
@@ -205,7 +229,7 @@
       INTEGER :: i
 
 
-      TYPE(oiiRL), DIMENSION(415) :: oiiRLs
+      TYPE(oiiRL), DIMENSION(:) :: oiiRLs
 
       call get_aeff_hb(te,ne, aeff_hb, em_hb)
 
@@ -719,7 +743,7 @@
       INTEGER :: ii, i
 
 
-      TYPE(niiRL), DIMENSION(99) :: niiRLs
+      TYPE(niiRL), DIMENSION(:) :: niiRLs
 
       call get_aeff_hb(te,ne, aeff_hb, em_hb)
 
@@ -1114,7 +1138,7 @@
       INTEGER :: i
 
 
-      TYPE(ciiRL), DIMENSION(57) :: ciiRLs
+      TYPE(ciiRL), DIMENSION(:) :: ciiRLs
 
       call get_aeff_hb(te,ne, aeff_hb, em_hb)
 
@@ -1150,7 +1174,7 @@
       INTEGER :: i
 
 
-      TYPE(neiiRL), DIMENSION(38) :: neiiRLs
+      TYPE(neiiRL), DIMENSION(:) :: neiiRLs
 
       call get_aeff_hb(te,ne, aeff_hb, em_hb)
 
@@ -1188,7 +1212,7 @@
 
       INTEGER :: i
 
-      TYPE(xiiiRL), DIMENSION(6) :: xiiiRLs
+      TYPE(xiiiRL), DIMENSION(:) :: xiiiRLs
 
       call get_aeff_hb(te,ne, aeff_hb, em_hb)
 

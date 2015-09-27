@@ -1262,7 +1262,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
        call oii_rec_lines(medtemp,meddens,DBLE(1),oiiRLs)
 
        do i = 1,listlength
-         do j = 1,415
+         do j = 1,size(oiiRLs)
           if (abs(linelist(i)%wavelength-oiiRLs(j)%Wave) .le. 0.005) then
             oiiRLs(j)%Obs = linelist(i)%int_dered
             if (oiiRLs(j)%Int .eq. 0.0) then
@@ -1282,7 +1282,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
        call nii_rec_lines(medtemp,meddens,DBLE(1),niiRLs)
 
        do i = 1,listlength
-         do j = 1,99
+         do j = 1,size(niiRLs)
           if (abs(linelist(i)%wavelength-niiRLs(j)%Wave) .le. 0.005) then
             niiRLs(j)%Obs = linelist(i)%int_dered
             niiRLs(j)%abundance = niiRLs(j)%obs/niiRLs(j)%Int
@@ -1297,7 +1297,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
        call cii_rec_lines(medtemp,meddens,DBLE(1),ciiRLs)
 
        do i = 1,listlength
-         do j = 1,57
+         do j = 1,size(ciiRLs)
           if (abs(linelist(i)%wavelength-ciiRLs(j)%Wave) .le. 0.005) then
             ciiRLs(j)%Obs = linelist(i)%int_dered
             ciiRLs(j)%abundance = ciiRLs(j)%obs/ciiRLs(j)%Int
@@ -1312,7 +1312,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
        call neii_rec_lines(medtemp,meddens,DBLE(1),neiiRLs)
 
        do i = 1,listlength
-         do j = 1,38
+         do j = 1,size(neiiRLs)
           if (abs(linelist(i)%wavelength-neiiRLs(j)%Wave) .le. 0.005) then
             neiiRLs(j)%Obs = linelist(i)%int_dered
             neiiRLs(j)%abundance = neiiRLs(j)%obs/neiiRLs(j)%Int
@@ -1327,7 +1327,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
        call xiii_rec_lines(medtemp,meddens,DBLE(1),xiiiRLs)
 
        do i = 1,listlength
-         do j = 1,6
+         do j = 1,size(xiiiRLs)
           if (abs(linelist(i)%wavelength-xiiiRLs(j)%Wave) .le. 0.005) then
             xiiiRLs(j)%Obs = linelist(i)%int_dered
             xiiiRLs(j)%abundance = xiiiRLs(j)%obs/xiiiRLs(j)%Int
@@ -1442,7 +1442,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
       weight = 0.00
 
 !      print *,"lambda   Mult   Int   Abund"
-      do i = 1,415
+      do i = 1,size(oiiRLs)
         if (oiiRLs(i)%abundance .ge. 1e-20) then
 !          print "(F7.2,1X,A7,1X,F6.3,1X,ES9.3)",oiiRLs(i)%wave,oiiRLs(i)%Mult,oiiRLs(i)%obs,oiiRLs(i)%abundance
           rlabundtemp = rlabundtemp + oiiRLs(i)%obs
@@ -1461,7 +1461,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
       do j = 1,11 !10 XXX
         rlabundtemp = 0.
         weight = 0.
-        do i = 1,415
+        do i = 1,size(oiiRLs)
           if (oiiRLs(i)%Mult .eq. oiimultiplets(j)%Multiplet .and. oiiRLs(i)%obs .gt. 0) then
 !            rlabundtemp = rlabundtemp + (oiiRLs(i)%obs * oiiRLs(i)%abundance)
 !            weight = weight + oiiRLs(i)%obs
@@ -1478,12 +1478,11 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
       rlabundtemp = 0.
       weight = 0.
-      do i = 1,182
-        if (oiiRLs(i)%Mult .ne. "       " .and. oiiRLs(i)%obs .gt. 0) then
-!          rlabundtemp = rlabundtemp + (oiiRLs(i)%obs * oiiRLs(i)%abundance)
-!          weight = weight + oiiRLs(i)%obs
-           rlabundtemp = rlabundtemp + oiiRLs(i)%obs
-           weight = weight + oiiRLs(i)%Int
+
+      do i=1,size(oiiRLs)
+        if (oiiRLs(i)%Term1(4:5) .eq. "3d" .and. oiiRLs(i)%Term2(3:4) .eq. "4f" .and. oiiRLs(i)%Mult .ne. "       " .and. oiiRLs(i)%obs .gt. 0) then
+          rlabundtemp = rlabundtemp + oiiRLs(i)%obs
+          weight = weight + oiiRLs(i)%Int
         endif
       enddo
 
