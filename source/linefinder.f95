@@ -35,7 +35,7 @@ character(len=5) :: temp_ion1, temp_ion2
 xcorr = 0.D0
 xcorr_array%restwavelength = 0.D0
 xcorr_array%observedwavelength = 0.D0
-xcorr_array%match = 0.D0
+xcorr_array%match = 0
 
 !algorithm:
 
@@ -97,7 +97,7 @@ call qsort(linelist_compare)
 do i=1,10
   if (minval(abs(linelist_compare - xcorr_array(i)%restwavelength)) .lt. 10) then
     xcorr_array(i)%observedwavelength = linelist_compare(minloc(abs(linelist_compare - xcorr_array(i)%restwavelength),1))
-    xcorr_array(i)%match = 1.D0
+    xcorr_array(i)%match = 1
   endif
 enddo
 
@@ -108,7 +108,7 @@ xcorr = 0.D0
 
 do i=-1000,1000
   do j=1,10
-    xcorr(i+1001)=xcorr(i+1001)+(abs(xcorr_array(j)%observedwavelength - xcorr_array(j)%restwavelength - 0.01*dble(i)) * xcorr_array(j)%match)
+    xcorr(i+1001)=xcorr(i+1001)+(abs(xcorr_array(j)%observedwavelength - xcorr_array(j)%restwavelength - 0.01*dble(i)) * dble(xcorr_array(j)%match))
   end do
 end do
 

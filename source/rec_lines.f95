@@ -226,9 +226,6 @@
      & Te, Ne, abund
       DOUBLE PRECISION :: a, b, c, d, an(4)
 
-      INTEGER :: i
-
-
       TYPE(oiiRL), DIMENSION(:) :: oiiRLs
 
       call get_aeff_hb(te,ne, aeff_hb, em_hb)
@@ -740,8 +737,7 @@
      & Br_term, z
       DOUBLE PRECISION :: a, b, c, d
 
-      INTEGER :: ii, i
-
+      INTEGER :: i
 
       TYPE(niiRL), DIMENSION(:) :: niiRLs
 
@@ -1135,9 +1131,6 @@
       DOUBLE PRECISION :: aeff_Hb, Em_Hb, &
      & Te, Ne, abund
 
-      INTEGER :: i
-
-
       TYPE(ciiRL), DIMENSION(:) :: ciiRLs
 
       call get_aeff_hb(te,ne, aeff_hb, em_hb)
@@ -1170,9 +1163,6 @@
       IMPLICIT NONE
       DOUBLE PRECISION :: aeff_Hb, Em_Hb,                         &
      &  Te, Ne, abund
-
-      INTEGER :: i
-
 
       TYPE(neiiRL), DIMENSION(:) :: neiiRLs
 
@@ -1209,8 +1199,6 @@
       IMPLICIT NONE
       DOUBLE PRECISION :: aeff_Hb, Em_Hb, &
      & Te, Ne, abund
-
-      INTEGER :: i
 
       TYPE(xiiiRL), DIMENSION(:) :: xiiiRLs
 

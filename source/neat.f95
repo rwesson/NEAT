@@ -55,8 +55,6 @@ program neat
         CHARACTER(len=1) :: blank
         INTEGER :: IO, listlength
         double precision :: normalise
-        character(len=85) :: linedatainput
-        DOUBLE PRECISION :: temp1,temp2,temp3,temp4
 
         !results and result processing
 
@@ -1238,9 +1236,9 @@ implicit none
 double precision :: input_array(:)
 double precision, intent(out) :: uncertainty_array(3)
 double precision, dimension(:), allocatable :: bintemp
-double precision :: binsize=0d0, comp=0d0
+double precision :: binsize=0d0
 double precision, dimension (:,:), allocatable, intent(out) :: binned_quantity_result
-integer :: ii, bincount, arraysize, abovepos, belowpos
+integer :: arraysize, abovepos, belowpos
 integer :: nbins, nperbin, runs
 integer, dimension(1) :: maxpos
 double precision :: mean=0d0, sd=0d0
