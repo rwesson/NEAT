@@ -375,7 +375,12 @@ program neat
                 print *,gettime()," : WARNING!!!  The line finding algorithm is intended as an aid only and is not designed to be highly robust"
                 print *,gettime()," : check your line list very carefully for potentially wrongly identified lines!!"
                 print *,"---------------------------------"
-                !get confirmation to continue
+                print *,"Are these line IDs ok? (y/n)"
+                read (5,*) blank
+                if (blank .eq. "n" .or. blank .eq. "N") then
+                  print *,gettime()," : analysis cancelled."
+                  stop
+                endif
         endif
 
 ! normalise to Hbeta
