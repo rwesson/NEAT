@@ -51,9 +51,8 @@ program neat
         TYPE(LINE),DIMENSION(:), allocatable :: linelist_original
         TYPE(LINE),dimension(:,:), allocatable :: all_linelists
         CHARACTER(len=512) :: filename
-        CHARACTER(len=15) :: invar1, invar2 !line fluxes and uncertainties are read as strings into these variables
         CHARACTER(len=1) :: blank
-        INTEGER :: IO, listlength
+        INTEGER :: IO, listlength, errstat
         double precision :: normalise
 
         !results and result processing
@@ -200,6 +199,7 @@ program neat
         R=3.1
         identifylines=.false.
         nbins=25
+        normalise = 0.d0
 
         ! start the logging output to terminal
 
@@ -306,7 +306,7 @@ program neat
                 stop
          endif
 
-        !first, read in the line list
+        !check number of runs
 
         if (runs .gt. 1 .and. runs .lt. 5000) print *,gettime(),": warning: number of iterations is low.  At least 5000 is recommended for good sampling of probability distributions"
         if (runs .gt. 1) nperbin=runs/nbins
@@ -319,50 +319,22 @@ program neat
 
         deallocate(options)
 
-        I = 0
-        OPEN(199, file=filename, iostat=IO, status='old')
-                DO WHILE (IO >= 0)
-                        READ(199,*,end=111) blank
-                        I = I + 1
-                END DO
-        111 print *
-        listlength=I
+! read in the line list, allocate original linelist array
 
-!then allocate and read
-        allocate (linelist(listlength))
+        call read_linelist(filename,linelist,listlength, errstat)
+
+        if (errstat .eq. 1) then
+                print *,gettime(),": error: line list reading failed"
+                print *,"            This can happen if it doesn't have three columns"
+                stop
+        elseif (errstat .eq. 2) then
+                PRINT*, gettime(),": cheese shop error - no inputs"
+                STOP
+        else
+                print "(X,A,A,A,A,I3,A)", gettime(),": line list file ",trim(filename)," read successfully (",listlength," lines)"
+        endif
+
         allocate (linelist_original(listlength))
-
-        linelist%intensity = 0.D0
-        linelist%abundance = 0.D0
-        linelist%freq=0d0
-        linelist%wavelength=0d0
-        linelist%wavelength_observed=0d0
-        linelist%int_dered=0d0
-        linelist%int_err=0d0
-        linelist%zone='    '
-        linelist%name='           '
-        linelist%transition='                    '
-        linelist%location=0
-        linelist%ion='                   '
-        linelist%latextext='               '
-        linelist%linedata='                                                                           '
-        normalise = 0.d0
-
-        REWIND (199)
-
-        DO I=1,listlength
-          READ(199,*,end=110) linelist(i)%wavelength, invar1, invar2 
-          if (invar1(1:1) .eq. "*") then
-            linelist(i)%intensity = 0.d0
-            linelist(i)%int_err = 0.d0
-          else
-            read (invar1,*) linelist(i)%intensity
-            read (invar2,*) linelist(i)%int_err
-          endif
-          linelist(i)%latextext = ""
-        END DO
-
-        CLOSE(199)
 
 ! run line identifier if required
 
@@ -395,19 +367,6 @@ program neat
 
         linelist%intensity = linelist%intensity * normalise
         linelist%int_err = linelist%int_err * normalise
-
-        110 PRINT "(X,A9,A11,I4,A15,I4,A9)", gettime(),": read in ", I - 1," lines (out of ",listlength," in file)"
-
-        if (I - 1 .ne. listlength) then
-                print *,gettime(),": error: line list reading failed"
-                print *,"This can happen if it doesn't have three columns"
-                stop
-        endif
-
-        if (linelist(1)%wavelength == 0) then
-                PRINT*, gettime(),": cheese shop error - no inputs"
-                STOP
-        endif
 
 ! check for and remove negative line fluxes and uncertainties
 

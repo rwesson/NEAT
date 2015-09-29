@@ -4,6 +4,70 @@ implicit none!
 
 contains
 
+subroutine read_linelist(filename,linelist,listlength, errstat)
+        implicit none
+        integer :: i,io, listlength, errstat
+        character(len=1) :: blank
+        type(line), dimension(:), allocatable :: linelist
+        character(len=512) :: filename
+        CHARACTER(len=15) :: invar1, invar2 !line fluxes and uncertainties are read as strings into these variables
+
+        errstat=0
+        I = 0
+        OPEN(199, file=filename, iostat=IO, status='old')
+                DO WHILE (IO >= 0)
+                        READ(199,*,end=111) blank
+                        I = I + 1
+                END DO
+        111 continue
+        listlength=I
+
+!then allocate and read
+        allocate (linelist(listlength))
+
+        linelist%intensity = 0.D0
+        linelist%abundance = 0.D0
+        linelist%freq=0d0
+        linelist%wavelength=0d0
+        linelist%wavelength_observed=0d0
+        linelist%int_dered=0d0
+        linelist%int_err=0d0
+        linelist%zone='    '
+        linelist%name='           '
+        linelist%transition='                    '
+        linelist%location=0
+        linelist%ion='                   '
+        linelist%latextext='               '
+        linelist%linedata='                                                                           '
+
+        REWIND (199)
+
+        DO I=1,listlength
+          READ(199,*,end=110) linelist(i)%wavelength, invar1, invar2
+          if (invar1(1:1) .eq. "*") then
+            linelist(i)%intensity = 0.d0
+            linelist(i)%int_err = 0.d0
+          else
+            read (invar1,*) linelist(i)%intensity
+            read (invar2,*) linelist(i)%int_err
+          endif
+          linelist(i)%latextext = ""
+        END DO
+
+        CLOSE(199)
+
+        110 continue
+
+        if (I - 1 .ne. listlength) then
+                errstat=1
+        endif
+
+        if (linelist(1)%wavelength == 0) then
+                errstat=2
+        endif
+
+end subroutine read_linelist
+
 subroutine read_ilines(ILs, Iint,iion,ionlist)
         IMPLICIT NONE
         TYPE(line), DIMENSION(:), allocatable :: ILs
