@@ -1,3 +1,10 @@
+1. read in all lines, fluxes, uncertainties
+2. call routines to identify them
+3. put them into arrays, or just add ID to a structure?
+4. analyse
+5. add atomic data to output files
+
+
 1. improve the reading of line list.  should do the following:
 
   - check for 2, 3 or 4 columns.
@@ -7,8 +14,14 @@
   - read and identify before the loop
   - identify blends and treat them sensibly, eg 7320/7330, use blended line wavelength
 
-2. include atomic data in output table
-3. use configuration files to determine which diagnostics will be used and which multiplets included in OII and NII abundances
+2. line finder, try fitting a 5th order polynomial or something instead of a simple linear shift
+
+3. include atomic data in output table
+4. use configuration files to determine which diagnostics will be used and which multiplets included in OII and NII abundances
+
+0. line identification outside loop - 
+1. line list tables should not include abundances, put them in separate tables
+3. remove RLs way outside optical which will be of no use for a very long time
 
 bug investigations
 
