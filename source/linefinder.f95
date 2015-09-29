@@ -54,7 +54,7 @@ xcorr_array%match = 0
 
         REWIND (100)
         DO I=1,n_neatlines
-                READ(100,*,end=102) temp_wave, temp_ion1, temp_ion2
+                READ(100,*,end=102) temp_wave, null, temp_ion1, temp_ion2
                 neatlines(i)%wavelength = temp_wave
                 neatlines(i)%ion = temp_ion1//temp_ion2 
         END DO
