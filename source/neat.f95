@@ -517,11 +517,10 @@ program neat
         if (runs .gt. 1) then
                 do j=1, listlength
 
-!rest wavelength and ion name
-!if line list was read in from ALFA then write out the observed and rest wavelength, transition data will be written out at the end of the table row
+!rest wavelength, ion name for plain text file
 
                 write (650,"(X,F7.2,X,A11)", advance='no') all_linelists(j,1)%wavelength,all_linelists(j,1)%name
-                write (651,"(X,F7.2,' & ',A15,' & ')", advance='no') all_linelists(j,1)%wavelength,all_linelists(j,1)%latextext
+                write (651,"(X,F7.2,' & ',A15,' & ')", advance='no') all_linelists(j,1)%wavelength
 
 !line flux - todo: calculate the corrected flux and uncertainties for SNR<6.
 
@@ -548,27 +547,32 @@ program neat
                   endif
                 else
                   write (650,"(A)", advance='no') " * "
-                  write (651,"(A)", advance='no') " *     &        &"
+                  write (651,"(A)", advance='no') " *     &        "
                 endif
+
+! transition data
+
+                write (650,*)
+                write (651,*) linelist_original(j)%linedata, "\\"
 
 !abundance - write out if there is an abundance for the line, don't write
 !anything except a line break if there is no abundance for the line.
 !todo: add an option to choose whether or not to put abundances in the line list table
 
-                quantity_result = all_linelists(j,:)%abundance
-                call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins,nperbin,runs)
-                if (uncertainty_array(2) .ne. 0.D0) then
-                  if (uncertainty_array(1) .ne. uncertainty_array(3)) then
-                    write (650,"(ES10.2,SP,ES10.2,SP,ES10.2)") uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
-                    write (651,"(' & ${',A,'}$ & $^{+',A,'}_{',A,'}$ \\')") trim(latex_number(uncertainty_array(2))),trim(latex_number(uncertainty_array(1))),trim(latex_number(-uncertainty_array(3)))
-                  else
-                    write (650,"(ES10.2,A,ES10.2)") uncertainty_array(2)," +-",uncertainty_array(1)
-                    write (651,"(' & $',A,'$ & $\pm',A,'$\\')") trim(latex_number(uncertainty_array(2))),trim(latex_number(uncertainty_array(1)))
-                  endif
-                else
-                  write (650,*)
-                  write (651,*) "\\"
-                endif
+!                quantity_result = all_linelists(j,:)%abundance
+!                call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins,nperbin,runs)
+!                if (uncertainty_array(2) .ne. 0.D0) then
+!                  if (uncertainty_array(1) .ne. uncertainty_array(3)) then
+!                    write (650,"(ES10.2,SP,ES10.2,SP,ES10.2)") uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
+!                    write (651,"(' & ${',A,'}$ & $^{+',A,'}_{',A,'}$ \\')") trim(latex_number(uncertainty_array(2))),trim(latex_number(uncertainty_array(1))),trim(latex_number(-uncertainty_array(3)))
+!                  else
+!                    write (650,"(ES10.2,A,ES10.2)") uncertainty_array(2)," +-",uncertainty_array(1)
+!                    write (651,"(' & $',A,'$ & $\pm',A,'$\\')") trim(latex_number(uncertainty_array(2))),trim(latex_number(uncertainty_array(1)))
+!                  endif
+!                else
+!                  write (650,*)
+!                  write (651,*) "\\"
+!                endif
 
                 end do
         else ! runs == 1, no uncertainties to write out
@@ -577,14 +581,14 @@ program neat
                   if (linelist(i)%intensity .ne. 0.d0) then
                     if (linelist(i)%abundance .gt. 0.0) then
                       write (650,"(X,F7.2,X,A11,F7.3,X,F7.3,X,ES14.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance
-                      write (651,"(X,F7.2,X,'&',A15,'&',X,F7.3,X,'&',X,F7.3,X,'&',X,'$',A,'$',X,'\\')") linelist(i)%wavelength,linelist(i)%latextext,linelist(i)%intensity,linelist(i)%int_dered, trim(latex_number(linelist(i)%abundance))
+                      write (651,"(X,F7.2,X,'&',X,F7.3,X,'&',X,F7.3,X,A,'\\')") linelist(i)%wavelength,linelist(i)%intensity,linelist(i)%int_dered,linelist(i)%linedata
                     else
                       write (650,"(X,F7.2,X,A11,F7.3,X,F7.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered
-                      write (651,"(X,F7.2,X,'&',A15,'&',X,F7.3,X,'&',X,F7.3,X,'&',X,'\\')") linelist(i)%wavelength,linelist(i)%latextext,linelist(i)%intensity,linelist(i)%int_dered
+                      write (651,"(X,F7.2,X,'&',X,F7.3,X,'&',X,F7.3,X,A,'\\')") linelist(i)%wavelength,linelist(i)%intensity,linelist(i)%int_dered,linelist(i)%linedata
                     endif
                   else
                     write (650,"(X,F7.2,X,A11,A7,X,A7)") linelist(i)%wavelength,linelist(i)%name,"*      ","*      "
-                    write (651,"(X,F7.2,X,'&',A15,'&',X,A7,X,'&',X,A7,X,'&',X,'\\')") linelist(i)%wavelength,linelist(i)%latextext,"*      ","*      "
+                    write (651,"(X,F7.2,X,'&',X,A7,X,'&',X,A7,X,A,'\\')") linelist(i)%wavelength,"*      ","*      ",linelist(i)%linedata
                   endif
                 end do
 

@@ -6,11 +6,19 @@ contains
 
 subroutine read_linelist(filename,linelist,listlength, errstat)
         implicit none
-        integer :: i,io, listlength, errstat
+        integer :: i, j, io, nlines, listlength, errstat
         character(len=1) :: blank
         type(line), dimension(:), allocatable :: linelist
         character(len=512) :: filename
         CHARACTER(len=15) :: invar1, invar2 !line fluxes and uncertainties are read as strings into these variables
+
+        TYPE neat_line
+          double precision :: wavelength
+          CHARACTER(len=85) :: linedata
+        END TYPE
+
+        type(neat_line), dimension(:), allocatable :: neatlines
+
 
         errstat=0
         I = 0
@@ -58,12 +66,43 @@ subroutine read_linelist(filename,linelist,listlength, errstat)
 
         110 continue
 
+! check for errors
+
         if (I - 1 .ne. listlength) then
                 errstat=1
         endif
 
         if (linelist(1)%wavelength == 0) then
                 errstat=2
+        endif
+
+!if no errors, proceed to copying line data into the array
+
+        if (errstat .eq. 0) then
+
+          I = 1
+          OPEN(100, file='utilities/complete_line_list', iostat=IO, status='old')
+            DO WHILE (IO >= 0)
+              READ(100,"(A1)",end=101) blank
+              I = I + 1
+            END DO
+          101 nlines=I-1
+
+!then allocate and read
+          allocate (neatlines(nlines))
+
+          REWIND (100)
+          DO I=1,nlines
+            READ(100,"(F8.2,A85)",end=102) neatlines(i)%wavelength,neatlines(i)%linedata
+            do j=1,listlength
+              if (abs(linelist(j)%wavelength - neatlines(i)%wavelength) .lt. 0.011) then
+                linelist(j)%linedata = neatlines(i)%linedata
+              endif
+            enddo
+          END DO
+          102 print *
+          CLOSE(100)
+
         endif
 
 end subroutine read_linelist
