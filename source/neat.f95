@@ -38,12 +38,12 @@ program neat
         CHARACTER :: switch_icf !switch for which ICF scheme to use
         INTEGER :: I, j, runs, Narg !runs = number of runs for randomiser
 
-        !input options
+!input options
 
         CHARACTER(len=2048), DIMENSION(:), allocatable :: options
         CHARACTER(len=2048) :: commandline
 
-        !file reading variables
+!file reading variables
 
         LOGICAL :: file_exists
         LOGICAL :: identifylines
@@ -55,7 +55,7 @@ program neat
         INTEGER :: IO, listlength, errstat
         double precision :: normalise
 
-        !results and result processing
+!results and result processing
 
         type(resultarray), dimension(:), allocatable :: all_results
         type(resultarray), dimension(1) :: iteration_result
@@ -63,7 +63,7 @@ program neat
         double precision, dimension(:,:), allocatable :: resultprocessingarray
         character(len=40), dimension(:,:), allocatable :: resultprocessingtext
 
-        !atomic data
+!atomic data
 
         character(len=10) :: ionlist(40) !list of ion names
         integer :: iion !# of ions in Ilines
@@ -72,36 +72,36 @@ program neat
         type(atomic_data),allocatable :: atomicdata(:)
         double precision, dimension(:,:,:), allocatable :: heidata
 
-        !extinction
+!extinction
 
         logical :: calculate_extinction=.true.
         DOUBLE PRECISION :: meanextinction, R
 
-        !RP effect switch
+!RP effect switch
 
         logical :: norp=.false.
 
-        !binning and uncertainties
+!binning and uncertainties
 
         double precision, dimension(3) :: uncertainty_array=0d0
         double precision, dimension (:,:), allocatable :: binned_quantity_result
         logical :: unusual
         integer :: verbosity,nbins,nperbin
 
-        !CEL array
+!CEL array
 
         TYPE(line), DIMENSION(:), allocatable :: ILs
 
-        !diagnostic array
+!diagnostic array
 
         double precision, dimension(6) :: diagnostic_array
 
-        !output formats
+!output formats
 
         character(len=35) :: extinction_format, diagnostic_format, diagnostic_ratio_format, abundances_format, adf_format
 
-        !multiple output formats defined as variables so they can be passed to
-        !the printout subroutine
+!multiple output formats defined as variables so they can be passed to
+!the printout subroutine
 
         extinction_format = "(X,A,F9.3,SP,F9.3,F9.3,S)"
         diagnostic_format = "(X,A,F9.1,SP,F9.1,F9.1,S)"
@@ -109,7 +109,7 @@ program neat
         abundances_format = "(X,A,ES14.3,SP,ES14.3,ES14.3,S)"
         adf_format = "(X,A,F8.2,SP,F8.2,F8.2,S)"
 
-        !read command line arguments
+!read command line arguments
 
         Narg = IARGC() !count input arguments
 
@@ -186,7 +186,7 @@ program neat
                 call getarg(i,options(i))
         enddo
 
-        ! set defaults
+! set defaults
 
         runs=1
         switch_ext="S" !Howarth 1983 Galactic law
@@ -201,7 +201,7 @@ program neat
         nbins=25
         normalise = 0.d0
 
-        ! start the logging output to terminal
+! start the logging output to terminal
 
         print *,"NEAT, the Nebular Empirical Analysis Tool"
         print *,"-----------------------------------------"
@@ -210,7 +210,7 @@ program neat
         print *,gettime(),": starting code"
         print *,gettime(),": command line: ",trim(commandline)
 
-        ! process command line arguments
+! process command line arguments
 
         do i=1,Narg
                 if ((trim(options(i))=="-n" .or. trim(options(i))=="--n-iterations") .and. (i+1) .le. Narg) then
@@ -306,7 +306,7 @@ program neat
                 stop
          endif
 
-        !check number of runs
+!check number of runs
 
         if (runs .gt. 1 .and. runs .lt. 5000) print *,gettime(),": warning: number of iterations is low.  At least 5000 is recommended for good sampling of probability distributions"
         if (runs .gt. 1) nperbin=runs/nbins
@@ -420,7 +420,7 @@ program neat
 
         print *,gettime(), ": reading atomic data"
 
-        !CELs read, can now read in atomic data
+!CELs read, can now read in atomic data
 
         allocate(atomicdata(iion))
         DO I=1,iion
@@ -428,10 +428,10 @@ program neat
             call read_atomic_data(atomicdata(I))
         ENDDO
 
-        !read ORL data
+!read ORL data
         call read_orl_data
 
-        !read helium emissivities
+!read helium emissivities
 
         if (switch_he .eq. "P") then
           allocate(heidata(21,15,44))
@@ -443,7 +443,7 @@ program neat
           call read_smits(heidata)
         endif
 
-        !find maximum #levels and temperatures - pass to equib to reduce footprint
+!find maximum #levels and temperatures - pass to equib to reduce footprint
 
         maxlevs = atomicdata(1)%nlevs
         maxtemps = atomicdata(1)%ntemps
@@ -452,7 +452,7 @@ program neat
             if(atomicdata(i)%ntemps .gt. maxtemps) maxtemps = atomicdata(i)%ntemps
         enddo
 !        print*,maxlevs,maxtemps
-        !now check number of iterations.  If 1, line list is fine as is.  If more than one, randomize the fluxes
+!now check number of iterations.  If 1, line list is fine as is.  If more than one, randomize the fluxes
 
         allocate(all_results(runs))
 
@@ -462,7 +462,7 @@ program neat
 
         else if(runs > 1)then
 
-                !save unrandomised line list
+!save unrandomised line list
 
                 linelist_original = linelist
 
@@ -1034,85 +1034,81 @@ program neat
 contains
 
         subroutine randomizer(linelist, listlength, norp)
+        ! from http://www.netlib.org/random/random.f90
 
-                TYPE(line), dimension(listlength) :: linelist
-                INTEGER :: IO, I, j, listlength
-                DOUBLE PRECISION :: temp4
-                LOGICAL, intent(in) :: norp
+        TYPE(line), dimension(listlength) :: linelist
+        INTEGER :: IO, I, j, listlength
+        DOUBLE PRECISION :: temp4
+        LOGICAL, intent(in) :: norp
 
-                REAL :: fn_val
+        REAL :: fn_val
+        REAL     :: s = 0.449871, t = -0.386595, a = 0.19600, b = 0.25472,           &
+                    r1 = 0.27597, r2 = 0.27846, u, v, x, y, q
+        REAL :: half
+        REAL :: newmean, newsnr, snr
 
-                !     Local variables
-                REAL     :: s = 0.449871, t = -0.386595, a = 0.19600, b = 0.25472,           &
-                            r1 = 0.27597, r2 = 0.27846, u, v, x, y, q
-                REAL :: half
-                REAL :: newmean, newsnr, snr
+        half = 0.5
 
-                half = 0.5
+        I = 1
+        IO=0
 
-                I = 1
-                IO=0
+        do j = 1,listlength
+          DO
+            CALL RANDOM_NUMBER(u)
+            CALL RANDOM_NUMBER(v)
+            v = 1.7156 * (v - half)
+            x = u - s
+            y = ABS(v) - t
+            q = x**2 + y*(a*y - b*x)
+            IF (q < r1) EXIT
+            IF (q > r2) CYCLE
+            IF (v**2 < -4.0*LOG(u)*u**2) EXIT
+          END DO
+          fn_val = v/u
 
-                        do j = 1,listlength
+!                if (j==1) R=3.1+(0.15*fn_val)
 
-                                ! from http://www.netlib.org/random/random.f90
+          if (linelist(j)%intensity/linelist(j)%int_err .gt. 6.0 .or. norp) then !normal distribution
 
-                                DO
-                                        CALL RANDOM_NUMBER(u)
-                                        CALL RANDOM_NUMBER(v)
-                                        v = 1.7156 * (v - half)
-                                        x = u - s
-                                        y = ABS(v) - t
-                                        q = x**2 + y*(a*y - b*x)
-                                        IF (q < r1) EXIT
-                                        IF (q > r2) CYCLE
-                                        IF (v**2 < -4.0*LOG(u)*u**2) EXIT
-                                END DO
-                                fn_val = v/u
+            temp4=linelist(j)%intensity+(fn_val*linelist(j)%int_err)
+            if(temp4 < 0) temp4 = 0.D0
+            linelist(j)%intensity = temp4
 
-!                                if (j==1) R=3.1+(0.15*fn_val)
+          elseif (linelist(j)%int_err .ge. linelist(j)%intensity) then !it's an upper limit, take number from semi-gaussian distribution with peak at zero and 5 sigma = intensity
+            linelist(j)%intensity = abs(fn_val)*0.2*linelist(j)%intensity
+          else !if SN<6, then take lognormal distribution, parameters from Rola & Pelat (1994)
+                     !for SN<6, the actual mean is derived from the observed mean using
+            snr = linelist(j)%intensity/linelist(j)%int_err
+            newmean = 0.0765957/(snr**2) + 1.86037/snr - 0.309695
+                     !the actual standard deviation is derived from the observed using
+            newsnr = -1.11329/(snr**3) + 1.8542/(snr**2) - 0.288222/snr + 0.18018
+                     !(fits to the data in Rola & Pelat's table 6)
+                     !the distributions in table 6 give the mean and sigma of log-normal distributions of S/N(obs), given S/N(true).  We don't know S/N(true) but using the distributions as that of the factor by which line fluxes are overestimated is equivalent.  So,
+            temp4 = exp(fn_val*newsnr + newmean)
+            if (temp4 < 0 ) temp4 = 0.D0
+            linelist(j)%intensity = linelist(j)%intensity / temp4
 
-                                if (linelist(j)%intensity/linelist(j)%int_err .gt. 6.0 .or. norp) then !normal distribution
+          endif
+        end do
 
-                                        temp4=linelist(j)%intensity+(fn_val*linelist(j)%int_err)
-                                        if(temp4 < 0) temp4 = 0.D0
-                                        linelist(j)%intensity = temp4
-
-                                elseif (linelist(j)%int_err .ge. linelist(j)%intensity) then !it's an upper limit, take number from semi-gaussian distribution with peak at zero and 5 sigma = intensity
-                                        linelist(j)%intensity = abs(fn_val)*0.2*linelist(j)%intensity
-                                else !if SN<6, then take lognormal distribution, parameters from Rola & Pelat (1994)
-                                     !for SN<6, the actual mean is derived from the observed mean using
-                                        snr = linelist(j)%intensity/linelist(j)%int_err
-                                        newmean = 0.0765957/(snr**2) + 1.86037/snr - 0.309695
-                                     !the actual standard deviation is derived from the observed using
-                                        newsnr = -1.11329/(snr**3) + 1.8542/(snr**2) - 0.288222/snr + 0.18018
-                                     !(fits to the data in Rola & Pelat's table 6)
-                                     !the distributions in table 6 give the mean and sigma of log-normal distributions of S/N(obs), given S/N(true).  We don't know S/N(true) but using the distributions as that of the factor by which line fluxes are overestimated is equivalent.  So,
-                                        temp4 = exp(fn_val*newsnr + newmean)
-                                        if (temp4 < 0 ) temp4 = 0.D0
-                                        linelist(j)%intensity = linelist(j)%intensity / temp4
-
-                                endif
-                        end do
-                !end do
         end subroutine
 
-           SUBROUTINE init_random_seed()
-            INTEGER :: i, n, clock
-            INTEGER, DIMENSION(:), ALLOCATABLE :: seed
+        SUBROUTINE init_random_seed()
+          INTEGER :: i, n, clock
+          INTEGER, DIMENSION(:), ALLOCATABLE :: seed
 
-            n=20
-            i=n
-            CALL RANDOM_SEED(size = n)
-            ALLOCATE(seed(n))
+          n=20
+          i=n
+          CALL RANDOM_SEED(size = n)
+          ALLOCATE(seed(n))
 
-            CALL SYSTEM_CLOCK(COUNT=clock)
+          CALL SYSTEM_CLOCK(COUNT=clock)
 
-            seed = clock + 37 * (/ (i - 1, i = 1, n) /)
-            CALL RANDOM_SEED(PUT = seed)
+          seed = clock + 37 * (/ (i - 1, i = 1, n) /)
+          CALL RANDOM_SEED(PUT = seed)
 
-            DEALLOCATE(seed)
-          END SUBROUTINE
+          DEALLOCATE(seed)
+        END SUBROUTINE
 
 subroutine write_uncertainties(input_array, uncertainty_array, plaintext, latextext, itemformat, filename, suffix, verbosity,nbins,nperbin,runs)
 
