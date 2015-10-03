@@ -2,8 +2,13 @@
 2. call routines to identify them
 3. put them into arrays, or just add ID to a structure?
 4. analyse
-5. add atomic data to output files
 
+read all atomic data before the loop - some RL atomic data is being read every time
+
+deblending:
+1. compile list of blended lines
+2. check isolated lines of same element, subtract flux from blend
+3. start with He, then OII, then CIII
 
 1. improve the reading of line list.  should do the following:
 
@@ -16,12 +21,7 @@
 
 2. line finder, try fitting a 5th order polynomial or something instead of a simple linear shift
 
-3. include atomic data in output table
-4. use configuration files to determine which diagnostics will be used and which multiplets included in OII and NII abundances
-
-0. line identification outside loop - 
-1. line list tables should not include abundances, put them in separate tables
-3. remove RLs way outside optical which will be of no use for a very long time
+3. use configuration files to determine which diagnostics will be used and which multiplets included in OII and NII abundances
 
 bug investigations
 
