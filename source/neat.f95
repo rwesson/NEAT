@@ -508,11 +508,10 @@ program neat
         open (651,FILE=trim(filename)//"_linelist.tex", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
 
         write (650,*) "Lambda  Ion           F(line)  I(line) Abundance"
-        write (651,*) "\centering"
-        write (651,*) "\small "
-        write (651,*) "\begin{longtable}{llrlrlrl}"
+        write (651,*) "\begin{longtable}{lrlrlllllll}"
         write (651,*) "\hline"
-        write (651,*) " $ \lambda $ & Ion & $F \left( \lambda \right) $ && $I \left( \lambda \right) $ && Abundance \\ \hline \hline "
+        write (651,*) "$ \lambda $ & Ion & $F \left( \lambda \right) $ && $I \left( \lambda \right) $ & Ion & Multiplet & Lower term & Upper term & g$_1$ & g$_2$ \\"
+        write (651,*) "\hline"
 
         if (runs .gt. 1) then
                 do j=1, listlength
@@ -522,7 +521,7 @@ program neat
                 write (650,"(X,F7.2,X,A11)", advance='no') all_linelists(j,1)%wavelength,all_linelists(j,1)%name
                 write (651,"(X,F7.2,' & ',A15,' & ')", advance='no') all_linelists(j,1)%wavelength
 
-!line flux - todo: calculate the corrected flux and uncertainties for SNR<6.
+!line flux
 
                if (linelist_original(j)%intensity .eq. 0.d0) then
                  write (650,"(A)", advance='no') " * "
