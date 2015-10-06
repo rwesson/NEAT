@@ -29,7 +29,6 @@ program neat
         use mod_atomic_read
         use mod_recombination_lines
         use mod_linefinder
-        !use mod_common_data
 
         IMPLICIT NONE
 
@@ -507,7 +506,7 @@ program neat
         open (650,FILE=trim(filename)//"_linelist", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
         open (651,FILE=trim(filename)//"_linelist.tex", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
 
-        write (650,*) "Lambda  Ion           F(line)  I(line) Abundance"
+        write (650,*) "Lambda  Ion          F(line)             I(line)               Abundance"
         write (651,*) "\begin{longtable}{lrlrlllllll}"
         write (651,*) "\hline"
         write (651,*) "$ \lambda $ & Ion & $F \left( \lambda \right) $ && $I \left( \lambda \right) $ & Ion & Multiplet & Lower term & Upper term & g$_1$ & g$_2$ \\"
@@ -541,7 +540,7 @@ program neat
                     write (650,"(F7.3,SP,F7.2,SP,F7.2)", advance='no') uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
                     write (651,"(F7.3,'& $^{',SP,F7.2,'}_{',SP,F7.2,'}$')", advance='no') uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
                   else
-                    write (650,"(F7.3,A,F7.2,5X)", advance='no') uncertainty_array(2)," +-",uncertainty_array(1)
+                    write (650,"(F7.3,A,F7.2,4X)", advance='no') uncertainty_array(2)," +-",uncertainty_array(1)
                     write (651,"(F7.3,'& $\pm$',F7.2)", advance='no') uncertainty_array(2),uncertainty_array(1)
                   endif
                 else
@@ -551,27 +550,27 @@ program neat
 
 ! transition data
 
-                write (650,*)
+!                write (650,*)
                 write (651,*) linelist_original(j)%linedata, "\\"
 
 !abundance - write out if there is an abundance for the line, don't write
 !anything except a line break if there is no abundance for the line.
 !todo: add an option to choose whether or not to put abundances in the line list table
 
-!                quantity_result = all_linelists(j,:)%abundance
-!                call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins,nperbin,runs)
-!                if (uncertainty_array(2) .ne. 0.D0) then
-!                  if (uncertainty_array(1) .ne. uncertainty_array(3)) then
-!                    write (650,"(ES10.2,SP,ES10.2,SP,ES10.2)") uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
+                quantity_result = all_linelists(j,:)%abundance
+                call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins,nperbin,runs)
+                if (uncertainty_array(2) .ne. 0.D0) then
+                  if (uncertainty_array(1) .ne. uncertainty_array(3)) then
+                    write (650,"(ES10.2,SP,ES10.2,SP,ES10.2)") uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
 !                    write (651,"(' & ${',A,'}$ & $^{+',A,'}_{',A,'}$ \\')") trim(latex_number(uncertainty_array(2))),trim(latex_number(uncertainty_array(1))),trim(latex_number(-uncertainty_array(3)))
-!                  else
-!                    write (650,"(ES10.2,A,ES10.2)") uncertainty_array(2)," +-",uncertainty_array(1)
+                  else
+                    write (650,"(ES10.2,A,ES10.2)") uncertainty_array(2)," +-",uncertainty_array(1)
 !                    write (651,"(' & $',A,'$ & $\pm',A,'$\\')") trim(latex_number(uncertainty_array(2))),trim(latex_number(uncertainty_array(1)))
-!                  endif
-!                else
-!                  write (650,*)
+                  endif
+                else
+                  write (650,*)
 !                  write (651,*) "\\"
-!                endif
+                endif
 
                 end do
         else ! runs == 1, no uncertainties to write out
