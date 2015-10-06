@@ -7,45 +7,44 @@
 #
 # You can now also call using
 #     > make CO=debug
-# for extra warnings, gprof and gdb output, exception trapping 
-# at runtime, and bounds-checking. 
+# for extra warnings, gprof and gdb output, exception trapping
+# at runtime, and bounds-checking.
 # This option is slow (about 2x slower than make all)
 #
 # For working code, call
 #     > make CO=fast
-# to enable optimisation. This is about 2x faster than normal 
+# to enable optimisation. This is about 2x faster than normal
 # (using gfortran) but has little error trapping.
-# 
+#
 # Finally,
 #     > make new
 # simply calls clean then all to force a re-build.
 #
-# I have also included similar options for ifort. Since I have 
-# the compiler here, and it is potentially significantly faster, 
+# I have also included similar options for ifort. Since I have
+# the compiler here, and it is potentially significantly faster,
 # it may be useful when it comes time to do science.
 #
 #----------------------------------------------------------------
 
 FC=gfortran
 LD=gfortran
-FFLAGS=-ffree-line-length-0 -fbounds-check
+FFLAGS=-ffree-line-length-0 -Jsource/
 
 ifeq ($(FC),gfortran)
-  FFLAGS = -ffree-line-length-0
   ifeq ($(CO),debug)
-    FFLAGS = -ffree-line-length-0 -fbounds-check -Wall -Wuninitialized #-ffpe-trap=zero,overflow,invalid,underflow,denormal 
+    FFLAGS += -fbounds-check -Wall -Wuninitialized #-ffpe-trap=zero,overflow,invalid,underflow,denormal
   endif
   ifeq ($(CO),debug2)
-    FFLAGS = -g -pg -ffree-line-length-0 -fbounds-check -Wall -Wuninitialized #-ffpe-trap=zero,overflow,invalid,underflow,denormal 
+    FFLAGS += -g -pg -fbounds-check -Wall -Wuninitialized #-ffpe-trap=zero,overflow,invalid,underflow,denormal
   endif
   ifeq ($(CO),debug3)
-    FFLAGS = -g -pg -ffree-line-length-0 -fbounds-check -Wall -Wuninitialized -ffpe-trap=zero,overflow,invalid,underflow,denormal 
+    FFLAGS += -g -pg -fbounds-check -Wall -Wuninitialized -ffpe-trap=zero,overflow,invalid,underflow,denormal
   endif
   ifeq ($(CO),pedantic)
-    FFLAGS = -g -pg -ffree-line-length-0 -fbounds-check -Wall -Wuninitialized -Werror -pedantic -ffpe-trap=zero,overflow,invalid,underflow,denormal
+    FFLAGS += -g -pg -fbounds-check -Wall -Wuninitialized -Werror -pedantic -ffpe-trap=zero,overflow,invalid,underflow,denormal
   endif
   ifeq ($(CO),fast)
-    FFLAGS = -O3 -ffree-line-length-0 -fno-backtrace
+    FFLAGS += -O3 -fno-backtrace
   endif
 endif
 
@@ -73,7 +72,7 @@ all: neat
 %.o: %.f95
 	$(FC) $(FFLAGS) $< -c -o $@
 
-neat: source/types.o source/extinction.o source/rec_lines.o source/helium.o source/equib_routines.o source/filereading.o source/abundances.o source/quicksort.o source/linefinder.o source/neat.o 
+neat: source/types.o source/extinction.o source/rec_lines.o source/helium.o source/equib_routines.o source/filereading.o source/abundances.o source/quicksort.o source/linefinder.o source/neat.o
 	$(LD) $(LDFLAGS) $(FFLAGS) -o $@ $^
 
 clean:
