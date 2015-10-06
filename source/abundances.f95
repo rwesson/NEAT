@@ -194,8 +194,7 @@ implicit none
         !For diagnostic ratios with the sum of two lines on top, the get_Tdiag
         !subroutine will properly calculate the ratio if one of the two lines is
         !missing, from the theoretical expected line strengths.
-        !TODO: calculate line ratios from atomic data at start instead of
-        !hardcoding
+        !TODO: calculate line ratios from atomic data at start instead of hardcoding
         CALL get_Tdiag("nii6548    ","nii6584    ","nii5754    ", DBLE(4.054), DBLE(1.3274), niiTratio)        ! N II
         CALL get_Tdiag("oiii5007   ","oiii4959   ","oiii4363   ", DBLE(1.3356), DBLE(3.98), oiiiTratio)        ! O III
         CALL get_Tdiag("neiii3868  ","neiii3967  ","neiii3342  ", DBLE(1.3013), DBLE(4.319), neiiiTratio)        ! Ne III
@@ -1259,7 +1258,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
 ! now get abundances for ORLs
 ! o2+
-       call oii_rec_lines(medtemp,meddens,DBLE(1),oiiRLs)
+       call oii_rec_lines(medtemp,meddens,1.d0,oiiRLs)
 
        do i = 1,listlength
          do j = 1,size(oiiRLs)
@@ -1279,7 +1278,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
 !N2+
 
-       call nii_rec_lines(medtemp,meddens,DBLE(1),niiRLs)
+       call nii_rec_lines(medtemp,meddens,1.d0,niiRLs)
 
        do i = 1,listlength
          do j = 1,size(niiRLs)
@@ -1294,7 +1293,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
        enddo
 
 !C2+
-       call cii_rec_lines(medtemp,meddens,DBLE(1),ciiRLs)
+       call cii_rec_lines(medtemp,meddens,1.d0,ciiRLs)
 
        do i = 1,listlength
          do j = 1,size(ciiRLs)
@@ -1309,7 +1308,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
        enddo
 
 !Ne2+
-       call neii_rec_lines(medtemp,meddens,DBLE(1),neiiRLs)
+       call neii_rec_lines(medtemp,meddens,1.d0,neiiRLs)
 
        do i = 1,listlength
          do j = 1,size(neiiRLs)
@@ -1324,7 +1323,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
        enddo
 
 !C3+, N3+
-       call xiii_rec_lines(medtemp,meddens,DBLE(1),xiiiRLs)
+       call xiii_rec_lines(medtemp,meddens,1.d0,xiiiRLs)
 
        do i = 1,listlength
          do j = 1,size(xiiiRLs)
@@ -1581,16 +1580,6 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 if (switch_icf .eq. "K") then
 
 ! ICFs (Kingsburgh + Barlow 1994)
-
-! first calculate the helium factor that appears in several ICFs
-! if no he lines are seen set this factor to zero, so that abundances relying on
-! this ratio are not calculated.
-
-     if (heiabund .gt. 0.) then
-        heICFfactor = (heiabund + heiiabund)/heiabund
-     elseif (heiabund .eq.0. .and. heiiabund .eq.0.0) then
-        heICFfactor = 0.0
-     endif
 
 ! oxygen - complete
      OabundCEL = 0.
