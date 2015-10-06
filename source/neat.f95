@@ -961,7 +961,7 @@ program neat
 
 !next, loop through the results, processing and printing
 
-        do j=1,140
+        do j=1,142
 
 ! here we put some if statements to put things into conveniently separate bits
 
