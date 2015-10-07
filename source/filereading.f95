@@ -19,6 +19,11 @@ subroutine read_linelist(filename,linelist,listlength, errstat)
 
         type(neat_line), dimension(:), allocatable :: neatlines
 
+! first get number of rows
+! todo: count the columns
+! if 2 - assume rest wavelength and intensity, read in and restrict to single iteration
+! if 3 - assume rest wavelength, intensity, uncertainty, read in as we do currently
+! if 4 - assume observed wavelength, rest wavelength, intensity, uncertainty, read in and add obs wlen to output table
 
         errstat=0
         I = 0

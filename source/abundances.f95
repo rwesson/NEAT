@@ -1868,6 +1868,13 @@ elseif (switch_icf .eq. "D") then
 endif
 
 !ORLs - not from KB94 but based on Liu et al. 2000
+!redefine He ICF factor, we use the same variable name for different things in DI14 and KB94
+!todo: fix this ugly workaround
+     if (heiabund .gt. 0.) then
+        heICFfactor = (heiabund + heiiabund)/heiabund
+     elseif (heiabund .eq.0. .and. heiiabund .eq.0.0) then
+        heICFfactor = 0.0
+     endif
 !Oxygen
 
      if (oiiRLabund .ge. 1e-20) then
