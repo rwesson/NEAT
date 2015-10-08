@@ -1596,10 +1596,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
      endif
 
 ! now apply the scheme chosen by the user
-! todo : make ICFs consistent so that they are always the factor by which you
-! multiply the sum of the observed ions to get the elemental abundance.  Some of
-! the DI14 ICFs are presented as corrections to an X/O ratio so that the ICF can
-! be less than 1.
+
 if (switch_icf .eq. "K") then
 
 ! ICFs (Kingsburgh + Barlow 1994)
