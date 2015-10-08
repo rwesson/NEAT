@@ -867,7 +867,6 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
           call oii_rl_diagnostics(oii4649/oii4089,oii4649/oii4662,oii_te,oii_ne)
           iteration_result%oii_te=oii_te
           iteration_result%oii_ne=oii_ne
-print *,"fuck",oii_te,oii_ne,oii4649/oii4089,oii4649/oii4662
         else
           iteration_result%oii_te=0.d0
           iteration_result%oii_ne=0.d0
