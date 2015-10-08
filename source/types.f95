@@ -164,6 +164,8 @@ TYPE resultarray
         double precision :: nii_v20_abund_orl =0d0
         double precision :: nii_v28_abund_orl=0d0
         double precision :: nii_3d4f_abund_orl=0d0
+        double precision :: oii_te=0.d0
+        double precision :: oii_ne=0.d0
 end type
 
 end module mod_resultarrays

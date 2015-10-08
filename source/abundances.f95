@@ -9,6 +9,7 @@ use mod_recombination_lines
 use mod_extinction
 use mod_resultarrays
 use mod_atomicdata
+use mod_oii_diagnostics
 
 implicit none
 
@@ -34,6 +35,7 @@ implicit none
         DOUBLE PRECISION :: c1, c2, c3, meanextinction, R
         REAL :: heiabund,heiiabund,Hetotabund, heICFfactor, OICFfactor, upsilon, upsilonprime
         REAL :: bajtemp
+        real :: oii4649, oii4089,oii4662,oii_te,oii_ne
 
         logical :: calculate_extinction
 
@@ -848,6 +850,28 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         endif
 
         iteration_result%Bal_jump_temp = BaJtemp
+
+! get te and ne from OII RL diagnostics if we have them
+
+        oii4089=0.d0
+        oii4649=0.d0
+        oii4662=0.d0
+
+        do i=1,listlength
+          if (abs(linelist(i)%wavelength-4089.29) .lt. 0.005) oii4089=linelist(i)%int_dered
+          if (abs(linelist(i)%wavelength-4649.13) .lt. 0.005) oii4649=linelist(i)%int_dered
+          if (abs(linelist(i)%wavelength-4661.63) .lt. 0.005) oii4662=linelist(i)%int_dered
+        enddo
+
+        if (oii4089.gt.0 .and. oii4649.gt.0 .and. oii4662.gt.0) then
+          call oii_rl_diagnostics(oii4649/oii4089,oii4649/oii4662,oii_te,oii_ne)
+          iteration_result%oii_te=oii_te
+          iteration_result%oii_ne=oii_ne
+print *,"fuck",oii_te,oii_ne,oii4649/oii4089,oii4649/oii4662
+        else
+          iteration_result%oii_te=0.d0
+          iteration_result%oii_ne=0.d0
+        endif
 
 ! get abundances for all CELs
 

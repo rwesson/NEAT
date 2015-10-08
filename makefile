@@ -72,7 +72,7 @@ all: neat
 %.o: %.f95
 	$(FC) $(FFLAGS) $< -c -o $@
 
-neat: source/types.o source/extinction.o source/rec_lines.o source/helium.o source/equib_routines.o source/filereading.o source/abundances.o source/quicksort.o source/linefinder.o source/neat.o
+neat: source/types.o source/oii_diagnostics.o source/extinction.o source/rec_lines.o source/helium.o source/equib_routines.o source/filereading.o source/abundances.o source/quicksort.o source/linefinder.o source/neat.o
 	$(LD) $(LDFLAGS) $(FFLAGS) -o $@ $^
 
 clean:
