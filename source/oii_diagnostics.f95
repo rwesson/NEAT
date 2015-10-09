@@ -13,7 +13,6 @@ real :: oii_te,oii_ne
 
 oii_te=0.d0
 oii_ne=0.d0
-
 !read data files
 !this needs to be moved into filereading.f95 and done outside the loop
 open (999, file="Atomic-data/te_oii.dat")
@@ -68,6 +67,15 @@ do i=1,8
 
     x0=(b*(b*obs4649_4089-a*obs4649_4662)-(a*c))/(a**2+b**2)
     y0=(a*(-b*obs4649_4089+a*obs4649_4662)-(b*c))/(a**2+b**2)
+
+    if (isnan(x0(1))) then !horrible hacky condition to check for vertical
+      x0(1)=values(i,j,3)
+      y0(1)=1.
+    endif
+    if (isnan(x0(2))) then
+      x0(2)=values(i+1,j,3)
+      y0(2)=1.
+    endif
 
     d=((obs4649_4089-x0)**2+(obs4649_4662-y0)**2)**0.5
 
