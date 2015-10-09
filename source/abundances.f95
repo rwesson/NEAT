@@ -35,7 +35,8 @@ implicit none
         DOUBLE PRECISION :: c1, c2, c3, meanextinction, R
         REAL :: heiabund,heiiabund,Hetotabund, heICFfactor, OICFfactor, upsilon, upsilonprime
         REAL :: bajtemp
-        real :: oii4649, oii4089,oii4662,oii_te,oii_ne
+        REAL :: oii4649, oii4089,oii4662,oii_te,oii_ne
+        REAL :: ratio_5876_4471, ratio_6678_4471, te_5876_4471, te_6678_4471
 
         logical :: calculate_extinction
 
@@ -817,7 +818,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 ! Helium abundances
 ! He II 
 
-        call get_heii_abund(REAL(medtemp),REAL(meddens),real(Heii_lines(1)%int_dered),heiiabund)
+        call get_heii_abund(REAL(medtemp),REAL(meddens),REAL(Heii_lines(1)%int_dered),heiiabund)
         Heii_lines(1)%abundance = heiiabund
 
 ! He I 
@@ -850,6 +851,41 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         endif
 
         iteration_result%Bal_jump_temp = BaJtemp
+
+! get Te from He line ratios
+! equations derived from Smits 1996 data, at ne=5000.
+! to be replaced with proper interpolation in density and using whichever dataset was selected
+! Te(5876/4471) = a*r**4 + b*r**3 + c*r**2 + d*r + e + f/(r-g)
+! a=6858; b=-99452.0; c=541944.8; d=-1317918.7; e=1210016.1; f=23.21; g=2.833
+! accurate to +-50K
+! Te(6678/4471) = a*r**2+b*r+c (r<0.775)
+!                 a*r**4+b**r*3+c**r*2+d**r+e (r>0.775)
+
+        ratio_5876_4471=0.d0
+        ratio_6678_4471=0.d0
+        Te_5876_4471=0.d0
+        Te_6678_4471=0.d0
+
+        if (HeI_lines(10)%int_dered .gt. 0.d0 .and. HeI_lines(15)%int_dered .gt.0.d0) then
+          ratio_5876_4471=HeI_lines(15)%int_dered/HeI_lines(10)%int_dered
+          if (ratio_5876_4471.lt. 4.2 .and. ratio_5876_4471.gt. 2.84) then
+            Te_5876_4471 = 6858*ratio_5876_4471**4 - 99452.0*ratio_5876_4471**3 + 541944.8*ratio_5876_4471**2 - 1317918.7*ratio_5876_4471 + 1210016.1 + 23.21/(ratio_5876_4471-2.833)
+          endif
+        endif
+
+        if (HeI_lines(10)%int_dered .gt. 0.d0 .and. HeI_lines(16)%int_dered .gt.0.d0) then
+          ratio_6678_4471=HeI_lines(16)%int_dered/HeI_lines(10)%int_dered
+          if (ratio_6678_4471 .lt. 0.775 .and. ratio_6678_4471 .gt. 0.59) then
+            Te_6678_4471 = -64152.4*ratio_6678_4471**2 + 33203.3*ratio_6678_4471 + 22553.1
+          elseif (ratio_6678_4471 .ge. 0.775 .and. ratio_6678_4471 .lt. 1.2) then
+            Te_6678_4471 = 1.06363e+06*ratio_6678_4471**4 - 4.4416e+06*ratio_6678_4471**3 + 6.96343e+06*ratio_6678_4471**2 - 4.86749e+06*ratio_6678_4471 + 1.28347e+06
+          endif
+        endif
+
+        iteration_result%ratio_5876_4471=ratio_5876_4471
+        iteration_result%ratio_6678_4471=ratio_6678_4471
+        iteration_result%Te_5876_4471=Te_5876_4471
+        iteration_result%Te_6678_4471=Te_6678_4471
 
 ! get te and ne from OII RL diagnostics if we have them
 

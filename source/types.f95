@@ -166,6 +166,11 @@ TYPE resultarray
         double precision :: nii_3d4f_abund_orl=0d0
         double precision :: oii_te=0.d0
         double precision :: oii_ne=0.d0
+        double precision :: ratio_5876_4471=0.d0
+        double precision :: ratio_6678_4471=0.d0
+        double precision :: Te_5876_4471=0.d0
+        double precision :: Te_6678_4471=0.d0
+
 end type
 
 end module mod_resultarrays
