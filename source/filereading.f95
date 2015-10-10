@@ -1,6 +1,6 @@
 module mod_abundIO
 use mod_abundtypes
-implicit none!
+implicit none
 
 contains
 
@@ -155,7 +155,8 @@ end module
 
 module mod_abundmaths
 use mod_abundtypes
-implicit none!
+use mod_atomicdata
+implicit none
 
 contains
 
@@ -183,6 +184,25 @@ integer function get_ion(ionname, iontable, Iint)
 
 end function
 
+!same as above for getting the location of ion within atomic data array. equally ugly.
+
+integer function get_atomicdata(ionname, atomicdatatable)
+        IMPLICIT NONE
+        CHARACTER(len=20) :: ionname
+        TYPE(atomic_data), DIMENSION(:) :: atomicdatatable
+        INTEGER :: i
+
+        do i = 1, size(atomicdatatable)
+          if(trim(atomicdatatable(i)%ion) == trim(ionname))then
+            get_atomicdata = i
+            return
+          endif
+        end do
+
+        get_atomicdata = 0
+        PRINT*, "My hovercraft is full of eels.  Atomic data not found.", ionname
+
+end function
 
 subroutine element_assign(ILs, linelist, Iint, listlength)
         IMPLICIT NONE
@@ -306,6 +326,7 @@ end subroutine
 end module mod_abundmaths
 
 module mod_atomic_read
+use mod_atomicdata
 
 contains
 subroutine read_atomic_data(ion)

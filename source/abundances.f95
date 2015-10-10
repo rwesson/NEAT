@@ -51,7 +51,7 @@ implicit none
         integer :: iion !# of ions in Ilines
         integer :: maxlevs,maxtemps
         type(atomic_data) :: atomicdata(iion)
-
+        character(len=20) :: ion
         double precision, dimension(21,15,44) :: heidata
 
 ! recombination line variables
@@ -198,18 +198,18 @@ implicit none
         !subroutine will properly calculate the ratio if one of the two lines is
         !missing, from the theoretical expected line strengths.
         !TODO: calculate line ratios from atomic data at start instead of hardcoding
-        CALL get_Tdiag("nii6548    ","nii6584    ","nii5754    ", DBLE(4.054), DBLE(1.3274), niiTratio)        ! N II
-        CALL get_Tdiag("oiii5007   ","oiii4959   ","oiii4363   ", DBLE(1.3356), DBLE(3.98), oiiiTratio)        ! O III
-        CALL get_Tdiag("neiii3868  ","neiii3967  ","neiii3342  ", DBLE(1.3013), DBLE(4.319), neiiiTratio)        ! Ne III
-        CALL get_Tdiag("neiii3868  ","neiii3967  ","neiii15p5um", DBLE(1.3013), DBLE(4.319), neiiiIRTratio)! Ne III ir
-        CALL get_Tdiag("nev3426    ","nev3345    ","nev2975    ", DBLE(1.3571), DBLE(3.800), nevTratio)        !!ne v
-        CALL get_Tdiag("siii9069   ","siii9531   ","siii6312   ", DBLE(3.47), DBLE(1.403), siiiTratio)        !s iii
-        CALL get_Tdiag("ariii7135  ","ariii7751  ","ariii5192  ", DBLE(1.24), DBLE(5.174), ariiiTratio)        !ar iii
-        CALL get_Tdiag("arv6435    ","arv7005    ","arv4625    ", DBLE(3.125), DBLE(1.471), arvTratio)        !ar v
-        CALL get_Tdiag("ci9850     ","ci9824     ","ci8727     ", DBLE(1.337), DBLE(3.965), ciTratio)      !C I
-        CALL get_Tdiag("oi6364     ","oi6300     ","oi5577     ", DBLE(4.127), DBLE(1.320), oiTratio)      !O I
-        CALL get_Tdiag("oiii4959   ","oiii5007   ","oiii52um   ", DBLE(1.3356), DBLE(3.98), oiiiIRTratio) ! OIII ir
-        CALL get_Tdiag("oiii4959   ","oiii5007   ","oiii1666   ", DBLE(1.3356), DBLE(3.98), oiiiUVTratio) ! OIII UV
+        CALL get_Tdiag("nii6548    ","nii6584    ","nii5754    ", "nii                 ", niiTratio)        ! N II
+        CALL get_Tdiag("oiii5007   ","oiii4959   ","oiii4363   ", "oiii                ", oiiiTratio)        ! O III
+        CALL get_Tdiag("neiii3868  ","neiii3967  ","neiii3342  ", "neiii               ", neiiiTratio)        ! Ne III
+        CALL get_Tdiag("neiii3868  ","neiii3967  ","neiii15p5um", "neiii               ", neiiiIRTratio)! Ne III ir
+        CALL get_Tdiag("nev3426    ","nev3345    ","nev2975    ", "nev                 ", nevTratio)        !!ne v
+        CALL get_Tdiag("siii9069   ","siii9531   ","siii6312   ", "siii                ", siiiTratio)        !s iii
+        CALL get_Tdiag("ariii7135  ","ariii7751  ","ariii5192  ", "ariii               ", ariiiTratio)        !ar iii
+        CALL get_Tdiag("arv6435    ","arv7005    ","arv4625    ", "arv                 ", arvTratio)        !ar v
+        CALL get_Tdiag("ci9850     ","ci9824     ","ci8727     ", "ci                  ", ciTratio)      !C I
+        CALL get_Tdiag("oi6364     ","oi6300     ","oi5577     ", "oi                  ", oiTratio)      !O I
+        CALL get_Tdiag("oiii5007   ","oiii4959   ","oiii52um   ", "oiii                ", oiiiIRTratio) ! OIII ir
+        CALL get_Tdiag("oiii5007   ","oiii4959   ","oiii1666   ", "oiii                ", oiiiUVTratio) ! OIII UV
 
         !Fixed, DJS
 
@@ -2240,51 +2240,61 @@ contains
 
         END SUBROUTINE
 
-        SUBROUTINE get_Tdiag(name1, name2, name3, factor1, factor2, ratio)
-                                                        !3.47,   1.403   SIII
-                IMPLICIT NONE 
-                CHARACTER(len=11) :: name1, name2, name3
-                INTEGER :: ion_no1, ion_no2, ion_no3
-                DOUBLE PRECISION :: factor1, factor2, ratio, ratio2
+        SUBROUTINE get_Tdiag(name1, name2, name3, ion, ratio)
+        !this routine gets the ratio for nebular to auroral diagnostics.  In case one of nebular pair is not observed, it assumes the intensity of the other is given by the theoretical ratio
+        IMPLICIT NONE
+        CHARACTER(len=11) :: name1, name2, name3
+        CHARACTER(len=20) :: ion
+        INTEGER :: ion_no1, ion_no2, ion_no3
+        DOUBLE PRECISION :: factor1, factor2, ratio, ratio2
+        integer :: level1, level2, level3 !level2 is the upper level, level1 the lower of the two lower levels
 
+        ion_no1 = get_ion(name1, ILs, Iint)
+        ion_no2 = get_ion(name2, ILs, Iint)
+        ion_no3 = get_ion(name3, ILs, Iint)
 
-                ion_no1 = get_ion(name1, ILs, Iint)
-                ion_no2 = get_ion(name2, ILs, Iint)
-                ion_no3 = get_ion(name3, ILs, Iint)
+        !get the levels of the transitions. upper level is common to both transitions
+        read (ILs(ion_no1)%transition(1:index(ILs(ion_no1)%transition,',')-1),"(i2)") level1
+        read (ILs(ion_no1)%transition(index(ILs(ion_no1)%transition,',')+1:index(ILs(ion_no1)%transition,'/')-1),"(i2)") level2
+        read (ILs(ion_no2)%transition(1:index(ILs(ion_no2)%transition,',')-1),"(i2)") level3
 
-                if(((ILs(ion_no1)%int_dered .gt. 0) .AND. (ILs(ion_no2)%int_dered .gt. 0)) .and. (ILs(ion_no3)%int_dered .gt. 0 ))then
+        !now, in possibly the ugliest lines of code in all of NEAT, get the theoretical ratio, which is ratio of A values multiplied by ratio of wavelengths
 
-                        ratio = (ILs(ion_no1)%int_dered + ILs(ion_no2)%int_dered) / ILs(ion_no3)%int_dered
+        factor1=1.+(atomicdata(get_atomicdata(ion,atomicdata))%A_coeffs(level2,level3)/atomicdata(get_atomicdata(ion,atomicdata))%A_coeffs(level2,level1) * (atomicdata(get_atomicdata(ion,atomicdata))%waveno(level2)-atomicdata(get_atomicdata(ion,atomicdata))%waveno(level3))/(atomicdata(get_atomicdata(ion,atomicdata))%waveno(level2)-atomicdata(get_atomicdata(ion,atomicdata))%waveno(level1)))
+        factor2=1.+(1./(factor1-1.))
 
-                        if(name1 == "siii9069   ")then
-                                ratio2 = (ILs(ion_no1)%int_dered / ILs(ion_no2)%int_dered)
-                                !print*, ratio2
-                                if(ratio2 > (factor2-1)*0.95 .and. ratio2 < (factor2-1)*1.05)then
-                                        !PRINT*, ratio2, " ", factor2-1, " 1 ", name1
-                                        ratio = (ILs(ion_no1)%int_dered + ILs(ion_no2)%int_dered) / ILs(ion_no3)%int_dered
-                                else if(ratio2 < (factor2-1)*0.95)then
-                                        !PRINT*, ratio2, " ", factor2-1, " 2 ", name1
-                                        ratio = (factor2 * ILs(ion_no2)%int_dered) / ILs(ion_no3)%int_dered
-                                        !PRINT*, (factor2 * ILs(ion_no2)%int_dered), " ", (ILs(ion_no1)%int_dered + ILs(ion_no2)%int_dered)
-                                else if(ratio2 > (factor2-1)*1.05)then
-                                        !PRINT*, ratio2, " ", factor2-1, " 3 ", name1
-                                        ratio = (factor1 * ILs(ion_no1)%int_dered) / ILs(ion_no3)%int_dered
-                                else
-                                        ratio = 0.0
-                                end if
-                        end if
+        !now calculate the diagnostic ratio
 
-                elseif(((ILs(ion_no1)%int_dered .gt. 0) .AND. (ILs(ion_no2)%int_dered .eq. 0)) .and. (ILs(ion_no3)%int_dered .gt. 0 ))then
-                        ratio = (ILs(ion_no1)%int_dered * factor1) / ILs(ion_no3)%int_dered
-                elseif(((ILs(ion_no1)%int_dered .eq. 0) .AND. (ILs(ion_no2)%int_dered .gt. 0)) .and. (ILs(ion_no3)%int_dered .gt. 0 ))then
-                        ratio = (ILs(ion_no2)%int_dered * factor2) / ILs(ion_no3)%int_dered
-                else
-                        ratio = 0.0
-                endif
+        if(((ILs(ion_no1)%int_dered .gt. 0) .AND. (ILs(ion_no2)%int_dered .gt. 0)) .and. (ILs(ion_no3)%int_dered .gt. 0 ))then
 
+          ratio = (ILs(ion_no1)%int_dered + ILs(ion_no2)%int_dered) / ILs(ion_no3)%int_dered
+
+          if(name1 == "siii9069   ")then
+            ratio2 = (ILs(ion_no1)%int_dered / ILs(ion_no2)%int_dered)
+            !print*, ratio2
+            if(ratio2 > (factor2-1)*0.95 .and. ratio2 < (factor2-1)*1.05)then
+              !PRINT*, ratio2, " ", factor2-1, " 1 ", name1
+              ratio = (ILs(ion_no1)%int_dered + ILs(ion_no2)%int_dered) / ILs(ion_no3)%int_dered
+            else if(ratio2 < (factor2-1)*0.95)then
+              !PRINT*, ratio2, " ", factor2-1, " 2 ", name1
+              ratio = (factor2 * ILs(ion_no2)%int_dered) / ILs(ion_no3)%int_dered
+              !PRINT*, (factor2 * ILs(ion_no2)%int_dered), " ", (ILs(ion_no1)%int_dered + ILs(ion_no2)%int_dered)
+            else if(ratio2 > (factor2-1)*1.05)then
+              !PRINT*, ratio2, " ", factor2-1, " 3 ", name1
+              ratio = (factor1 * ILs(ion_no1)%int_dered) / ILs(ion_no3)%int_dered
+            else
+              ratio = 0.0
+            end if
+          end if
+
+        elseif(((ILs(ion_no1)%int_dered .gt. 0) .AND. (ILs(ion_no2)%int_dered .eq. 0)) .and. (ILs(ion_no3)%int_dered .gt. 0 ))then
+          ratio = (ILs(ion_no1)%int_dered * factor1) / ILs(ion_no3)%int_dered
+        elseif(((ILs(ion_no1)%int_dered .eq. 0) .AND. (ILs(ion_no2)%int_dered .gt. 0)) .and. (ILs(ion_no3)%int_dered .gt. 0 ))then
+          ratio = (ILs(ion_no2)%int_dered * factor2) / ILs(ion_no3)%int_dered
+        else
+          ratio = 0.0
+        endif
 
         END SUBROUTINE
-
-
 
 end subroutine abundances
