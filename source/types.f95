@@ -7,8 +7,11 @@ TYPE line
         DOUBLE PRECISION :: wavelength_observed !for use with output from ALFA
         DOUBLE PRECISION :: intensity
         DOUBLE PRECISION :: int_err
-        DOUBLE PRECISION :: freq
         DOUBLE PRECISION :: int_dered
+        DOUBLE PRECISION :: blend_intensity !intensity for blended lines copied to this, set to zero for abundance calculations, then copied back for linelist
+        DOUBLE PRECISION :: blend_int_dered
+        DOUBLE PRECISION :: blend_int_err
+        DOUBLE PRECISION :: freq
         CHARACTER(len=20) :: transition
         DOUBLE PRECISION :: abundance
         CHARACTER(len=4) :: zone !high, medium or low ionisation zone

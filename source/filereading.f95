@@ -45,6 +45,8 @@ subroutine read_linelist(filename,linelist,listlength, errstat)
         linelist%wavelength_observed=0d0
         linelist%int_dered=0d0
         linelist%int_err=0d0
+        linelist%blend_intensity=0.d0
+        linelist%blend_int_err=0d0
         linelist%zone='    '
         linelist%name='           '
         linelist%transition='                    '
@@ -58,8 +60,11 @@ subroutine read_linelist(filename,linelist,listlength, errstat)
         DO I=1,listlength
           READ(199,*,end=110) linelist(i)%wavelength, invar1, invar2
           if (invar1(1:1) .eq. "*") then
-            linelist(i)%intensity = 0.d0
-            linelist(i)%int_err = 0.d0
+!line is blended, its intensity will be removed from abundance and diagnostic calculations but retained in linelist
+            linelist(i-1)%blend_intensity=linelist(i-1)%intensity
+            linelist(i-1)%blend_int_err=linelist(i-1)%int_err
+            linelist(i-1:i)%intensity = 0.d0
+            linelist(i-1:i)%int_err = 0.d0
           else
             read (invar1,*) linelist(i)%intensity
             read (invar2,*) linelist(i)%int_err

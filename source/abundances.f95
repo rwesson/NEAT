@@ -1,4 +1,3 @@
-
 subroutine abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf)
 use mod_abundmaths
 use mod_abundtypes
@@ -90,7 +89,12 @@ implicit none
         HeI_lines%intensity = 0
         HeII_lines%intensity = 0
 
-        !file reading stuff
+        !store fluxes of blends for later retrieval
+
+        where (linelist%blend_intensity .gt. 0.d0)
+          linelist%intensity=0.d0
+          linelist%int_err=0.d0
+        endwhere
 
         !assign IDs to CELs
 
@@ -2197,6 +2201,13 @@ do i=1,Iint
     linelist(ILs(i)%location)%latextext = ILs(i)%latextext
   end if
 end do
+
+!copy blend fluxes back into their original location
+
+where (linelist%blend_intensity .gt. 0.d0)
+  linelist%intensity=linelist%blend_intensity
+  linelist%int_err=linelist%blend_int_err
+endwhere
 
 !write ion names to array
 

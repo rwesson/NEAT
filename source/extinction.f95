@@ -208,23 +208,23 @@ subroutine deredden(lines, number, m_ext)
                 if( (lines(i)%freq .gt. 7.14) .AND. (lines(i)%freq .lt. 10.0))then !far UV
                         fl = flambda(lines(i)%freq, 1)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl)
-
+                        lines(i)%blend_int_dered = lines(i)%blend_intensity * 10**(m_ext*fl)
                 elseif((lines(i)%freq .gt. 3.65) .AND. (lines(i)%freq .lt. 7.14))then ! mid UV
                         fl = flambda(lines(i)%freq, 2)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl)
-
+                        lines(i)%blend_int_dered = lines(i)%blend_intensity * 10**(m_ext*fl)
                 elseif((lines(i)%freq .gt. 2.75) .AND. (lines(i)%freq .lt. 3.65))then ! near UV
                         fl = flambda(lines(i)%freq, 3)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl)
-
+                        lines(i)%blend_int_dered = lines(i)%blend_intensity * 10**(m_ext*fl)
                 elseif((lines(i)%freq .gt. 1.83) .AND. (lines(i)%freq .lt. 2.75))then ! optical
                         fl = flambda(lines(i)%freq, 4)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl)
-
+                        lines(i)%blend_int_dered = lines(i)%blend_intensity * 10**(m_ext*fl)
                 elseif(lines(i)%freq .lt. 1.83)then !IR
                         fl = flambda(lines(i)%freq, 5)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl)
-
+                        lines(i)%blend_int_dered = lines(i)%blend_intensity * 10**(m_ext*fl)
                 endif
 
         end do
@@ -271,15 +271,15 @@ subroutine deredden_LMC(lines, number, m_ext)
                 if(lines(i)%freq .gt. 2.75)then ! UV
                         fl = flambdaLMC(lines(i)%freq, 1)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl)
-
+                        lines(i)%blend_int_dered = lines(i)%blend_intensity * 10**(m_ext*fl)
                 elseif((lines(i)%freq .gt. 1.83) .AND. (lines(i)%freq .lt. 2.75))then ! optical
                         fl = flambdaLMC(lines(i)%freq, 2)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl)
-
+                        lines(i)%blend_int_dered = lines(i)%blend_intensity * 10**(m_ext*fl)
                 elseif(lines(i)%freq .lt. 1.83)then !IR
                         fl = flambdaLMC(lines(i)%freq, 3)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl)
-
+                        lines(i)%blend_int_dered = lines(i)%blend_intensity * 10**(m_ext*fl)
                 endif
 
         end do
@@ -341,19 +341,19 @@ subroutine deredden_CCM(lines, number, m_ext, R)
                 if(lines(i)%freq .gt. 8)then ! Far UV
                         fl = flambdaCCM(lines(i)%freq, 1, R)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl)
-
+                        lines(i)%blend_int_dered = lines(i)%blend_intensity * 10**(m_ext*fl)
                 elseif((lines(i)%freq .gt. 3.3) .AND. (lines(i)%freq .lt. 8))then ! UV
                         fl = flambdaCCM(lines(i)%freq, 2, R)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl)
-
+                        lines(i)%blend_int_dered = lines(i)%blend_intensity * 10**(m_ext*fl)
                 elseif((lines(i)%freq .gt. 1.1) .AND. (lines(i)%freq .lt. 3.3))then !optical & NIR
                         fl = flambdaCCM(lines(i)%freq, 3, R)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl)
-
+                        lines(i)%blend_int_dered = lines(i)%blend_intensity * 10**(m_ext*fl)
                 elseif(lines(i)%freq .lt. 1.1)then !IR
                         fl = flambdaCCM(lines(i)%freq, 4, R)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl)
-
+                        lines(i)%blend_int_dered = lines(i)%blend_intensity * 10**(m_ext*fl)
                 endif
 
         end do
@@ -400,15 +400,15 @@ subroutine deredden_SMC(lines, number, m_ext)
                 if(lines(i)%freq .gt. 6.72)then ! Far UV
                         fl = flambdaSMC(lines(i)%freq, 1)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl)
-
+                        lines(i)%blend_int_dered = lines(i)%blend_intensity * 10**(m_ext*fl)
                 elseif((lines(i)%freq .gt. 1.83) .AND. (lines(i)%freq .lt. 6.72))then ! optical/UV
                         fl = flambdaSMC(lines(i)%freq, 2)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl)
-
+                        lines(i)%blend_int_dered = lines(i)%blend_intensity * 10**(m_ext*fl)
                 elseif(lines(i)%freq .lt. 1.83)then !IR
                         fl = flambdaSMC(lines(i)%freq, 3)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl)
-
+                        lines(i)%blend_int_dered = lines(i)%blend_intensity * 10**(m_ext*fl)
                 endif
 
         end do
@@ -472,21 +472,27 @@ subroutine deredden_Fitz(lines, number, m_ext) !Uses Seaton/Howarth for IR, opti
                 if (lines(i)%freq .lt. 1.83) then
                         fl = flambdaFitz(lines(i)%freq, 1)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl)
+                        lines(i)%blend_int_dered = lines(i)%blend_intensity * 10**(m_ext*fl)
                 elseif((lines(i)%freq .gt. 1.83) .AND. (lines(i)%freq .lt. 2.75))then ! optical
                         fl = flambdaFitz(lines(i)%freq, 2)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl)
+                        lines(i)%blend_int_dered = lines(i)%blend_intensity * 10**(m_ext*fl)
                 elseif((lines(i)%freq .gt. 2.75) .AND. (lines(i)%freq .lt. 3.65))then ! near UV
                         fl = flambdaFitz(lines(i)%freq, 3)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl)
+                        lines(i)%blend_int_dered = lines(i)%blend_intensity * 10**(m_ext*fl)
                 elseif((lines(i)%freq .gt. 3.65) .AND. (lines(i)%freq .lt. 3.70))then ! mid UV
                         fl = flambdaFitz(lines(i)%freq, 4)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl)
+                        lines(i)%blend_int_dered = lines(i)%blend_intensity * 10**(m_ext*fl)
                 elseif((lines(i)%freq .gt. 3.70) .AND. (lines(i)%freq .lt. 5.90))then ! mid UV
                         fl = flambdaFitz(lines(i)%freq, 5)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl)
+                        lines(i)%blend_int_dered = lines(i)%blend_intensity * 10**(m_ext*fl)
                 elseif(lines(i)%freq .gt. 5.90)then ! far UV
                         fl = flambdaFitz(lines(i)%freq, 6)
                         lines(i)%int_dered = lines(i)%intensity * 10**(m_ext*fl)
+                        lines(i)%blend_int_dered = lines(i)%blend_intensity * 10**(m_ext*fl)
                 endif
 
         end do
