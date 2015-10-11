@@ -205,7 +205,7 @@ implicit none
         !For diagnostic ratios with the sum of two lines on top, the get_Tdiag
         !subroutine will properly calculate the ratio if one of the two lines is
         !missing, from the theoretical expected line strengths.
-        !TODO: calculate line ratios from atomic data at start instead of hardcoding
+
         CALL get_Tdiag("nii6548    ","nii6584    ","nii5754    ", "nii                 ", niiTratio)        ! N II
         CALL get_Tdiag("oiii5007   ","oiii4959   ","oiii4363   ", "oiii                ", oiiiTratio)        ! O III
         CALL get_Tdiag("neiii3868  ","neiii3967  ","neiii3342  ", "neiii               ", neiiiTratio)        ! Ne III
