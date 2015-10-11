@@ -234,7 +234,6 @@ subroutine get_H(H_BS, linelist, listlength)
         IMPLICIT NONE
         TYPE(line), DIMENSION(38), INTENT(OUT) :: H_BS
         TYPE(line), DIMENSION(:) :: linelist
-        double precision, dimension(38) :: balmerlines
         INTEGER :: i, j, listlength
 
         H_BS%wavelength = (/ 6562.77D0, 4861.33D0, 4340.47D0, 4101.74D0, 3970.07D0, 3889.05D0, 3835.38D0, 3797.90D0, 3770.63D0, 3750.15D0, 3734.37D0, 3721.94D0, 3711.97D0, 3703.85D0, 3697.15D0, 3691.55D0, 3686.83D0, 3682.81D0, 3679.35D0, 3676.36D0, 3673.76D0, 3671.48D0, 3669.46D0, 3667.68D0, 3666.10D0, 3664.68D0, 3663.40D0, 3662.26D0, 3661.22D0, 3660.28D0, 3659.42D0, 3658.64D0, 3657.92D0, 3657.27D0, 3656.66D0, 3656.11D0, 3655.59D0, 3655.12D0 /)
@@ -267,7 +266,6 @@ subroutine get_HeI(HeI_lines, linelist,listlength)
         TYPE(line), DIMENSION(44), INTENT(OUT) :: HeI_lines
         TYPE(line), DIMENSION(:), INTENT(IN) :: linelist
         INTEGER :: i, j, listlength
-        double precision, dimension(44) :: hei_wavelengths
 
         HeI_lines%wavelength = (/ 2945.10D0,3188.74D0,3613.64D0,3888.65D0,3964.73D0,4026.21D0,4120.82D0,4387.93D0,4437.55D0,4471.50D0,4713.17D0,4921.93D0,5015.68D0,5047.74D0,5875.66D0,6678.16D0,7065.25D0,7281.35D0,9463.58D0,10830.25D0,11013.07D0,11969.06D0,12527.49D0,12755.69D0,12784.92D0,12790.50D0,12845.98D0,12968.43D0,12984.88D0,13411.69D0,15083.65D0,17002.40D0,18555.57D0,18685.33D0,18697.21D0,19089.36D0,19543.19D0,20424.97D0,20581.28D0,20601.76D0,21120.12D0,21132.03D0,21607.80D0,21617.01D0 /)
         HeI_lines%location = 0 !initialise to prevent bugs!
@@ -299,7 +297,6 @@ subroutine get_HeII(HeII_lines, linelist,listlength)
         TYPE(line), DIMENSION(1), INTENT(OUT) :: HeII_lines
         TYPE(line), DIMENSION(:), INTENT(IN) :: linelist
         INTEGER :: i, j, listlength
-        double precision, dimension(1) :: heii_wavelengths
 
         heii_lines%wavelength = (/ 4685.68D0 /)
         heii_lines%location = 0
