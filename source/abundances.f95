@@ -1595,26 +1595,25 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
       if (ILs(get_ion("nii5754    ", ILs, Iint))%Int_dered .gt. 0.d0) then
         if (niiicelabund .gt. 0.d0) then
-          nii5754recCEL=10000.*(3.19*(lowtemp/1.e4)**0.30*niiicelabund)/ILs(get_ion("nii5754    ", ILs, Iint))%Int_dered
+          nii5754recCEL=10000.*(3.19*(medtemp/1.e4)**0.30*niiicelabund)/ILs(get_ion("nii5754    ", ILs, Iint))%Int_dered
         endif
         if (niirlabund .gt. 0.d0) then
-          nii5754recRL=10000.*(3.19*(lowtemp/1.e4)**0.30*niirlabund)/ILs(get_ion("nii5754    ", ILs, Iint))%Int_dered
+          nii5754recRL=10000.*(3.19*(medtemp/1.e4)**0.30*niirlabund)/ILs(get_ion("nii5754    ", ILs, Iint))%Int_dered
         endif
       endif
 
-! this bit would break if the blend and the individual lines were both specified, which should never happen
       if (ILs(get_ion("oii7320    ", ILs, Iint))%Int_dered .gt. 0 .and. ILs(get_ion("oii7330    ", ILs, Iint))%Int_dered .gt. 0) then
         if (oiiicelabund .gt. 0) then
-          oii7325recCEL=10000.*(9.36*(lowtemp/1.e4)**0.44*oiiicelabund)/(ILs(get_ion("oii7320    ", ILs, Iint))%Int_dered+ILs(get_ion("oii7330    ", ILs, Iint))%Int_dered)
+          oii7325recCEL=10000.*(9.36*(medtemp/1.e4)**0.44*oiiicelabund)/(ILs(get_ion("oii7320    ", ILs, Iint))%Int_dered+ILs(get_ion("oii7330    ", ILs, Iint))%Int_dered)
         endif
         if (oiiRLabund .gt. 0) then
-          oii7325recRL=10000.*(9.36*(lowtemp/1.e4)**0.44*oiirlabund)/(ILs(get_ion("oii7320    ", ILs, Iint))%Int_dered+ILs(get_ion("oii7330    ", ILs, Iint))%Int_dered)
+          oii7325recRL=10000.*(9.36*(medtemp/1.e4)**0.44*oiirlabund)/(ILs(get_ion("oii7320    ", ILs, Iint))%Int_dered+ILs(get_ion("oii7330    ", ILs, Iint))%Int_dered)
         endif
       endif
 
       if (ILs(get_ion("oiii4363   ", ILs, Iint))%Int_dered .gt. 0 .and. hetotabund .gt. 0) then
-        oiii4363recCEL=10000.*12.4*(lowtemp/1.e4)**0.59*(((hetotabund/heiabund)**0.66666)-1)*(oiicelabund+oiiicelabund)/ILs(get_ion("oiii4363   ", ILs, Iint))%Int_dered
-        oiii4363recRL=10000.*12.4*(lowtemp/1.e4)**0.59*(((hetotabund/heiabund)**0.66666)-1)*(oiiRLabund)/ILs(get_ion("oiii4363   ", ILs, Iint))%Int_dered
+        oiii4363recCEL=10000.*12.4*(hightemp/1.e4)**0.59*(((hetotabund/heiabund)**0.66666)-1)*(oiicelabund+oiiicelabund)/ILs(get_ion("oiii4363   ", ILs, Iint))%Int_dered
+        oiii4363recRL=10000.*12.4*(hightemp/1.e4)**0.59*(((hetotabund/heiabund)**0.66666)-1)*(oiiRLabund)/ILs(get_ion("oiii4363   ", ILs, Iint))%Int_dered
       endif
 
 ! ICFs
