@@ -959,7 +959,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         celabundtemp = 0.
                 niiCELabund = 0.
         weight = 0.
-        do i= get_ion("nii5754    ", ILs, Iint), get_ion("nii6584    ", ILs, Iint)
+        do i= get_ion("nii6548    ", ILs, Iint), get_ion("nii6584    ", ILs, Iint)
           if (ILs(i)%abundance .ge. 1e-10) niiCELabund = niiCELabund + ILs(i)%abundance*ILs(i)%intensity
           if (ILs(i)%abundance .ge. 1e-10) weight = weight + ILs(i)%intensity
         enddo
@@ -1197,7 +1197,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         celabundtemp = 0.
                 ariiiCELabund = 0.
         weight = 0.
-        do i=get_ion("ariii5192  ", ILs, Iint), get_ion("ariii7751  ", ILs, Iint)
+        do i=get_ion("ariii7135  ", ILs, Iint), get_ion("ariii7751  ", ILs, Iint)
           if (ILs(i)%abundance .ge. 1e-20) ariiiCELabund = ariiiCELabund + ILs(i)%abundance*ILs(i)%intensity
           if (ILs(i)%abundance .ge. 1e-20) then
             weight = weight + ILs(i)%intensity
@@ -1292,7 +1292,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
          celabundtemp = 0.
                  ciCELabund = 0.
         weight = 0.
-        do i=get_ion("ci8727     ", ILs, Iint), get_ion("ci9850     ", ILs, Iint)
+        do i=get_ion("ci9824     ", ILs, Iint), get_ion("ci9850     ", ILs, Iint)
           if (ILs(i)%abundance .ge. 1e-20) ciCELabund = ciCELabund + ILs(i)%abundance*ILs(i)%intensity
           if (ILs(i)%abundance .ge. 1e-20) then
             weight = weight + ILs(i)%intensity
@@ -1309,7 +1309,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
          celabundtemp = 0.
                  oiCELabund = 0.
         weight = 0.
-        do i=get_ion("oi5577     ", ILs, Iint), get_ion("oi6364     ", ILs, Iint)
+        do i=get_ion("oi6300     ", ILs, Iint), get_ion("oi6364     ", ILs, Iint)
           if (ILs(i)%abundance .ge. 1e-20) then
             oiCELabund = oiCELabund + ILs(i)%abundance*ILs(i)%intensity
             weight = weight + ILs(i)%intensity
