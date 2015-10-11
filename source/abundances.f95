@@ -1810,9 +1810,9 @@ elseif (switch_icf .eq. "D") then
 
 !Equation 4:
   if (heiabund+heiiabund .gt. 0.D0) then
-    heICFfactor = heiiabund/(heiabund+heiiabund)
+    upsilon = heiiabund/(heiabund+heiiabund)
   else
-    heICFfactor=0.0
+    upsilon=0.0
   endif
 !Equation 5:
   if (oiiCELabund + oiiiCELabund .gt. 0.D0) then
@@ -1828,7 +1828,7 @@ elseif (switch_icf .eq. "D") then
 !equation 12:
 
   if (oiiCELabund .gt. 0.D0 .and. oiiiCELabund .gt. 0.D0) then
-    celICFO = 10.**((0.08*heICFfactor + 0.006*heICFfactor**2)/(0.34-0.27*heICFfactor)) !should check if upsilon is greater than 0.95 before using
+    celICFO = 10.**((0.08*upsilon + 0.006*upsilon**2)/(0.34-0.27*upsilon)) !should check if upsilon is greater than 0.95 before using
     oabundCEL = celICFO * (oiiCELabund + oiiiCELabund)
   else
     celICFO = 1.0
@@ -1838,10 +1838,10 @@ elseif (switch_icf .eq. "D") then
 !nitrogen
 !equation 14:
 
-  if (niiCELabund .gt. 0.D0 .and. oiiCELabund .gt. 0.D0 .and. heICFfactor .gt. 0.D0) then
-    CELicfN = 10.**(-0.16*oICFfactor*(1+log10(heICFfactor)))
+  if (niiCELabund .gt. 0.D0 .and. oiiCELabund .gt. 0.D0 .and. upsilon .gt. 0.D0) then
+    CELicfN = 10.**(-0.16*oICFfactor*(1+log10(upsilon)))
     nabundCEL = CELicfN * niiCELabund * OabundCEL / oiiCELabund
-  elseif (niiCELabund .gt. 0.D0 .and. oiiCELabund .gt. 0.D0 .and. heICFfactor .eq. 0.D0) then
+  elseif (niiCELabund .gt. 0.D0 .and. oiiCELabund .gt. 0.D0 .and. upsilon .eq. 0.D0) then
     CELicfN = 0.64*Oicffactor
     nabundCEL = CELicfN * niiCELabund * OabundCEL / oiiCELabund
   else
@@ -1864,7 +1864,7 @@ elseif (switch_icf .eq. "D") then
     NeabundCEL = CELicfne * OabundCEL * (neiiiCELabund / oiiiCELabund)
 !equation 20:
   elseif (neiiiCELabund .gt. 0.D0 .and. nevCELabund .gt. 0.D0) then
-    CELicfNe = (1.31+12.68*heICFfactor**2.57)**0.27
+    CELicfNe = (1.31+12.68*upsilon**2.57)**0.27
     NeabundCEL = CELicfNe * OabundCEL * (neiiiCELabund + nevCELabund)
   else
     NeabundCEL = 0.D0
@@ -1874,7 +1874,7 @@ elseif (switch_icf .eq. "D") then
 !sulphur
 
   if (siiiCELabund .eq. 0.D0 .and. siiCELabund .gt. 0.D0) then !equation 23:
-    CELicfS = 10.**(0.31-0.51*heICFfactor)
+    CELicfS = 10.**(0.31-0.51*upsilon)
     SabundCEL = CELicfS * OabundCEL * siiCELabund
   elseif (siiiCELabund .gt. 0.D0 .and. siiCELabund .gt. 0.D0) then !equation 26:
     CELicfS = 10.**((-0.02 - 0.03*OICFfactor - 2.31*OICFfactor**2 + 2.19*OICFfactor**3) / (90.69 + 2.09*OICFfactor - 2.69*OICFfactor**2))
@@ -1887,7 +1887,7 @@ elseif (switch_icf .eq. "D") then
 !chlorine
 
   if (cliiCELabund .gt. 0.D0 .and. cliiiCELabund .gt. 0.D0 .and. clivCELabund .gt. 0.D0) then !equation 32:
-    CELicfCl = 0.98+(0.56-0.57*HeICFfactor)**7.64
+    CELicfCl = 0.98+(0.56-0.57*upsilon)**7.64
     ClabundCEL = CELicfCl * (cliiCELabund + cliiiCELabund + clivCELabund)
   elseif (OICFfactor .le. 0.02 .and. cliiCELabund .gt. 0.D0 .and. cliiiCELabund .gt. 0.D0) then
     CELicfCl = 1.0
