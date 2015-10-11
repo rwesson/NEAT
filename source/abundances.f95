@@ -1411,34 +1411,16 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 !cii recombination lines
 
       do i = 1,size(ciiRLs)
-        if (ciiRLs(i)%abundance .ge. 1e-20) then
-!          print "(1X,F7.2,1X,F6.3,1X,ES9.3)",ciiRLs(i)%wave,ciiRLs(i)%obs,ciiRLs(i)%abundance
-          rlabundtemp = rlabundtemp + ciiRLs(i)%obs
-          weight = weight + ciiRLs(i)%Int
-        endif
         if (ciiRLs(i)%wave .eq. 4267.15D0) then
           cii4267rlabund = ciiRLs(i)%abundance
         endif
       enddo
 
-      if (weight .gt. 0) then
-        ciirlabund = rlabundtemp/weight
-      else
-        ciirlabund = 0.
-      endif
+      ciirlabund = sum(ciiRLs%obs)/sum(ciiRLs%int, mask=ciiRLs%obs.gt.0.d0)
 
 !nii recombination lines
 
-!      print *,"lambda   Mult   Int   Abund"
-      do i = 1,size(niiRLs)
-        if (niiRLs(i)%abundance .ge. 1e-20) then
-!          print "(F7.2,1X,A7,1X,F6.3,1X,ES9.3)",niiRLs(i)%wave,niiRLs(i)%Mult,niiRLs(i)%obs,niiRLs(i)%abundance
-          rlabundtemp = rlabundtemp + niiRLs(i)%obs
-          weight = weight + niiRLs(i)%Int
-        endif
-      enddo
-
-  if (weight .gt. 0) then
+  if (sum(niiRLs%int) .gt. 0) then
 !      print "(ES9.2)",rlabundtemp / weight
 
       niimultiplets%Multiplet = (/"V3     ","V5     ","V8     " ,"V12    ","V20    ","V28    ","3d-4f  "/)
@@ -1447,7 +1429,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
       do j = 1,6
         rlabundtemp = 0.
-        weight = 1.
+        weight = 0.
         do i = 1,size(niiRLs)
           if (niiRLs(i)%Mult .eq. niimultiplets(j)%Multiplet .and. niiRLs(i)%obs .gt. 0) then
 !            rlabundtemp = rlabundtemp + (niiRLs(i)%obs * niiRLs(i)%abundance)
@@ -1505,16 +1487,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
       rlabundtemp = 0.00
       weight = 0.00
 
-!      print *,"lambda   Mult   Int   Abund"
-      do i = 1,size(oiiRLs)
-        if (oiiRLs(i)%abundance .ge. 1e-20) then
-!          print "(F7.2,1X,A7,1X,F6.3,1X,ES9.3)",oiiRLs(i)%wave,oiiRLs(i)%Mult,oiiRLs(i)%obs,oiiRLs(i)%abundance
-          rlabundtemp = rlabundtemp + oiiRLs(i)%obs
-          weight = weight + oiiRLs(i)%Int
-        endif
-      enddo
-
-  if (weight .gt. 0) then
+  if (sum(oiiRLs%Int).gt. 0) then
 
 !     print "(ES9.2)",rlabundtemp/weight
 
@@ -1582,48 +1555,37 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
       rlabundtemp = 0.0
       weight = 0.0
 
-!      print *,"lambda   Mult   Int   Abund"
-      do i = 1,38
-        if (neiiRLs(i)%abundance .ge. 1e-20) then
-!          print "(F7.2,1X,F6.3,1X,ES9.3)",neiiRLs(i)%wave,neiiRLs(i)%obs,neiiRLs(i)%abundance
-           rlabundtemp = rlabundtemp + neiiRLs(i)%obs
-           weight = weight + neiiRLs(i)%Int
-        endif
-      enddo
+      if (sum(neiiRLs%Int) .gt. 0) then
+        neiiRLabund = sum(neiiRLs%obs)/sum(neiiRLs%Int, mask=neiiRLs%obs.gt.0.d0)
+      else
+        neiiRLabund = 0.D0
+      endif
 
-   if (weight .gt. 0) then
-      neiiRLabund = rlabundtemp/weight
-   else
-      neiiRLabund = 0.D0
-   endif
+!N3+ and C3+
 
+      rlabundtemp=0.d0
+      weight=0.d0
 
-      rlabundtemp = 0.0
-      weight = 0.0
-
-      do i = 1,4
-        if (xiiiRLs(i)%abundance .ge. 1e-20) then
-          rlabundtemp = rlabundtemp + xiiiRLs(i)%obs
-          weight = weight + xiiiRLs(i)%Int
-        endif
+      do i=1,4
+        rlabundtemp = rlabundtemp + xiiiRLs(i)%obs
+        weight = weight + xiiiRLs(i)%Int
       enddo
       if (weight .gt. 0) then
-        ciiiRLabund = rlabundtemp / weight
+        ciiiRLabund = rlabundtemp/weight
       else
         ciiiRLabund = 0.0
       endif
 
-!      do i = 5,6
-!        if (xiiiRLs(i)%abundance .ge. 1e-20) then
-!           print "(F7.2,1X,F6.3,1X,ES9.3)",xiiiRLs(i)%wave,xiiiRLs(i)%obs,xiiiRLs(i)%abundance
-!        endif
-!      enddo
-
-     if (xiiiRLs(6)%abundance .ge. 1e-20) then
-        niiiRLabund = xiiiRLs(6)%abundance
-     else
+      do i=5,6
+        rlabundtemp = rlabundtemp + xiiiRLs(i)%obs
+        weight = weight + xiiiRLs(i)%Int
+      enddo
+      if (weight .gt. 0) then
+        niiiRLabund = rlabundtemp/weight
+      else
         niiiRLabund = 0.0
-     endif
+      endif
+
 
 ! ICFs
 
