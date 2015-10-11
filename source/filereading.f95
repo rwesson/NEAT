@@ -338,11 +338,11 @@ subroutine read_atomic_data(ion)
 use mod_atomicdata
     IMPLICIT NONE
     type(atomic_data) :: ion
-    integer :: I,J,K,L,N,NCOMS,ID(2),JD(2),KP1,NLEV1,ionl,dummy
+    integer :: I,J,K,L,N,NCOMS,ID(2),JD(2),KP1,NLEV1,GX,ionl,dummy
     character(len=1) :: comments(78)
     character(len=10) :: ionname
     character(len=25) :: filename
-    real*8 :: GX,WN,AX,QX
+    real*8 :: WN,AX,QX
 
     id = 0
     jd = 0
@@ -371,7 +371,7 @@ use mod_atomicdata
 
         ion%col_str = 0d0
         ion%A_coeffs = 0d0
-        ion%G = 0d0
+        ion%G = 0
         ion%waveno= 0d0
         ion%temps=0d0
         ion%roott=0d0

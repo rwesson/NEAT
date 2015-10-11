@@ -195,7 +195,7 @@ type atomic_data
         real(kind=8),allocatable :: temps(:)
         real(kind=8),allocatable :: roott(:)
         character(len=20),allocatable :: labels(:)
-        real(kind=8),allocatable :: G(:)
+        integer,allocatable :: G(:)
         real(kind=8),allocatable :: waveno(:)
         real(kind=8),allocatable :: A_coeffs(:,:)
         real(kind=8),allocatable :: col_str(:,:,:)
