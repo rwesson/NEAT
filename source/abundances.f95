@@ -66,7 +66,11 @@ implicit none
 ! strong line variables
         DOUBLE PRECISION :: X23,O_R23upper, O_R23lower, N2,O_N2, O3N2, O_O3N2, Ar3O3, O_Ar3O3, S3O3, O_S3O3, x23temp1, x23temp2, x23temp3, x23temp4
 
-        ! initialise some variables
+! recombination contribution to CEL line fluxes for both RL and CEL abundances
+
+        double precision :: nii5754recCEL=0.d0, oii7325recCEL=0.d0, oiii4363recCEL=0.d0, nii5754recRL=0.d0, oii7325recRL=0.d0, oiii4363recRL=0.d0
+
+! initialise some variables
 
         oiiRLabund = 0.d0
         niiRLabund = 0.d0
@@ -1586,6 +1590,32 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         niiiRLabund = 0.0
       endif
 
+! calculate recombination contributions to CELs using equations 1-3 from Liu et al. 2000
+! equations give recombination flux relative to Hb=1
+
+      if (ILs(get_ion("nii5754    ", ILs, Iint))%Int_dered .gt. 0.d0) then
+        if (niiicelabund .gt. 0.d0) then
+          nii5754recCEL=10000.*(3.19*(lowtemp/1.e4)**0.30*niiicelabund)/ILs(get_ion("nii5754    ", ILs, Iint))%Int_dered
+        endif
+        if (niirlabund .gt. 0.d0) then
+          nii5754recRL=10000.*(3.19*(lowtemp/1.e4)**0.30*niirlabund)/ILs(get_ion("nii5754    ", ILs, Iint))%Int_dered
+        endif
+      endif
+
+! this bit would break if the blend and the individual lines were both specified, which should never happen
+      if ((ILs(get_ion("oii7320    ", ILs, Iint))%Int_dered .gt. 0 .and. ILs(get_ion("oii7330    ", ILs, Iint))%Int_dered .gt. 0).or.ILs(get_ion("oii7325b   ", ILs, Iint))%Int_dered .gt. 0) then
+        if (oiiicelabund .gt. 0) then
+          oii7325recCEL=10000.*(9.36*(lowtemp/1.e4)**0.44*oiiicelabund)/(ILs(get_ion("oii7320    ", ILs, Iint))%Int_dered+ILs(get_ion("oii7330    ", ILs, Iint))%Int_dered + ILs(get_ion("oii7325b   ", ILs, Iint))%Int_dered)
+        endif
+        if (oiiRLabund .gt. 0) then
+          oii7325recRL=10000.*(9.36*(lowtemp/1.e4)**0.44*oiirlabund)/(ILs(get_ion("oii7320    ", ILs, Iint))%Int_dered+ILs(get_ion("oii7330    ", ILs, Iint))%Int_dered + ILs(get_ion("oii7325b   ", ILs, Iint))%Int_dered)
+        endif
+      endif
+
+      if (ILs(get_ion("oiii4363   ", ILs, Iint))%Int_dered .gt. 0 .and. hetotabund .gt. 0) then
+        oiii4363recCEL=10000.*12.4*(lowtemp/1.e4)**0.59*(((hetotabund/heiabund)**0.66666)-1)*(oiicelabund+oiiicelabund)/ILs(get_ion("oiii4363   ", ILs, Iint))%Int_dered
+        oiii4363recRL=10000.*12.4*(lowtemp/1.e4)**0.59*(((hetotabund/heiabund)**0.66666)-1)*(oiiRLabund)/ILs(get_ion("oiii4363   ", ILs, Iint))%Int_dered
+      endif
 
 ! ICFs
 
@@ -2009,6 +2039,15 @@ if (ariiiCELabund + arivCELabund + arvCELabund .gt. 0.d0) CELicfAr = ArabundCEL/
         iteration_result(1)%Neii_abund_ORL = NeiiRLabund
         iteration_result(1)%Ne_icf_ORL = RLicfNe
         iteration_result(1)%Ne_abund_ORL = NeabundRL
+
+!recombination contributions
+
+        iteration_result(1)%nii5754recCEL = nii5754recCEL
+        iteration_result(1)%oii7325recCEL = oii7325recCEL
+        iteration_result(1)%oiii4363recCEL = oiii4363recCEL
+        iteration_result(1)%nii5754recRL = nii5754recRL
+        iteration_result(1)%oii7325recRL = oii7325recRL
+        iteration_result(1)%oiii4363recRL = oiii4363recRL
 
 !multiplet abundances
 

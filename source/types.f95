@@ -173,6 +173,12 @@ TYPE resultarray
         double precision :: ratio_6678_4471=0.d0
         double precision :: Te_5876_4471=0.d0
         double precision :: Te_6678_4471=0.d0
+        double precision :: nii5754recCEL=0.d0
+        double precision :: oii7325recCEL=0.d0
+        double precision :: oiii4363recCEL=0.d0
+        double precision :: nii5754recRL=0.d0
+        double precision :: oii7325recRL=0.d0
+        double precision :: oiii4363recRL=0.d0
 
 end type
 
