@@ -3,13 +3,13 @@ contains
 
 subroutine oii_rl_diagnostics(obs4649_4089, obs4649_4662,oii_te,oii_ne)
 implicit none
-real :: obs4649_4089, obs4649_4662
-real, dimension(9,8,4) :: values
+double precision :: obs4649_4089, obs4649_4662
+double precision, dimension(9,8,4) :: values
 integer :: i,j
 character(len=7) :: x
 character(len=5) :: in1, in2
-real, dimension(4) :: a,b,c, x0, y0, d !equations of sides, locations of closest points on lines to value, distances to closest points
-real :: oii_te,oii_ne
+double precision, dimension(4) :: a,b,c, x0, y0, d !equations of sides, locations of closest points on lines to value, distances to closest points
+double precision :: oii_te,oii_ne
 
 oii_te=0.d0
 oii_ne=0.d0

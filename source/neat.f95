@@ -51,7 +51,7 @@ program neat
         TYPE(LINE),dimension(:,:), allocatable :: all_linelists
         CHARACTER(len=512) :: filename
         CHARACTER(len=1) :: blank
-        INTEGER :: IO, listlength, errstat
+        INTEGER :: listlength, errstat
         double precision :: normalise
 
 !results and result processing
@@ -1061,7 +1061,7 @@ contains
         REAL     :: s = 0.449871, t = -0.386595, a = 0.19600, b = 0.25472,           &
                     r1 = 0.27597, r2 = 0.27846, u, v, x, y, q
         REAL :: half
-        REAL :: newmean, newsnr, snr
+        double precision :: newmean, newsnr, snr
 
         half = 0.5
 

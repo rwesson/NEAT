@@ -32,10 +32,10 @@ implicit none
         DOUBLE PRECISION :: adfC, adfN, adfO, adfNe, w1, w2, w3, w4
         DOUBLE PRECISION :: adfC2plus, adfN2plus, adfO2plus, adfNe2plus
         DOUBLE PRECISION :: c1, c2, c3, meanextinction, R
-        REAL :: heiabund,heiiabund,Hetotabund, heICFfactor, OICFfactor, upsilon, upsilonprime
-        REAL :: bajtemp
-        REAL :: oii4649, oii4089,oii4662,oii_te,oii_ne
-        REAL :: ratio_5876_4471, ratio_6678_4471, te_5876_4471, te_6678_4471
+        double precision :: heiabund,heiiabund,Hetotabund, heICFfactor, OICFfactor, upsilon, upsilonprime
+        double precision :: bajtemp
+        double precision :: oii4649, oii4089,oii4662,oii_te,oii_ne
+        double precision :: ratio_5876_4471, ratio_6678_4471, te_5876_4471, te_6678_4471
 
         logical :: calculate_extinction
 
@@ -332,7 +332,7 @@ implicit none
          if (siiTratio .gt. 0 .and. siiTratio .lt. 1e10) then
            call get_diagnostic("sii       ","1,2,1,3/            ","1,4,1,5/            ",siiTratio,"T",lowdens,siiTemp,maxlevs,maxtemps,atomicdata,iion)
            count = count + 1
-                 
+
                  if (siitemp .lt. 0d0) then
                     count=count-1
                     siitemp=0d0
@@ -824,18 +824,18 @@ iteration_result(1)%ArV_temp_ratio = arvTratio
 iteration_result(1)%NeV_temp_ratio = nevTratio
 
 ! Helium abundances
-! He II 
+! He II
 
-        call get_heii_abund(REAL(medtemp),REAL(meddens),REAL(Heii_lines(1)%int_dered),heiiabund)
+        call get_heii_abund(medtemp,meddens,Heii_lines(1)%int_dered,heiiabund)
         Heii_lines(1)%abundance = heiiabund
 
-! He I 
+! He I
 
         if (switch_he=="S") then
 !         call get_hei_smits(REAL(medtemp),REAL(meddens),HeI_lines,heiabund)
-          call get_hei_smits_new(REAL(medtemp),REAL(meddens),HeI_lines,heidata, heiabund)
+          call get_hei_smits_new(medtemp,meddens,HeI_lines,heidata, heiabund)
         else
-          call get_hei_porter(REAL(medtemp),REAL(meddens),HeI_lines,heidata, heiabund)
+          call get_hei_porter(medtemp,meddens,HeI_lines,heidata, heiabund)
         endif
 
         hetotabund = heiabund + heiiabund
@@ -845,12 +845,12 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         BaJtemp = 0.0
         Balmer_jump(1)%int_dered = 0.0
         Balmer_jump(2)%int_dered = 0.0
-        
+
         do i=1,listlength
             if(linelist(i)%wavelength .eq. 3645.50) Balmer_jump(1) = linelist(i)
             if(linelist(i)%wavelength .eq. 3646.50) Balmer_jump(2) = linelist(i)
         enddo
-        
+
         if(Balmer_jump(1)%int_dered .gt. 0 .and. Balmer_jump(2)%int_dered .gt. 0 .and. H_BS(9)%intensity .gt. 0) then
         BaJtemp = (Balmer_jump(1)%int_dered - Balmer_jump(2)%int_dered)/H_BS(9)%int_dered
         BaJtemp = BaJtemp**(-3./2.)
@@ -1772,7 +1772,7 @@ elseif (switch_icf=="P") then
 
 !Nitrogen
      NabundCEL = 0.
-     if (oiiCELabund .gt. 1e-20) then 
+     if (oiiCELabund .gt. 1e-20) then
        CELicfN = OabundCEL/oiiCELabund
        NabundCEL = niiCELabund * CELicfN ! (14)
      endif
@@ -2238,7 +2238,7 @@ endif
 contains
 
         SUBROUTINE get_diag(name1, name2, diag)
-                IMPLICIT NONE 
+                IMPLICIT NONE
                 CHARACTER(len=11) :: name1, name2
                 INTEGER :: ion_no1, ion_no2
                 DOUBLE PRECISION :: diag

@@ -4,7 +4,7 @@
       subroutine get_heii_abund(te, ne, IHeII4686, heiiabund)
 
       IMPLICIT NONE
-      REAL A4686,TE,NE,IHeII4686,heiiabund
+      double precision :: A4686,TE,NE,IHeII4686,heiiabund
 
       A4686=10.**(GAMM4861(TE,NE)-GAMM4686(TE,NE))
       heiiabund=IHeII4686/100.*A4686
@@ -15,13 +15,13 @@
       use mod_abundtypes
 
       IMPLICIT NONE
-      real :: te, ne
-      real :: AB4471,AB5876,AB6678,heiabund 
+      double precision :: te, ne
+      double precision :: AB4471,AB5876,AB6678,heiabund
 
-      type(line), dimension(44) :: he_lines 
+      type(line), dimension(44) :: he_lines
       double precision, dimension(3) :: weights
       double precision, dimension(21,15,44), intent(in) :: heidata
-      real, dimension(44) :: emissivities
+      double precision, dimension(44) :: emissivities
       integer :: i
 
 !      data is for the following lines, in this order: 2945.10,3188.74,3613.64,3888.65,3964.73,4026.21,4120.82,4387.93,4437.55,4471.50,4713.17,4921.93,5015.68,5047.74,5875.66,6678.16,7065.25,7281.35,9463.58,10830.25,11013.07,11969.06,12527.49,12755.69,12784.92,12790.50,12845.98,12968.43,12984.88,13411.69,15083.65,17002.40,18555.57,18685.33,18697.21,19089.36,19543.19,20424.97,20581.28,20601.76,21120.12,21132.03,21607.80,21617.01 /)
@@ -53,8 +53,8 @@
         subroutine get_emissivity_porter(te, ne, line, emissivity, heidata)
 
         implicit none
-        real :: te, ne, testart, nestart, logne
-        real :: interp_factor_te, interp_factor_ne, interp_t1, interp_t2, emissivity
+        double precision :: te, ne, testart, nestart, logne
+        double precision :: interp_factor_te, interp_factor_ne, interp_t1, interp_t2, emissivity
         double precision, dimension(21,15,44), intent(in) :: heidata
         integer :: i,j, line
 
@@ -115,15 +115,15 @@
       use mod_abundtypes
 
       IMPLICIT NONE
-      real :: te, ne, tereduced
-      real :: AB4471,AB5876,AB6678,heiabund 
-      real :: c4471, c5876, c6678, d ! corrections for collisional excitation
+      double precision :: te, ne, tereduced
+      double precision :: AB4471,AB5876,AB6678,heiabund
+      double precision :: c4471, c5876, c6678, d ! corrections for collisional excitation
 
-      type(line), dimension(44) :: he_lines 
+      type(line), dimension(44) :: he_lines
       double precision, dimension(3) :: weights
       double precision, dimension(3,6,44), intent(in) :: heidata
-      real, dimension(44,3) :: emissivities
-      real :: interpolatedemissivity
+      double precision, dimension(44,3) :: emissivities
+      double precision :: interpolatedemissivity
       integer :: i,j
 
 !      data is for the following lines, in this order: 2945.10,3188.74,3613.64,3888.65,3964.73,4026.21,4120.82,4387.93,4437.55,4471.50,4713.17,4921.93,5015.68,5047.74,5875.66,6678.16,7065.25,7281.35,9463.58,10830.25,11013.07,11969.06,12527.49,12755.69,12784.92,12790.50,12845.98,12968.43,12984.88,13411.69,15083.65,17002.40,18555.57,18685.33,18697.21,19089.36,19543.19,20424.97,20581.28,20601.76,21120.12,21132.03,21607.80,21617.01 /)
@@ -182,19 +182,19 @@
 
       end subroutine get_hei_smits_new
 
-      REAL FUNCTION GAMM4861(TE,NE)
+      double precision FUNCTION GAMM4861(TE,NE)
 !     This function determines the value of Log10 (gamm(H Beta))
 !     = Log10( 4*Pai*j(HBeta)/NpNe) at temperature Te and density Ne
 !     Storey P. J., Hummer D. G., 1995, MNRAS, 272, 41
 !
       IMPLICIT NONE
-      REAL TE,NE,AE2,AE3,AE4,AE5,AE6,AE7,AE8,AEFF,HCLL
-      REAL LNE, LTE
+      double precision TE,NE,AE2,AE3,AE4,AE5,AE6,AE7,AE8,AEFF,HCLL
+      double precision LNE, LTE
 
                      ! = Log10 ( h * c / lambda(H-beta) ) - [ cgs units
       HCLL=-11.38871
-      LNE = ALOG10(NE)
-      LTE = ALOG10(TE)
+      LNE = log10(NE)
+      LTE = log10(TE)
 !
       AE2 =(-9.06524E+00)+                                              &
      &     (-2.69954E+00)* LTE +                                        &
@@ -261,19 +261,19 @@
       END function gamm4861
 !
 !
-      REAL FUNCTION GAMM4686(TE,NE)
+      double precision FUNCTION GAMM4686(TE,NE)
 !     This function determines the value of Log10 (gamm(HeII4686))
 !     = Log10( 4*Pai*j(HeII 4686)/N(He++)Ne) at temperature Te and densi
 !     Storey P. J., Hummer D. G., 1995, MNRAS, 272, 41
 !
       IMPLICIT NONE
-      REAL TE,NE,AE2,AE3,AE4,AE5,AE6,AE7,AE8,AEFF,HCLL
-      REAL LNE, LTE
+      double precision TE,NE,AE2,AE3,AE4,AE5,AE6,AE7,AE8,AEFF,HCLL
+      double precision LNE, LTE
 
                      ! = Log10 ( h * c / lambda(4686) ) - [ cgs units ]
       HCLL=-11.37272
-      LNE = ALOG10(NE)
-      LTE = ALOG10(TE)
+      LNE = log10(NE)
+      LTE = log10(TE)
 !
       AE2 =(-8.14491E+00)+                                              &
      &     (-2.10904E+00)* LTE +                                        &
@@ -340,19 +340,19 @@
       END function gamm4686
 !
 !
-      REAL FUNCTION GAMM6683(TE,NE)
+      double precision FUNCTION GAMM6683(TE,NE)
 !     This function determines the value of Log10 (gamm(HeII6683))
 !     = Log10( 4*Pai*j(HeII 6683)/N(He++)Ne) at temperature Te and densi
 !     Storey P. J., Hummer D. G., 1995, MNRAS, 272, 41
 !
       IMPLICIT NONE
-      REAL TE,NE,AE2,AE3,AE4,AE5,AE6,AE7,AE8,AEFF,HCLL
-      REAL LNE, LTE
+      double precision TE,NE,AE2,AE3,AE4,AE5,AE6,AE7,AE8,AEFF,HCLL
+      double precision LNE, LTE
 
                         ! = Log10 ( h * c / lambda(6683) ) - [ cgs units
       HCLL=-11.52688452
-      LNE = ALOG10(NE)
-      LTE = ALOG10(TE)
+      LNE = log10(NE)
+      LTE = log10(TE)
 !
       AE2 =(-8.19880E+00)+                                              &
      &     (-4.85499E+00)* LTE +                                        &
