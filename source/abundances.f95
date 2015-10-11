@@ -1410,7 +1410,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
 !cii recombination lines
 
-      do i = 1,57
+      do i = 1,size(ciiRLs)
         if (ciiRLs(i)%abundance .ge. 1e-20) then
 !          print "(1X,F7.2,1X,F6.3,1X,ES9.3)",ciiRLs(i)%wave,ciiRLs(i)%obs,ciiRLs(i)%abundance
           rlabundtemp = rlabundtemp + ciiRLs(i)%obs
