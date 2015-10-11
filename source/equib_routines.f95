@@ -297,7 +297,7 @@
                  DD = QQ(1) +                                           &
      &            (QQ(2) - QQ(1))/(T(2) - T(1)) * (TLOGT - T(1))
               ELSE
-                CALL CFY(TLOGT, DD, T, QQ, NTEMP, NDIM1,HMH,D)
+                CALL CFY(TLOGT, DD, T, QQ, NTEMP, NDIM1, D)
               ENDIF
               IF (IRATS.EQ.0.D+00) THEN
                 CS(I-1,J) = DD
@@ -721,7 +721,7 @@
                  DD = QQ(1) +                                           &
      &            (QQ(2) - QQ(1))/(T(2) - T(1)) * (TLOGT - T(1))
               ELSE
-                CALL CFY(TLOGT, DD, T, QQ, NTEMP, NDIM1,HMH,D)
+                CALL CFY(TLOGT, DD, T, QQ, NTEMP, NDIM1, D)
               ENDIF
               IF (IRATS.EQ.0.D+00) THEN
                 CS(I-1,J) = DD
@@ -1130,7 +1130,7 @@
       END subroutine elu
 !
 !---- PROC CFY
-      SUBROUTINE CFY(X,Y,XX,YY,NPT,NDIM, HMH, D)
+      SUBROUTINE CFY(X,Y,XX,YY,NPT,NDIM,D)
       IMPLICIT NONE
       INTEGER NPT, NDIM, J
       REAL*8 XX(NDIM),YY(NDIM), HMH(NDIM,NDIM), D(NDIM),                &
