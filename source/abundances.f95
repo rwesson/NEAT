@@ -1603,12 +1603,12 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
       endif
 
 ! this bit would break if the blend and the individual lines were both specified, which should never happen
-      if ((ILs(get_ion("oii7320    ", ILs, Iint))%Int_dered .gt. 0 .and. ILs(get_ion("oii7330    ", ILs, Iint))%Int_dered .gt. 0).or.ILs(get_ion("oii7325b   ", ILs, Iint))%Int_dered .gt. 0) then
+      if (ILs(get_ion("oii7320    ", ILs, Iint))%Int_dered .gt. 0 .and. ILs(get_ion("oii7330    ", ILs, Iint))%Int_dered .gt. 0) then
         if (oiiicelabund .gt. 0) then
-          oii7325recCEL=10000.*(9.36*(lowtemp/1.e4)**0.44*oiiicelabund)/(ILs(get_ion("oii7320    ", ILs, Iint))%Int_dered+ILs(get_ion("oii7330    ", ILs, Iint))%Int_dered + ILs(get_ion("oii7325b   ", ILs, Iint))%Int_dered)
+          oii7325recCEL=10000.*(9.36*(lowtemp/1.e4)**0.44*oiiicelabund)/(ILs(get_ion("oii7320    ", ILs, Iint))%Int_dered+ILs(get_ion("oii7330    ", ILs, Iint))%Int_dered)
         endif
         if (oiiRLabund .gt. 0) then
-          oii7325recRL=10000.*(9.36*(lowtemp/1.e4)**0.44*oiirlabund)/(ILs(get_ion("oii7320    ", ILs, Iint))%Int_dered+ILs(get_ion("oii7330    ", ILs, Iint))%Int_dered + ILs(get_ion("oii7325b   ", ILs, Iint))%Int_dered)
+          oii7325recRL=10000.*(9.36*(lowtemp/1.e4)**0.44*oiirlabund)/(ILs(get_ion("oii7320    ", ILs, Iint))%Int_dered+ILs(get_ion("oii7330    ", ILs, Iint))%Int_dered)
         endif
       endif
 
