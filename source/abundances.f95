@@ -1430,7 +1430,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 !nii recombination lines
 
 !      print *,"lambda   Mult   Int   Abund"
-      do i = 1,99
+      do i = 1,size(niiRLs)
         if (niiRLs(i)%abundance .ge. 1e-20) then
 !          print "(F7.2,1X,A7,1X,F6.3,1X,ES9.3)",niiRLs(i)%wave,niiRLs(i)%Mult,niiRLs(i)%obs,niiRLs(i)%abundance
           rlabundtemp = rlabundtemp + niiRLs(i)%obs
@@ -1448,7 +1448,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
       do j = 1,6
         rlabundtemp = 0.
         weight = 1.
-        do i = 1,99
+        do i = 1,size(niiRLs)
           if (niiRLs(i)%Mult .eq. niimultiplets(j)%Multiplet .and. niiRLs(i)%obs .gt. 0) then
 !            rlabundtemp = rlabundtemp + (niiRLs(i)%obs * niiRLs(i)%abundance)
 !            weight = weight + niiRLs(i)%obs
@@ -1463,10 +1463,12 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
       endif
       enddo
 
+!3d-4f transitions
+
       rlabundtemp = 0.
       weight = 0.
-      do i = 77,99
-        if (niiRLs(i)%obs .gt. 0) then
+      do i = 1,size(niiRLs)
+        if (niiRLs(i)%obs .gt. 0 .and. (niiRLs(i)%Mult(4:4) .eq. "a" .or. niiRLs(i)%Mult(4:4).eq."b")) then
 !          rlabundtemp = rlabundtemp + (niiRLs(i)%obs * niiRLs(i)%abundance)
 !          weight = weight + niiRLs(i)%obs
            rlabundtemp = rlabundtemp + niiRLs(i)%obs
