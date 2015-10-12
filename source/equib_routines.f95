@@ -38,19 +38,17 @@
       use mod_atomicdata
       IMPLICIT NONE
 
-      INTEGER NDIM1, NDIM2, NDIM1T3, MAXND
+      integer :: NDIM1, NDIM2, NDIM1T3, MAXND
                                                       !Maximum no of Te & levels
-      !PARAMETER (NDIM1=maxtemps, NDIM2=maxlevs)!35, NDIM2=150)
                                              !NDIM1T3 should be at least 3*NDIM1
-      !PARAMETER (NDIM1T3 = 3*NDIM1)!105)
                                                    !Maximum no. of Ne increments
       PARAMETER (MAXND=100)
-      INTEGER G(NDIM2),                                                 &
+      integer :: G(NDIM2),                                                 &
      &  ITRANA(2,NDIM2),ITRANB(2,NDIM2),ITRANC(2,NDIM2),LOOP
       type(atomic_data),dimension(:),intent(in) :: atomicdata
-      integer iion,nion
-      REAL*8 N(NDIM2)
-      REAL*8 & !TDRAT(2,MAXND)
+      integer :: iion,nion
+      double precision :: N(NDIM2)
+      double precision :: & !TDRAT(2,MAXND)
      & TNIJ(NDIM2,NDIM2), FINTIJ(NDIM2,NDIM2),                          &
      & WAVA(NDIM2), WAVB(NDIM2), WAVC(NDIM2), CS(NDIM2,NDIM2),          &
      & QEFF(NDIM2,NDIM2), QQ(NDIM1),                                    &
@@ -58,23 +56,23 @@
      & ROOTT(NDIM1), X(NDIM2,NDIM2), Y(NDIM2),                          &
      & X2(NDIM2,NDIM2), XKEEP(NDIM2,NDIM2), Y2(NDIM2), YKEEP(NDIM2),    &
      & HMH(NDIM1,NDIM1), D(NDIM1)
-      CHARACTER(len=20) LABEL(NDIM2)
-      CHARACTER(len=10) ION 
-      INTEGER I, I1, I2, J, KK, LL, JT, JJD,                            &
+      CHARACTER(len=20) :: LABEL(NDIM2)
+      CHARACTER(len=10) :: ION
+      integer :: I, I1, I2, J, KK, LL, JT, JJD,                            &
      & NLEV, NTEMP, IBIG, IRATS,                                        &
      & NLEV1, INT, IND, IOPT, IT, IM1, JM1, IP1,                        &
      & IAPR, IBPR, ICPR, IKT, IA, IB, IC, IA1, IA2, IB1, IB2, IC1, IC2
-      REAL*8 TEMPI, TINC, DENSI, DINC, DENS, DLOGD, TEMP, TLOGT,        &
+      double precision :: TEMPI, TINC, DENSI, DINC, DENS, DLOGD, TEMP, TLOGT,        &
      & TEMP2, DD, DELTEK, EXPE, VALUE, SUMN, TTT, TTP, AHB, EJI, WAV,   &
      & RLINT, FINT, SUMA, SUMB, SUMC, FRAT, DEE
 
       DOUBLE PRECISION :: fixedq
-      REAL*8 inratio,result
-      CHARACTER(len=20) levu,levl
-      CHARACTER(len=1) diagtype
-      REAL*8, DIMENSION(:,:), ALLOCATABLE :: RESULTS
-      REAL*8 valtest(3)
-      integer test
+      double precision :: inratio,result
+      CHARACTER(len=20) :: levu,levl
+      CHARACTER(len=1) :: diagtype
+      double precision, DIMENSION(:,:), ALLOCATABLE :: RESULTS
+      double precision :: valtest(3)
+      integer :: test
 
           ndim1t3=3*ndim1
       g=0
@@ -107,96 +105,12 @@
       A(1:nlev,1:nlev)=atomicdata(nion)%A_coeffs(1:nlev,1:nlev)
       E(1:nlev)=atomicdata(nion)%Waveno(1:nlev)
       G(1:nlev)=atomicdata(nion)%G(1:nlev)
+
       irats=0
-
-
-
-!      IONL = INDEX(ION,' ') - 1
-!      OPEN(UNIT=1,STATUS='OLD',                                         &
-!     & FILE='Atomic-data/'//ION(1:IONL)//'.dat')
-                                                      !Read in no. comment lines
-!      READ(1,*) NLINES
-!      DO I = 1, NLINES
-                                                                       !Comments
-!        READ(1,1003) LTEXT
-!      ENDDO
-                                          !Read no. of levels (max=NDIM2) NLEV,
-!      READ (1,*) NLEV, NTEMP
-                                          !no. of Te (max=NDIM1) NTEMP and the
-!      DO I = 1, NLEV
-                                          !input format (cf Readme)
-!         READ (1,1002) LABEL(I)
-!      ENDDO
-!     be
       ibig=0
-                                            !Read in Te's where coll. strengths are tabulated
-!      DO I = 1, NTEMP
-!           READ (1,*) T(I)
-!           T(I) = LOG10 (T(I))
-!           ROOTT(I) = SQRT(T(I))
-!      ENDDO
 
-
-
-                             !If IRATS=0, what tabulated are collision strengths
-!      READ(1,*) IRATS
-!                            !Else Coll. rates = tabulated values * 10 ** IRATS
-!      IF(IBIG.EQ.0) THEN
-!   10   READ (1,*) ID(2), JD(2), QX
-!        IF (QX.EQ.0.D0) GOTO 20
-!        IF (ID(2).EQ.0) THEN
-!          ID(2) = ID(1)
-!          K = K + 1
-!        ELSE
-!          ID(1) = ID(2)
-!          K = 1
-!        ENDIF
-!        IF (JD(2).EQ.0) THEN
-!          JD(2) = JD(1)
-!        ELSE
-!          JD(1) = JD(2)
-!        ENDIF
-!        I = ID(2)
-!        J = JD(2)
-!        QOM(K,I,J) = QX
-!        GO TO 10
-!      ENDIF
-!   20 IF(IBIG.EQ.1.OR.IBIG.EQ.2) THEN
-!        READ(1,*) NTRA
-!        DO IN = 1, NTRA
-!          READ(1,*) I,J,(QOM(ITEMP,I,J),ITEMP=1,NTEMP)
-!        ENDDO
-!      ENDIF
-                                                  !Read transition probabilities
       NLEV1 = NLEV - 1
-!      IF (IBIG.EQ.1) THEN
-!       READ(1,7000) ((I,J,A(J,I),L=K+1,NLEV),K=1,NLEV1)
-!      ELSE
-!      DO K = 1, NLEV1
-!        KP1 = K + 1
-!          DO L = KP1, NLEV
-!            READ (1,*) I, J, AX
-!            A(J,I) = AX
-!          ENDDO
-!      ENDDO
-!      ENDIF
-                                 !Read statistical weights, energy levels (cm-1)
-!      DO J = 1, NLEV
-!        READ (1,*) I, GX, EX
-!        G(I) = GX
-!        E(I) = EX
-!      ENDDO
-!      CLOSE (UNIT=1)
-                                !Get levels for ratio
-                                                           !150 large enough
       ITRANC = 0
-
-!newbit
-
-!print*,ion,diagtype,fixedq,int
-! set up T and D loops depending on input.
-                                               !Read in Te and Ne where the line
-                                               !ratio is to be calculated
 
       !*****LOOP STARTS HERE*************************
       DO LOOP = 1, 9
@@ -245,9 +159,6 @@
 
         DO JJD = 1, IND
           DENS=DENSI+(JJD-1)*DINC
-!          IF(DENSI.LT.30.D0) THEN
-!            DENS=10.D0**DENS
-!          ENDIF
           IF (TEMP.LE.0.D0.OR.DENS.LE.0.D0) THEN
             WRITE (6,6100)
                 print *,"Temp = ", TEMP, ", Dens = ", DENS, ", Ion = ",ion,diagtype
@@ -404,11 +315,7 @@
           ENDDO
           FRAT=SUMA/SUMB
           SUMC = 1./SUMC
-!          TDRAT(1,JJD)=DENS  !are these lines necessary,
-!          TDRAT(2,JJD)=FRAT  !TDRAT is now never used again?
-!          write(6,*),jd,suma,sumb,sumc,dens,frat
-!          WRITE(7,1017) TEMP, DENS, SUMC
-!          WRITE(8,1017) TEMP, DENS, FRAT, FRAT-inratio
+
           if (diagtype .eq. "t" .or. diagtype .eq. "T") then
             RESULTS(1, JT) = TEMP
             RESULTS(2, JT) = DENS
@@ -471,7 +378,7 @@
                 deallocate(results)!can be dealt with without breaking the code.
                 return             !It's set to zero later and excluded from
                                    !the averaging. Turns out long train rides
-                                   !are good for sorting such problems. 
+                                   !are good for sorting such problems.
                 !print*,"Valtest failed"
                 !print*,ion,levu,levl,loop,inratio,diagtype
                 !print*,results
@@ -518,36 +425,36 @@
       IMPLICIT NONE
 
           !INTEGER maxlevs,maxtemps
-      INTEGER NDIM1, NDIM2, NDIM1T3, MAXND
+      integer :: NDIM1, NDIM2, NDIM1T3, MAXND
                                                       !Maximum no of Te & levels
       !PARAMETER (NDIM1=maxtemps, NDIM2=maxlevs)!35, NDIM2=150)
                                              !NDIM1T3 should be at least 3*NDIM1
       !PARAMETER (NDIM1T3 = 3*NDIM1)!105)
                                                    !Maximum no. of Ne increments
       PARAMETER (MAXND=100)
-      INTEGER G(NDIM2),                                                 &
+      integer :: G(NDIM2),                                                 &
      &  ITRANA(2,NDIM2),ITRANB(2,NDIM2),ITRANC(2,NDIM2)
       type(atomic_data),dimension(:),intent(in) :: atomicdata
       integer :: nion,iion
-      REAL*8 N(NDIM2)
-      REAL*8 TDRAT(2,MAXND), TNIJ(NDIM2,NDIM2), FINTIJ(NDIM2,NDIM2),    &
+      double precision :: N(NDIM2)
+      double precision :: TDRAT(2,MAXND), TNIJ(NDIM2,NDIM2), FINTIJ(NDIM2,NDIM2),    &
      & WAVA(NDIM2), WAVB(NDIM2), WAVC(NDIM2), CS(NDIM2,NDIM2),          &
      & QEFF(NDIM2,NDIM2), QQ(NDIM1),                                    &
      & QOM(NDIM1,NDIM2,NDIM2), A(NDIM2,NDIM2), E(NDIM2), T(NDIM1),      &
      & ROOTT(NDIM1), X(NDIM2,NDIM2), Y(NDIM2),                          &
      & X2(NDIM2,NDIM2), XKEEP(NDIM2,NDIM2), Y2(NDIM2), YKEEP(NDIM2),    &
      & HMH(NDIM1,NDIM1), D(NDIM1)
-      CHARACTER(len=20) LABEL(NDIM2), ION 
-      INTEGER I, I1, I2, J, KK, LL, JT, JJD,                            &
+      CHARACTER(len=20) :: LABEL(NDIM2), ION
+      integer :: I, I1, I2, J, KK, LL, JT, JJD,                            &
      & NLEV, NTEMP, IBIG, IRATS,                                        &
      & NLEV1, INT, IND, IOPT, IT, IM1, JM1, IP1,                        &
      & IAPR, IBPR, ICPR, IKT, IA, IB, IC, IA1, IA2, IB1, IB2, IC1, IC2
-      REAL*8 TEMPI, TINC, DENSI, DINC, DENS, DLOGD, TEMP, TLOGT,        &
+      double precision :: TEMPI, TINC, DENSI, DINC, DENS, DLOGD, TEMP, TLOGT,        &
      & TEMP2, DD, DELTEK, EXPE, VALUE, SUMN, TTT, TTP, AHB, EJI, WAV,   &
      & RLINT, FINT, SUMA, SUMB, SUMC, FRAT, DEE
 
-      CHARACTER(len=20) levels
-      real*8 iobs, abund
+      CHARACTER(len=20) :: levels
+      double precision :: iobs, abund
 !
       ndim1t3=3*ndim1
       g=0
@@ -580,89 +487,11 @@
       A(1:nlev,1:nlev)=atomicdata(nion)%A_coeffs(1:nlev,1:nlev)
       E(1:nlev)=atomicdata(nion)%Waveno(1:nlev)
       G(1:nlev)=atomicdata(nion)%G(1:nlev)
+
       irats=0
-
-                                                        !Interrogate for input
-!      IONL = INDEX(ION,' ') - 1
-!      OPEN(UNIT=1,STATUS='OLD',                                         &
-!     & FILE='Atomic-data/'//ION(1:IONL)//'.dat')
-!!     + NAME='atomic_data/'//ION(1:IONL)//'.dat')
-                                                      !Read in no. comment lines
-!      READ(1,*) NLINES
-!      DO I = 1, NLINES
-                                                                       !comments
-!        READ(1,1003) LTEXT
-!      ENDDO
-                                          !Read no. of levels (max=NDIM2) NLEV,
-!      READ (1,*) NLEV, NTEMP
-                                          !no. of Te (max=NDIM1) NTEMP and the
-!      DO I = 1, NLEV
-                                          !input format (cf Readme)
-!         READ (1,1002) LABEL(I)
-!      ENDDO
-!     be
       ibig=0
-!Read in Te's where coll. strengths are tabulated
-!      DO I = 1, NTEMP
-!           READ (1,*) T(I)
-!           T(I) = LOG10 (T(I))
-!           ROOTT(I) = SQRT(T(I))
-!      ENDDO
-                             !If IRATS=0, what tabulated are collision strengths
-!      READ(1,*) IRATS
-!                            !Else Coll. rates = tabulated values * 10 ** IRATS
-!      IF(IBIG.EQ.0) THEN
-!   10   READ (1,*) ID(2), JD(2), QX
-!        IF (QX.EQ.0.D0) GOTO 20
-!        IF (ID(2).EQ.0) THEN
-!          ID(2) = ID(1)
-!          K = K + 1
-!        ELSE
-!          ID(1) = ID(2)
-!          K = 1
-!        ENDIF
-!        IF (JD(2).EQ.0) THEN
-!          JD(2) = JD(1)
-!        ELSE
-!          JD(1) = JD(2)
-!        ENDIF
-!        I = ID(2)
-!        J = JD(2)
-!        QOM(K,I,J) = QX
-!        GO TO 10
-!      ENDIF
-!   20 IF(IBIG.EQ.1.OR.IBIG.EQ.2) THEN
-!        READ(1,*) NTRA
-!        DO IN = 1, NTRA
-!          READ(1,*) I,J,(QOM(ITEMP,I,J),ITEMP=1,NTEMP)
-!        ENDDO
-!      ENDIF
-                                                  !Read transition probabilities
+
       NLEV1 = NLEV - 1
-!      IF (IBIG.EQ.1) THEN
-!       READ(1,7000) ((I,J,A(J,I),L=K+1,NLEV),K=1,NLEV1)
-!      ELSE
-!      DO K = 1, NLEV1
-!        KP1 = K + 1
-!          DO L = KP1, NLEV
-!            READ (1,*) I, J, AX
-!            A(J,I) = AX
-!          ENDDO
-!      ENDDO
-!      ENDIF
-                                 !Read statistical weights, energy levels (cm-1)
-!      DO J = 1, NLEV
-!        READ (1,*) I, GX, EX
-!        G(I) = GX
-!        E(I) = EX
-!      ENDDO
-!      CLOSE (UNIT=1)
-                                !Get levels for ratio
-                                                           !150 large enough
-
-                                               !Read in Te and Ne where the line
-                                               !ratio is to be calculated
-
                                                                !Start of Te loop
       DO JT = 1, INT
         TEMP=TEMPI+(JT-1)*TINC
@@ -670,10 +499,6 @@
                                                                !Start of Ne loop
         DO JJD = 1, IND
           DENS=DENSI+(JJD-1)*DINC
-!          IF(DENSI.LT.30.D0) THEN !commented out as using linear
-!          densities only now
-!            DENS=10.D0**DENS
-!          ENDIF
           IF (TEMP.LE.0.D0.OR.DENS.LE.0.D0) THEN
             WRITE (6,6100)
             STOP
@@ -865,8 +690,8 @@
                                                        !Solving linear equations
       SUBROUTINE LUSLV(A,B,N,M)
       IMPLICIT NONE
-      INTEGER M, N
-      REAL*8 A(M,M),B(M)
+      integer :: M, N
+      double precision :: A(M,M),B(M)
       CALL LURED(A,N,M)
       CALL RESLV(A,B,N,M)
       RETURN
@@ -875,8 +700,8 @@
 !---- PROC LURED
       SUBROUTINE LURED(A,N,NR)
       IMPLICIT NONE
-      INTEGER N, NR, NM1, I, J, K, IP1
-      REAL*8 A(NR,NR), FACT
+      integer :: N, NR, NM1, I, J, K, IP1
+      double precision :: A(NR,NR), FACT
       IF(N.EQ.1) RETURN
       NM1=N-1
       DO I=1,NM1
@@ -895,8 +720,8 @@
                                                                !Resolve A with B
       SUBROUTINE RESLV(A,B,N,NR)
       IMPLICIT NONE
-      INTEGER N, NR, NM1, I, J, K, L, IP1
-      REAL*8 A(NR,NR),B(NR)
+      integer :: N, NR, NM1, I, J, K, L, IP1
+      double precision :: A(NR,NR),B(NR)
       IF(N.EQ.1) GOTO 1
       NM1=N-1
       DO I=1,NM1
@@ -922,8 +747,8 @@
 !---- PROC SPLMAT
       SUBROUTINE SPLMAT(XX,NPT,IOPT,NDIM, NDIMT3, HMH)
       IMPLICIT NONE
-      INTEGER NDIM, NDIMT3, NPT, IOPT, NPM, NELEM
-      REAL*8 XX(NDIM),GH(NDIMT3),Y(NDIM), HMH(NDIM,NDIM)
+      integer :: NDIM, NDIMT3, NPT, IOPT, NPM, NELEM
+      double precision :: XX(NDIM),GH(NDIMT3),Y(NDIM), HMH(NDIM,NDIM)
       NPM=NPT-2
       CALL GHGEN(GH,XX,NPT,IOPT,NDIM,NDIMT3)
       NELEM=3*NPM-2
@@ -939,8 +764,8 @@
 !     in the array D(I), I=1 to N.
       SUBROUTINE DERIV(XY,D,X,N,NDIM)
       IMPLICIT NONE
-      INTEGER N ,NDIM, I, J, K
-      REAL*8 XY(NDIM),D(NDIM), X, P1, P2, S
+      integer :: N ,NDIM, I, J, K
+      double precision :: XY(NDIM),D(NDIM), X, P1, P2, S
       DO I=1,N
         P1=1.
         S=0.
@@ -973,9 +798,9 @@
 !     internal points.
       SUBROUTINE HGEN(XX,GH,Y,NPT,IOPT,NDIM,NDIMT3,HMH)
       IMPLICIT NONE
-      INTEGER NPT, IOPT, NDIM, NDIMT3, NDIM3, NIP, I, J, K, NPM,        &
+      integer :: NPT, IOPT, NDIM, NDIMT3, NDIM3, NIP, I, J, K, NPM,        &
      & INDX
-      REAL*8 XX(NDIM), GH(NDIMT3), Y(NDIM), HMH(NDIM,NDIM),             &
+      double precision :: XX(NDIM), GH(NDIMT3), Y(NDIM), HMH(NDIM,NDIM),             &
      & XY(5),D(5),C(2,5), A0, AN1, H1, H2
                                    !Case of derivative boundary condition, with
       IF(IOPT.EQ.2) THEN
@@ -1046,9 +871,6 @@
         ENDDO
 
         HMH(2:npm+1,I)=Y(1:npm)
-!        DO J=1,NPM
-!        HMH(J+1,I)=Y(J)
-!        ENDDO
                                     !Insert values for second derivative at end
         HMH(1,I)=0.
                                     !points: first and last rows of the matrix
@@ -1078,8 +900,8 @@
 !---- PROC GHGEN
       SUBROUTINE GHGEN(GH,XX,NPT,IOPT,NDIM,NDIMT3)
       IMPLICIT NONE
-      INTEGER NPT, IOPT, NDIM, NDIMT3, INDX, NPTM, I, J, IP, JP, IK
-      REAL*8 XX(NDIM),GH(NDIMT3)
+      integer :: NPT, IOPT, NDIM, NDIMT3, INDX, NPTM, I, J, IP, JP, IK
+      double precision :: XX(NDIM),GH(NDIMT3)
       INDX=0
       NPTM=NPT-1
       DO I=2,NPTM
@@ -1107,8 +929,8 @@
 !---- PROC ELU
       SUBROUTINE ELU(GH,N,NDIM)
       IMPLICIT NONE
-      INTEGER N, NDIM, INDX, I, J, JP
-      REAL*8 GH(NDIM)
+      integer :: N, NDIM, INDX, I, J, JP
+      double precision :: GH(NDIM)
       INDX=0
       DO I=1,N
         DO J=1,3
@@ -1132,8 +954,8 @@
 !---- PROC CFY
       SUBROUTINE CFY(X,Y,XX,YY,NPT,NDIM,D)
       IMPLICIT NONE
-      INTEGER NPT, NDIM, J
-      REAL*8 XX(NDIM),YY(NDIM), HMH(NDIM,NDIM), D(NDIM),                &
+      integer :: NPT, NDIM, J
+      double precision :: XX(NDIM),YY(NDIM), HMH(NDIM,NDIM), D(NDIM),                &
      & X, Y, TT
       IF(X.LT.XX(1)) THEN
         Y=YY(1)
@@ -1153,8 +975,8 @@
 !---- PROC CFD
       SUBROUTINE CFD(X,XX,NPT,NDIM, HMH, D)
       IMPLICIT NONE
-      INTEGER NPT, NDIM, NPTM, I, J
-      REAL*8 X, XX(NDIM), HMH(NDIM,NDIM), D(NDIM), X1, X2, A1, A2, HI
+      integer :: NPT, NDIM, NPTM, I, J
+      double precision :: X, XX(NDIM), HMH(NDIM,NDIM), D(NDIM), X1, X2, A1, A2, HI
       IF(X.LT.XX(1)) THEN
         !WRITE(6,400) XX(1)
         RETURN
