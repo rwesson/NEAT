@@ -997,7 +997,7 @@ program neat
 !next, loop through the results, processing and printing
 
         do j=1,155
-print *,j
+
 ! here we put some if statements to put things into conveniently separate bits
 
           if (j .eq. 1) then
