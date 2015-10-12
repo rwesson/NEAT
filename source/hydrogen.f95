@@ -110,6 +110,12 @@ enddo
 
 density=10**(density/weight)
 
+!check if lower limit, Storey and Hummer go down to 100cm-3
+
+if (density .lt. 100.) then
+  density = 100.d0
+endif
+
 !deallocate arrays
 
 deallocate(emissivities)
