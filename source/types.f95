@@ -179,6 +179,7 @@ TYPE resultarray
         double precision :: nii5754recRL=0.d0
         double precision :: oii7325recRL=0.d0
         double precision :: oiii4363recRL=0.d0
+        double precision :: balmerdec_density=0.d0
 
 end type
 

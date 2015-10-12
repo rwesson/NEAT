@@ -9,6 +9,7 @@ use mod_extinction
 use mod_resultarrays
 use mod_atomicdata
 use mod_oii_diagnostics
+use mod_hydrogen
 
 implicit none
 
@@ -61,6 +62,8 @@ implicit none
 
         TYPE (RLabund), DIMENSION(12) :: oiimultiplets
         TYPE (RLabund), DIMENSION(7) :: niimultiplets
+
+        double precision :: balmerdec_density
 
 ! strong line variables
         DOUBLE PRECISION :: X23,O_R23upper, O_R23lower, N2,O_N2, O3N2, O_O3N2, Ar3O3, O_Ar3O3, S3O3, O_S3O3, x23temp1, x23temp2, x23temp3, x23temp4
@@ -858,6 +861,11 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         endif
 
         iteration_result%Bal_jump_temp = BaJtemp
+
+! calculate n_e from Balmer decrement
+
+        call balmer_densities(H_BS,medtemp,balmerdec_density)
+        iteration_result%balmerdec_density=balmerdec_density
 
 ! get Te from He line ratios
 ! equations derived from Smits 1996 data, at ne=5000.
