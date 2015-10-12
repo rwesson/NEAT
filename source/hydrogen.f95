@@ -86,7 +86,7 @@ do H=10,25
     if (ratios(H) .lt. (searcharray(1,H,2)/searcharray(1,4,2))) then
       densities(H) = 1.
     elseif (ratios(H) .gt. (searcharray(ndens,H,2)/searcharray(ndens,4,2))) then
-      densities(H) = 1.e8
+      densities(H) = 8.
     else !search for the value
       do j=1,ndens-1
         r1=searcharray(j,H,2)/searcharray(j,4,2)
@@ -103,6 +103,7 @@ end do
 
 do i=10,25
   if (densities(i).gt.0.d0) then
+print *,i,H_BS(i-2)%int_dered,densities(i)
     density=density+H_BS(i-2)%int_dered*densities(i)
     weight=weight+H_BS(i-2)%int_dered
   endif
