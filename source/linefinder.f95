@@ -135,8 +135,8 @@ if (rms .lt. 0.05) then
 endif
 
 print "(I2,A25)",count," reference lines detected"
-print "(X,A54,F5.3)","Average offset between observed and rest wavelengths: ",shift
-print "(X,A74,F6.3)","RMS difference between rest wavelengths and shifted observed wavelengths: ",rms
+print "(A55,F5.3)"," Average offset between observed and rest wavelengths: ",shift
+print "(A75,F6.3)"," RMS difference between rest wavelengths and shifted observed wavelengths: ",rms
 print *
 print *,"The following line IDs are suggested:"
 print *

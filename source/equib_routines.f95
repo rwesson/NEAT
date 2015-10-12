@@ -955,8 +955,7 @@
       SUBROUTINE CFY(X,Y,XX,YY,NPT,NDIM,D)
       IMPLICIT NONE
       integer :: NPT, NDIM, J
-      double precision :: XX(NDIM),YY(NDIM), HMH(NDIM,NDIM), D(NDIM),                &
-     & X, Y, TT
+      double precision :: XX(NDIM),YY(NDIM), D(NDIM), X, Y, TT
       IF(X.LT.XX(1)) THEN
         Y=YY(1)
       ENDIF

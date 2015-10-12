@@ -339,7 +339,7 @@ use mod_atomicdata
     character(len=1) :: comments(78)
     character(len=10) :: ionname
     character(len=25) :: filename
-    real*8 :: WN,AX,QX
+    double precision :: WN,AX,QX
 
     id = 0
     jd = 0

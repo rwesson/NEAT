@@ -50,14 +50,13 @@ implicit none
         integer :: iion !# of ions in Ilines
         integer :: maxlevs,maxtemps
         type(atomic_data) :: atomicdata(iion)
-        character(len=20) :: ion
         double precision, dimension(21,15,44) :: heidata
 
 ! recombination line variables
 
         TYPE RLabund
            CHARACTER(len=7) :: Multiplet
-           REAL*8 :: Abundance
+           double precision :: Abundance
         END TYPE
 
         TYPE (RLabund), DIMENSION(12) :: oiimultiplets
@@ -933,7 +932,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         do i = 1,Iint !This used to be Iint-1 but I think that's corrected in the file reading routine now (RW 25/10/2011)
 !                 print *,ILs(i)%ion,ILs(i)%transition,ILs(i)%int_dered
 ! copy the ion name into the linelist array
-           if (ILs(i)%location .ne. 0) linelist(ILs(i)%location)%name=ILs(i)%ion
+           if (ILs(i)%location .ne. 0) linelist(ILs(i)%location)%name=ILs(i)%ion(1:11)
 ! then do the abundance calculations
            if (ILs(i)%zone .eq. "low ") then
                 !PRINT*, siiitemp, lowdens
@@ -1884,6 +1883,9 @@ elseif (switch_icf .eq. "D") then
   endif
 
 !chlorine
+!we currently don't calculate clii or cliv so they are set to zero
+cliiCELabund = 0.d0
+clivCELabund = 0.d0
 
   if (cliiCELabund .gt. 0.D0 .and. cliiiCELabund .gt. 0.D0 .and. clivCELabund .gt. 0.D0) then !equation 32:
     CELicfCl = 0.98+(0.56-0.57*upsilon)**7.64
