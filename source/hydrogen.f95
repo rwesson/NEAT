@@ -103,7 +103,6 @@ end do
 
 do i=10,25
   if (densities(i).gt.0.d0) then
-print *,i,H_BS(i-2)%int_dered,densities(i)
     density=density+H_BS(i-2)%int_dered*densities(i)
     weight=weight+H_BS(i-2)%int_dered
   endif
