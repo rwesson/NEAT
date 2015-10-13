@@ -400,7 +400,7 @@ use mod_hydrogen
          elseif (diagnostic_array(4) .gt. 0.0) then
            lowtemp = diagnostic_array(4)
          else
-           lowtemp = 10000.0
+           lowtemp = 10000.d0
          endif
 
       enddo
@@ -590,6 +590,11 @@ use mod_hydrogen
          else
            medtemp = lowtemp
          endif
+
+!if there is no lowtemp, set it to medtemp
+!this would break if lowtemp was actually calculated to be 10000.d0 but I think the probability of that is low enough that we can live without checking for it
+
+        if (lowtemp .eq. 10000.d0 .and. medtemp .ne. 10000.d0) lowtemp = medtemp
 
         !dereddening again
 
