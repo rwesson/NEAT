@@ -11,7 +11,8 @@ use mod_atomicdata
 use mod_oii_diagnostics
 use mod_hydrogen
 
-implicit none
+        implicit none
+        integer, parameter :: dp = kind(1.d0)
 
         INTEGER :: count, Iint, i, j, ion_no1, ion_no2, ion_no3, ion_no4, ion_no5, ion_no6
         integer, intent(in) :: listlength
@@ -20,23 +21,23 @@ implicit none
         CHARACTER :: switch_he !switch for helium atomic data
         CHARACTER :: switch_icf !switch for which ICF to use
         type(resultarray), dimension(1) :: iteration_result
-        double precision, dimension(6), intent(in) :: diagnostic_array
+        real(kind=dp), dimension(6), intent(in) :: diagnostic_array
 
-        DOUBLE PRECISION :: oiiNratio, oiiDens, oiiiTratio, oiiiTemp, oiiiIRNratio, oiiiIRTratio, oiiiIRtemp, oiiiUVTratio, oiiiUVtemp, oiiiIRdens, niiTratio, niiTemp, ariiiIRNratio, ariiiIRdens, arivNratio, arivDens, cliiiNratio, cliiiDens, siiNratio, siiDens, siiTratio, siiTemp, siiiIRNratio, siiiIRdens, oiiTratio, oiiTemp, neiiiTratio, neiiiIRTratio, neiiiIRNratio, neiiiIRdens, neiiiTemp, neiiiIRTemp, oitemp, citemp
-        DOUBLE PRECISION :: ciiiNratio,neivNratio,nevTratio,siiiTratio,ariiiTratio,arvTratio,lowtemp,lowdens,medtemp,ciiidens,meddens,siiitemp,ariiitemp,hightemp,neivdens,highdens,arvtemp,nevtemp,oiTratio,ciTratio
-        DOUBLE PRECISION :: oiiRLabund, niiRLabund, ciiRLabund, cii4267rlabund, neiiRLabund, ciiiRLabund, niiiRLabund, RLabundtemp, weight
-        DOUBLE PRECISION :: ciiiCELabund, niiCELabund, niiiIRCELabund, niiiUVCELabund, oiiCELabund, oiiiCELabund, oiiiIRCELabund, oivCELabund, neiiIRCELabund, neiiiIRCELabund, neiiiCELabund, neivCELabund, siiCELabund, siiiCELabund, siiiIRCELabund, sivIRCELabund, cliiCELabund, cliiiCELabund, clivCELabund, ariiiCELabund, arivCELabund, ariiiIRCELabund, nivCELabund, niiiCELabund, ciiCELabund, civCELabund, nvCELabund, nevCELabund, arvCELabund, CELabundtemp, ciCELabund, oiCELabund
-        DOUBLE PRECISION :: fn4
-        DOUBLE PRECISION :: CELicfO, CELicfC, CELicfN, CELicfNe, CELicfAr, CELicfS, CELicfCl
-        DOUBLE PRECISION :: RLicfO, RLicfC, RLicfN, RLicfNe, RLicfHe
-        DOUBLE PRECISION :: CabundRL, CabundCEL, NabundRL, NabundCEL, OabundRL, OabundCEL, NeabundRL, NeabundCEL, SabundCEL, ArabundCEL, NOabundCEL, NCabundCEL, ClabundCEL
-        DOUBLE PRECISION :: adfC, adfN, adfO, adfNe, w1, w2, w3, w4
-        DOUBLE PRECISION :: adfC2plus, adfN2plus, adfO2plus, adfNe2plus
-        DOUBLE PRECISION :: c1, c2, c3, meanextinction, R
-        double precision :: heiabund,heiiabund,Hetotabund, heICFfactor, OICFfactor, upsilon, upsilonprime
-        double precision :: bajtemp
-        double precision :: oii4649, oii4089,oii4662,oii_te,oii_ne
-        double precision :: ratio_5876_4471, ratio_6678_4471, te_5876_4471, te_6678_4471
+        real(kind=dp) :: oiiNratio, oiiDens, oiiiTratio, oiiiTemp, oiiiIRNratio, oiiiIRTratio, oiiiIRtemp, oiiiUVTratio, oiiiUVtemp, oiiiIRdens, niiTratio, niiTemp, ariiiIRNratio, ariiiIRdens, arivNratio, arivDens, cliiiNratio, cliiiDens, siiNratio, siiDens, siiTratio, siiTemp, siiiIRNratio, siiiIRdens, oiiTratio, oiiTemp, neiiiTratio, neiiiIRTratio, neiiiIRNratio, neiiiIRdens, neiiiTemp, neiiiIRTemp, oitemp, citemp
+        real(kind=dp) :: ciiiNratio,neivNratio,nevTratio,siiiTratio,ariiiTratio,arvTratio,lowtemp,lowdens,medtemp,ciiidens,meddens,siiitemp,ariiitemp,hightemp,neivdens,highdens,arvtemp,nevtemp,oiTratio,ciTratio
+        real(kind=dp) :: oiiRLabund, niiRLabund, ciiRLabund, cii4267rlabund, neiiRLabund, ciiiRLabund, niiiRLabund, RLabundtemp, weight
+        real(kind=dp) :: ciiiCELabund, niiCELabund, niiiIRCELabund, niiiUVCELabund, oiiCELabund, oiiiCELabund, oiiiIRCELabund, oivCELabund, neiiIRCELabund, neiiiIRCELabund, neiiiCELabund, neivCELabund, siiCELabund, siiiCELabund, siiiIRCELabund, sivIRCELabund, cliiCELabund, cliiiCELabund, clivCELabund, ariiiCELabund, arivCELabund, ariiiIRCELabund, nivCELabund, niiiCELabund, ciiCELabund, civCELabund, nvCELabund, nevCELabund, arvCELabund, CELabundtemp, ciCELabund, oiCELabund
+        real(kind=dp) :: fn4
+        real(kind=dp) :: CELicfO, CELicfC, CELicfN, CELicfNe, CELicfAr, CELicfS, CELicfCl
+        real(kind=dp) :: RLicfO, RLicfC, RLicfN, RLicfNe, RLicfHe
+        real(kind=dp) :: CabundRL, CabundCEL, NabundRL, NabundCEL, OabundRL, OabundCEL, NeabundRL, NeabundCEL, SabundCEL, ArabundCEL, NOabundCEL, NCabundCEL, ClabundCEL
+        real(kind=dp) :: adfC, adfN, adfO, adfNe, w1, w2, w3, w4
+        real(kind=dp) :: adfC2plus, adfN2plus, adfO2plus, adfNe2plus
+        real(kind=dp) :: c1, c2, c3, meanextinction, R
+        real(kind=dp) :: heiabund,heiiabund,Hetotabund, heICFfactor, OICFfactor, upsilon, upsilonprime
+        real(kind=dp) :: bajtemp
+        real(kind=dp) :: oii4649, oii4089,oii4662,oii_te,oii_ne
+        real(kind=dp) :: ratio_5876_4471, ratio_6678_4471, te_5876_4471, te_6678_4471
 
         logical :: calculate_extinction
 
@@ -51,26 +52,26 @@ implicit none
         integer :: iion !# of ions in Ilines
         integer :: maxlevs,maxtemps
         type(atomic_data) :: atomicdata(iion)
-        double precision, dimension(21,15,44) :: heidata
+        real(kind=dp), dimension(21,15,44) :: heidata
 
 ! recombination line variables
 
         TYPE RLabund
            CHARACTER(len=7) :: Multiplet
-           double precision :: Abundance
+           real(kind=dp) :: Abundance
         END TYPE
 
         TYPE (RLabund), DIMENSION(12) :: oiimultiplets
         TYPE (RLabund), DIMENSION(7) :: niimultiplets
 
-        double precision :: balmerdec_density
+        real(kind=dp) :: balmerdec_density
 
 ! strong line variables
-        DOUBLE PRECISION :: X23,O_R23upper, O_R23lower, N2,O_N2, O3N2, O_O3N2, Ar3O3, O_Ar3O3, S3O3, O_S3O3, x23temp1, x23temp2, x23temp3, x23temp4
+        real(kind=dp) :: X23,O_R23upper, O_R23lower, N2,O_N2, O3N2, O_O3N2, Ar3O3, O_Ar3O3, S3O3, O_S3O3, x23temp1, x23temp2, x23temp3, x23temp4
 
 ! recombination contribution to CEL line fluxes for both RL and CEL abundances
 
-        double precision :: nii5754recCEL=0.d0, oii7325recCEL=0.d0, oiii4363recCEL=0.d0, nii5754recRL=0.d0, oii7325recRL=0.d0, oiii4363recRL=0.d0
+        real(kind=dp) :: nii5754recCEL=0.d0, oii7325recCEL=0.d0, oiii4363recCEL=0.d0, nii5754recRL=0.d0, oii7325recRL=0.d0, oiii4363recRL=0.d0
 
 ! initialise some variables
 
@@ -2247,10 +2248,12 @@ endif
 contains
 
         SUBROUTINE get_diag(name1, name2, diag)
-                IMPLICIT NONE
+                implicit none
+                integer, parameter :: dp = kind(1.d0)
+
                 CHARACTER(len=11) :: name1, name2
                 INTEGER :: ion_no1, ion_no2
-                DOUBLE PRECISION :: diag
+                real(kind=dp) :: diag
 
                 ion_no1 = get_ion(name1, ILs, Iint)
                 ion_no2 = get_ion(name2, ILs, Iint)
@@ -2265,11 +2268,13 @@ contains
 
         SUBROUTINE get_Tdiag(name1, name2, name3, ion, ratio)
         !this routine gets the ratio for nebular to auroral diagnostics.  In case one of nebular pair is not observed, it assumes the intensity of the other is given by the theoretical ratio
-        IMPLICIT NONE
+        implicit none
+        integer, parameter :: dp = kind(1.d0)
+
         CHARACTER(len=11) :: name1, name2, name3
         CHARACTER(len=20) :: ion
         INTEGER :: ion_no1, ion_no2, ion_no3
-        DOUBLE PRECISION :: factor1, factor2, ratio, ratio2
+        real(kind=dp) :: factor1, factor2, ratio, ratio2
         integer :: level1, level2, level3 !level2 is the upper level, level1 the lower of the two lower levels
 
         ion_no1 = get_ion(name1, ILs, Iint)

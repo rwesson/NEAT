@@ -1,16 +1,19 @@
 module mod_extinction
 use mod_abundtypes
 implicit none
+private :: dp
+integer, parameter :: dp = kind(1.d0)
 
 contains
 
 subroutine calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction, switch_ext, temp, dens, R)
         IMPLICIT NONE
+        integer, parameter :: dp = kind(1.d0)
         TYPE(line), DIMENSION(38) :: H_BS
-        DOUBLE PRECISION :: c1, c2, c3, meanextinction, R
-        double precision :: fl_ha, fl_hg, fl_hd
+        real(kind=dp) :: c1, c2, c3, meanextinction, R
+        real(kind=dp) :: fl_ha, fl_hg, fl_hd
         character :: switch_ext
-        double precision :: temp, dens
+        real(kind=dp) :: temp, dens
 
 !determine f(lambda) for the balmer lines, depending on the law used
 !galactic, howarth
@@ -80,11 +83,11 @@ endif
 
 end subroutine calc_extinction_coeffs
 
-double precision function calc_balmer_ratios(temp, dens, line)
+real(kind=dp) function calc_balmer_ratios(temp, dens, line)
         implicit none
         integer :: i, j, line
-        double precision :: d1, d2, temp, dens
-        double precision, dimension(6,3,4) :: HS
+        real(kind=dp) :: d1, d2, temp, dens
+        real(kind=dp), dimension(6,3,4) :: HS
 
         !Ha/Hb
         HS(1,1,:) = (/ 5000., 3.04, 3.02, 3.00/)
@@ -166,9 +169,9 @@ end function
 
 !-------SEATON GALACTIC LAW-------------------------------!
 
-double precision function flambda(X,switch)
+real(kind=dp) function flambda(X,switch)
         IMPLICIT NONE
-        DOUBLE PRECISION :: X
+        real(kind=dp) :: X
         INTEGER :: switch
         !Howarth 1983 Galactic + Seaton 1979
         if(switch == 1) then
@@ -194,7 +197,7 @@ subroutine deredden(lines, number, m_ext)
         IMPLICIT NONE
         TYPE(line), DIMENSION(:) :: lines
         INTEGER :: number
-        DOUBLE PRECISION :: m_ext, fl
+        real(kind=dp) :: m_ext, fl
         INTEGER :: i
 
         do i = 1,number
@@ -233,9 +236,9 @@ end subroutine
 
 !-------HOWARTH LMC LAW-----------------------------------!
 
-double precision function flambdaLMC(X,switch)
+real(kind=dp) function flambdaLMC(X,switch)
         IMPLICIT NONE
-        DOUBLE PRECISION :: X
+        real(kind=dp) :: X
         INTEGER :: switch
         !Howarth 1983 LMC
         if(switch == 1) then
@@ -257,7 +260,7 @@ subroutine deredden_LMC(lines, number, m_ext)
         IMPLICIT NONE
         TYPE(line), DIMENSION(:) :: lines
         INTEGER :: number
-        DOUBLE PRECISION :: m_ext, fl
+        real(kind=dp) :: m_ext, fl
         INTEGER :: i
 
         do i = 1,number
@@ -288,9 +291,9 @@ end subroutine
 
 !-------CCM GALACTIC LAW----------------------------------!
 
-double precision function flambdaCCM(X,switch, R)
+real(kind=dp) function flambdaCCM(X,switch, R)
         IMPLICIT NONE
-        DOUBLE PRECISION :: X, a, b, y, Fa, Fb, R
+        real(kind=dp) :: X, a, b, y, Fa, Fb, R
         INTEGER :: switch
         !CCM 1989 Galactic
         if(switch == 1) then !far UV
@@ -327,7 +330,7 @@ subroutine deredden_CCM(lines, number, m_ext, R)
         IMPLICIT NONE
         TYPE(line), DIMENSION(:) :: lines
         INTEGER :: number
-        DOUBLE PRECISION :: m_ext, fl, R
+        real(kind=dp) :: m_ext, fl, R
         INTEGER :: i
 
         do i = 1,number
@@ -362,9 +365,9 @@ end subroutine
 
 !-------PREVOT SMC LAW------------------------------------!
 
-double precision function flambdaSMC(X,switch)
+real(kind=dp) function flambdaSMC(X,switch)
         IMPLICIT NONE
-        DOUBLE PRECISION :: X
+        real(kind=dp) :: X
         INTEGER :: switch
         !Prevot 1984 SMC
         if(switch == 1) then
@@ -386,7 +389,7 @@ subroutine deredden_SMC(lines, number, m_ext)
         IMPLICIT NONE
         TYPE(line), DIMENSION(:) :: lines
         INTEGER :: number
-        DOUBLE PRECISION :: m_ext, fl
+        real(kind=dp) :: m_ext, fl
         INTEGER :: i
 
         do i = 1,number
@@ -418,9 +421,9 @@ end subroutine
 !-------Fitzpatrick Galactic law--------------------------!
 
 
-double precision function flambdaFitz(X,switch) !based on FM90 with values taken from Fitxpatrick 1992
+real(kind=dp) function flambdaFitz(X,switch) !based on FM90 with values taken from Fitxpatrick 1992
         IMPLICIT NONE
-        DOUBLE PRECISION :: X, x_0, c1, c2, c3, c4, gamma, D, F
+        real(kind=dp) :: X, x_0, c1, c2, c3, c4, gamma, D, F
         INTEGER :: switch
        c1 = -0.38
        c2 =  0.74
@@ -458,7 +461,7 @@ subroutine deredden_Fitz(lines, number, m_ext) !Uses Seaton/Howarth for IR, opti
         IMPLICIT NONE
         TYPE(line), DIMENSION(:) :: lines
         INTEGER :: number
-        DOUBLE PRECISION :: m_ext, fl
+        real(kind=dp) :: m_ext, fl
         INTEGER :: i
 
         do I = 1, number

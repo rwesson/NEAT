@@ -3,6 +3,10 @@
 
       module mod_recombination_lines
 
+      implicit none
+      private :: dp
+      integer, parameter :: dp = kind(1.d0)
+
       TYPE oiiRL
             CHARACTER(len=1) :: Hyb
             CHARACTER(len=1) :: n_E1
@@ -23,18 +27,18 @@
             INTEGER :: g1
             INTEGER :: g2
             INTEGER :: ION
-            DOUBLE PRECISION :: Wave
-            DOUBLE PRECISION :: E1
-            DOUBLE PRECISION :: E2
-            DOUBLE PRECISION :: Em
-            DOUBLE PRECISION :: Int
-            DOUBLE PRECISION :: Br_A
-            DOUBLE PRECISION :: Br_B
-            DOUBLE PRECISION :: Br_C
-            DOUBLE PRECISION :: gf1
-            DOUBLE PRECISION :: gf2
-            DOUBLE PRECISION :: Obs
-            DOUBLE PRECISION :: abundance
+            real(kind=dp) :: Wave
+            real(kind=dp) :: E1
+            real(kind=dp) :: E2
+            real(kind=dp) :: Em
+            real(kind=dp) :: Int
+            real(kind=dp) :: Br_A
+            real(kind=dp) :: Br_B
+            real(kind=dp) :: Br_C
+            real(kind=dp) :: gf1
+            real(kind=dp) :: gf2
+            real(kind=dp) :: Obs
+            real(kind=dp) :: abundance
       END TYPE
 
       TYPE(oiiRL), DIMENSION(:), allocatable :: oiiRLs
@@ -59,63 +63,63 @@
             INTEGER :: g1
             INTEGER :: g2
             INTEGER :: ION
-            DOUBLE PRECISION :: Wave
-            DOUBLE PRECISION :: E1
-            DOUBLE PRECISION :: E2
-            DOUBLE PRECISION :: Em
-            DOUBLE PRECISION :: Int
-            DOUBLE PRECISION :: Br_LS
-            DOUBLE PRECISION :: gf1
-            DOUBLE PRECISION :: gf2
-            DOUBLE PRECISION :: Obs
-            DOUBLE PRECISION :: abundance
+            real(kind=dp) :: Wave
+            real(kind=dp) :: E1
+            real(kind=dp) :: E2
+            real(kind=dp) :: Em
+            real(kind=dp) :: Int
+            real(kind=dp) :: Br_LS
+            real(kind=dp) :: gf1
+            real(kind=dp) :: gf2
+            real(kind=dp) :: Obs
+            real(kind=dp) :: abundance
       END TYPE
 
       TYPE(niiRL), DIMENSION(:),allocatable :: niiRLs
 
       TYPE ciiRL
-            DOUBLE PRECISION :: Wave
-            DOUBLE PRECISION :: a
-            DOUBLE PRECISION :: b
-            DOUBLE PRECISION :: c
-            DOUBLE PRECISION :: d
-            DOUBLE PRECISION :: f
-            DOUBLE PRECISION :: aeff
-            DOUBLE PRECISION :: Int
-            DOUBLE PRECISION :: Obs
-            DOUBLE PRECISION :: abundance
+            real(kind=dp) :: Wave
+            real(kind=dp) :: a
+            real(kind=dp) :: b
+            real(kind=dp) :: c
+            real(kind=dp) :: d
+            real(kind=dp) :: f
+            real(kind=dp) :: aeff
+            real(kind=dp) :: Int
+            real(kind=dp) :: Obs
+            real(kind=dp) :: abundance
       END TYPE
 
       TYPE(ciiRL), DIMENSION(:),allocatable :: ciiRLs
 
       TYPE neiiRL
-            DOUBLE PRECISION :: Wave
-            DOUBLE PRECISION :: a
-            DOUBLE PRECISION :: b
-            DOUBLE PRECISION :: c
-            DOUBLE PRECISION :: d
-            DOUBLE PRECISION :: f
-            DOUBLE PRECISION :: Br
-            DOUBLE PRECISION :: aeff
-            DOUBLE PRECISION :: Int
-            DOUBLE PRECISION :: Obs
-            DOUBLE PRECISION :: abundance
+            real(kind=dp) :: Wave
+            real(kind=dp) :: a
+            real(kind=dp) :: b
+            real(kind=dp) :: c
+            real(kind=dp) :: d
+            real(kind=dp) :: f
+            real(kind=dp) :: Br
+            real(kind=dp) :: aeff
+            real(kind=dp) :: Int
+            real(kind=dp) :: Obs
+            real(kind=dp) :: abundance
       END TYPE
 
       TYPE(neiiRL), DIMENSION(:),allocatable :: neiiRLs
 
       TYPE xiiiRL
             CHARACTER(len=3) :: Ion
-            DOUBLE PRECISION :: Wave
-            DOUBLE PRECISION :: a
-            DOUBLE PRECISION :: b
-            DOUBLE PRECISION :: c
-            DOUBLE PRECISION :: d
-            DOUBLE PRECISION :: Br
-            DOUBLE PRECISION :: aeff
-            DOUBLE PRECISION :: Int
-            DOUBLE PRECISION :: Obs
-            DOUBLE PRECISION :: abundance
+            real(kind=dp) :: Wave
+            real(kind=dp) :: a
+            real(kind=dp) :: b
+            real(kind=dp) :: c
+            real(kind=dp) :: d
+            real(kind=dp) :: Br
+            real(kind=dp) :: aeff
+            real(kind=dp) :: Int
+            real(kind=dp) :: Obs
+            real(kind=dp) :: abundance
       END TYPE
 
       TYPE(xiiiRL), DIMENSION(:),allocatable :: xiiiRLs
@@ -222,9 +226,9 @@
       subroutine oii_rec_lines(te,ne,abund,oiiRLs)
 
       IMPLICIT NONE
-      DOUBLE PRECISION :: aeff, aeff_hb, Em_Hb, &
+      real(kind=dp) :: aeff, aeff_hb, Em_Hb, &
      & Te, Ne, abund
-      DOUBLE PRECISION :: a, b, c, d, an(4)
+      real(kind=dp) :: a, b, c, d, an(4)
 
       TYPE(oiiRL), DIMENSION(:) :: oiiRLs
 
@@ -732,10 +736,10 @@
       subroutine nii_rec_lines(te, ne, abund, niiRLs)
 
       IMPLICIT NONE
-      DOUBLE PRECISION :: aeff, aeff_hb, Em_Hb, &
+      real(kind=dp) :: aeff, aeff_hb, Em_Hb, &
      & Te, Ne, abund, &
      & Br_term, z
-      DOUBLE PRECISION :: a, b, c, d
+      real(kind=dp) :: a, b, c, d
 
       INTEGER :: i
 
@@ -1128,7 +1132,7 @@
       subroutine cii_rec_lines(te, ne, abund, ciiRLs)
 
       IMPLICIT NONE
-      DOUBLE PRECISION :: aeff_Hb, Em_Hb, &
+      real(kind=dp) :: aeff_Hb, Em_Hb, &
      & Te, Ne, abund
 
       TYPE(ciiRL), DIMENSION(:) :: ciiRLs
@@ -1161,7 +1165,7 @@
       subroutine neii_rec_lines(te, ne, abund, neiiRLs)
 
       IMPLICIT NONE
-      DOUBLE PRECISION :: aeff_Hb, Em_Hb,                         &
+      real(kind=dp) :: aeff_Hb, Em_Hb,                         &
      &  Te, Ne, abund
 
       TYPE(neiiRL), DIMENSION(:) :: neiiRLs
@@ -1197,7 +1201,7 @@
       subroutine xiii_rec_lines(te, ne, abund, xiiiRLs)
 
       IMPLICIT NONE
-      DOUBLE PRECISION :: aeff_Hb, Em_Hb, &
+      real(kind=dp) :: aeff_Hb, Em_Hb, &
      & Te, Ne, abund
 
       TYPE(xiiiRL), DIMENSION(:) :: xiiiRLs
@@ -1227,7 +1231,7 @@
 
       subroutine get_aeff_hb(te, ne, aeff_hb, em_hb)
       IMPLICIT NONE
-      double precision :: Te, Ne, AE2, AE3, AE4, AE5, AE6, AE7, AE8, aeff_hb, Em_Hb, logem
+      real(kind=dp) :: Te, Ne, AE2, AE3, AE4, AE5, AE6, AE7, AE8, aeff_hb, Em_Hb, logem
 
       AE2 = -9.06524E+00 -2.69954E+00 * log10(te) + 8.80123E-01 * &
       &log10(te) ** 2 -1.57946E-01 * log10(te) ** 3 + &

@@ -52,14 +52,14 @@ program neat
         CHARACTER(len=512) :: filename
         CHARACTER(len=1) :: blank
         INTEGER :: listlength, errstat
-        double precision :: normalise
+        real(kind=dp) :: normalise
 
 !results and result processing
 
         type(resultarray), dimension(:), allocatable :: all_results
         type(resultarray), dimension(1) :: iteration_result
-        double precision, dimension(:), allocatable :: quantity_result
-        double precision, dimension(:,:), allocatable :: resultprocessingarray
+        real(kind=dp), dimension(:), allocatable :: quantity_result
+        real(kind=dp), dimension(:,:), allocatable :: resultprocessingarray
         character(len=40), dimension(:,:), allocatable :: resultprocessingtext
 
 !atomic data
@@ -69,12 +69,12 @@ program neat
         integer :: Iint 
         integer :: maxlevs,maxtemps
         type(atomic_data),allocatable :: atomicdata(:)
-        double precision, dimension(:,:,:), allocatable :: heidata
+        real(kind=dp), dimension(:,:,:), allocatable :: heidata
 
 !extinction
 
         logical :: calculate_extinction=.true.
-        DOUBLE PRECISION :: meanextinction, R
+        real(kind=dp) :: meanextinction, R
 
 !RP effect switch
 
@@ -82,8 +82,8 @@ program neat
 
 !binning and uncertainties
 
-        double precision, dimension(3) :: uncertainty_array=0d0
-        double precision, dimension (:,:), allocatable :: binned_quantity_result
+        real(kind=dp), dimension(3) :: uncertainty_array=0d0
+        real(kind=dp), dimension (:,:), allocatable :: binned_quantity_result
         logical :: unusual
         integer :: verbosity,nbins,nperbin
 
@@ -93,7 +93,7 @@ program neat
 
 !diagnostic array
 
-        double precision, dimension(6) :: diagnostic_array
+        real(kind=dp), dimension(6) :: diagnostic_array
 
 !output formats
 
@@ -1075,14 +1075,14 @@ contains
 
         TYPE(line), dimension(listlength) :: linelist
         INTEGER :: IO, I, j, listlength
-        DOUBLE PRECISION :: temp4
+        real(kind=dp) :: temp4
         LOGICAL, intent(in) :: norp
 
-        double precision :: fn_val
-        double precision     :: s = 0.449871, t = -0.386595, a = 0.19600, b = 0.25472,           &
+        real(kind=dp) :: fn_val
+        real(kind=dp)     :: s = 0.449871, t = -0.386595, a = 0.19600, b = 0.25472,           &
                     r1 = 0.27597, r2 = 0.27846, u, v, x, y, q
-        double precision :: half
-        double precision :: newmean, newsnr, snr
+        real(kind=dp) :: half
+        real(kind=dp) :: newmean, newsnr, snr
 
         half = 0.5
 
@@ -1153,9 +1153,9 @@ subroutine write_uncertainties(input_array, uncertainty_array, plaintext, latext
 !uncertainty calculation and also write the binned and unbinned results to files
 !as necessary.
 implicit none
-double precision :: input_array(:)
-double precision, intent(out) :: uncertainty_array(3)
-double precision, dimension (:,:), allocatable :: binned_quantity_result
+real(kind=dp) :: input_array(:)
+real(kind=dp), intent(out) :: uncertainty_array(3)
+real(kind=dp), dimension (:,:), allocatable :: binned_quantity_result
 character(len=35), intent(in) :: plaintext, latextext
 character(len=35), intent(in) :: itemformat
 character(len=512), intent(in) :: filename
@@ -1234,20 +1234,20 @@ end subroutine write_uncertainties
 subroutine get_uncertainties(input_array, binned_quantity_result, uncertainty_array, unusual,nbins,nperbin,runs)
 
 implicit none
-double precision :: input_array(:)
-double precision, intent(out) :: uncertainty_array(3)
-double precision, dimension(:), allocatable :: bintemp
-double precision :: binsize=0d0
-double precision, dimension (:,:), allocatable, intent(out) :: binned_quantity_result
+real(kind=dp) :: input_array(:)
+real(kind=dp), intent(out) :: uncertainty_array(3)
+real(kind=dp), dimension(:), allocatable :: bintemp
+real(kind=dp) :: binsize=0d0
+real(kind=dp), dimension (:,:), allocatable, intent(out) :: binned_quantity_result
 integer :: arraysize, abovepos, belowpos
 integer :: nbins, nperbin, runs
 integer, dimension(1) :: maxpos
-double precision :: mean=0d0, sd=0d0
-double precision :: mean_log=0d0, sd_log=0d0
-double precision :: mean_exp=0d0, sd_exp=0d0
-double precision, dimension(3,3) :: sds=0d0
-double precision :: tolerance=0d0
-double precision :: binstart,binend,binwidth
+real(kind=dp) :: mean=0d0, sd=0d0
+real(kind=dp) :: mean_log=0d0, sd_log=0d0
+real(kind=dp) :: mean_exp=0d0, sd_exp=0d0
+real(kind=dp), dimension(3,3) :: sds=0d0
+real(kind=dp) :: tolerance=0d0
+real(kind=dp) :: binstart,binend,binwidth
 logical :: unusual !if not true, then the distribution is normal, log normal or exp normal
 
 
@@ -1419,7 +1419,7 @@ end function gettime
 
 character(len=100) function latex_number(inputnumber)
 ! for any number in the form aEx, write it in latex format, ie a$\times$10$^{x}$
-double precision :: inputnumber, mantissa
+real(kind=dp) :: inputnumber, mantissa
 integer :: exponent, pos
 
 write (latex_number,"(ES14.6)") inputnumber

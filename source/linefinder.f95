@@ -9,26 +9,26 @@ use mod_quicksort
 implicit none
 
 TYPE xcorrarray
-        double precision :: restwavelength
-        double precision :: observedwavelength
+        real(kind=dp) :: restwavelength
+        real(kind=dp) :: observedwavelength
         integer :: match ! 0 if the reference line is not observed, 1 if it is
 end TYPE
 
 TYPE neat_line
-        double precision :: wavelength 
+        real(kind=dp) :: wavelength 
         CHARACTER(len=20) :: ion
 END TYPE
 
 type(neat_line), dimension(:), allocatable :: neatlines
 type(xcorrarray), dimension(10) :: xcorr_array
-double precision, dimension(2001) :: xcorr
+real(kind=dp), dimension(2001) :: xcorr
 integer, intent(in) :: listlength
 TYPE(line), dimension(listlength) :: linelist
 TYPE(line), dimension(listlength) :: linelist_copy
-double precision, dimension(20) :: linelist_compare
+real(kind=dp), dimension(20) :: linelist_compare
 
 integer :: I, J, n_neatlines, IO, assign_1, assign_2, count
-double precision :: temp_wave, diff, shift, rms
+real(kind=dp) :: temp_wave, diff, shift, rms
 character(len=1) :: null
 character(len=5) :: temp_ion1, temp_ion2
 

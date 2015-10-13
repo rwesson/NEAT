@@ -5,20 +5,21 @@ contains
 subroutine balmer_densities(H_BS,medtemp,density)
 
 implicit none
+integer, parameter :: dp = kind(1.d0)
 
 type(line), dimension(:) :: H_BS
-double precision, dimension(10:25) :: ratios,densities
-double precision, dimension(:,:,:,:), allocatable :: emissivities
-double precision, dimension(:,:,:), allocatable :: searcharray
+real(kind=dp), dimension(10:25) :: ratios,densities
+real(kind=dp), dimension(:,:,:,:), allocatable :: emissivities
+real(kind=dp), dimension(:,:,:), allocatable :: searcharray
 integer :: ntemps, ndens, nlevs
-double precision :: density, interp_t, weight
-double precision, intent(in) :: medtemp
+real(kind=dp) :: density, interp_t, weight
+real(kind=dp), intent(in) :: medtemp
 character(len=1) :: junk
 character(len=20), dimension(8) :: invar
 integer :: i,j,k,l !counters
-double precision :: r1, r2
+real(kind=dp) :: r1, r2
 integer :: H ! temporary, which line to look at
-double precision, dimension(:), allocatable :: temperatures
+real(kind=dp), dimension(:), allocatable :: temperatures
 
 density=0.d0
 weight=0.d0

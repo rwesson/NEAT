@@ -37,6 +37,7 @@
       subroutine get_diagnostic(ion,levu,levl,inratio,diagtype,fixedq,result,ndim2,ndim1,atomicdata,iion)
       use mod_atomicdata
       IMPLICIT NONE
+      integer, parameter :: dp = kind(1.d0)
 
       integer :: NDIM1, NDIM2, NDIM1T3, MAXND
                                                       !Maximum no of Te & levels
@@ -47,8 +48,8 @@
      &  ITRANA(2,NDIM2),ITRANB(2,NDIM2),ITRANC(2,NDIM2),LOOP
       type(atomic_data),dimension(:),intent(in) :: atomicdata
       integer :: iion,nion
-      double precision :: N(NDIM2)
-      double precision :: & !TDRAT(2,MAXND)
+      real(kind=dp) :: N(NDIM2)
+      real(kind=dp) :: & !TDRAT(2,MAXND)
      & TNIJ(NDIM2,NDIM2), FINTIJ(NDIM2,NDIM2),                          &
      & WAVA(NDIM2), WAVB(NDIM2), WAVC(NDIM2), CS(NDIM2,NDIM2),          &
      & QEFF(NDIM2,NDIM2), QQ(NDIM1),                                    &
@@ -62,16 +63,16 @@
      & NLEV, NTEMP, IBIG, IRATS,                                        &
      & NLEV1, INT, IND, IOPT, IT, IM1, JM1, IP1,                        &
      & IAPR, IBPR, ICPR, IKT, IA, IB, IC, IA1, IA2, IB1, IB2, IC1, IC2
-      double precision :: TEMPI, TINC, DENSI, DINC, DENS, DLOGD, TEMP, TLOGT,        &
+      real(kind=dp) :: TEMPI, TINC, DENSI, DINC, DENS, DLOGD, TEMP, TLOGT,        &
      & TEMP2, DD, DELTEK, EXPE, VALUE, SUMN, TTT, TTP, AHB, EJI, WAV,   &
      & RLINT, FINT, SUMA, SUMB, SUMC, FRAT, DEE
 
-      DOUBLE PRECISION :: fixedq
-      double precision :: inratio,result
+      real(kind=dp) :: fixedq
+      real(kind=dp) :: inratio,result
       CHARACTER(len=20) :: levu,levl
       CHARACTER(len=1) :: diagtype
-      double precision, DIMENSION(:,:), ALLOCATABLE :: RESULTS
-      double precision :: valtest(3)
+      real(kind=dp), DIMENSION(:,:), ALLOCATABLE :: RESULTS
+      real(kind=dp) :: valtest(3)
       integer :: test
 
           ndim1t3=3*ndim1
@@ -422,7 +423,8 @@
 
       subroutine get_abundance(ion,levels,tempi,densi,iobs,abund,ndim2,ndim1,atomicdata,iion)
       use mod_atomicdata
-      IMPLICIT NONE
+      implicit none
+      integer, parameter :: dp = kind(1.d0)
 
           !INTEGER maxlevs,maxtemps
       integer :: NDIM1, NDIM2, NDIM1T3, MAXND
@@ -436,8 +438,8 @@
      &  ITRANA(2,NDIM2),ITRANB(2,NDIM2),ITRANC(2,NDIM2)
       type(atomic_data),dimension(:),intent(in) :: atomicdata
       integer :: nion,iion
-      double precision :: N(NDIM2)
-      double precision :: TDRAT(2,MAXND), TNIJ(NDIM2,NDIM2), FINTIJ(NDIM2,NDIM2),    &
+      real(kind=dp) :: N(NDIM2)
+      real(kind=dp) :: TDRAT(2,MAXND), TNIJ(NDIM2,NDIM2), FINTIJ(NDIM2,NDIM2),    &
      & WAVA(NDIM2), WAVB(NDIM2), WAVC(NDIM2), CS(NDIM2,NDIM2),          &
      & QEFF(NDIM2,NDIM2), QQ(NDIM1),                                    &
      & QOM(NDIM1,NDIM2,NDIM2), A(NDIM2,NDIM2), E(NDIM2), T(NDIM1),      &
@@ -449,12 +451,12 @@
      & NLEV, NTEMP, IBIG, IRATS,                                        &
      & NLEV1, INT, IND, IOPT, IT, IM1, JM1, IP1,                        &
      & IAPR, IBPR, ICPR, IKT, IA, IB, IC, IA1, IA2, IB1, IB2, IC1, IC2
-      double precision :: TEMPI, TINC, DENSI, DINC, DENS, DLOGD, TEMP, TLOGT,        &
+      real(kind=dp) :: TEMPI, TINC, DENSI, DINC, DENS, DLOGD, TEMP, TLOGT,        &
      & TEMP2, DD, DELTEK, EXPE, VALUE, SUMN, TTT, TTP, AHB, EJI, WAV,   &
      & RLINT, FINT, SUMA, SUMB, SUMC, FRAT, DEE
 
       CHARACTER(len=20) :: levels
-      double precision :: iobs, abund
+      real(kind=dp) :: iobs, abund
 !
       ndim1t3=3*ndim1
       g=0
@@ -689,9 +691,11 @@
 !---- PROC LUSLV
                                                        !Solving linear equations
       SUBROUTINE LUSLV(A,B,N,M)
-      IMPLICIT NONE
+      implicit none
+      integer, parameter :: dp = kind(1.d0)
+
       integer :: M, N
-      double precision :: A(M,M),B(M)
+      real(kind=dp) :: A(M,M),B(M)
       CALL LURED(A,N,M)
       CALL RESLV(A,B,N,M)
       RETURN
@@ -699,9 +703,11 @@
 !
 !---- PROC LURED
       SUBROUTINE LURED(A,N,NR)
-      IMPLICIT NONE
+      implicit none
+      integer, parameter :: dp = kind(1.d0)
+
       integer :: N, NR, NM1, I, J, K, IP1
-      double precision :: A(NR,NR), FACT
+      real(kind=dp) :: A(NR,NR), FACT
       IF(N.EQ.1) RETURN
       NM1=N-1
       DO I=1,NM1
@@ -719,9 +725,11 @@
 !---- PROC RESLV
                                                                !Resolve A with B
       SUBROUTINE RESLV(A,B,N,NR)
-      IMPLICIT NONE
+      implicit none
+      integer, parameter :: dp = kind(1.d0)
+
       integer :: N, NR, NM1, I, J, K, L, IP1
-      double precision :: A(NR,NR),B(NR)
+      real(kind=dp) :: A(NR,NR),B(NR)
       IF(N.EQ.1) GOTO 1
       NM1=N-1
       DO I=1,NM1
@@ -746,9 +754,11 @@
 !
 !---- PROC SPLMAT
       SUBROUTINE SPLMAT(XX,NPT,IOPT,NDIM, NDIMT3, HMH)
-      IMPLICIT NONE
+      implicit none
+      integer, parameter :: dp = kind(1.d0)
+
       integer :: NDIM, NDIMT3, NPT, IOPT, NPM, NELEM
-      double precision :: XX(NDIM),GH(NDIMT3),Y(NDIM), HMH(NDIM,NDIM)
+      real(kind=dp) :: XX(NDIM),GH(NDIMT3),Y(NDIM), HMH(NDIM,NDIM)
       NPM=NPT-2
       CALL GHGEN(GH,XX,NPT,IOPT,NDIM,NDIMT3)
       NELEM=3*NPM-2
@@ -763,9 +773,11 @@
 !     The derivative is given as the coefficients of F(I), I=1 to N,
 !     in the array D(I), I=1 to N.
       SUBROUTINE DERIV(XY,D,X,N,NDIM)
-      IMPLICIT NONE
+      implicit none
+      integer, parameter :: dp = kind(1.d0)
+
       integer :: N ,NDIM, I, J, K
-      double precision :: XY(NDIM),D(NDIM), X, P1, P2, S
+      real(kind=dp) :: XY(NDIM),D(NDIM), X, P1, P2, S
       DO I=1,N
         P1=1.
         S=0.
@@ -797,10 +809,12 @@
 !     IOPT = 2  YP at end points from lagarnge interpolant of a set of
 !     internal points.
       SUBROUTINE HGEN(XX,GH,Y,NPT,IOPT,NDIM,NDIMT3,HMH)
-      IMPLICIT NONE
+      implicit none
+      integer, parameter :: dp = kind(1.d0)
+
       integer :: NPT, IOPT, NDIM, NDIMT3, NDIM3, NIP, I, J, K, NPM,        &
      & INDX
-      double precision :: XX(NDIM), GH(NDIMT3), Y(NDIM), HMH(NDIM,NDIM),             &
+      real(kind=dp) :: XX(NDIM), GH(NDIMT3), Y(NDIM), HMH(NDIM,NDIM),             &
      & XY(5),D(5),C(2,5), A0, AN1, H1, H2
                                    !Case of derivative boundary condition, with
       IF(IOPT.EQ.2) THEN
@@ -899,9 +913,11 @@
 !
 !---- PROC GHGEN
       SUBROUTINE GHGEN(GH,XX,NPT,IOPT,NDIM,NDIMT3)
-      IMPLICIT NONE
+      implicit none
+      integer, parameter :: dp = kind(1.d0)
+
       integer :: NPT, IOPT, NDIM, NDIMT3, INDX, NPTM, I, J, IP, JP, IK
-      double precision :: XX(NDIM),GH(NDIMT3)
+      real(kind=dp) :: XX(NDIM),GH(NDIMT3)
       INDX=0
       NPTM=NPT-1
       DO I=2,NPTM
@@ -928,9 +944,11 @@
 !
 !---- PROC ELU
       SUBROUTINE ELU(GH,N,NDIM)
-      IMPLICIT NONE
+      implicit none
+      integer, parameter :: dp = kind(1.d0)
+
       integer :: N, NDIM, INDX, I, J, JP
-      double precision :: GH(NDIM)
+      real(kind=dp) :: GH(NDIM)
       INDX=0
       DO I=1,N
         DO J=1,3
@@ -953,9 +971,11 @@
 !
 !---- PROC CFY
       SUBROUTINE CFY(X,Y,XX,YY,NPT,NDIM,D)
-      IMPLICIT NONE
+      implicit none
+      integer, parameter :: dp = kind(1.d0)
+
       integer :: NPT, NDIM, J
-      double precision :: XX(NDIM),YY(NDIM), D(NDIM), X, Y, TT
+      real(kind=dp) :: XX(NDIM),YY(NDIM), D(NDIM), X, Y, TT
       IF(X.LT.XX(1)) THEN
         Y=YY(1)
       ENDIF
@@ -973,9 +993,11 @@
 !
 !---- PROC CFD
       SUBROUTINE CFD(X,XX,NPT,NDIM, HMH, D)
-      IMPLICIT NONE
+      implicit none
+      integer, parameter :: dp = kind(1.d0)
+
       integer :: NPT, NDIM, NPTM, I, J
-      double precision :: X, XX(NDIM), HMH(NDIM,NDIM), D(NDIM), X1, X2, A1, A2, HI
+      real(kind=dp) :: X, XX(NDIM), HMH(NDIM,NDIM), D(NDIM), X1, X2, A1, A2, HI
       IF(X.LT.XX(1)) THEN
         !WRITE(6,400) XX(1)
         RETURN

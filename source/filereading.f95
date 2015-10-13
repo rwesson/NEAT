@@ -1,6 +1,8 @@
 module mod_abundIO
 use mod_abundtypes
 implicit none
+private :: dp
+integer, parameter :: dp = kind(1.d0)
 
 contains
 
@@ -13,7 +15,7 @@ subroutine read_linelist(filename,linelist,listlength, errstat)
         CHARACTER(len=15) :: invar1, invar2 !line fluxes and uncertainties are read as strings into these variables
 
         TYPE neat_line
-          double precision :: wavelength
+          real(kind=dp) :: wavelength
           CHARACTER(len=85) :: linedata
         END TYPE
 
@@ -330,6 +332,9 @@ end module mod_abundmaths
 module mod_atomic_read
 use mod_atomicdata
 
+private :: dp
+integer, parameter :: dp = kind(1.d0)
+
 contains
 subroutine read_atomic_data(ion)
 use mod_atomicdata
@@ -339,7 +344,7 @@ use mod_atomicdata
     character(len=1) :: comments(78)
     character(len=10) :: ionname
     character(len=25) :: filename
-    double precision :: WN,AX,QX
+    real(kind=dp) :: WN,AX,QX
 
     id = 0
     jd = 0
@@ -439,9 +444,9 @@ end subroutine read_atomic_data
 subroutine read_porter(heidata)
 
 implicit none
-double precision, dimension(21,15,44) :: heidata
+real(kind=dp), dimension(21,15,44) :: heidata
 integer :: i,j,tpos,npos,io
-double precision, dimension(46) :: temp
+real(kind=dp), dimension(46) :: temp
 
 !read data
 
@@ -465,9 +470,9 @@ end subroutine
 subroutine read_smits(heidata)
 
 implicit none
-double precision, dimension(3,6,44) :: heidata
+real(kind=dp), dimension(3,6,44) :: heidata
 integer :: i,j,k,io
-double precision, dimension(18) :: temp
+real(kind=dp), dimension(18) :: temp
 
 !read data
 !fitted fourth order polynomials to the Smits 1996 emissivities
