@@ -840,7 +840,6 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 ! He I
 
         if (switch_he=="S") then
-!         call get_hei_smits(REAL(medtemp),REAL(meddens),HeI_lines,heiabund)
           call get_hei_smits_new(medtemp,meddens,HeI_lines,heidata, heiabund)
         else
           call get_hei_porter(medtemp,meddens,HeI_lines,heidata, heiabund)
