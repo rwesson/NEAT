@@ -35,7 +35,7 @@ use mod_hydrogen
         real(kind=dp) :: adfC2plus, adfN2plus, adfO2plus, adfNe2plus
         real(kind=dp) :: c1, c2, c3, meanextinction, R
         real(kind=dp) :: heiabund,heiiabund,Hetotabund, heICFfactor, OICFfactor, upsilon, upsilonprime
-        real(kind=dp) :: bajtemp
+        real(kind=dp) :: Te_balmer, Te_paschen
         real(kind=dp) :: oii4649, oii4089,oii4662,oii_te,oii_ne
         real(kind=dp) :: ratio_5876_4471, ratio_6678_4471, te_5876_4471, te_6678_4471
 
@@ -45,7 +45,7 @@ use mod_hydrogen
         TYPE(line), DIMENSION(38) :: H_Balmer, H_Paschen
         TYPE(line), DIMENSION(44) :: HeI_lines
         TYPE(line), DIMENSION(1) :: HeII_lines
-        TYPE(line), DIMENSION(2) :: Balmer_jump
+        TYPE(line), DIMENSION(2) :: Balmer_jump, Paschen_jump
 
         !atomic data
 
@@ -859,9 +859,9 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
         hetotabund = heiabund + heiiabund
 
-!  Calculate T_e from Balmer Jump
+!  Calculate T_e from Balmer Jump using equation 3 of Liu et al. (2001)
 
-        BaJtemp = 0.0
+        Te_balmer = 0.0
         Balmer_jump(1)%int_dered = 0.0
         Balmer_jump(2)%int_dered = 0.0
 
@@ -871,13 +871,33 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         enddo
 
         if(Balmer_jump(1)%int_dered .gt. 0 .and. Balmer_jump(2)%int_dered .gt. 0 .and. H_Balmer(9)%intensity .gt. 0) then
-        BaJtemp = (Balmer_jump(1)%int_dered - Balmer_jump(2)%int_dered)/H_Balmer(9)%int_dered
-        BaJtemp = BaJtemp**(-3./2.)
-        BaJtemp = BaJtemp*368
-        BaJtemp = BaJtemp*(1+0.256*heiabund+3.409*heiiabund)
+        Te_balmer = (Balmer_jump(1)%int_dered - Balmer_jump(2)%int_dered)/H_Balmer(9)%int_dered
+        Te_balmer = Te_balmer**(-1.5)
+        Te_balmer = Te_balmer*368
+        Te_balmer = Te_balmer*(1+0.256*heiabund+3.409*heiiabund)
         endif
 
-        iteration_result%Bal_jump_temp = BaJtemp
+        iteration_result%Balmer_jump_temp = Te_balmer
+
+!and from Paschen jump, using equation 7 of Fang et al. (2011)
+
+        Te_paschen = 0.0
+        Paschen_jump(1)%int_dered = 0.0
+        Paschen_jump(2)%int_dered = 0.0
+
+        do i=1,listlength
+            if(linelist(i)%wavelength .eq. 8100.d0) Paschen_jump(1) = linelist(i)
+            if(linelist(i)%wavelength .eq. 8400.d0) Paschen_jump(2) = linelist(i)
+        enddo
+
+        if(Paschen_jump(1)%int_dered .gt. 0 .and. Paschen_jump(2)%int_dered .gt. 0 .and. H_Paschen(8)%intensity .gt. 0) then
+        Te_paschen = (Paschen_jump(1)%int_dered - Paschen_jump(2)%int_dered)/H_Paschen(8)%int_dered
+        Te_paschen = Te_paschen**(-1.77)
+        Te_paschen = Te_paschen*8.72
+        Te_paschen = Te_paschen*(1+0.52*heiabund+4.40*heiiabund)
+        endif
+
+        iteration_result%Paschen_jump_temp = Te_paschen
 
 ! calculate n_e from Balmer decrement
 
@@ -887,7 +907,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 ! and from Paschen decrement. todo: add to iteration result
 
         call paschen_densities(H_Paschen,medtemp,paschendec_density)
-!print *,paschendec_density
+        iteration_result%paschendec_density=paschendec_density
 
 ! get Te from He line ratios
 ! equations derived from Smits 1996 data, at ne=5000.

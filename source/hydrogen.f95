@@ -133,7 +133,7 @@ endif
 
 !check if lower limit, Storey and Hummer go down to 100cm-3
 
-if (density .lt. 100.) then
+if (density .lt. 100. .and. density .ne. 0.d0) then
   density = 100.d0
 endif
 

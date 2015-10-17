@@ -155,7 +155,8 @@ TYPE resultarray
         real(kind=dp) :: NeIV_density_ratio=0d0
         real(kind=dp) :: ArV_temp_ratio=0d0
         real(kind=dp) :: NeV_temp_ratio=0d0
-        real(kind=dp) :: Bal_jump_temp=0d0
+        real(kind=dp) :: Balmer_jump_temp=0d0
+        real(kind=dp) :: Paschen_jump_temp=0.d0
         real(kind=dp) :: oii_v1_abund_orl=0d0
         real(kind=dp) :: oii_v2_abund_orl=0d0
         real(kind=dp) :: oii_v5_abund_orl=0d0
@@ -188,6 +189,7 @@ TYPE resultarray
         real(kind=dp) :: oii7325recRL=0.d0
         real(kind=dp) :: oiii4363recRL=0.d0
         real(kind=dp) :: balmerdec_density=0.d0
+        real(kind=dp) :: paschendec_density=0.d0
 
 end type
 
