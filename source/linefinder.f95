@@ -15,7 +15,7 @@ TYPE xcorrarray
 end TYPE
 
 TYPE neat_line
-        real(kind=dp) :: wavelength 
+        real(kind=dp) :: wavelength
         CHARACTER(len=20) :: ion
 END TYPE
 
@@ -56,7 +56,7 @@ xcorr_array%match = 0
         DO I=1,n_neatlines
                 READ(100,*,end=102) temp_wave, null, temp_ion1, temp_ion2
                 neatlines(i)%wavelength = temp_wave
-                neatlines(i)%ion = temp_ion1//temp_ion2 
+                neatlines(i)%ion = temp_ion1//temp_ion2
         END DO
         102 print *
         CLOSE(100)
@@ -83,7 +83,7 @@ end do
 
 do i=1,20
   !copy wavelength of line with highest intensity
-  linelist_compare(i)=linelist_copy(maxloc(linelist_copy%intensity,1))%wavelength 
+  linelist_compare(i)=linelist_copy(maxloc(linelist_copy%intensity,1))%wavelength
   !replace that line with an intensity of zero so that we can repeat and get the next strongest
   linelist_copy(maxloc(linelist_copy%intensity))%intensity = 0.D0
 end do
@@ -152,7 +152,7 @@ do I=1,listlength
       diff = abs(linelist(i)%wavelength-shift-neatlines(j)%wavelength)
       assign_1 = i
       assign_2 = j
-    endif 
+    endif
   enddo
   if (diff .le. rms) then
     print "(F8.2,A4,F8.2,1X,A10,F6.3)",linelist(assign_1)%wavelength," ->  ",neatlines(assign_2), diff

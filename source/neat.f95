@@ -67,7 +67,7 @@ program neat
 
         character(len=10) :: ionlist(40) !list of ion names
         integer :: iion !# of ions in Ilines
-        integer :: Iint 
+        integer :: Iint
         integer :: maxlevs,maxtemps
         type(atomic_data),allocatable :: atomicdata(:)
         real(kind=dp), dimension(:,:,:), allocatable :: heidata
@@ -493,7 +493,7 @@ program neat
                         call abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf)
 
                         !store all line and derived quantity in arrays
-                        all_linelists(:,i)=linelist 
+                        all_linelists(:,i)=linelist
                         all_results(i)=iteration_result(1)
                         !restore the unrandomized line list ready for the next iteration
                         linelist = linelist_original
@@ -1049,20 +1049,20 @@ program neat
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{CEL abundances}\\ \hline"
           elseif (j .eq. 110) then
             write (650,"(/A,/A/)") "ORL abundances","=============="
-            write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{ORL abundances}\\ \hline" 
-          elseif (j .eq. 111 .or. j .eq. 115 .or. j .eq. 126 .or. j .eq. 141) then 
-            write (650,"(/A,/A/)") 
+            write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{ORL abundances}\\ \hline"
+          elseif (j .eq. 111 .or. j .eq. 115 .or. j .eq. 126 .or. j .eq. 141) then
+            write (650,"(/A,/A/)")
             write (651,*) "\\"
           elseif (j .eq. 144) then
             write (650,"(/A,/A/)") "Strong line abundances","======================"
-            write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{Strong line abundances}\\ \hline" 
+            write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{Strong line abundances}\\ \hline"
           elseif (j .eq. 150) then
             write (650,"(/A,/A/)") "Abundance discrepancy factors","============================="
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{Abundance discrepancy factors}\\ \hline"
           endif
 
 ! this writes the results to the plain text and latex summary files
-          
+
           quantity_result=resultprocessingarray(j,:)
           call write_uncertainties(quantity_result,uncertainty_array,resultprocessingtext(j,1),resultprocessingtext(j,2),resultprocessingtext(j,3),filename, resultprocessingtext(j,4), verbosity,nbins,nperbin,runs)
 
@@ -1325,12 +1325,12 @@ if (binsize .gt. 0d0) then
 !!$
 !!$  do i=1,arraysize
 !!$    if (bintemp(i).eq.comp) then
-!!$      bincount=bincount+1 
-!!$    else 
-!!$      binned_quantity_result(ii,:)=(/comp, dble(bincount)/) 
+!!$      bincount=bincount+1
+!!$    else
+!!$      binned_quantity_result(ii,:)=(/comp, dble(bincount)/)
 !!$      comp=bintemp(i)
 !!$      bincount=0
-!!$      ii=ii+1 
+!!$      ii=ii+1
 !!$    endif
 !!$  enddo
 
@@ -1397,9 +1397,9 @@ if (binsize .gt. 0d0) then
 
   sds=sds/arraysize
 
-  if (abs(sds(1,1)-0.6827).lt.tolerance .and. abs(sds(1,2)-0.9545).lt.(tolerance*0.5) .and. abs(sds(1,3)-0.9973).lt. (tolerance*0.1)) then 
+  if (abs(sds(1,1)-0.6827).lt.tolerance .and. abs(sds(1,2)-0.9545).lt.(tolerance*0.5) .and. abs(sds(1,3)-0.9973).lt. (tolerance*0.1)) then
     uncertainty_array(:)=(/sd,mean,sd/)
-  elseif (abs(sds(2,1)-0.6827).lt.tolerance .and. abs(sds(2,2)-0.9545).lt.(tolerance*0.5) .and. abs(sds(2,3)-0.9973).lt. (tolerance*0.1)) then 
+  elseif (abs(sds(2,1)-0.6827).lt.tolerance .and. abs(sds(2,2)-0.9545).lt.(tolerance*0.5) .and. abs(sds(2,3)-0.9973).lt. (tolerance*0.1)) then
     uncertainty_array(:)=(/exp(mean_log)-exp(mean_log-sd_log),exp(mean_log),exp(mean_log+sd_log)-exp(mean_log)/)
   elseif (abs(sds(3,1)-0.6827).lt.tolerance .and. abs(sds(3,2)-0.9545).lt.(tolerance*0.5) .and. abs(sds(3,3)-0.9973).lt. (tolerance*0.1)) then
     uncertainty_array(:)=(/log(mean_exp+sd_exp)-log(mean_exp),log(mean_exp),log(mean_exp-sd_exp)-log(mean_exp)/)

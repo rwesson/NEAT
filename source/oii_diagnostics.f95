@@ -43,7 +43,7 @@ values(:,8,2)=5.0 ! all lines separated by 0.4dex except top density, 0.6 dex hi
 !get point on each of those lines closest to our value
 !use this to determine if point is between two lines in both directions
 !if it is, then we're in the box and the magnitude of the vectors gives us an interpolated value
-  
+
 do i=1,8
   do j=1,7
 
