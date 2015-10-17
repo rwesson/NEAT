@@ -92,7 +92,7 @@ if (medtemp .lt. temperatures(1) .or. medtemp .gt. temperatures(size(temperature
   searcharray(:,:,:)=hidata(i,:,:,:)
 else
   interp_t=(medtemp-temperatures(i-1))/(temperatures(i)-temperatures(i-1))
-  searcharray(:,:,:)=hidata(i,:,:,:)+interp_t*(hidata(i+1,:,:,:)-hidata(i,:,:,:))
+  searcharray(:,:,:)=hidata(i-1,:,:,:)+interp_t*(hidata(i,:,:,:)-hidata(i,:,:,:))
 endif
 
 !now go through H_Balmer from 10 to 25, calculate the density for each line ratio, store it
@@ -188,7 +188,7 @@ if (medtemp .lt. temperatures(1) .or. medtemp .gt. temperatures(size(temperature
   searcharray(:,:,:)=hidata(i,:,:,:)
 else
   interp_t=(medtemp-temperatures(i-1))/(temperatures(i)-temperatures(i-1))
-  searcharray(:,:,:)=hidata(i,:,:,:)+interp_t*(hidata(i+1,:,:,:)-hidata(i,:,:,:))
+  searcharray(:,:,:)=hidata(i-1,:,:,:)+interp_t*(hidata(i,:,:,:)-hidata(i,:,:,:))
 endif
 
 !now go through H_Paschen from 10 to 25, calculate the density for each line ratio, store it
