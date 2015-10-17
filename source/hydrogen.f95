@@ -125,7 +125,11 @@ do i=10,25
   endif
 enddo
 
-density=10**(density/weight)
+if (weight .gt. 0.d0) then
+  density=10**(density/weight)
+else
+  density=0.d0
+endif
 
 !check if lower limit, Storey and Hummer go down to 100cm-3
 
@@ -138,5 +142,101 @@ endif
 deallocate(searcharray)
 
 end subroutine balmer_densities
+
+subroutine paschen_densities(H_Paschen,medtemp,density)
+! computed using ratios of Paschen lines to Hbeta
+! will change to P9, checking if it is observed
+implicit none
+integer, parameter :: dp = kind(1.d0)
+
+type(line), dimension(:) :: H_Paschen
+real(kind=dp), dimension(10:25) :: ratios,densities
+real(kind=dp), dimension(:,:,:), allocatable :: searcharray
+real(kind=dp) :: density, interp_t, weight
+real(kind=dp), intent(in) :: medtemp
+integer :: i,j !counters
+real(kind=dp) :: r1, r2
+integer :: H ! temporary, which line to look at
+
+density=0.d0
+weight=0.d0
+
+!nb H_Paschen indexing is such that entry 1 contains H4, etc
+!Thus H10 is in entry 7
+!allocate arrays to store values, high order lines (n>10) only
+ratios = H_Paschen(7:22)%int_dered/100.d0
+densities=0.d0
+
+!allocate the search array.  emissivities array has dimensions of temperature, density, level 1, level 2
+!search array just has dimensions of density, level 1, level 2
+
+allocate(searcharray(size(hidata,2),size(hidata,3),size(hidata,4)))
+
+!now find the temperature
+
+do i=1,ntemps
+  if (medtemp .lt. temperatures(i)) then
+    exit
+  endif
+end do
+
+!interpolate linearly between temperatures to get line ratios with density at specified temperature
+!if temperature is outside data limits, it is just set to the limit
+!lower limit is 500K, upper is 30000K
+
+if (medtemp .lt. temperatures(1) .or. medtemp .gt. temperatures(size(temperatures))) then
+  searcharray(:,:,:)=hidata(i,:,:,:)
+else
+  interp_t=(medtemp-temperatures(i-1))/(temperatures(i)-temperatures(i-1))
+  searcharray(:,:,:)=hidata(i,:,:,:)+interp_t*(hidata(i+1,:,:,:)-hidata(i,:,:,:))
+endif
+
+!now go through H_Paschen from 10 to 25, calculate the density for each line ratio, store it
+!intrat data only goes up to n=25
+
+do H=10,25
+  if (H_Paschen(H-3)%int_dered .gt. 0.d0) then !line is present, calculate a density
+    if (ratios(H) .lt. (searcharray(1,H,3)/searcharray(1,4,2))) then
+      densities(H) = 1.
+    elseif (ratios(H) .gt. (searcharray(ndens,H,3)/searcharray(ndens,4,2))) then
+      densities(H) = 8.
+    else !search for the value
+      do j=1,ndens-1
+        r1=searcharray(j,H,3)/searcharray(j,4,2)
+        r2=searcharray(j+1,H,3)/searcharray(j+1,4,2)
+        if (ratios(H) .gt. r1 .and. ratios(H) .lt. r2) then
+          densities(H)=j+1+(ratios(H)-r1)/(r2-r1)
+        endif
+      enddo
+    endif
+  endif
+end do
+
+!now we have an array with all the densities implied by the ratios.  Derive a flux weighted value
+
+do i=10,25
+  if (densities(i).gt.0.d0) then
+    density=density+H_Paschen(i-2)%int_dered*densities(i)
+    weight=weight+H_Paschen(i-2)%int_dered
+  endif
+enddo
+
+if (weight .gt. 0.d0) then
+  density=10**(density/weight)
+else
+  density=0.d0
+endif
+
+!check if lower limit, Storey and Hummer go down to 100cm-3
+
+if (density .lt. 100. .and. density .ne. 0.d0) then
+  density = 100.d0
+endif
+
+!deallocate search array
+
+deallocate(searcharray)
+
+end subroutine paschen_densities
 
 end module mod_hydrogen

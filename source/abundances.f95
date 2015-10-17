@@ -64,7 +64,7 @@ use mod_hydrogen
         TYPE (RLabund), DIMENSION(12) :: oiimultiplets
         TYPE (RLabund), DIMENSION(7) :: niimultiplets
 
-        real(kind=dp) :: balmerdec_density
+        real(kind=dp) :: balmerdec_density, paschendec_density
 
 ! strong line variables
         real(kind=dp) :: X23,O_R23upper, O_R23lower, N2,O_N2, O3N2, O_O3N2, Ar3O3, O_Ar3O3, S3O3, O_S3O3, x23temp1, x23temp2, x23temp3, x23temp4
@@ -113,6 +113,8 @@ use mod_hydrogen
         ILs%int_dered = 0
         H_Balmer%abundance = 0
         H_Balmer%int_dered = 0
+        H_Paschen%abundance = 0
+        H_Paschen%int_dered = 0
         HeI_lines%abundance = 0
         HeI_lines%int_dered = 0
         HeII_lines%abundance = 0
@@ -160,35 +162,40 @@ use mod_hydrogen
         !actual dereddening
 
         if (switch_ext == "S") then
-                CALL deredden(ILs, Iint, meanextinction)
-                CALL deredden(H_Balmer, 38, meanextinction)
+                call deredden(ILs, Iint, meanextinction)
+                call deredden(H_Balmer, 38, meanextinction)
+                call deredden(H_Paschen, 38, meanextinction)
                 call deredden(HeI_lines, 44, meanextinction)
                 call deredden(HeII_lines, 1, meanextinction)
-                CALL deredden(linelist, listlength, meanextinction)
+                call deredden(linelist, listlength, meanextinction)
         elseif (switch_ext == "H") then
-                CALL deredden_LMC(ILs, Iint, meanextinction)
-                CALL deredden_LMC(H_Balmer, 38, meanextinction)
+                call deredden_LMC(ILs, Iint, meanextinction)
+                call deredden_LMC(H_Balmer, 38, meanextinction)
+                call deredden_LMC(H_Paschen, 38, meanextinction)
                 call deredden_LMC(HeI_lines, 44, meanextinction)
                 call deredden_LMC(HeII_lines, 1, meanextinction)
-                CALL deredden_LMC(linelist, listlength, meanextinction)
+                call deredden_LMC(linelist, listlength, meanextinction)
         elseif (switch_ext == "C") then
-                CALL deredden_CCM(ILs, Iint, meanextinction, R)
-                CALL deredden_CCM(H_Balmer, 38, meanextinction, R)
+                call deredden_CCM(ILs, Iint, meanextinction, R)
+                call deredden_CCM(H_Balmer, 38, meanextinction, R)
+                call deredden_CCM(H_Paschen, 38, meanextinction, R)
                 call deredden_CCM(HeI_lines, 44, meanextinction, R)
                 call deredden_CCM(HeII_lines, 1, meanextinction, R)
-                CALL deredden_CCM(linelist, listlength, meanextinction, R)
+                call deredden_CCM(linelist, listlength, meanextinction, R)
         elseif (switch_ext == "P") then
-                CALL deredden_SMC(ILs, Iint, meanextinction)
-                CALL deredden_SMC(H_Balmer, 38, meanextinction)
+                call deredden_SMC(ILs, Iint, meanextinction)
+                call deredden_SMC(H_Balmer, 38, meanextinction)
+                call deredden_SMC(H_Paschen, 38, meanextinction)
                 call deredden_SMC(HeI_lines, 44, meanextinction)
                 call deredden_SMC(HeII_lines, 1, meanextinction)
-                CALL deredden_SMC(linelist, listlength, meanextinction)
+                call deredden_SMC(linelist, listlength, meanextinction)
         elseif (switch_ext == "F") then
-                CALL deredden_Fitz(ILs, Iint, meanextinction)
-                CALL deredden_Fitz(H_Balmer, 38, meanextinction)
+                call deredden_Fitz(ILs, Iint, meanextinction)
+                call deredden_Fitz(H_Balmer, 38, meanextinction)
+                call deredden_Fitz(H_Paschen, 38, meanextinction)
                 call deredden_Fitz(HeI_lines, 44, meanextinction)
                 call deredden_Fitz(HeII_lines, 1, meanextinction)
-                CALL deredden_Fitz(linelist, listlength, meanextinction)
+                call deredden_Fitz(linelist, listlength, meanextinction)
         endif
 
 
@@ -615,35 +622,40 @@ use mod_hydrogen
 
           linelist = linelist_orig
           if (switch_ext == "S") then
-                  CALL deredden(ILs, Iint, meanextinction)
-                  CALL deredden(H_Balmer, 38, meanextinction)
+                  call deredden(ILs, Iint, meanextinction)
+                  call deredden(H_Balmer, 38, meanextinction)
+                  call deredden(H_Paschen, 38, meanextinction)
                   call deredden(HeI_lines, 44, meanextinction)
                   call deredden(HeII_lines, 1, meanextinction)
-                  CALL deredden(linelist, listlength, meanextinction)
+                  call deredden(linelist, listlength, meanextinction)
           elseif (switch_ext == "H") then
-                  CALL deredden_LMC(ILs, Iint, meanextinction)
-                  CALL deredden_LMC(H_Balmer, 38, meanextinction)
+                  call deredden_LMC(ILs, Iint, meanextinction)
+                  call deredden_LMC(H_Balmer, 38, meanextinction)
+                  call deredden_LMC(H_Paschen, 38, meanextinction)
                   call deredden_LMC(HeI_lines, 44, meanextinction)
                   call deredden_LMC(HeII_lines, 1, meanextinction)
-                  CALL deredden_LMC(linelist, listlength, meanextinction)
+                  call deredden_LMC(linelist, listlength, meanextinction)
           elseif (switch_ext == "C") then
-                  CALL deredden_CCM(ILs, Iint, meanextinction, R)
-                  CALL deredden_CCM(H_Balmer, 38, meanextinction, R)
+                  call deredden_CCM(ILs, Iint, meanextinction, R)
+                  call deredden_CCM(H_Balmer, 38, meanextinction, R)
+                  call deredden_CCM(H_Paschen, 38, meanextinction, R)
                   call deredden_CCM(HeI_lines, 44, meanextinction, R)
                   call deredden_CCM(HeII_lines, 1, meanextinction, R)
-                  CALL deredden_CCM(linelist, listlength, meanextinction, R)
+                  call deredden_CCM(linelist, listlength, meanextinction, R)
           elseif (switch_ext == "P") then
-                  CALL deredden_SMC(ILs, Iint, meanextinction)
-                  CALL deredden_SMC(H_Balmer, 38, meanextinction)
+                  call deredden_SMC(ILs, Iint, meanextinction)
+                  call deredden_SMC(H_Balmer, 38, meanextinction)
+                  call deredden_SMC(H_Paschen, 38, meanextinction)
                   call deredden_SMC(HeI_lines, 44, meanextinction)
                   call deredden_SMC(HeII_lines, 1, meanextinction)
-                  CALL deredden_SMC(linelist, listlength, meanextinction)
+                  call deredden_SMC(linelist, listlength, meanextinction)
           elseif (switch_ext == "F") then
-                  CALL deredden_Fitz(ILs, Iint, meanextinction)
-                  CALL deredden_Fitz(H_Balmer, 38, meanextinction)
+                  call deredden_Fitz(ILs, Iint, meanextinction)
+                  call deredden_Fitz(H_Balmer, 38, meanextinction)
+                  call deredden_Fitz(H_Paschen, 38, meanextinction)
                   call deredden_Fitz(HeI_lines, 44, meanextinction)
                   call deredden_Fitz(HeII_lines, 1, meanextinction)
-                  CALL deredden_Fitz(linelist, listlength, meanextinction)
+                  call deredden_Fitz(linelist, listlength, meanextinction)
           endif
         endif ! end of exinction calculating
 
@@ -871,6 +883,11 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
         call balmer_densities(H_Balmer,medtemp,balmerdec_density)
         iteration_result%balmerdec_density=balmerdec_density
+
+! and from Paschen decrement. todo: add to iteration result
+
+        call paschen_densities(H_Paschen,medtemp,paschendec_density)
+!print *,paschendec_density
 
 ! get Te from He line ratios
 ! equations derived from Smits 1996 data, at ne=5000.
