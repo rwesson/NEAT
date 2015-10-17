@@ -1,36 +1,21 @@
 module mod_hydrogen
 use mod_abundtypes
-contains
-
-subroutine balmer_densities(H_BS,medtemp,density)
 
 implicit none
+private :: dp
 integer, parameter :: dp = kind(1.d0)
-
-type(line), dimension(:) :: H_BS
-real(kind=dp), dimension(10:25) :: ratios,densities
-real(kind=dp), dimension(:,:,:,:), allocatable :: emissivities
-real(kind=dp), dimension(:,:,:), allocatable :: searcharray
+real(kind=dp), dimension(:,:,:,:), allocatable :: hidata
+real(kind=dp), dimension(:), allocatable :: temperatures
 integer :: ntemps, ndens, nlevs
-real(kind=dp) :: density, interp_t, weight
-real(kind=dp), intent(in) :: medtemp
+
+contains
+
+subroutine read_hydrogen
+!get Case B emissivities from file, values are from Storey and Hummer 1995.
+implicit none
 character(len=1) :: junk
 character(len=20), dimension(8) :: invar
 integer :: i,j,k,l !counters
-real(kind=dp) :: r1, r2
-integer :: H ! temporary, which line to look at
-real(kind=dp), dimension(:), allocatable :: temperatures
-
-density=0.d0
-weight=0.d0
-
-!nb H_BS indexing is such that entry 1 contains H3, etc
-!Thus H10 is in entry 8
-!allocate arrays to store values, high order lines (n>10) only
-ratios = H_BS(8:23)%int_dered/H_BS(2)%int_dered
-densities=0.d0
-
-!first read in the data
 
 open (unit=357, file="Atomic-data/RHi.dat")
 read (357,*) junk !first line is a comment
@@ -39,11 +24,10 @@ nlevs=25 ! maximum number of levels shown in intrat data file
 
 !allocate the emissivities array, dimensions are temperature, density, level 1, level 2
 
-allocate(emissivities(ntemps, ndens, nlevs, nlevs))
-allocate(searcharray(ndens,nlevs,nlevs))
+allocate(hidata(ntemps, ndens, nlevs, nlevs))
 allocate(temperatures(ntemps))
 
-emissivities(:,:,:,:)=0.d0
+hidata(:,:,:,:)=0.d0
 
 !now, loop through the temperatures and densities and read in the emissivities
 
@@ -55,12 +39,44 @@ do i=1,ntemps
     endif
     do k=nlevs,1,-1
       do l=1,k-1
-        read (357,"(E10.3)", advance="no") emissivities(i,j,k,l)
+        read (357,"(E10.3)", advance="no") hidata(i,j,k,l)
       enddo
     enddo
   enddo
 enddo
 close (357)
+
+end subroutine read_hydrogen
+
+subroutine balmer_densities(H_Balmer,medtemp,density)
+
+implicit none
+integer, parameter :: dp = kind(1.d0)
+
+type(line), dimension(:) :: H_Balmer
+real(kind=dp), dimension(10:25) :: ratios,densities
+real(kind=dp), dimension(:,:,:), allocatable :: searcharray
+real(kind=dp) :: density, interp_t, weight
+real(kind=dp), intent(in) :: medtemp
+integer :: i,j !counters
+real(kind=dp) :: r1, r2
+integer :: H ! temporary, which line to look at
+
+density=0.d0
+weight=0.d0
+
+!nb H_Balmer indexing is such that entry 1 contains H3, etc
+!Thus H10 is in entry 8
+!allocate arrays to store values, high order lines (n>10) only
+ratios = H_Balmer(8:23)%int_dered/H_Balmer(2)%int_dered
+densities=0.d0
+
+!allocate the search array.  emissivities array has dimensions of temperature, density, level 1, level 2
+!search array just has dimensions of density, level 1, level 2
+
+allocate(searcharray(size(hidata,2),size(hidata,3),size(hidata,4)))
+
+!now find the temperature
 
 do i=1,ntemps
   if (medtemp .lt. temperatures(i)) then
@@ -73,17 +89,17 @@ end do
 !lower limit is 500K, upper is 30000K
 
 if (medtemp .lt. temperatures(1) .or. medtemp .gt. temperatures(size(temperatures))) then
-  searcharray(:,:,:)=emissivities(i,:,:,:) 
+  searcharray(:,:,:)=hidata(i,:,:,:)
 else
   interp_t=(medtemp-temperatures(i-1))/(temperatures(i)-temperatures(i-1))
-  searcharray(:,:,:)=emissivities(i,:,:,:)+interp_t*(emissivities(i+1,:,:,:)-emissivities(i,:,:,:))
+  searcharray(:,:,:)=hidata(i,:,:,:)+interp_t*(hidata(i+1,:,:,:)-hidata(i,:,:,:))
 endif
 
-!now go through H_BS from 10 to 25, calculate the density for each line ratio, store it
+!now go through H_Balmer from 10 to 25, calculate the density for each line ratio, store it
 !intrat data only goes up to n=25
 
 do H=10,25
-  if (H_BS(H-2)%int_dered .gt. 0.d0) then !line is present, calculate a density
+  if (H_Balmer(H-2)%int_dered .gt. 0.d0) then !line is present, calculate a density
     if (ratios(H) .lt. (searcharray(1,H,2)/searcharray(1,4,2))) then
       densities(H) = 1.
     elseif (ratios(H) .gt. (searcharray(ndens,H,2)/searcharray(ndens,4,2))) then
@@ -104,8 +120,8 @@ end do
 
 do i=10,25
   if (densities(i).gt.0.d0) then
-    density=density+H_BS(i-2)%int_dered*densities(i)
-    weight=weight+H_BS(i-2)%int_dered
+    density=density+H_Balmer(i-2)%int_dered*densities(i)
+    weight=weight+H_Balmer(i-2)%int_dered
   endif
 enddo
 
@@ -117,11 +133,9 @@ if (density .lt. 100.) then
   density = 100.d0
 endif
 
-!deallocate arrays
+!deallocate search array
 
-deallocate(emissivities)
 deallocate(searcharray)
-deallocate(temperatures)
 
 end subroutine balmer_densities
 

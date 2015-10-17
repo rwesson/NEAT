@@ -6,10 +6,10 @@ integer, parameter :: dp = kind(1.d0)
 
 contains
 
-subroutine calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction, switch_ext, temp, dens, R)
+subroutine calc_extinction_coeffs(H_Balmer, c1, c2, c3, meanextinction, switch_ext, temp, dens, R)
         IMPLICIT NONE
         integer, parameter :: dp = kind(1.d0)
-        TYPE(line), DIMENSION(38) :: H_BS
+        TYPE(line), DIMENSION(38) :: H_Balmer
         real(kind=dp) :: c1, c2, c3, meanextinction, R
         real(kind=dp) :: fl_ha, fl_hg, fl_hd
         character :: switch_ext
@@ -48,20 +48,20 @@ endif
 !Section with interpolations for Balmer ratios for T_e (temp) and N_e (dens)
 !interpolating over 6 Te points, 5,7.5,10,12.5,15,20kK and 3 Ne points 10^2, 10^3 10^4 cm^(-3)
 
-if (H_BS(1)%intensity .gt. 0 .and. H_BS(2)%intensity .gt. 0) then
-        c1 = log10( ( DBLE(H_BS(1)%intensity) / DBLE(H_BS(2)%intensity) )/ calc_balmer_ratios(temp, dens, 1)    )/(-fl_ha)
+if (H_Balmer(1)%intensity .gt. 0 .and. H_Balmer(2)%intensity .gt. 0) then
+        c1 = log10( ( DBLE(H_Balmer(1)%intensity) / DBLE(H_Balmer(2)%intensity) )/ calc_balmer_ratios(temp, dens, 1)    )/(-fl_ha)
 else
         c1 = 0.0
 endif
 
-if (H_BS(3)%intensity .gt. 0 .and. H_BS(2)%intensity .gt. 0) then
-        c2 = log10( ( DBLE(H_BS(3)%intensity) / DBLE(H_BS(2)%intensity) )/ calc_balmer_ratios(temp, dens, 2) )/(-fl_hg)
+if (H_Balmer(3)%intensity .gt. 0 .and. H_Balmer(2)%intensity .gt. 0) then
+        c2 = log10( ( DBLE(H_Balmer(3)%intensity) / DBLE(H_Balmer(2)%intensity) )/ calc_balmer_ratios(temp, dens, 2) )/(-fl_hg)
 else
         c2=0.0
 endif
 
-if (H_BS(4)%intensity .gt. 0 .and. H_BS(2)%intensity .gt. 0) then
-        c3 = log10( ( DBLE(H_BS(4)%intensity) / DBLE(H_BS(2)%intensity) )/ calc_balmer_ratios(temp, dens, 3) )/(-fl_hd)
+if (H_Balmer(4)%intensity .gt. 0 .and. H_Balmer(2)%intensity .gt. 0) then
+        c3 = log10( ( DBLE(H_Balmer(4)%intensity) / DBLE(H_Balmer(2)%intensity) )/ calc_balmer_ratios(temp, dens, 3) )/(-fl_hd)
 else
         c3 = 0.0
 endif
@@ -79,7 +79,7 @@ if (c3<0) then
         c3=0
 endif
 
-        meanextinction = (c1*H_BS(1)%intensity + c2*H_BS(3)%intensity + c3*H_BS(4)%intensity) / (H_BS(1)%intensity + H_BS(3)%intensity + H_BS(4)%intensity)
+        meanextinction = (c1*H_Balmer(1)%intensity + c2*H_Balmer(3)%intensity + c3*H_Balmer(4)%intensity) / (H_Balmer(1)%intensity + H_Balmer(3)%intensity + H_Balmer(4)%intensity)
 
 end subroutine calc_extinction_coeffs
 

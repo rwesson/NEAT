@@ -42,7 +42,7 @@ use mod_hydrogen
         logical :: calculate_extinction
 
         TYPE(line), DIMENSION(Iint) :: ILs
-        TYPE(line), DIMENSION(38) :: H_BS
+        TYPE(line), DIMENSION(38) :: H_Balmer, H_Paschen
         TYPE(line), DIMENSION(44) :: HeI_lines
         TYPE(line), DIMENSION(1) :: HeII_lines
         TYPE(line), DIMENSION(2) :: Balmer_jump
@@ -92,7 +92,7 @@ use mod_hydrogen
 
         linelist_orig = linelist
 
-        H_BS%intensity = 0
+        H_Balmer%intensity = 0
         HeI_lines%intensity = 0
         HeII_lines%intensity = 0
 
@@ -111,29 +111,29 @@ use mod_hydrogen
 
         ILs%abundance = 0
         ILs%int_dered = 0
-        H_BS%abundance = 0
-        H_BS%int_dered = 0
+        H_Balmer%abundance = 0
+        H_Balmer%int_dered = 0
         HeI_lines%abundance = 0
         HeI_lines%int_dered = 0
         HeII_lines%abundance = 0
         HeII_lines%int_dered = 0
 
         !first find hydrogen and helium lines
-        CALL get_H(H_BS, linelist, listlength)
+        CALL get_H(H_Balmer, H_Paschen, linelist, listlength)
         call get_Hei(Hei_lines, linelist, listlength)
         call get_Heii(Heii_lines, linelist, listlength)
 
         !is H beta detected? if not, we can't do anything.
         !todo: the calculation of expected Hbeta from Halpha and c(Hb) needs fixing as Hb=0 now triggers an error outside the loop - 15/05/2015
 
-        if (H_BS(2)%intensity .eq. 0.D0) then
+        if (H_Balmer(2)%intensity .eq. 0.D0) then
           print *,"   No H beta found"
-          if (H_BS(1)%intensity .gt. 0.D0 .and. calculate_extinction .eqv. .false.) then
+          if (H_Balmer(1)%intensity .gt. 0.D0 .and. calculate_extinction .eqv. .false.) then
             print *, "   Estimating from observed H alpha and specified c(Hb)" !do we really want this to be printed out 10000 times?
 !todo: make this select the right flambda according to the specified extinction law
-            print "(4X,F6.2,A5,F6.3,A13)",H_BS(1)%intensity," and ",meanextinction," respectively"
-            H_BS(2)%intensity=(H_BS(1)%intensity/2.85)*10.**(meanextinction*flambda(dble(1.524),5))
-            print "(4X,A9,F6.2)","H beta = ",(H_BS(2)%intensity)
+            print "(4X,F6.2,A5,F6.3,A13)",H_Balmer(1)%intensity," and ",meanextinction," respectively"
+            H_Balmer(2)%intensity=(H_Balmer(1)%intensity/2.85)*10.**(meanextinction*flambda(dble(1.524),5))
+            print "(4X,A9,F6.2)","H beta = ",(H_Balmer(2)%intensity)
           else
             print *,"   Specify the extinction from the command line with the -c option to proceed"
             stop
@@ -144,7 +144,7 @@ use mod_hydrogen
 ! changes here may also need to be made in the subsequent section too
 
         if (calculate_extinction) then
-                CALL calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction, switch_ext, DBLE(10000.),DBLE(1000.), R)
+                CALL calc_extinction_coeffs(H_Balmer, c1, c2, c3, meanextinction, switch_ext, DBLE(10000.),DBLE(1000.), R)
 
                 if (meanextinction .lt. 0.0 .or. isnan(meanextinction)) then
                    meanextinction = 0.0
@@ -161,31 +161,31 @@ use mod_hydrogen
 
         if (switch_ext == "S") then
                 CALL deredden(ILs, Iint, meanextinction)
-                CALL deredden(H_BS, 38, meanextinction)
+                CALL deredden(H_Balmer, 38, meanextinction)
                 call deredden(HeI_lines, 44, meanextinction)
                 call deredden(HeII_lines, 1, meanextinction)
                 CALL deredden(linelist, listlength, meanextinction)
         elseif (switch_ext == "H") then
                 CALL deredden_LMC(ILs, Iint, meanextinction)
-                CALL deredden_LMC(H_BS, 38, meanextinction)
+                CALL deredden_LMC(H_Balmer, 38, meanextinction)
                 call deredden_LMC(HeI_lines, 44, meanextinction)
                 call deredden_LMC(HeII_lines, 1, meanextinction)
                 CALL deredden_LMC(linelist, listlength, meanextinction)
         elseif (switch_ext == "C") then
                 CALL deredden_CCM(ILs, Iint, meanextinction, R)
-                CALL deredden_CCM(H_BS, 38, meanextinction, R)
+                CALL deredden_CCM(H_Balmer, 38, meanextinction, R)
                 call deredden_CCM(HeI_lines, 44, meanextinction, R)
                 call deredden_CCM(HeII_lines, 1, meanextinction, R)
                 CALL deredden_CCM(linelist, listlength, meanextinction, R)
         elseif (switch_ext == "P") then
                 CALL deredden_SMC(ILs, Iint, meanextinction)
-                CALL deredden_SMC(H_BS, 38, meanextinction)
+                CALL deredden_SMC(H_Balmer, 38, meanextinction)
                 call deredden_SMC(HeI_lines, 44, meanextinction)
                 call deredden_SMC(HeII_lines, 1, meanextinction)
                 CALL deredden_SMC(linelist, listlength, meanextinction)
         elseif (switch_ext == "F") then
                 CALL deredden_Fitz(ILs, Iint, meanextinction)
-                CALL deredden_Fitz(H_BS, 38, meanextinction)
+                CALL deredden_Fitz(H_Balmer, 38, meanextinction)
                 call deredden_Fitz(HeI_lines, 44, meanextinction)
                 call deredden_Fitz(HeII_lines, 1, meanextinction)
                 CALL deredden_Fitz(linelist, listlength, meanextinction)
@@ -601,13 +601,13 @@ use mod_hydrogen
         if (calculate_extinction) then
 
           ILs%int_dered = 0
-          H_BS%int_dered = 0
+          H_Balmer%int_dered = 0
           HeI_lines%int_dered = 0
           HeII_lines%int_dered = 0
 
         !update extinction. DS 22/10/11
           meanextinction=0
-          CALL calc_extinction_coeffs(H_BS, c1, c2, c3, meanextinction, switch_ext, medtemp, lowdens, R)
+          CALL calc_extinction_coeffs(H_Balmer, c1, c2, c3, meanextinction, switch_ext, medtemp, lowdens, R)
 
           if (meanextinction .lt. 0.0 .or. isnan(meanextinction)) then
              meanextinction = 0.0
@@ -616,31 +616,31 @@ use mod_hydrogen
           linelist = linelist_orig
           if (switch_ext == "S") then
                   CALL deredden(ILs, Iint, meanextinction)
-                  CALL deredden(H_BS, 38, meanextinction)
+                  CALL deredden(H_Balmer, 38, meanextinction)
                   call deredden(HeI_lines, 44, meanextinction)
                   call deredden(HeII_lines, 1, meanextinction)
                   CALL deredden(linelist, listlength, meanextinction)
           elseif (switch_ext == "H") then
                   CALL deredden_LMC(ILs, Iint, meanextinction)
-                  CALL deredden_LMC(H_BS, 38, meanextinction)
+                  CALL deredden_LMC(H_Balmer, 38, meanextinction)
                   call deredden_LMC(HeI_lines, 44, meanextinction)
                   call deredden_LMC(HeII_lines, 1, meanextinction)
                   CALL deredden_LMC(linelist, listlength, meanextinction)
           elseif (switch_ext == "C") then
                   CALL deredden_CCM(ILs, Iint, meanextinction, R)
-                  CALL deredden_CCM(H_BS, 38, meanextinction, R)
+                  CALL deredden_CCM(H_Balmer, 38, meanextinction, R)
                   call deredden_CCM(HeI_lines, 44, meanextinction, R)
                   call deredden_CCM(HeII_lines, 1, meanextinction, R)
                   CALL deredden_CCM(linelist, listlength, meanextinction, R)
           elseif (switch_ext == "P") then
                   CALL deredden_SMC(ILs, Iint, meanextinction)
-                  CALL deredden_SMC(H_BS, 38, meanextinction)
+                  CALL deredden_SMC(H_Balmer, 38, meanextinction)
                   call deredden_SMC(HeI_lines, 44, meanextinction)
                   call deredden_SMC(HeII_lines, 1, meanextinction)
                   CALL deredden_SMC(linelist, listlength, meanextinction)
           elseif (switch_ext == "F") then
                   CALL deredden_Fitz(ILs, Iint, meanextinction)
-                  CALL deredden_Fitz(H_BS, 38, meanextinction)
+                  CALL deredden_Fitz(H_Balmer, 38, meanextinction)
                   call deredden_Fitz(HeI_lines, 44, meanextinction)
                   call deredden_Fitz(HeII_lines, 1, meanextinction)
                   CALL deredden_Fitz(linelist, listlength, meanextinction)
@@ -858,8 +858,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
             if(linelist(i)%wavelength .eq. 3646.50) Balmer_jump(2) = linelist(i)
         enddo
 
-        if(Balmer_jump(1)%int_dered .gt. 0 .and. Balmer_jump(2)%int_dered .gt. 0 .and. H_BS(9)%intensity .gt. 0) then
-        BaJtemp = (Balmer_jump(1)%int_dered - Balmer_jump(2)%int_dered)/H_BS(9)%int_dered
+        if(Balmer_jump(1)%int_dered .gt. 0 .and. Balmer_jump(2)%int_dered .gt. 0 .and. H_Balmer(9)%intensity .gt. 0) then
+        BaJtemp = (Balmer_jump(1)%int_dered - Balmer_jump(2)%int_dered)/H_Balmer(9)%int_dered
         BaJtemp = BaJtemp**(-3./2.)
         BaJtemp = BaJtemp*368
         BaJtemp = BaJtemp*(1+0.256*heiabund+3.409*heiiabund)
@@ -869,7 +869,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
 ! calculate n_e from Balmer decrement
 
-        call balmer_densities(H_BS,medtemp,balmerdec_density)
+        call balmer_densities(H_Balmer,medtemp,balmerdec_density)
         iteration_result%balmerdec_density=balmerdec_density
 
 ! get Te from He line ratios
@@ -2111,8 +2111,8 @@ endif
 !O N2 Pettini + Pagel 2004
 
 ion_no1 = get_ion("nii6584    ",ILs, Iint)
-if (ILs(ion_no1)%int_dered .gt. 0 .and. H_BS(1)%int_dered .gt. 0) then
-  N2 = ILs(ion_no1)%int_dered / H_BS(1)%int_dered
+if (ILs(ion_no1)%int_dered .gt. 0 .and. H_Balmer(1)%int_dered .gt. 0) then
+  N2 = ILs(ion_no1)%int_dered / H_Balmer(1)%int_dered
   O_N2 = 8.90 + (0.57 * N2)
   iteration_result(1)%O_N2 = O_N2
 endif
@@ -2120,8 +2120,8 @@ endif
 !O O3N2 Pettini + Pagel 2004
 
 ion_no2 = get_ion("oiii5007   ",ILs, Iint)
-if (ILS(ion_no1)%int_dered .gt. 0 .and. ILs(ion_no2)%int_dered .gt. 0 .and. H_BS(1)%int_dered .gt. 0) then
-  O3N2 = log10((ILS(ion_no2)%int_dered*H_BS(1)%int_dered)/(ILS(ion_no1)%int_dered * H_BS(2)%int_dered))
+if (ILS(ion_no1)%int_dered .gt. 0 .and. ILs(ion_no2)%int_dered .gt. 0 .and. H_Balmer(1)%int_dered .gt. 0) then
+  O3N2 = log10((ILS(ion_no2)%int_dered*H_Balmer(1)%int_dered)/(ILS(ion_no1)%int_dered * H_Balmer(2)%int_dered))
   O_O3N2 = 8.73 - (0.32*O3N2)
   iteration_result(1)%O_O3N2 = O_O3N2
 endif
@@ -2229,9 +2229,9 @@ endwhere
 !write ion names to array
 
 do i=1,38
-  if (H_BS(i)%location .gt. 0) then
-    linelist(H_BS(i)%location)%name = "H I"
-    linelist(H_BS(i)%location)%latextext = "H~{\sc i}"
+  if (H_Balmer(i)%location .gt. 0) then
+    linelist(H_Balmer(i)%location)%name = "H I"
+    linelist(H_Balmer(i)%location)%latextext = "H~{\sc i}"
   endif
 end do
 

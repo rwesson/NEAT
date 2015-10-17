@@ -29,6 +29,7 @@ program neat
         use mod_atomic_read
         use mod_recombination_lines
         use mod_linefinder
+        use mod_hydrogen
 
         IMPLICIT NONE
 
@@ -430,8 +431,14 @@ program neat
 !read ORL data
         call read_orl_data
 
+!read hydrogen emissivities
+
+        print *,gettime(), ": reading hydrogen emissivities"
+        call read_hydrogen
+
 !read helium emissivities
 
+        print *,gettime(), ": reading helium emissivities"
         if (switch_he .eq. "P") then
           allocate(heidata(21,15,44))
           heidata = 0.D0
@@ -456,9 +463,11 @@ program neat
         allocate(all_results(runs))
 
         if(runs == 1)then !calculates abundances without uncertainties
+                print *
+                print *,gettime(),": doing abundance calculations"
                 call abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf)
                 all_results(1)=iteration_result(1) ! copy the iteration result to all_results to simplify the writing out of results later
-
+                print *,gettime(),": finished abundance calculations"
         else if(runs > 1)then
 
 !save unrandomised line list
@@ -499,6 +508,7 @@ program neat
 !now write all the lines to line list files, plain text and latex
 !linelist first
 
+        print *
         print *,gettime(),": Writing line list"
 
         allocate(quantity_result(runs))
@@ -606,7 +616,6 @@ program neat
 
 !now write out the summary files and all the binned data
 
-        print *
         print *,gettime(),": Writing summary files"
 
 !first, define arrays with links to all the data that needs processing.
