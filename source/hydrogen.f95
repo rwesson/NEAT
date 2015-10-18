@@ -216,8 +216,8 @@ end do
 
 do i=10,25
   if (densities(i).gt.0.d0) then
-    density=density+H_Paschen(i-2)%int_dered*densities(i)
-    weight=weight+H_Paschen(i-2)%int_dered
+    density=density+H_Paschen(i-3)%int_dered*densities(i)
+    weight=weight+H_Paschen(i-3)%int_dered
   endif
 enddo
 
