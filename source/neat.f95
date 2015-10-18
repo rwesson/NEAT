@@ -30,6 +30,7 @@ program neat
         use mod_recombination_lines
         use mod_linefinder
         use mod_hydrogen
+        use mod_oii_diagnostics
 
         IMPLICIT NONE
 
@@ -448,6 +449,11 @@ program neat
           heidata = 0.D0
           call read_smits(heidata)
         endif
+
+!read oii data for diagnostics
+
+        print *,gettime(), ": reading OII diagnostics data"
+        call read_oii_diagnosticdata
 
 !find maximum #levels and temperatures - pass to equib to reduce footprint
 
