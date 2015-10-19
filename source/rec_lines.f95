@@ -43,6 +43,9 @@
 
       TYPE(oiiRL), DIMENSION(:), allocatable :: oiiRLs
 
+      real(kind=dp), dimension(36,9), target :: oii_coefficients
+      real(kind=dp), dimension(:), pointer :: A_4f, A_3d4F, A_3d4D, B_3d4D, C_3d4D, A_3d2F, B_3d2F, C_3d2F, A_3d2D, C_3d2D, A_3d2P, C_3d2P, A_3p4D, B_3p4D, A_3p4P, B_3p4P, A_3p4S, B_3p4S, A_3p2D, C_3p2D, A_3p2P, C_3p2P, A_3p2S, C_3p2S, A_4f_low, A_3d4F_low, B_3d4D_low, A_3d2F_low, A_3d2D_low, A_3d2P_low, A_3p4D_low, A_3p4P_low, A_3p4S_low, A_3p2D_low, A_3p2P_low, A_3p2S_low
+
       TYPE niiRL
             CHARACTER(len=1) :: Hyb
             CHARACTER(len=1) :: n_E1
@@ -153,7 +156,90 @@
             END DO
       CLOSE(201)
 
-                ! read in NII data
+     ! coefficients from LSBC 1995, S94
+     ! array consists of coefficients a2, a4, a5, a6, b, c and d, plus calculated values a and aeff
+     ! an is the coefficient a at log(ne)=n. this will be interpolated and stored in variable a.
+     ! the interpolated a is then used with the other coefficients to calculate aeff
+     ! replace with reading from file at some point
+
+      oii_coefficients(1,:) = (/0.236d0,0.232d0,0.228d0,0.222d0,-0.92009d0,0.15526d0,0.03442d0,0.d0,0.d0/)
+      oii_coefficients(2,:) = (/0.876d0,0.876d0,0.877d0,0.880d0,-0.73465d0,0.13689d0,0.06220d0,0.d0,0.d0/)
+!      oii_coefficients(3,:) = (/0.727d0,0.726d0,0.725d0,0.726d0,-0.73465d0,0.13689d0,0.06220d0,0.d0,0.d0/)
+      oii_coefficients(4,:) = (/0.747d0,0.745d0,0.744d0,0.745d0,-0.74621d0,0.15710d0,0.07059d0,0.d0,0.d0/)
+!      oii_coefficients(5,:) = (/0.769d0,0.767d0,0.766d0,0.766d0,-0.74621d0,0.15710d0,0.07059d0,0.d0,0.d0/)
+      oii_coefficients(6,:) = (/0.727d0,0.726d0,0.725d0,0.726d0,-0.74621d0,0.15710d0,0.07059d0,0.d0,0.d0/)
+!      oii_coefficients(7,:) = (/0.747d0,0.745d0,0.744d0,0.745d0,-0.74621d0,0.15710d0,0.07059d0,0.d0,0.d0/)
+!      oii_coefficients(8,:) = (/0.769d0,0.767d0,0.766d0,0.766d0,-0.74621d0,0.15710d0,0.07059d0,0.d0,0.d0/)
+      oii_coefficients(9,:) = (/0.603d0,0.601d0,0.600d0,0.599d0,-0.79533d0,0.15314d0,0.05322d0,0.d0,0.d0/)
+!      oii_coefficients(10,:) = (/0.620d0,0.618d0,0.616d0,0.615d0,-0.79533d0,0.15314d0,0.05322d0,0.d0,0.d0/)
+      oii_coefficients(11,:) = (/0.526d0,0.524d0,0.523d0,0.524d0,-0.78448d0,0.13681d0,0.05608d0,0.d0,0.d0/)
+!      oii_coefficients(1,:) = (/0.538d0,0.536d0,0.535d0,0.536d0,-0.78448d0,0.13681d0,0.05608d0,0.d0,0.d0/)
+      oii_coefficients(13,:) = (/34.7d0,34.9d0,35.1d0,35.0d0,-0.749d0,0.023d0,0.074d0,0.d0,0.d0/)
+      oii_coefficients(14,:) = (/36.0d0,36.2d0,36.4d0,36.3d0,-0.736d0,0.033d0,0.077d0,0.d0,0.d0/)
+      oii_coefficients(15,:) = (/10.4d0,10.4d0,10.5d0,10.4d0,-0.721d0,0.073d0,0.072d0,0.d0,0.d0/)
+      oii_coefficients(16,:) = (/14.6d0,14.6d0,14.7d0,14.6d0,-0.732d0,0.081d0,0.066d0,0.d0,0.d0/)
+      oii_coefficients(17,:) = (/0.90d0,0.90d0,0.90d0,1.00d0,-0.485d0,-0.047d0,0.140d0,0.d0,0.d0/)
+      oii_coefficients(18,:) = (/4.80d0,4.90d0,4.90d0,4.90d0,-0.730d0,-0.003d0,0.057d0,0.d0,0.d0/)
+      oii_coefficients(19,:) = (/2.40d0,2.40d0,2.50d0,2.60d0,-0.550d0,-0.051d0,0.178d0,0.d0,0.d0/)
+      oii_coefficients(20,:) = (/14.5d0,14.6d0,14.5d0,14.3d0,-0.736d0,0.068d0,0.066d0,0.d0,0.d0/)
+      oii_coefficients(21,:) = (/1.10d0,1.20d0,1.20d0,1.20d0,-0.523d0,-0.044d0,0.173d0,0.d0,0.d0/)
+      oii_coefficients(22,:) = (/1.30d0,1.40d0,1.40d0,1.40d0,-0.565d0,-0.042d0,0.158d0,0.d0,0.d0/)
+      oii_coefficients(23,:) = (/0.40d0,0.40d0,0.40d0,0.40d0,-0.461d0,-0.083d0,0.287d0,0.d0,0.d0/)
+      oii_coefficients(24,:) = (/0.50d0,0.50d0,0.50d0,0.60d0,-0.547d0,-0.074d0,0.244d0,0.d0,0.d0/)
+
+      oii_coefficients(25,:) = (/0.236d0,0.236d0,0.236d0,0.236d0,-1.07552d0,-0.04843d0,0.d0,0.d0,0.d0/)
+      oii_coefficients(26,:) = (/0.878d0,0.878d0,0.878d0,0.878d0,-0.86175d0,-0.02470d0,0.d0,0.d0,0.d0/)
+      oii_coefficients(27,:) = (/0.747d0,0.747d0,0.747d0,0.747d0,-0.89382d0,-0.02906d0,0.d0,0.d0,0.d0/)
+      oii_coefficients(28,:) = (/0.747d0,0.747d0,0.747d0,0.747d0,-0.89382d0,-0.02906d0,0.d0,0.d0,0.d0/)
+      oii_coefficients(29,:) = (/0.603d0,0.603d0,0.603d0,0.603d0,-0.94025d0,-0.03467d0,0.d0,0.d0,0.d0/)
+      oii_coefficients(30,:) = (/0.526d0,0.526d0,0.526d0,0.526d0,-0.91758d0,-0.03120d0,0.d0,0.d0,0.d0/)
+      oii_coefficients(31,:) = (/36.288d0,36.288d0,36.288d0,36.288d0,-0.75421d0,0.02883d0,0.01213d0,0.d0,0.d0/)
+      oii_coefficients(32,:) = (/14.656d0,14.656d0,14.656d0,14.656d0,-0.80449d0,0.00018d0,0.00517d0,0.d0,0.d0/)
+      oii_coefficients(33,:) = (/4.8340d0,4.8340d0,4.8340d0,4.8340d0,-0.71947d0,0.02544d0,0.00936d0,0.d0,0.d0/)
+      oii_coefficients(34,:) = (/2.3616d0,2.3616d0,2.3616d0,2.3616d0,-0.46263d0,0.14697d0,0.03856d0,0.d0,0.d0/)
+      oii_coefficients(35,:) = (/1.1198d0,1.1198d0,1.1198d0,1.1198d0,-0.44147d0,0.13837d0,0.03191d0,0.d0,0.d0/)
+      oii_coefficients(36,:) = (/0.3922d0,0.3922d0,0.3922d0,0.3922d0,-0.35043d0,0.26366d0,0.06666d0,0.d0,0.d0/)
+
+!define pointers so that we can refer to the coefficients by state as well as processing all coefficients at once
+
+      A_4f => oii_coefficients(1,:)
+    A_3d4F => oii_coefficients(2,:)
+    A_3d4D => oii_coefficients(3,:)
+    B_3d4D => oii_coefficients(4,:)
+    C_3d4D => oii_coefficients(5,:)
+    A_3d2F => oii_coefficients(6,:)
+    B_3d2F => oii_coefficients(7,:)
+    C_3d2F => oii_coefficients(8,:)
+    A_3d2D => oii_coefficients(9,:)
+    C_3d2D => oii_coefficients(10,:)
+    A_3d2P => oii_coefficients(11,:)
+    C_3d2P => oii_coefficients(12,:)
+    A_3p4D => oii_coefficients(13,:)
+    B_3p4D => oii_coefficients(14,:)
+    A_3p4P => oii_coefficients(15,:)
+    B_3p4P => oii_coefficients(16,:)
+    A_3p4S => oii_coefficients(17,:)
+    B_3p4S => oii_coefficients(18,:)
+    A_3p2D => oii_coefficients(19,:)
+    C_3p2D => oii_coefficients(20,:)
+    A_3p2P => oii_coefficients(21,:)
+    C_3p2P => oii_coefficients(22,:)
+    A_3p2S => oii_coefficients(23,:)
+    C_3p2S => oii_coefficients(24,:)
+  A_4f_low => oii_coefficients(25,:)
+A_3d4F_low => oii_coefficients(26,:)
+B_3d4D_low => oii_coefficients(27,:)
+A_3d2F_low => oii_coefficients(28,:)
+A_3d2D_low => oii_coefficients(29,:)
+A_3d2P_low => oii_coefficients(30,:)
+A_3p4D_low => oii_coefficients(31,:)
+A_3p4P_low => oii_coefficients(32,:)
+A_3p4S_low => oii_coefficients(33,:)
+A_3p2D_low => oii_coefficients(34,:)
+A_3p2P_low => oii_coefficients(35,:)
+A_3p2S_low => oii_coefficients(36,:)
+
+     ! read in NII data
 
             302 FORMAT (I5, 1X, F9.4, 1X, A1, A1, A1, A1, A1, 1X, F7.4, &
      & 1X, A3, 1X, F7.4, 1X, A3, 1X, A7, 3X, F11.4, A1, A1, 1X, I2, &
@@ -227,43 +313,37 @@
 
       IMPLICIT NONE
       real(kind=dp) :: aeff, aeff_hb, Em_Hb, Te, Ne, abund, tered
-      real(kind=dp) :: a, b, c, d, an(4)
 
       TYPE(oiiRL), DIMENSION(:) :: oiiRLs
 
       call get_aeff_hb(te,ne, aeff_hb, em_hb)
 
-! 4f-3d transitions
-
-      a = 0.232
-      b = -0.92009
-      c = 0.15526
-      d = 0.03442
-      an = (/0.236,0.232,0.228,0.222/)
+! interpolate the a values
 
       if (log10(ne) .le. 2) then
-        a = an(1)
+        oii_coefficients(:,8)= oii_coefficients(:,1)
       elseif (log10(ne) .gt. 2 .and. log10(ne) .le. 4) then
-        a = an(1) + (an(2) - an(1)) / 2. * (log10(ne) - 2.)
+        oii_coefficients(:,8)= oii_coefficients(:,1) + (oii_coefficients(:,2) - oii_coefficients(:,1)) / 2. * (log10(ne) - 2.)
       elseif (log10(ne) .gt. 4 .and. log10(ne) .le. 5) then
-        a = an(2) + (an(3) - an(2)) * (log10(ne) - 2.)
+        oii_coefficients(:,8)= oii_coefficients(:,2) + (oii_coefficients(:,3) - oii_coefficients(:,2)) * (log10(ne) - 2.)
       elseif (log10(ne) .gt. 6 .and. log10(ne) .le. 6) then
-        a = an(3) + (an(4) - an(3)) * (log10(ne) - 2.)
+        oii_coefficients(:,8)= oii_coefficients(:,3) + (oii_coefficients(:,4) - oii_coefficients(:,3)) * (log10(ne) - 2.)
       else
-        a = an(4)
+        oii_coefficients(:,8)= oii_coefficients(:,4)
       endif
 
-      tered = te/10000.
-      aeff = 1.e-14 * a * tered ** (b)
-      aeff = aeff * (1. + c * (1. - tered) + d * (1. - tered) ** 2)
+! calculate the aeffs.  coefficients 
 
-! New eff. recomb. data for 1000 < T < 5000 K, Ne = 100/cm3
+      tered=te/10000.
+      oii_coefficients(1:24,9)=1.e-14 * (oii_coefficients(1:24,8) * tered**oii_coefficients(1:24,5) * (1. + oii_coefficients(1:24,6) * (1. - tered) + oii_coefficients(1:24,7) * (1. - tered) ** 2))
+      oii_coefficients(25:36,9)=1.e-14 * oii_coefficients(25:36,8) * tered**(oii_coefficients(25:36,5) + oii_coefficients(25:36,6)*log(tered) + oii_coefficients(25:36,7)* log(tered) ** 2)
 
-      if (tered .le. 0.5) then
-        a = 0.236
-        b = -1.07552
-        c = -0.04843
-        aeff = 1.e-14 * a * tered ** (b + c * log(tered))
+! 4f-3d transitions
+
+      if (tered .gt. 0.5) then
+        aeff=A_4f(9)
+      else
+        aeff=A_4f_low(9)
       endif
 
       where (oiiRLs%Term1(4:5) .eq. "3d" .and. oiiRLs%Term2(3:4) .eq. "4f")
@@ -273,267 +353,95 @@
       endwhere
 
 ! 3d-3p ^4F transitions (Case A=B=C for a,b,c,d; Br diff. slightly, adopt Case B)
-      a =  0.876
-      b =  -0.73465
-      c =  0.13689
-      d =  0.06220
-      an = (/0.876,0.876,0.877,0.880/) !a for logNe = 2,4,5,6 (LSBC95, Tab.5a)
-      if ( log(ne) .le. 2) then
-            a = an(1)
-      elseif ( log(ne) .gt. 2 .and. log(ne) .le. 4) then
-            a = an(1) + (an(2) - an(1)) / 2.*(log(ne) - 2.)
-      elseif ( log(ne) .gt. 4 .and. log(ne) .le. 5) then
-            a = an(2) + (an(3) - an(2))*(log(ne) - 2.)
-      elseif ( log(ne) .gt. 6 .and. log(ne) .le. 6) then
-            a = an(3) + (an(4) - an(3))*(log(ne) - 2.)
+
+      if (tered .gt. 0.5) then
+        aeff=A_3d4F(9)
       else
-              a = an(4)
+        aeff=A_3d4F_low(9)
       endif
-!
-      aeff = 1.e-14*a*tered ** (b)
-      aeff = aeff*(1. + c*(1. - tered) + d*(1. - tered) ** 2)
-!
-! New eff. recomb. data for 1000 < T < 5000 K, Ne = 100/cm3
-! c.f. ~/source/OII_a_eff_at_low_Te/00readme/
-      if ( tered .le. 0.5) then
-            a = 0.878
-            b = -0.86175
-            c = -0.02470
-            aeff = 1.e-14*a*tered ** (b + c*log(tered))
-      endif
-!
+
       where (oiiRLs%Mult .eq. " V10       " .or. oiiRLs%Mult .eq. " V18       ")
         oiiRLs%Em = aeff*1.98648E-08 / oiiRLs%Wave*&
       & oiiRLs%g2*oiiRLs%Br_B
         oiiRLs%Int = 100.*oiiRLs%Em / Em_hb*abund
       endwhere
 !
-! 3d-3p ^4D, ^4P transitions
-      a =  0.745
-      b =  -0.74621
-      c =  0.15710
-      d =  0.07059
-!      an = (/0.727,0.726,0.725,0.726/) !a for logNe = 2,4,5,6 (LSBC95, Tab.5a) Case A
-      an = (/0.747,0.745,0.744,0.745/) !a for logNe = 2,4,5,6 (LSBC95, Tab.5a) Case B
-!      an = (/0.769,0.767,0.766,0.766/) !a for logNe = 2,4,5,6 (LSBC95, Tab.5a) Case C
-      if ( log(ne) .le. 2) then
-            a = an(1)
-      elseif ( log(ne) .gt. 2 .and. log(ne) .le. 4) then
-            a = an(1) + (an(2) - an(1)) / 2.*(log(ne) - 2.)
-      elseif ( log(ne) .gt. 4 .and. log(ne) .le. 5) then
-            a = an(2) + (an(3) - an(2))*(log(ne) - 2.)
-      elseif ( log(ne) .gt. 6 .and. log(ne) .le. 6) then
-            a = an(3) + (an(4) - an(3))*(log(ne) - 2.)
+! 3d-3p ^4D, ^4P transitions. case B assumed
+
+      if (tered .gt. 0.5) then
+        aeff=B_3d4D(9)
       else
-              a = an(4)
+        aeff=B_3d4D_low(9)
       endif
-!
-      aeff = 1.e-14*a*tered ** (b)
-      aeff = aeff*(1. + c*(1. - tered) + d*(1. - tered) ** 2)
-!
-! New eff. recomb. data for 1000 < T < 5000 K, Ne = 100/cm3
-! c.f. ~/source/OII_a_eff_at_low_Te/00readme/
-      if ( tered .le. 0.5) then
-            a = 0.747
-            b = -0.89382
-            c = -0.02906
-            aeff = 1.e-14*a*tered ** (b + c*log(tered))
-      endif
-!
-      where (oiiRLs%Term1(4:5) .eq. "3p" .and. (oiiRLs%Term2 .eq. "  3d  4D " .or. oiiRLs%Term2 .eq. "  3d  4P "))! same coeffs for 3d 4D and 3d 4P
+
+      where (oiiRLs%Term1(4:5) .eq. "3p" .and. (oiiRLs%Term2 .eq. "  3d  4D " .or. oiiRLs%Term2 .eq. "  3d  4P "))
         oiiRLs%Em = aeff*1.98648E-08 / oiiRLs%Wave*&
       & oiiRLs%g2*oiiRLs%Br_B
         oiiRLs%Int = 100.*oiiRLs%Em / Em_hb*abund
       endwhere
 !
-! 3d-3p ^2F transitions
-      a =  0.745
-      b =  -0.74621
-      c =  0.15710
-      d =  0.07059
-      an = (/0.727,0.726,0.725,0.726/) !a for logNe = 2,4,5,6 (LSBC95, Tab.5a) Case A
-!      an = (/0.747,0.745,0.744,0.745/) !a for logNe = 2,4,5,6 (LSBC95, Tab.5a) Case B
-!      an = (/0.769,0.767,0.766,0.766/) !a for logNe = 2,4,5,6 (LSBC95, Tab.5a) Case C
-      if ( log(ne) .le. 2) then
-            a = an(1)
-      elseif ( log(ne) .gt. 2 .and. log(ne) .le. 4) then
-            a = an(1) + (an(2) - an(1)) / 2.*(log(ne) - 2.)
-      elseif ( log(ne) .gt. 4 .and. log(ne) .le. 5) then
-            a = an(2) + (an(3) - an(2))*(log(ne) - 2.)
-      elseif ( log(ne) .gt. 6 .and. log(ne) .le. 6) then
-            a = an(3) + (an(4) - an(3))*(log(ne) - 2.)
+! 3d-3p ^2F transitions. case A
+
+      if (tered .gt. 0.5) then
+        aeff=A_3d2F(9)
       else
-              a = an(4)
+        aeff=A_3d2F_low(9)
       endif
-!
-      aeff = 1.e-14*a*tered ** (b)
-      aeff = aeff*(1. + c*(1. - tered) + d*(1. - tered) ** 2)
-!
-! New eff. recomb. data for 1000 < T < 5000 K, Ne = 100/cm3
-! c.f. ~/source/OII_a_eff_at_low_Te/00readme/
-      if ( tered .le. 0.5) then
-            a = 0.747
-            b = -0.89382
-            c = -0.02906
-            aeff = 1.e-14*a*tered ** (b + c*log(tered))
-      endif
-!
+
       where (oiiRLs%Term1(4:5) .eq. "3p" .and. oiiRLs%Term2 .eq. "  3d  2F   ")
         oiiRLs%Em = aeff*1.98648E-08 / oiiRLs%Wave*&
       & oiiRLs%g2*oiiRLs%Br_A
         oiiRLs%Int = 100.*oiiRLs%Em / Em_hb*abund
       endwhere
 !
-! 3d-3p ^2D transitions
-      a =  0.601
-      b =  -0.79533
-      c =  0.15314
-      d =  0.05322
-      an = (/0.603,0.601,0.600,0.599/) !a for logNe = 2,4,5,6 (LSBC95, Tab.5a) Case A
-!      an = (/0.620,0.618,0.616,0.615/) !a for logNe = 2,4,5,6 (LSBC95, Tab.5a) Case C
-      if ( log(ne) .le. 2) then
-            a = an(1)
-      elseif ( log(ne) .gt. 2 .and. log(ne) .le. 4) then
-            a = an(1) + (an(2) - an(1)) / 2.*(log(ne) - 2.)
-      elseif ( log(ne) .gt. 4 .and. log(ne) .le. 5) then
-            a = an(2) + (an(3) - an(2))*(log(ne) - 2.)
-      elseif ( log(ne) .gt. 6 .and. log(ne) .le. 6) then
-            a = an(3) + (an(4) - an(3))*(log(ne) - 2.)
+! 3d-3p ^2D transitions. case A
+
+      if (tered .gt. 0.5) then
+        aeff=A_3d2D(9)
       else
-              a = an(4)
+        aeff=A_3d2D_low(9)
       endif
-!
-      aeff = 1.e-14*a*tered ** (b)
-      aeff = aeff*(1. + c*(1. - tered) + d*(1. - tered) ** 2)
-!
-! New eff. recomb. data for 1000 < T < 5000 K, Ne = 100/cm3
-! c.f. ~/source/OII_a_eff_at_low_Te/00readme/
-      if ( tered .le. 0.5) then
-            a = 0.603
-            b = -0.94025
-            c = -0.03467
-            aeff = 1.e-14*a*tered ** (b + c*log(tered))
-      endif
-!
+
       where (oiiRLs%Term1(4:5) .eq. "3d" .and. oiiRLs%Term2 .eq. "  3d  2D   ")
         oiiRLs%Em = aeff*1.98648E-08 / oiiRLs%Wave*&
       & oiiRLs%g2*oiiRLs%Br_A
         oiiRLs%Int = 100.*oiiRLs%Em / Em_hb*abund
       endwhere
 !
-! 3d-3p ^2P transitions
-      a =  0.524
-      b =  -0.78448
-      c =  0.13681
-      d =  0.05608
-      an = (/0.526,0.524,0.523,0.524/) !a for logNe = 2,4,5,6 (LSBC95, Tab.5a) Case A
-!      an = (/0.538,0.536,0.535,0.536/) !a for logNe = 2,4,5,6 (LSBC95, Tab.5a) Case C
-      if ( log(ne) .le. 2) then
-            a = an(1)
-      elseif ( log(ne) .gt. 2 .and. log(ne) .le. 4) then
-            a = an(1) + (an(2) - an(1)) / 2.*(log(ne) - 2.)
-      elseif ( log(ne) .gt. 4 .and. log(ne) .le. 5) then
-            a = an(2) + (an(3) - an(2))*(log(ne) - 2.)
-      elseif ( log(ne) .gt. 6 .and. log(ne) .le. 6) then
-            a = an(3) + (an(4) - an(3))*(log(ne) - 2.)
+! 3d-3p ^2P transitions. case A
+
+      if (tered .gt. 0.5) then
+        aeff=A_3d2P(9)
       else
-              a = an(4)
+        aeff=A_3d2P_low(9)
       endif
-!
-      aeff = 1.e-14*a*tered ** (b)
-      aeff = aeff*(1. + c*(1. - tered) + d*(1. - tered) ** 2)
-!
-! New eff. recomb. data for 1000 < T < 5000 K, Ne = 100/cm3
-! c.f. ~/source/OII_a_eff_at_low_Te/00readme/
-      if ( tered .le. 0.5) then
-            a = 0.526
-            b = -0.91758
-            c = -0.03120
-            aeff = 1.e-14*a*tered ** (b + c*log(tered))
-      endif
-!
+
       where (oiiRLs%Term1(4:5) .eq. "3p" .and. oiiRLs%Term2 .eq. "  3d  2P   ")
         oiiRLs%Em = aeff*1.98648E-08 / oiiRLs%Wave*&
       & oiiRLs%g2*oiiRLs%Br_A
         oiiRLs%Int = 100.*oiiRLs%Em / Em_hb*abund
       endwhere
 !
-! 3p-3s ^4D - ^4P transitions
-!      an = (/34.7,34.9,35.1,35.0/) !a for logNe = 2,4,5,6 Case A
-!      a =  36.2
-!      b =  -0.749
-!      c =  0.023
-!      d =  0.074
-      an = (/36.0,36.2,36.4,36.3/) !a for logNe = 2,4,5,6 Case B
-      a =  36.2
-      b =  -0.736
-      c =  0.033
-      d =  0.077
-      if ( log(ne) .le. 2) then
-            a = an(1)
-      elseif ( log(ne) .gt. 2 .and. log(ne) .le. 4) then
-            a = an(1) + (an(2) - an(1)) / 2.*(log(ne) - 2.)
-      elseif ( log(ne) .gt. 4 .and. log(ne) .le. 5) then
-            a = an(2) + (an(3) - an(2))*(log(ne) - 2.)
-      elseif ( log(ne) .gt. 6 .and. log(ne) .le. 6) then
-            a = an(3) + (an(4) - an(3))*(log(ne) - 2.)
+! 3p-3s ^4D - ^4P transitions. case B
+
+      if (tered .gt. 0.5) then
+        aeff=B_3p4D(9)
       else
-              a = an(4)
+        aeff=A_3p4D_low(9)
       endif
-!
-      aeff = 1.e-14*a*tered ** (b)
-      aeff = aeff*(1. + c*(1. - tered) + d*(1. - tered) ** 2)
-!
-! New eff. recomb. data for 1000 < T < 5000 K, Ne = 100/cm3
-! c.f. ~/source/OII_a_eff_at_low_Te/00readme/
-      if ( tered .le. 0.5) then
-            a = 36.288
-            b = -0.75421
-            c = 0.02883
-            d = 0.01213
-            aeff = 1.e-14*a*tered ** (b + c*log(tered) + d* log(tered) ** 2)
-      endif
-!
+
       where (oiiRLs%Mult .eq. " V1        ")
         oiiRLs%Em = aeff*1.98648E-08 / oiiRLs%Wave*&
       & oiiRLs%g2*oiiRLs%Br_B
         oiiRLs%Int = 100.*oiiRLs%Em / Em_hb*abund
       endwhere
 !
-! 3p-3s ^4P - ^4P transitions
-!      an = (/10.4,10.4,10.5,10.4/) !a for logNe = 2,4,5,6 Case A
-!      a =  10.4
-!      b =  -0.721
-!      c =  0.073
-!      d =  0.072
-      an = (/14.6,14.6,14.7,14.6/) !a for logNe = 2,4,5,6 Case B
-      a =  14.6
-      b =  -0.732
-      c =  0.081
-      d =  0.066
-      if ( log(ne) .le. 2) then
-            a = an(1)
-      elseif ( log(ne) .gt. 2 .and. log(ne) .le. 4) then
-            a = an(1) + (an(2) - an(1)) / 2.*(log(ne) - 2.)
-      elseif ( log(ne) .gt. 4 .and. log(ne) .le. 5) then
-            a = an(2) + (an(3) - an(2))*(log(ne) - 2.)
-      elseif ( log(ne) .gt. 6 .and. log(ne) .le. 6) then
-            a = an(3) + (an(4) - an(3))*(log(ne) - 2.)
+! 3p-3s ^4P - ^4P transitions. case B
+
+      if (tered .gt. 0.5) then
+        aeff=B_3p4P(9)
       else
-              a = an(4)
-      endif
-!
-      aeff = 1.e-14*a*tered ** (b)
-      aeff = aeff*(1. + c*(1. - tered) + d*(1. - tered) ** 2)
-!
-! New eff. recomb. data for 1000 < T < 5000 K, Ne = 100/cm3
-! c.f. ~/source/OII_a_eff_at_low_Te/00readme/
-      if ( tered .le. 0.5) then
-            a = 14.656
-            b = -0.80449
-            c = 0.00018
-            d = 0.00517
-            aeff = 1.e-14*a*tered ** (b + c*log(tered) + d* log(tered) ** 2)
+        aeff=A_3p4P_low(9)
       endif
 !
       where (oiiRLs%Mult .eq. " V2        ")
@@ -542,40 +450,12 @@
         oiiRLs%Int = 100.*oiiRLs%Em / Em_hb*abund
       endwhere
 !
-! 3p-3s ^4S - ^4P transitions
-!      an = (/0.90,0.90,0.90,1.00/) !a for logNe = 2,4,5,6 Case A
-!      a =  0.90
-!      b =  -0.485
-!      c =  -0.047
-!      d =  0.140
-      an = (/4.80,4.90,4.90,4.90/) !a for logNe = 2,4,5,6 Case B
-      a =  4.90
-      b =  -0.730
-      c =  -0.003
-      d =  0.057
-      if ( log(ne) .le. 2) then
-            a = an(1)
-      elseif ( log(ne) .gt. 2 .and. log(ne) .le. 4) then
-            a = an(1) + (an(2) - an(1)) / 2.*(log(ne) - 2.)
-      elseif ( log(ne) .gt. 4 .and. log(ne) .le. 5) then
-            a = an(2) + (an(3) - an(2))*(log(ne) - 2.)
-      elseif ( log(ne) .gt. 6 .and. log(ne) .le. 6) then
-            a = an(3) + (an(4) - an(3))*(log(ne) - 2.)
+! 3p-3s ^4S - ^4P transitions. case B
+
+      if (tered .gt. 0.5) then
+        aeff=B_3p4S(9)
       else
-              a = an(4)
-      endif
-!
-      aeff = 1.e-14*a*tered ** (b)
-      aeff = aeff*(1. + c*(1. - tered) + d*(1. - tered) ** 2)
-!
-! New eff. recomb. data for 1000 < T < 5000 K, Ne = 100/cm3
-! c.f. ~/source/OII_a_eff_at_low_Te/00readme/
-      if ( tered .le. 0.5) then
-            a = 4.8340
-            b = -0.71947
-            c = 0.02544
-            d = 0.00936
-            aeff = 1.e-14*a*tered ** (b + c*log(tered) + d* log(tered) ** 2)
+        aeff=A_3p4S_low(9)
       endif
 !
       where (oiiRLs%Mult .eq. " V3        ")
@@ -584,40 +464,12 @@
         oiiRLs%Int = 100.*oiiRLs%Em / Em_hb*abund
       endwhere
 !
-! 3p-3s ^2D - ^2P transitions
-      an = (/2.40,2.40,2.50,2.60/) !a for logNe = 2,4,5,6 Case A
-      a =  2.40
-      b =  -0.550
-      c =  -0.051
-      d =  0.178
-!      an = (/14.5,14.6,14.5,14.3/) !a for logNe = 2,4,5,6 Case C
-!      a =  14.6
-!      b =  -0.736
-!      c =  0.068
-!      d =  0.066
-      if ( log(ne) .le. 2) then
-            a = an(1)
-      elseif ( log(ne) .gt. 2 .and. log(ne) .le. 4) then
-            a = an(1) + (an(2) - an(1)) / 2.*(log(ne) - 2.)
-      elseif ( log(ne) .gt. 4 .and. log(ne) .le. 5) then
-            a = an(2) + (an(3) - an(2))*(log(ne) - 2.)
-      elseif ( log(ne) .gt. 6 .and. log(ne) .le. 6) then
-            a = an(3) + (an(4) - an(3))*(log(ne) - 2.)
+! 3p-3s ^2D - ^2P transitions. case A
+
+      if (tered .gt. 0.5) then
+        aeff=A_3p2D(9)
       else
-              a = an(4)
-      endif
-!
-      aeff = 1.e-14*a*tered ** (b)
-      aeff = aeff*(1. + c*(1. - tered) + d*(1. - tered) ** 2)
-!
-! New eff. recomb. data for 1000 < T < 5000 K, Ne = 100/cm3
-! c.f. ~/source/OII_a_eff_at_low_Te/00readme/
-      if ( tered .le. 0.5) then
-            a = 2.3616
-            b = -0.46263
-            c = 0.14697
-            d = 0.03856
-            aeff = 1.e-14*a*tered ** (b + c*log(tered) + d* log(tered) ** 2)
+        aeff=A_3p2D_low(9)
       endif
 !
       where (oiiRLs%Mult .eq. " V5        ")
@@ -626,40 +478,12 @@
         oiiRLs%Int = 100.*oiiRLs%Em / Em_hb*abund
       endwhere
 !
-! 3p-3s ^2P - ^2P transitions
-      an = (/1.10,1.20,1.20,1.20/) !a for logNe = 2,4,5,6 Case A
-      a =  1.20
-      b =  -0.523
-      c =  -0.044
-      d =  0.173
-!      an = (/1.30,1.40,1.40,1.40/) !a for logNe = 2,4,5,6 Case C
-!      a =  1.40
-!      b =  -0.565
-!      c =  -0.042
-!      d =  0.158
-      if ( log(ne) .le. 2) then
-            a = an(1)
-      elseif ( log(ne) .gt. 2 .and. log(ne) .le. 4) then
-            a = an(1) + (an(2) - an(1)) / 2.*(log(ne) - 2.)
-      elseif ( log(ne) .gt. 4 .and. log(ne) .le. 5) then
-            a = an(2) + (an(3) - an(2))*(log(ne) - 2.)
-      elseif ( log(ne) .gt. 6 .and. log(ne) .le. 6) then
-            a = an(3) + (an(4) - an(3))*(log(ne) - 2.)
+! 3p-3s ^2P - ^2P transitions. case A
+
+      if (tered .gt. 0.5) then
+        aeff=A_3p2P(9)
       else
-              a = an(4)
-      endif
-!
-      aeff = 1.e-14*a*tered ** (b)
-      aeff = aeff*(1. + c*(1. - tered) + d*(1. - tered) ** 2)
-!
-! New eff. recomb. data for 1000 < T < 5000 K, Ne = 100/cm3
-! c.f. ~/source/OII_a_eff_at_low_Te/00readme/
-      if ( tered .le. 0.5) then
-            a = 1.1198
-            b = -0.44147
-            c = 0.13837
-            d = 0.03191
-            aeff = 1.e-14*a*tered ** (b + c*log(tered) + d* log(tered) ** 2)
+        aeff=A_3p2P_low(9)
       endif
 !
       where (oiiRLs%Mult .eq. " V6        ")
@@ -668,40 +492,12 @@
         oiiRLs%Int = 100.*oiiRLs%Em / Em_hb*abund
       endwhere
 !
-! 3p-3s ^2S - ^2P transitions
-      an = (/0.40,0.40,0.40,0.40/) !a for logNe = 2,4,5,6 Case A
-      a =  0.40
-      b =  -0.461
-      c =  -0.083
-      d =  0.287
-!      an = (/0.50,0.50,0.50,0.60/) !a for logNe = 2,4,5,6 Case C
-!      a =  0.50
-!      b =  -0.547
-!      c =  -0.074
-!      d =  0.244
-      if ( log(ne) .le. 2) then
-            a = an(1)
-      elseif ( log(ne) .gt. 2 .and. log(ne) .le. 4) then
-            a = an(1) + (an(2) - an(1)) / 2.*(log(ne) - 2.)
-      elseif ( log(ne) .gt. 4 .and. log(ne) .le. 5) then
-            a = an(2) + (an(3) - an(2))*(log(ne) - 2.)
-      elseif ( log(ne) .gt. 6 .and. log(ne) .le. 6) then
-            a = an(3) + (an(4) - an(3))*(log(ne) - 2.)
+! 3p-3s ^2S - ^2P transitions. case A
+
+      if (tered .gt. 0.5) then
+        aeff=A_3p2S(9)
       else
-              a = an(4)
-      endif
-!
-      aeff = 1.e-14*a*tered ** (b)
-      aeff = aeff*(1. + c*(1. - tered) + d*(1. - tered) ** 2)
-!
-! New eff. recomb. data for 1000 < T < 5000 K, Ne = 100/cm3
-! c.f. ~/source/OII_a_eff_at_low_Te/00readme/
-      if ( tered .le. 0.5) then
-            a = 0.3922
-            b = -0.35043
-            c = 0.26366
-            d = 0.06666
-            aeff = 1.e-14*a*tered ** (b + c*log(tered) + d* log(tered) ** 2)
+        aeff=A_3p2S_low(9)
       endif
 !
       where (oiiRLs%Mult .eq. " V4        ")
