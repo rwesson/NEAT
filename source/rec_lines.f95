@@ -44,7 +44,10 @@
       TYPE(oiiRL), DIMENSION(:), allocatable :: oiiRLs
 
       real(kind=dp), dimension(36,9), target :: oii_coefficients
-      real(kind=dp), dimension(:), pointer :: A_4f, A_3d4F, A_3d4D, B_3d4D, C_3d4D, A_3d2F, B_3d2F, C_3d2F, A_3d2D, C_3d2D, A_3d2P, C_3d2P, A_3p4D, B_3p4D, A_3p4P, B_3p4P, A_3p4S, B_3p4S, A_3p2D, C_3p2D, A_3p2P, C_3p2P, A_3p2S, C_3p2S, A_4f_low, A_3d4F_low, B_3d4D_low, A_3d2F_low, A_3d2D_low, A_3d2P_low, A_3p4D_low, A_3p4P_low, A_3p4S_low, A_3p2D_low, A_3p2P_low, A_3p2S_low
+      real(kind=dp), dimension(:), pointer :: oii_A_4f, oii_A_3d4F, oii_A_3d4D, oii_B_3d4D, oii_C_3d4D, oii_A_3d2F, oii_B_3d2F, oii_C_3d2F, oii_A_3d2D, oii_C_3d2D, oii_A_3d2P, oii_C_3d2P, oii_A_3p4D, oii_B_3p4D, oii_A_3p4P, oii_B_3p4P, oii_A_3p4S, oii_B_3p4S, oii_A_3p2D, oii_C_3p2D, oii_A_3p2P, oii_C_3p2P, oii_A_3p2S, oii_C_3p2S, oii_A_4f_low, oii_A_3d4F_low, oii_B_3d4D_low, oii_A_3d2F_low, oii_A_3d2D_low, oii_A_3d2P_low, oii_A_3p4D_low, oii_A_3p4P_low, oii_A_3p4S_low, oii_A_3p2D_low, oii_A_3p2P_low, oii_A_3p2S_low
+
+      real(kind=dp), dimension(27,6), target :: nii_coefficients
+      real(kind=dp), dimension(:), pointer :: nii_V3, nii_V4, nii_V5, nii_V8, nii_V12, nii_V13, nii_V15, nii_V17, nii_V19, nii_V20, nii_V21, nii_V22, nii_V24, nii_V26, nii_V28, nii_V29, nii_V30, nii_V31, nii_V36, nii_V39, nii_V58, nii_V48, nii_V55, nii_V43, nii_V61, nii_V39b, nii_V58a
 
       TYPE niiRL
             CHARACTER(len=1) :: Hyb
@@ -202,42 +205,42 @@
 
 !define pointers so that we can refer to the coefficients by state as well as processing all coefficients at once
 
-      A_4f => oii_coefficients(1,:)
-    A_3d4F => oii_coefficients(2,:)
-    A_3d4D => oii_coefficients(3,:)
-    B_3d4D => oii_coefficients(4,:)
-    C_3d4D => oii_coefficients(5,:)
-    A_3d2F => oii_coefficients(6,:)
-    B_3d2F => oii_coefficients(7,:)
-    C_3d2F => oii_coefficients(8,:)
-    A_3d2D => oii_coefficients(9,:)
-    C_3d2D => oii_coefficients(10,:)
-    A_3d2P => oii_coefficients(11,:)
-    C_3d2P => oii_coefficients(12,:)
-    A_3p4D => oii_coefficients(13,:)
-    B_3p4D => oii_coefficients(14,:)
-    A_3p4P => oii_coefficients(15,:)
-    B_3p4P => oii_coefficients(16,:)
-    A_3p4S => oii_coefficients(17,:)
-    B_3p4S => oii_coefficients(18,:)
-    A_3p2D => oii_coefficients(19,:)
-    C_3p2D => oii_coefficients(20,:)
-    A_3p2P => oii_coefficients(21,:)
-    C_3p2P => oii_coefficients(22,:)
-    A_3p2S => oii_coefficients(23,:)
-    C_3p2S => oii_coefficients(24,:)
-  A_4f_low => oii_coefficients(25,:)
-A_3d4F_low => oii_coefficients(26,:)
-B_3d4D_low => oii_coefficients(27,:)
-A_3d2F_low => oii_coefficients(28,:)
-A_3d2D_low => oii_coefficients(29,:)
-A_3d2P_low => oii_coefficients(30,:)
-A_3p4D_low => oii_coefficients(31,:)
-A_3p4P_low => oii_coefficients(32,:)
-A_3p4S_low => oii_coefficients(33,:)
-A_3p2D_low => oii_coefficients(34,:)
-A_3p2P_low => oii_coefficients(35,:)
-A_3p2S_low => oii_coefficients(36,:)
+      oii_A_4f => oii_coefficients(1,:)
+    oii_A_3d4F => oii_coefficients(2,:)
+    oii_A_3d4D => oii_coefficients(3,:)
+    oii_B_3d4D => oii_coefficients(4,:)
+    oii_C_3d4D => oii_coefficients(5,:)
+    oii_A_3d2F => oii_coefficients(6,:)
+    oii_B_3d2F => oii_coefficients(7,:)
+    oii_C_3d2F => oii_coefficients(8,:)
+    oii_A_3d2D => oii_coefficients(9,:)
+    oii_C_3d2D => oii_coefficients(10,:)
+    oii_A_3d2P => oii_coefficients(11,:)
+    oii_C_3d2P => oii_coefficients(12,:)
+    oii_A_3p4D => oii_coefficients(13,:)
+    oii_B_3p4D => oii_coefficients(14,:)
+    oii_A_3p4P => oii_coefficients(15,:)
+    oii_B_3p4P => oii_coefficients(16,:)
+    oii_A_3p4S => oii_coefficients(17,:)
+    oii_B_3p4S => oii_coefficients(18,:)
+    oii_A_3p2D => oii_coefficients(19,:)
+    oii_C_3p2D => oii_coefficients(20,:)
+    oii_A_3p2P => oii_coefficients(21,:)
+    oii_C_3p2P => oii_coefficients(22,:)
+    oii_A_3p2S => oii_coefficients(23,:)
+    oii_C_3p2S => oii_coefficients(24,:)
+  oii_A_4f_low => oii_coefficients(25,:)
+oii_A_3d4F_low => oii_coefficients(26,:)
+oii_B_3d4D_low => oii_coefficients(27,:)
+oii_A_3d2F_low => oii_coefficients(28,:)
+oii_A_3d2D_low => oii_coefficients(29,:)
+oii_A_3d2P_low => oii_coefficients(30,:)
+oii_A_3p4D_low => oii_coefficients(31,:)
+oii_A_3p4P_low => oii_coefficients(32,:)
+oii_A_3p4S_low => oii_coefficients(33,:)
+oii_A_3p2D_low => oii_coefficients(34,:)
+oii_A_3p2P_low => oii_coefficients(35,:)
+oii_A_3p2S_low => oii_coefficients(36,:)
 
      ! read in NII data
 
@@ -261,6 +264,66 @@ A_3p2S_low => oii_coefficients(36,:)
      &niiRLs(i)%Term2, niiRLs(i)%Br_LS
             END DO
       CLOSE(201)
+
+! arrays of NII fitting coefficients, consisting of a, b, c, d, Br, and aeff
+
+      nii_coefficients(1,:) = (/-12.7289d0, -0.689816d0, 0.022005d0, 0.d0, 0.d0, 0.d0 /)
+      nii_coefficients(2,:) = (/-13.8161d0, -0.778606d0, -0.028944d0, 0.d0, 0.d0, 0.d0 /)
+      nii_coefficients(3,:) = (/-13.0765d0, -0.734594d0, -0.0251909d0, 0.d0, 0.d0, 0.d0 /)
+      nii_coefficients(4,:) = (/-14.1211d0, -0.608107d0, 0.0362301d0, 0.d0, 0.d0, 0.d0 /)
+      nii_coefficients(5,:) = (/-13.7473d0, -0.509595d0, 0.0255685d0, 0.d0, 0.d0, 0.d0 /)
+      nii_coefficients(6,:) = (/-14.3753d0, -0.515547d0, 0.0100966d0, 0.d0, 0.d0, 0.d0 /)
+      nii_coefficients(7,:) = (/-14.3932d0, -0.887946d0, -0.0525855d0, 0.d0, 0.d0, 0.d0 /)
+      nii_coefficients(8,:) = (/-15.0052d0, -0.89811d0, -0.0581789d0, 0.d0, 0.d0, 0.d0 /)
+      nii_coefficients(9,:) = (/-12.6183d0, -0.840727d0, -0.0229685d0, 0.d0, 0.d0, 0.d0 /)
+      nii_coefficients(10,:) = (/-13.3184d0, -0.884034d0, -0.0512093d0, 0.d0, 0.d0, 0.d0 /)
+      nii_coefficients(11,:) = (/-14.5113d0, -0.87792d0, -0.0552785d0, 0.d0, 0.d0, 0.d0 /)
+      nii_coefficients(12,:) = (/-14.1305d0, -0.487037d0, 0.0354135d0, 0.d0, 0.d0, 0.d0 /)
+      nii_coefficients(13,:) = (/-13.3527d0, -0.878224d0, -0.0557112d0, 0.d0, 0.d0, 0.d0 /)
+      nii_coefficients(14,:) = (/-14.9628d0, -0.486746d0, 0.0358261d0, 0.d0, 0.d0, 0.d0 /)
+      nii_coefficients(15,:) = (/-13.0871d0, -0.883624d0, -0.0506882d0, 0.d0, 0.d0, 0.d0 /)
+      nii_coefficients(16,:) = (/-13.5581d0, -0.878488d0, -0.0557583d0, 0.d0, 0.d0, 0.d0 /)
+      nii_coefficients(17,:) = (/-14.3521d0, -0.487527d0, 0.0355516d0, 0.d0, 0.d0, 0.d0 /)
+      nii_coefficients(18,:) = (/-15.0026d0, -0.923093d0, -0.0588371d0, 0.d0, 0.d0, 0.d0 /)
+      nii_coefficients(19,:) = (/-13.8636d0, -0.569144d0, 0.0068655d0, 0.d0, 0.d0, 0.d0 /)
+      nii_coefficients(20,:) = (/-13.035d0, -1.12035d0, -0.10642d0, 0.d0, 0.d0, 0.d0 /)
+      nii_coefficients(21,:) = (/-13.5484d0, -1.11909d0, -0.105123d0, 0.d0, 0.d0, 0.d0 /)
+      nii_coefficients(22,:) = (/-13.2548d0, -1.12902d0, -0.110368d0, 0.d0, 0.d0, 0.d0 /)
+      nii_coefficients(23,:) = (/-13.5656d0, -1.11989d0, -0.105818d0, 0.d0, 0.d0, 0.d0 /)
+      nii_coefficients(24,:) = (/-13.7426d0, -1.13351d0, -0.111146d0, 0.d0, 0.d0, 0.d0 /)
+      nii_coefficients(25,:) = (/-13.7373d0, -1.12695d0, -0.108158d0, 0.d0, 0.d0, 0.d0 /)
+      nii_coefficients(26,:) = (/0.108d0, -0.754d0, 2.587d0, 0.719d0, 0.350d0, 0.d0 /)
+      nii_coefficients(27,:) = (/0.326d0, -0.754d0, 2.587d0, 0.719d0, 0.074d0, 0.d0 /)
+
+        nii_V3 => nii_coefficients(1,:)
+        nii_V4 => nii_coefficients(2,:)
+        nii_V5 => nii_coefficients(3,:)
+        nii_V8 => nii_coefficients(4,:)
+       nii_V12 => nii_coefficients(5,:)
+       nii_V13 => nii_coefficients(6,:)
+       nii_V15 => nii_coefficients(7,:)
+       nii_V17 => nii_coefficients(8,:)
+       nii_V19 => nii_coefficients(9,:)
+       nii_V20 => nii_coefficients(10,:)
+       nii_V21 => nii_coefficients(11,:)
+       nii_V22 => nii_coefficients(12,:)
+       nii_V24 => nii_coefficients(13,:)
+       nii_V26 => nii_coefficients(14,:)
+       nii_V28 => nii_coefficients(15,:)
+       nii_V29 => nii_coefficients(16,:)
+       nii_V30 => nii_coefficients(17,:)
+       nii_V31 => nii_coefficients(18,:)
+       nii_V36 => nii_coefficients(19,:)
+       nii_V39 => nii_coefficients(20,:)
+       nii_V58 => nii_coefficients(21,:)
+       nii_V48 => nii_coefficients(22,:)
+       nii_V55 => nii_coefficients(23,:)
+       nii_V43 => nii_coefficients(24,:)
+       nii_V61 => nii_coefficients(25,:)
+      nii_V39b => nii_coefficients(26,:)
+      nii_V58a => nii_coefficients(27,:)
+
+!define the pointers
 
 ! read in CII data
 
@@ -341,9 +404,9 @@ A_3p2S_low => oii_coefficients(36,:)
 ! 4f-3d transitions
 
       if (tered .gt. 0.5) then
-        aeff=A_4f(9)
+        aeff=oii_A_4f(9)
       else
-        aeff=A_4f_low(9)
+        aeff=oii_A_4f_low(9)
       endif
 
       where (oiiRLs%Term1(4:5) .eq. "3d" .and. oiiRLs%Term2(3:4) .eq. "4f")
@@ -355,9 +418,9 @@ A_3p2S_low => oii_coefficients(36,:)
 ! 3d-3p ^4F transitions (Case A=B=C for a,b,c,d; Br diff. slightly, adopt Case B)
 
       if (tered .gt. 0.5) then
-        aeff=A_3d4F(9)
+        aeff=oii_A_3d4F(9)
       else
-        aeff=A_3d4F_low(9)
+        aeff=oii_A_3d4F_low(9)
       endif
 
       where (oiiRLs%Mult .eq. " V10       " .or. oiiRLs%Mult .eq. " V18       ")
@@ -369,9 +432,9 @@ A_3p2S_low => oii_coefficients(36,:)
 ! 3d-3p ^4D, ^4P transitions. case B assumed
 
       if (tered .gt. 0.5) then
-        aeff=B_3d4D(9)
+        aeff=oii_B_3d4D(9)
       else
-        aeff=B_3d4D_low(9)
+        aeff=oii_B_3d4D_low(9)
       endif
 
       where (oiiRLs%Term1(4:5) .eq. "3p" .and. (oiiRLs%Term2 .eq. "  3d  4D " .or. oiiRLs%Term2 .eq. "  3d  4P "))
@@ -383,9 +446,9 @@ A_3p2S_low => oii_coefficients(36,:)
 ! 3d-3p ^2F transitions. case A
 
       if (tered .gt. 0.5) then
-        aeff=A_3d2F(9)
+        aeff=oii_A_3d2F(9)
       else
-        aeff=A_3d2F_low(9)
+        aeff=oii_A_3d2F_low(9)
       endif
 
       where (oiiRLs%Term1(4:5) .eq. "3p" .and. oiiRLs%Term2 .eq. "  3d  2F   ")
@@ -397,9 +460,9 @@ A_3p2S_low => oii_coefficients(36,:)
 ! 3d-3p ^2D transitions. case A
 
       if (tered .gt. 0.5) then
-        aeff=A_3d2D(9)
+        aeff=oii_A_3d2D(9)
       else
-        aeff=A_3d2D_low(9)
+        aeff=oii_A_3d2D_low(9)
       endif
 
       where (oiiRLs%Term1(4:5) .eq. "3d" .and. oiiRLs%Term2 .eq. "  3d  2D   ")
@@ -411,9 +474,9 @@ A_3p2S_low => oii_coefficients(36,:)
 ! 3d-3p ^2P transitions. case A
 
       if (tered .gt. 0.5) then
-        aeff=A_3d2P(9)
+        aeff=oii_A_3d2P(9)
       else
-        aeff=A_3d2P_low(9)
+        aeff=oii_A_3d2P_low(9)
       endif
 
       where (oiiRLs%Term1(4:5) .eq. "3p" .and. oiiRLs%Term2 .eq. "  3d  2P   ")
@@ -425,9 +488,9 @@ A_3p2S_low => oii_coefficients(36,:)
 ! 3p-3s ^4D - ^4P transitions. case B
 
       if (tered .gt. 0.5) then
-        aeff=B_3p4D(9)
+        aeff=oii_B_3p4D(9)
       else
-        aeff=A_3p4D_low(9)
+        aeff=oii_A_3p4D_low(9)
       endif
 
       where (oiiRLs%Mult .eq. " V1        ")
@@ -439,9 +502,9 @@ A_3p2S_low => oii_coefficients(36,:)
 ! 3p-3s ^4P - ^4P transitions. case B
 
       if (tered .gt. 0.5) then
-        aeff=B_3p4P(9)
+        aeff=oii_B_3p4P(9)
       else
-        aeff=A_3p4P_low(9)
+        aeff=oii_A_3p4P_low(9)
       endif
 !
       where (oiiRLs%Mult .eq. " V2        ")
@@ -453,9 +516,9 @@ A_3p2S_low => oii_coefficients(36,:)
 ! 3p-3s ^4S - ^4P transitions. case B
 
       if (tered .gt. 0.5) then
-        aeff=B_3p4S(9)
+        aeff=oii_B_3p4S(9)
       else
-        aeff=A_3p4S_low(9)
+        aeff=oii_A_3p4S_low(9)
       endif
 !
       where (oiiRLs%Mult .eq. " V3        ")
@@ -467,9 +530,9 @@ A_3p2S_low => oii_coefficients(36,:)
 ! 3p-3s ^2D - ^2P transitions. case A
 
       if (tered .gt. 0.5) then
-        aeff=A_3p2D(9)
+        aeff=oii_A_3p2D(9)
       else
-        aeff=A_3p2D_low(9)
+        aeff=oii_A_3p2D_low(9)
       endif
 !
       where (oiiRLs%Mult .eq. " V5        ")
@@ -481,9 +544,9 @@ A_3p2S_low => oii_coefficients(36,:)
 ! 3p-3s ^2P - ^2P transitions. case A
 
       if (tered .gt. 0.5) then
-        aeff=A_3p2P(9)
+        aeff=oii_A_3p2P(9)
       else
-        aeff=A_3p2P_low(9)
+        aeff=oii_A_3p2P_low(9)
       endif
 !
       where (oiiRLs%Mult .eq. " V6        ")
@@ -495,9 +558,9 @@ A_3p2S_low => oii_coefficients(36,:)
 ! 3p-3s ^2S - ^2P transitions. case A
 
       if (tered .gt. 0.5) then
-        aeff=A_3p2S(9)
+        aeff=oii_A_3p2S(9)
       else
-        aeff=A_3p2S_low(9)
+        aeff=oii_A_3p2S_low(9)
       endif
 !
       where (oiiRLs%Mult .eq. " V4        ")
@@ -511,8 +574,7 @@ A_3p2S_low => oii_coefficients(36,:)
       subroutine nii_rec_lines(te, ne, abund, niiRLs)
 
       IMPLICIT NONE
-      real(kind=dp) :: aeff, aeff_hb, Em_Hb, Te, Ne, abund, Br_term, z, tered
-      real(kind=dp) :: a, b, c, d
+      real(kind=dp) :: aeff_hb, Em_Hb, Te, Ne, abund, tered
 
       TYPE(niiRL), DIMENSION(:) :: niiRLs
 
@@ -520,336 +582,223 @@ A_3p2S_low => oii_coefficients(36,:)
 
       tered = te/10000.
 
+      nii_coefficients(1:25,6) = 10. ** (nii_coefficients(1:25,1) + nii_coefficients(1:25,2) * log10(tered) + nii_coefficients(1:25,3) * log10(tered) ** 2)
+      nii_coefficients(26:27,6) = (1.e-13 * 2.d0 * nii_coefficients(26:27,1) * (tered/4.d0)**nii_coefficients(26:27,2)) / (1.d0 + nii_coefficients(26:27,3)*(tered/4.d0)**nii_coefficients(26:27,4))*nii_coefficients(26:27,5)
+
 !     2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p E1 3P* - 3D  M03  transitions
 !     case B
-      a = -12.7289
-      b = -0.689816
-      c = 0.022005
 !
-      aeff = 10. ** (a + b * log10(tered) + c * log10(tered) ** 2)
       where (niiRLs%Mult .eq. "V3         ")
-        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Em = nii_V3(6) * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
         niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
       endwhere
 !
 !      2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 3P* - 3S     M04 transitions
 !      case B
-      a = -13.8161
-      b = -0.778606
-      c = -0.028944
 !
-      aeff = 10. ** (a + b * log10(tered) + c * log10(tered) ** 2)
       where (niiRLs%Mult .eq. "V4         ")
-        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Em = nii_V4(6) * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
         niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
       endwhere
 !
 !       2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 3P* - 3P     M05 transitions
 !      case B
-      a = -13.0765
-      b = -0.734594
-      c = -0.0251909
 !
-      aeff = 10. ** (a + b * log10(tered) + c * log10(tered) ** 2)
 
       where (niiRLs%Mult .eq. "V5         ")
-        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Em = nii_V5(6) * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
         niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
       endwhere
 !
 !       2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 1P* - 1P     M08 transitions
 !      case A
-      a = -14.1211
-      b = -0.608107
-      c = 0.0362301
 !
-      aeff = 10. ** (a + b * log10(tered) + c * log10(tered) ** 2)
       where (niiRLs%Mult .eq. "V8         ")
-        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Em = nii_V8(6) * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
         niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
       endwhere
 !
 !       2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 1P* - 1D     M12 transitions
 !      case A
-      a = -13.7473
-      b = -0.509595
-      c = 0.0255685
 !
-      aeff = 10. ** (a + b * log10(tered) + c * log10(tered) ** 2)
       where (niiRLs%Mult .eq. "V12        ")
-        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Em = nii_V12(6) * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
         niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
       endwhere
 !
 !       2s2.2p.(2P*).3s - 2s2.2p.(2P*).3p 1P* - 1S     M13 transitions
 !      case A
-      a = -14.3753
-      b = -0.515547
-      c = 0.0100966
 !
-      aeff = 10. ** (a + b * log10(tered) + c * log10(tered) ** 2)
       where (niiRLs%Mult .eq. "V13        ")
-        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Em = nii_V13(6) * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
         niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
       endwhere
 !
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 1P - 1D*     M15 transitions
 !      case A
-      a = -14.3932
-      b = -0.887946
-      c = -0.0525855
 !
-      aeff = 10. ** (a + b * log10(tered) + c * log10(tered) ** 2)
       where (niiRLs%Mult .eq. "V15        ")
-        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Em = nii_V15(6) * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
         niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
       endwhere
 !
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 1P - 1P*     M17 transitions
 !      case A
-      a = -15.0052
-      b = -0.89811
-      c = -0.0581789
 !
-      aeff = 10. ** (a + b * log10(tered) + c * log10(tered) ** 2)
       where (niiRLs%Mult .eq. "V17        ")
-        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Em = nii_V17(6) * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
         niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
       endwhere
 !
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3D - 3F*     M19 transitions
 !      case B
-      a = -12.6183
-      b = -0.840727
-      c = -0.0229685
 !
-      aeff = 10. ** (a + b * log10(tered) + c * log10(tered) ** 2)
       where (niiRLs%Mult .eq. "V19        ")
-        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Em = nii_V19(6) * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
         niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
       endwhere
 !
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3D - 3D*     M20 transitions
 !      case B
-      a = -13.3184
-      b = -0.884034
-      c = -0.0512093
 !
-      aeff = 10. ** (a + b * log10(tered) + c * log10(tered) ** 2)
       where (niiRLs%Mult .eq. "V20        ")
-        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Em = nii_V20(6) * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
         niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
       endwhere
 !
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3D - 3P*     M21 transitions
 !      case B
-      a = -14.5113
-      b = -0.87792
-      c = -0.0552785
 !
-      aeff = 10. ** (a + b * log10(tered) + c * log10(tered) ** 2)
       where (niiRLs%Mult .eq. "V21        ")
-        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Em = nii_V21(6) * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
         niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
       endwhere
 !
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).4s 3D - 3P*     M22 transitions
 !      case B
-      a = -14.1305
-      b = -0.487037
-      c = 0.0354135
 !
-      aeff = 10. ** (a + b * log10(tered) + c * log10(tered) ** 2)
       where (niiRLs%Mult .eq. "V22        ")
-        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Em = nii_V22(6) * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
         niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
       endwhere
 !
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3S - 3P*     M24 transitions
 !      case B
-      a = -13.3527
-      b = -0.878224
-      c = -0.0557112
 !
-      aeff = 10. ** (a + b * log10(tered) + c * log10(tered) ** 2)
       where (niiRLs%Mult .eq. "V24        ")
-        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Em = nii_V24(6) * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
         niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
       endwhere
 !
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).4s 3S - 3P*     M26 transitions
 !      case B
-      a = -14.9628
-      b = -0.486746
-      c = 0.0358261
 !
-      aeff = 10. ** (a + b * log10(tered) + c * log10(tered) ** 2)
       where (niiRLs%Mult .eq. "V26        ")
-        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Em = nii_V26(6) * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
         niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
       endwhere
 !
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3P - 3D*     M28 transitions
 !      case B
-      a = -13.0871
-      b = -0.883624
-      c = -0.0506882
 !
-      aeff = 10. ** (a + b * log10(tered) + c * log10(tered) ** 2)
       where (niiRLs%Mult .eq. "V28        ")
-        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Em = nii_V28(6) * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
         niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
       endwhere
 !
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 3P - 3P*     M29 transitions
 !      case B
-      a = -13.5581
-      b = -0.878488
-      c = -0.0557583
 !
-      aeff = 10. ** (a + b * log10(tered) + c * log10(tered) ** 2)
       where (niiRLs%Mult .eq. "V29        ")
-        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Em = nii_V29(6) * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
         niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
       endwhere
 !
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).4s 3P - 3P*     M30 transitions
 !      case B
-      a = -14.3521
-      b = -0.487527
-      c = 0.0355516
 !
-      aeff = 10. ** (a + b * log10(tered) + c * log10(tered) ** 2)
       where (niiRLs%Mult .eq. "V30        ")
-        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Em = nii_V30(6) * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
         niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
       endwhere
 !
 !       2s2.2p.(2P*).3p - 2s2.2p.(2P*).3d 1D - 1F*     M31 transitions
 !      case A
-      a = -15.0026
-      b = -0.923093
-      c = -0.0588371
 !
-      aeff = 10. ** (a + b * log10(tered) + c * log10(tered) ** 2)
       where (niiRLs%Mult .eq. "V31        ")
-        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Em = nii_V31(6) * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
         niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
       endwhere
 !
 !       2s2.2p.(2P*).3d - 2s2.2p.(2P*).4p 3F* - 3D     M36 transitions
 !      case B
-      a = -13.8636
-      b = -0.569144
-      c = 0.0068655
 !
-      aeff = 10. ** (a + b * log10(tered) + c * log10(tered) ** 2)
       where (niiRLs%Mult .eq. "V36        ")
-        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Em = nii_V36(6) * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
         niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
       endwhere
 !
 !       2s2.2p.(2P*).3d - 2s2.2p.(2P*<3/2>).4f 3F* - 3G M39 transitions
 !      case B
-      a = -13.035
-      b = -1.12035
-      c = -0.10642
 !
-      aeff = 10. ** (a + b * log10(tered) + c * log10(tered) ** 2)
       where (niiRLs%Mult(1:3) .eq. "V39")
-        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Em = nii_V39(6) * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
         niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
       endwhere
 !
 !       2s2.2p.(2P*).3d - 2s2.2p.(2P*<3/2>).4f 1F* - 1G M58 transitions
 !      case A
-      a = -13.5484
-      b = -1.11909
-      c = -0.105123
 !
-      aeff = 10. ** (a + b * log10(tered) + c * log10(tered) ** 2)
       where (niiRLs%Mult(1:3) .eq. "V58")
-        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Em = nii_V58(6) * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
         niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
       endwhere
 !
 !       3d 3D* - 4f 3F 4242 M48 transitions
 !      case B
-      a = -13.2548
-      b = -1.12902
-      c = -0.110368
 !
-      aeff = 10. ** (a + b * log10(tered) + c * log10(tered) ** 2)
       where (niiRLs%Mult(1:3) .eq. "V48")
-        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Em = nii_V48(6) * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
         niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
       endwhere
 !
 !       3d 3P* - 4f 3D 4435 M55 transitions
 !      case B
-      a = -13.5656
-      b = -1.11989
-      c = -0.105818
 !
-      aeff = 10. ** (a + b * log10(tered) + c * log10(tered) ** 2)
       where (niiRLs%Mult(1:3) .eq. "V55")
-        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Em = nii_V55(6) * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
         niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
       endwhere
 !
 !       3d 1D* - 4f 1F 4176 M43 (RMT M42) transitions
 !      case A
-      a = -13.7426
-      b = -1.13351
-      c = -0.111146
 !
-      aeff = 10. ** (a + b * log10(tered) + c * log10(tered) ** 2)
       where (niiRLs%Mult(1:3) .eq. "V43")
-        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Em = nii_V43(6) * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
         niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
       endwhere
 !
 !       3d 1P* - 4f 1D 4677 M61 (RMT M62) transitions
 !      case A
-      a = -13.7373
-      b = -1.12695
-      c = -0.108158
 !
-      aeff = 10. ** (a + b * log10(tered) + c * log10(tered) ** 2)
       where (niiRLs%Mult(1:3) .eq. "V61")
-        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Em = nii_V61(6) * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
         niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
       endwhere
 !
 !       3d 3F* - 4f 1G 4026 M39b transitions
 !      case A (PPB):
-      a = 0.108
-      b = -0.754
-      c = 2.587
-      d = 0.719
-      z = 2.
-      Br_term = 0.350
 !
-      aeff = 1.e-13 * z * a  * (tered/z**2) ** (b)
-      aeff = aeff / (1. + c * (tered/z**2) ** (d)) * Br_term
       where (niiRLs%Mult(1:4) .eq. "V39b")
-        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Em = nii_V39b(6) * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
         niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
       endwhere
 !
 !       3d 1F* - 4f 3G 4552 M58a transitions
 !      case A (PPB):
-      a = 0.326
-      b = -0.754
-      c = 2.587
-      d = 0.719
-      z = 2.
-      Br_term = 0.074
 !
-      aeff = 1.e-13 * z * a  * (tered/z**2) ** (b)
-      aeff = aeff / (1. + c * (tered/z**2) ** (d)) * Br_term
       where (niiRLs%Mult(1:4) .eq. "V58a")
-        niiRLs%Em = aeff * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
+        niiRLs%Em = nii_V58a(6) * 1.98648E-08 / niiRLs%Wave * niiRLs%Br_LS
         niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
       endwhere
 
