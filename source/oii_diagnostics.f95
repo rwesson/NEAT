@@ -100,6 +100,6 @@ do i=1,8
 
   enddo
 enddo
-print *,oii_te
+
 end subroutine oii_rl_diagnostics
 end module mod_oii_diagnostics
