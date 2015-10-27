@@ -1053,7 +1053,7 @@ program neat
           elseif (j .eq. 72) then
             write (650,"(/A,/A/)") "CEL abundances","=============="
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{CEL abundances}\\ \hline"
-          elseif (j .eq. 110) then
+          elseif (j .eq. 108) then
             write (650,"(/A,/A/)") "ORL abundances","=============="
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{ORL abundances}\\ \hline"
           elseif (j .eq. 111 .or. j .eq. 115 .or. j .eq. 126 .or. j .eq. 141) then

@@ -2270,6 +2270,10 @@ do i=1,38
     linelist(H_Balmer(i)%location)%name = "H I"
     linelist(H_Balmer(i)%location)%latextext = "H~{\sc i}"
   endif
+  if (H_Paschen(i)%location .gt. 0) then
+    linelist(H_Paschen(i)%location)%name = "H I"
+    linelist(H_Paschen(i)%location)%latextext = "H~{\sc i}"
+  endif
 end do
 
 do i=1,44
