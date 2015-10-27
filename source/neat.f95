@@ -538,12 +538,12 @@ program neat
 
 !line flux
 
-               if (linelist_original(j)%intensity .eq. 0.d0) then
+               if (all_linelists(j,1)%intensity .eq. 0.d0 .and. all_linelists(j,1)%blend_intensity .eq. 0.d0) then
                  write (650,"(A)", advance='no') " * "
                  write (651,"(A)", advance='no') " *     &             &"
                else
-                 write (650,"(F7.3,A,F7.2,3X)", advance='no') linelist_original(j)%intensity," +-",linelist_original(j)%int_err
-                 write (651,"(F7.3,'& $\pm$',F7.2, '&')", advance='no') linelist_original(j)%intensity,linelist_original(j)%int_err
+                 write (650,"(F7.3,A,F7.2,3X)", advance='no') all_linelists(j,1)%intensity," +-",all_linelists(j,1)%int_err
+                 write (651,"(F7.3,'& $\pm$',F7.2, '&')", advance='no') all_linelists(j,1)%intensity,all_linelists(j,1)%int_err
                endif
 
 !dereddened flux
@@ -551,7 +551,7 @@ program neat
 
                 call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins,nperbin,runs)
 
-                if (linelist_original(j)%intensity .ne. 0.d0) then
+                if (all_linelists(j,1)%intensity .ne. 0.d0 .or. all_linelists(j,1)%blend_intensity .ne. 0.d0) then
                   if (uncertainty_array(1) .ne. uncertainty_array(3)) then
                     write (650,"(F7.3,SP,F7.2,SP,F7.2)", advance='no') uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
                     write (651,"(F7.3,'& $^{',SP,F7.2,'}_{',SP,F7.2,'}$')", advance='no') uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
@@ -567,7 +567,7 @@ program neat
 ! transition data
 
 !                write (650,*)
-                write (651,*) linelist_original(j)%linedata, "\\"
+                write (651,*) all_linelists(j,1)%linedata, "\\"
 
 !abundance - write out if there is an abundance for the line, don't write
 !anything except a line break if there is no abundance for the line.

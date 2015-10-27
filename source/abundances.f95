@@ -2260,6 +2260,7 @@ end do
 
 where (linelist%blend_intensity .gt. 0.d0)
   linelist%intensity=linelist%blend_intensity
+  linelist%int_dered=linelist%blend_int_dered
   linelist%int_err=linelist%blend_int_err
 endwhere
 
