@@ -101,7 +101,7 @@ endif
 do H=10,25
   if (H_Balmer(H-2)%int_dered .gt. 0.d0) then !line is present, calculate a density
     if (ratios(H) .lt. (searcharray(1,H,2)/searcharray(1,4,2))) then
-      densities(H) = 1.
+      densities(H) = 2.
     elseif (ratios(H) .gt. (searcharray(ndens,H,2)/searcharray(ndens,4,2))) then
       densities(H) = 8.
     else !search for the value
@@ -197,7 +197,7 @@ endif
 do H=10,25
   if (H_Paschen(H-3)%int_dered .gt. 0.d0) then !line is present, calculate a density
     if (ratios(H) .lt. (searcharray(1,H,3)/searcharray(1,4,2))) then
-      densities(H) = 1.
+      densities(H) = 2.
     elseif (ratios(H) .gt. (searcharray(ndens,H,3)/searcharray(ndens,4,2))) then
       densities(H) = 8.
     else !search for the value
