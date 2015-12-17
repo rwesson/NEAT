@@ -29,6 +29,7 @@
 FC=gfortran
 LD=gfortran
 FFLAGS=-ffree-line-length-0 -Jsource/
+MANDIR=/usr/share/man/man1
 
 ifeq ($(FC),gfortran)
   ifeq ($(CO),debug)
@@ -82,6 +83,5 @@ install:
 	test -e ${PREFIX}/etc/neat || mkdir ${PREFIX}/etc/neat
 	install -m 644 Atomic-data/*.* ${PREFIX}/etc/neat
 	install neat ${PREFIX}/usr/bin
-#	install -g 0 -o 0 -m 644 man/neat.1 ${MANDIR}
-#	gzip -f ${MANDIR}/neat.1
-#	ln -s -f ${MANDIR}/neat.1.gz ${MANDIR}/neatcube.1.gz
+	install -g 0 -o 0 -m 644 man/neat.1 ${MANDIR}
+	gzip -f ${MANDIR}/neat.1 

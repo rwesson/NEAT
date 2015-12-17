@@ -115,67 +115,8 @@ program neat
         Narg = IARGC() !count input arguments
 
         if (Narg .eq. 0) then
-           print *,"Syntax: ./neat.exe [option1 value1] [option2 value2] .. [optionx valuex]"
-           print *,"Available options:"
-           print *,"  -i / --input"
-           print *,"       Input file"
-           print *,"       No default"
-           print *,"  -u / --uncertainties"
-           print *,"       Calculate uncertainties, using 20,000 iterations"
-           print *,"       Default: no calculation of uncertainties"
-           print *,"       If this option is specified, the -n option will be ignored"
-           print *,"  -n / --n-iterations"
-           print *,"       Number of iterations"
-           print *,"       Default: 1"
-           print *,"  -e / --extinction-law"
-           print *,"       Extinction law"
-           print *,"       Values:"
-           print *,"          How:  Galactic law of Howarth (1983, MNRAS, 203, 301)"
-           print *,"          CCM:  Galactic law of Cardelli, Clayton, Mathis (1989, ApJ, 345, 245)"
-           print *,"          Fitz: Galactic law of Fitzpatrick & Massa (1990, ApJS, 72, 163)"
-           print *,"          LMC:  LMC law of Howarth (1983, MNRAS, 203, 301)"
-           print *,"          SMC:  SMC law of Prevot et al. (984, A&A, 132, 389)"
-           print *,"       Default: How"
-           print *,"  -c"
-           print *,"       The logarithmic extinction at H beta"
-           print *,"       Default: calculated from Balmer line ratios"
-           print *,"  -nelow, -nemed, -nehigh"
-           print *,"  -telow, -temed, -tehigh"
-           print *,"       The electron densities and temperatures to be used."
-           print *,"       Units: cm-3 for densities, K for temperatures"
-           print *,"       Default: calculated from available diagnostics."
-           print *,"  -he / --helium-data"
-           print *,"       The atomic data to use for He I abundances"
-           print *,"       Values:"
-           print *,"          S96: Smits, 1996, MNRAS, 278, 683"
-           print *,"          P12: Porter et al., 2012, MNRAS, 425, 28"
-           print *,"       Default: S96"
-           print *,"  -icf / --ionisation-correction-scheme"
-           print *,"       The ICF scheme to be used to correct for unseen ions"
-           print *,"       Values:"
-           print *,"          KB94: Kingsburgh & Barlow (1994, MNRAS, 271, 257)"
-           print *,"          PT92: Peimbert, Torres-Peimbert & Ruiz (1992, RMxAA, 24, 155)"
-           print *,"          DI14: Delgado-Inglada, Morisset & Stasinska (2014, MNRAS, 440, 536)"
-           print *,"       Default: KB94"
-           print *,"  -v / --verbosity"
-           print *,"       Amount of output to write for each derived quantity"
-           print *,"       This option has no effect unless -n or -u is specified"
-           print *,"       Values:"
-           print *,"         1: write out summary files, binned results and complete results"
-           print *,"         2: write out summary files and binned results"
-           print *,"         3: write out summary files only"
-           print *,"       Default: 3"
-           print *,"  -id / --identify"
-           print *,"       This option triggers an algorithm which attempts to convert observed wavelengths into rest wavelengths"
-           print *,"       If the option is not present, NEAT assumes that the input line list already has rest wavelengths in the first column"
-           print *,"       No default"
-           print *,"  -norp"
-           print *,"       When calculating Monte Carlo uncertainties, NEAT's default behaviour is to compensate for the upward bias"
-           print *,"       affecting weak lines described by Rola and Pelat (1994).  This option overrides that and no compensation is calculated."
-        !  to be fully implemented:
-        !  -R                     : R (default 3.1)
-        !  --nbins                : user can set number of bins for routine
-        !  -b                     : batch mode
+           print *,"Syntax: neat [option1 value1] [option2 value2] .. [optionx valuex]"
+           print *,"type  man neat  for help"
            stop
         endif
 
@@ -289,6 +230,9 @@ program neat
                 if (trim(options(i))=="-norp") then
                    norp=.true.
                 endif
+        !  to be fully implemented:
+        !  -R                     : R (default 3.1) - only used with CCM at the moment
+        !  -b                     : batch mode
          enddo
 
          if (Narg .eq. 1) then

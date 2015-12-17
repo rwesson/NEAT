@@ -1,0 +1,80 @@
+.\" Manpage for neat.
+.TH man 1 "08 Dec 2015" "1.7" "neat man page"
+.SH NAME
+neat \- nebular empirical analysis tool
+.SH SYNOPSIS
+neat [option1] [value1] ...
+.SH DESCRIPTION
+neat carries out a comprehensive empirical analysis on a list of nebular emission line fluxes.  If uncertainties are required, it evaluates them using a Monte Carlo approach.
+.SH OPTIONS
+.TP
+.B \-i / --input
+  Input file
+  No default
+.TP
+.B \-u / --uncertainties
+  Calculate uncertainties, using 20,000 iterations
+  Default: no calculation of uncertainties
+  If this option is specified, the -n option will be ignored
+.TP
+.B \-n / --n-iterations
+  Number of iterations
+  Default: 1
+.TP
+.B \-e / --extinction-law
+  Extinction law
+  Values:
+     How:  Galactic law of Howarth (1983, MNRAS, 203, 301)
+     CCM:  Galactic law of Cardelli, Clayton, Mathis (1989, ApJ, 345, 245)
+     Fitz: Galactic law of Fitzpatrick & Massa (1990, ApJS, 72, 163)
+     LMC:  LMC law of Howarth (1983, MNRAS, 203, 301)
+     SMC:  SMC law of Prevot et al. (984, A&A, 132, 389)
+  Default: How
+.TP
+.B \-c
+  The logarithmic extinction at H beta
+  Default: calculated from Balmer line ratios
+.TP
+.B \-nelow, -nemed, -nehigh
+.B \-telow, -temed, -tehigh
+  The electron densities and temperatures to be used.
+  Units: cm-3 for densities, K for temperatures
+  Default: calculated from available diagnostics.
+.TP
+.B \-he / --helium-data
+  The atomic data to use for He I abundances
+  Values:
+     S96: Smits, 1996, MNRAS, 278, 683
+     P12: Porter et al., 2012, MNRAS, 425, 28
+  Default: S96
+.TP
+.B \-icf / --ionisation-correction-scheme
+  The ICF scheme to be used to correct for unseen ions
+  Values:
+     KB94: Kingsburgh & Barlow (1994, MNRAS, 271, 257)
+     PT92: Peimbert, Torres-Peimbert & Ruiz (1992, RMxAA, 24, 155)
+     DI14: Delgado-Inglada, Morisset & Stasinska (2014, MNRAS, 440, 536)
+  Default: KB94
+.TP
+.B \-v / --verbosity
+  Amount of output to write for each derived quantity
+  This option has no effect unless -n or -u is specified
+  Values:
+    1: write out summary files, binned results and complete results
+    2: write out summary files and binned results
+    3: write out summary files only
+  Default: 3
+.TP
+.B \-id / --identify
+  This option triggers an algorithm which attempts to convert observed wavelengths into rest wavelengths. If the option is not present, NEAT assumes that the input line list already has rest wavelengths in the first column
+  No default
+.TP
+.B \-norp
+  When calculating Monte Carlo uncertainties, NEAT's default behaviour is to compensate for the upward bias
+  affecting weak lines described by Rola and Pelat (1994).  This option overrides that and no compensation is calculated.
+.SH SEE ALSO
+alfa
+.SH BUGS
+No known bugs.
+.SH AUTHOR
+Roger Wesson, Dave Stock, Peter Scicluna
