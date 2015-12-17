@@ -128,7 +128,7 @@ subroutine read_ilines(ILs, Iint,iion,ionlist)
         Iint = 1
 
         301 FORMAT(A11, 1X, A6, 1X, F7.2, 1X, A20,1X,A4,1X,A15)
-        OPEN(201, file="source/Ilines_levs", status='old')
+        OPEN(201, file="/etc/neat/Ilines_levs", status='old')
                 READ (201,*) Iread
                 ALLOCATE (ILs(Iread))
                 ILs%intensity=0.D0 !otherwise it seems you can get random very small numbers in the array.
@@ -364,7 +364,7 @@ use mod_atomicdata
     ionname = ion%ion
 !    print*,'Reading atomic data ion',ionname
     ionl = index(ionname,' ') - 1
-    filename = 'Atomic-data/'//ionname(1:IONL)//'.dat'
+    filename = '/etc/neat/'//ionname(1:IONL)//'.dat'
     OPEN(unit=1, status = 'OLD', file=filename,ACTION='READ')
 
 !read # of comment lines and skip them
@@ -463,7 +463,7 @@ real(kind=dp), dimension(46) :: temp
 
 !read data
 
-OPEN(100, file='Atomic-data/RHei_porter2012.dat', iostat=IO, status='old')
+OPEN(100, file='/etc/neat/RHei_porter2012.dat', iostat=IO, status='old')
 
 ! read in the data
 
@@ -491,7 +491,7 @@ real(kind=dp), dimension(18) :: temp
 !fitted fourth order polynomials to the Smits 1996 emissivities
 !the data file contains the coefficients for log(ne)=2,4,6
 
-OPEN(100, file='Atomic-data/RHei_smits1996_coeffs.dat', iostat=IO, status='old')
+OPEN(100, file='/etc/neat/RHei_smits1996_coeffs.dat', iostat=IO, status='old')
 
 ! read in the data
 

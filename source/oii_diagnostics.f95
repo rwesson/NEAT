@@ -17,7 +17,7 @@ character(len=5) :: in1, in2
 
 !read data files
 
-open (999, file="Atomic-data/te_oii.dat")
+open (999, file="/etc/neat/te_oii.dat")
 do i=1,4
   read (999,*) x !4 lines of comments ignored
 enddo

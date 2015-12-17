@@ -63,7 +63,7 @@ ifeq ($(FC),ifort)
   endif
 endif
 
-.PHONY: all clean
+.PHONY: all clean install
 
 new: clean all
 
@@ -77,3 +77,11 @@ neat: source/types.o source/oii_diagnostics.o source/hydrogen.o source/extinctio
 
 clean:
 	rm -f neat source/*.o source/*.mod
+
+install:
+	test -e ${PREFIX}/etc/neat || mkdir ${PREFIX}/etc/neat
+	install -m 644 Atomic-data/*.* ${PREFIX}/etc/neat
+	install neat ${PREFIX}/usr/bin
+#	install -g 0 -o 0 -m 644 man/neat.1 ${MANDIR}
+#	gzip -f ${MANDIR}/neat.1
+#	ln -s -f ${MANDIR}/neat.1.gz ${MANDIR}/neatcube.1.gz
