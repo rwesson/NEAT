@@ -12,7 +12,7 @@
 # This option is slow (about 2x slower than make all)
 #
 #     > make CO=debug2, debug2, pedantic
-# offer further levels of checks in case of problems 
+# offer further levels of checks in case of problems
 #
 #     > make new
 # simply calls clean then all to force a re-build.
@@ -61,9 +61,9 @@ endif
 
 .PHONY: all clean install
 
-new: clean all
-
 all: neat
+
+new: clean all
 
 %.o: %.f95
 	$(FC) $(FFLAGS) $< -c -o $@
