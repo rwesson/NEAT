@@ -6,13 +6,14 @@ integer, parameter :: dp = kind(1.d0)
 
 contains
 
-subroutine read_linelist(filename,linelist,listlength, errstat)
+subroutine read_linelist(filename,linelist,listlength,ncols,errstat)
         implicit none
-        integer :: i, j, io, nlines, listlength, errstat
+        integer :: i, j, io, nlines, listlength, errstat, ncols
         character(len=1) :: blank
         type(line), dimension(:), allocatable :: linelist
-        character(len=512) :: filename
-        CHARACTER(len=15) :: invar1, invar2 !line fluxes and uncertainties are read as strings into these variables
+        character(len=512) :: filename, rowdata
+        CHARACTER(len=15),dimension(4) :: invar !line fluxes and uncertainties are read as strings into these variables
+        real(kind=dp),dimension(5) :: rowdata2 !to check number of columns, first row of file is read as character, then read as real into this array
 
         TYPE neat_line
           real(kind=dp) :: wavelength
@@ -22,10 +23,6 @@ subroutine read_linelist(filename,linelist,listlength, errstat)
         type(neat_line), dimension(:), allocatable :: neatlines
 
 ! first get number of rows
-! todo: count the columns
-! if 2 - assume rest wavelength and intensity, read in and restrict to single iteration
-! if 3 - assume rest wavelength, intensity, uncertainty, read in as we do currently
-! if 4 - assume observed wavelength, rest wavelength, intensity, uncertainty, read in and add obs wlen to output table
 
         errstat=0
         I = 0
@@ -57,65 +54,96 @@ subroutine read_linelist(filename,linelist,listlength, errstat)
         linelist%latextext='               '
         linelist%linedata='                                                                           '
 
+! now count the columns
+! if 2 - assume rest wavelength and intensity, read in and restrict to single iteration
+! if 3 - assume rest wavelength, intensity, uncertainty, read in as we do currently
+! if 4 - assume observed wavelength, rest wavelength, intensity, uncertainty, read in and add obs wlen to output table
+
+        rewind(199)
+        rowdata2=-1.0d-27
+        read(199,"(A)") rowdata
+
+        do while (io>=0)
+          read (rowdata,*,end=113) rowdata2(:)
+        enddo
+
+113     ncols=count(rowdata2 .ne. -1.0d-27)
+        invar="               "
+
         REWIND (199)
 
         DO I=1,listlength
-          READ(199,*,end=110) linelist(i)%wavelength, invar1, invar2
-          if (invar1(1:1) .eq. "*") then
+          READ(199,*,end=110) invar(1:ncols)
+          if (ncols .eq. 4) then
+            read (invar(2),*) linelist(i)%wavelength
+          else
+            read (invar(1),*) linelist(i)%wavelength
+          endif
+          if (index(invar(2),"*") .gt. 0 .or. index(invar(3),"*") .gt. 0) then
 !line is blended, its intensity will be removed from abundance and diagnostic calculations but retained in linelist
             linelist(i-1)%blend_intensity=linelist(i-1)%intensity
             linelist(i-1)%blend_int_err=linelist(i-1)%int_err
             linelist(i-1:i)%intensity = 0.d0
             linelist(i-1:i)%int_err = 0.d0
           else
-            read (invar1,*) linelist(i)%intensity
-            read (invar2,*) linelist(i)%int_err
+            if (ncols .eq. 2) then
+              read (invar(2),*) linelist(i)%intensity
+            elseif (ncols .eq. 3) then
+              read (invar(2),*) linelist(i)%intensity
+              read (invar(3),*) linelist(i)%int_err
+            elseif (ncols .eq. 4) then
+              read (invar(1),*) linelist(i)%wavelength_observed
+              read (invar(3),*) linelist(i)%intensity
+              read (invar(4),*) linelist(i)%int_err
+            endif
           endif
           linelist(i)%latextext = ""
         END DO
 
-        CLOSE(199)
-
         110 continue
+        CLOSE(199)
 
 ! check for errors
 
         if (I - 1 .ne. listlength) then
-                errstat=1
+          errstat=errstat+1
+          return
         endif
 
         if (linelist(1)%wavelength == 0) then
-                errstat=2
+          errstat=errstat+2
+          return
         endif
 
-!if no errors, proceed to copying line data into the array
+        if (ncols .eq. 2) then !set uncertainties to 10 per cent, warn
+                linelist%int_err=linelist%intensity*0.1
+                errstat=errstat+4
+        endif
 
-        if (errstat .eq. 0) then
+!if no fatal errors, proceed to copying line data into the array
 
-          I = 1
-          OPEN(100, file='utilities/complete_line_list', iostat=IO, status='old')
-            DO WHILE (IO >= 0)
-              READ(100,"(A1)",end=101) blank
-              I = I + 1
-            END DO
-          101 nlines=I-1
+        I = 1
+        OPEN(100, file='utilities/complete_line_list', iostat=IO, status='old')
+          DO WHILE (IO >= 0)
+            READ(100,"(A1)",end=101) blank
+            I = I + 1
+          END DO
+        101 nlines=I-1
 
 !then allocate and read
-          allocate (neatlines(nlines))
+        allocate (neatlines(nlines))
 
-          REWIND (100)
-          DO I=1,nlines
-            READ(100,"(F8.2,A85)",end=102) neatlines(i)%wavelength,neatlines(i)%linedata
-            do j=1,listlength
-              if (abs(linelist(j)%wavelength - neatlines(i)%wavelength) .lt. 0.011) then
-                linelist(j)%linedata = neatlines(i)%linedata
-              endif
-            enddo
-          END DO
-          102 print *
-          CLOSE(100)
-
-        endif
+        REWIND (100)
+        DO I=1,nlines
+          READ(100,"(F8.2,A85)",end=102) neatlines(i)%wavelength,neatlines(i)%linedata
+          do j=1,listlength
+            if (abs(linelist(j)%wavelength - neatlines(i)%wavelength) .lt. 0.011) then
+              linelist(j)%linedata = neatlines(i)%linedata
+            endif
+          enddo
+        END DO
+        102 print *
+        CLOSE(100)
 
 end subroutine read_linelist
 

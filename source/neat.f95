@@ -53,7 +53,7 @@ program neat
         TYPE(LINE),dimension(:,:), allocatable :: all_linelists
         CHARACTER(len=512) :: filename
         CHARACTER(len=1) :: blank
-        INTEGER :: listlength, errstat
+        INTEGER :: listlength, ncols, errstat
         real(kind=dp) :: normalise
 
 !results and result processing
@@ -266,15 +266,20 @@ program neat
 
 ! read in the line list, allocate original linelist array
 
-        call read_linelist(filename,linelist,listlength, errstat)
+        call read_linelist(filename,linelist,listlength,ncols,errstat)
 
-        if (errstat .eq. 1) then
+! error status was incremented by 1, 2 or 4 depending on error so btest function determines which errors were encountered
+! test the two fatal errors first, then the warning.
+
+        if (btest(errstat,0)) then
                 print *,gettime(),": error: line list reading failed"
                 print *,"            This can happen if it doesn't have three columns"
                 stop
-        elseif (errstat .eq. 2) then
+        elseif (btest(errstat,1)) then
                 PRINT*, gettime(),": cheese shop error - no inputs"
                 STOP
+        elseif (btest(errstat,2) .and. runs .gt. 1) then !only relevant if uncertainties were requested
+                print*, gettime(),": warning: no uncertainties given, arbitrarily assuming 10 per cent for everything"
         else
                 print "(X,A,A,A,A,I3,A)", gettime(),": line list file ",trim(filename)," read successfully (",listlength," lines)"
         endif
@@ -475,6 +480,13 @@ program neat
         if (runs .gt. 1) then
                 do j=1, listlength
 
+!observed wavelength if known
+
+                if (ncols .eq. 4) then
+                  write (650,"(X,F7.2,X)", advance='no') all_linelists(j,1)%wavelength_observed
+                  write (651,"(X,F7.2,' & ')", advance='no') all_linelists(j,1)%wavelength_observed
+                endif
+
 !rest wavelength, ion name for plain text file
 
                 write (650,"(X,F7.2,X,A11)", advance='no') all_linelists(j,1)%wavelength,all_linelists(j,1)%name
@@ -536,6 +548,10 @@ program neat
         else ! runs == 1, no uncertainties to write out
 
                 do i=1,listlength
+                  if (ncols .eq. 4) then
+                    write (650,"(X,F7.2,X)", advance='no') linelist(i)%wavelength_observed
+                    write (651,"(X,F7.2,' & ')", advance='no') linelist(i)%wavelength_observed
+                  endif
                   if (linelist(i)%intensity .ne. 0.d0) then
                     if (linelist(i)%abundance .gt. 0.0) then
                       write (650,"(X,F7.2,X,A11,F7.3,X,F7.3,X,ES14.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance
