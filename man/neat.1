@@ -5,73 +5,66 @@ neat \- nebular empirical analysis tool
 .SH SYNOPSIS
 neat [option1] [value1] ...
 .SH DESCRIPTION
-neat carries out a comprehensive empirical analysis on a list of nebular emission line fluxes.  If uncertainties are required, it evaluates them using a Monte Carlo approach.
+neat carries out a comprehensive empirical analysis on a list of nebular emission line fluxes. If uncertainties are required, it evaluates them using a Monte Carlo approach.
 .SH OPTIONS
 .TP
-.B \-i / --input
-  Input file
-  No default
+.B \-i / \-\-input [FILENAME]
+Input file. The file should be in plain text, and can have two, three or four columns. Two columns are assumed to be rest wavelength and flux, three are assumed to be rest wavelength, flux and uncertainty, and four columns are assumed to be observed wavelength, rest wavelength, flux and uncertainty.
 .TP
-.B \-u / --uncertainties
-  Calculate uncertainties, using 20,000 iterations
-  Default: no calculation of uncertainties
-  If this option is specified, the -n option will be ignored
+.B \-u / \-\-uncertainties
+Calculate uncertainties, using 20,000 iterations.  If this option is specified, the \-n option will be ignored
 .TP
-.B \-n / --n-iterations
-  Number of iterations
-  Default: 1
+.B \-n / \-\-n\-iterations [VALUE]
+Number of iterations. Default: 1
 .TP
-.B \-e / --extinction-law
-  Extinction law
-  Values:
-     How:  Galactic law of Howarth (1983, MNRAS, 203, 301)
-     CCM:  Galactic law of Cardelli, Clayton, Mathis (1989, ApJ, 345, 245)
-     Fitz: Galactic law of Fitzpatrick & Massa (1990, ApJS, 72, 163)
-     LMC:  LMC law of Howarth (1983, MNRAS, 203, 301)
-     SMC:  SMC law of Prevot et al. (984, A&A, 132, 389)
-  Default: How
+.B \-e / \-\-extinction\-law [VALUE]
+Extinction law to use for dereddening.
+
+Valid values are:
+ \fBHow\fR: Galactic law of Howarth (1983, MNRAS, 203, 301)
+ \fBCCM\fR: Galactic law of Cardelli, Clayton, Mathis (1989, ApJ, 345, 245)
+ \fBFitz\fR: Galactic law of Fitzpatrick & Massa (1990, ApJS, 72, 163)
+ \fBLMC\fR: LMC law of Howarth (1983, MNRAS, 203, 301)
+ \fBSMC\fR: SMC law of Prevot et al. (984, A&A, 132, 389)
+Default: How
 .TP
-.B \-c
-  The logarithmic extinction at H beta
-  Default: calculated from Balmer line ratios
+.B \-c [VALUE]
+The logarithmic extinction at H beta.  By default, this is calculated from the Balmer line ratios.
 .TP
-.B \-nelow, -nemed, -nehigh
-.B \-telow, -temed, -tehigh
-  The electron densities and temperatures to be used.
-  Units: cm-3 for densities, K for temperatures
-  Default: calculated from available diagnostics.
+.B \-nelow, \-nemed, \-nehigh, \-telow, \-temed, \-tehigh [VALUE]
+By default, electron densities and temperatures are calculated from the available diagnostics, but their values can be overridden with these commands.  The required units are cm\-3 for densities and K for temperatures.
 .TP
-.B \-he / --helium-data
-  The atomic data to use for He I abundances
-  Values:
-     S96: Smits, 1996, MNRAS, 278, 683
-     P12: Porter et al., 2012, MNRAS, 425, 28
-  Default: S96
+.B \-he / \-\-helium\-data [VALUE]
+The atomic data to use for He I abundances
+
+Valid values are:
+ \fBS96\fR: Smits, 1996, MNRAS, 278, 683
+ \fBP12\fR: Porter et al., 2012, MNRAS, 425, 28
+Default: S96
 .TP
-.B \-icf / --ionisation-correction-scheme
-  The ICF scheme to be used to correct for unseen ions
-  Values:
-     KB94: Kingsburgh & Barlow (1994, MNRAS, 271, 257)
-     PT92: Peimbert, Torres-Peimbert & Ruiz (1992, RMxAA, 24, 155)
-     DI14: Delgado-Inglada, Morisset & Stasinska (2014, MNRAS, 440, 536)
-  Default: KB94
+.B \-icf / \-\-ionisation\-correction\-scheme [VALUE]
+The ICF scheme to be used to correct for unseen ions
+
+Valid values are:
+ \fBKB94\fR: Kingsburgh & Barlow (1994, MNRAS, 271, 257)
+ \fBPT92\fR: Peimbert, Torres\-Peimbert & Ruiz (1992, RMxAA, 24, 155)
+ \fBDI14\fR: Delgado\-Inglada, Morisset & Stasinska (2014, MNRAS, 440, 536)
+Default: KB94
 .TP
-.B \-v / --verbosity
-  Amount of output to write for each derived quantity
-  This option has no effect unless -n or -u is specified
-  Values:
-    1: write out summary files, binned results and complete results
-    2: write out summary files and binned results
-    3: write out summary files only
-  Default: 3
+.B \-v / \-\-verbosity [VALUE]
+Amount of output to write for each derived quantity. This option has no effect unless \-n or \-u is specified.
+
+Valid values are:
+ 1: write out summary files, binned results and complete results
+ 2: write out summary files and binned results
+ 3: write out summary files only
+Default: 3
 .TP
-.B \-id / --identify
-  This option triggers an algorithm which attempts to convert observed wavelengths into rest wavelengths. If the option is not present, NEAT assumes that the input line list already has rest wavelengths in the first column
-  No default
+.B \-id / \-\-identify
+This option triggers an algorithm which attempts to convert observed wavelengths into rest wavelengths. If the option is not present, NEAT assumes that the input line list already has rest wavelengths in the first column
 .TP
 .B \-norp
-  When calculating Monte Carlo uncertainties, NEAT's default behaviour is to compensate for the upward bias
-  affecting weak lines described by Rola and Pelat (1994).  This option overrides that and no compensation is calculated.
+When calculating Monte Carlo uncertainties, NEAT's default behaviour is to compensate for the upward bias affecting weak lines described by Rola and Pelat (1994). This option overrides that and no compensation is calculated.
 .SH SEE ALSO
 alfa
 .SH BUGS
