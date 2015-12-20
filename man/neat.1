@@ -8,16 +8,16 @@ neat [option1] [value1] ...
 neat carries out a comprehensive empirical analysis on a list of nebular emission line fluxes. If uncertainties are required, it evaluates them using a Monte Carlo approach.
 .SH OPTIONS
 .TP
-.B \-i / \-\-input [FILENAME]
+.B \-i, \-\-input [FILENAME]
 Input file. The file should be in plain text, and can have two, three or four columns. Two columns are assumed to be rest wavelength and flux, three are assumed to be rest wavelength, flux and uncertainty, and four columns are assumed to be observed wavelength, rest wavelength, flux and uncertainty.
 .TP
-.B \-u / \-\-uncertainties
+.B \-u, \-\-uncertainties
 Calculate uncertainties, using 20,000 iterations.  If this option is specified, the \-n option will be ignored
 .TP
-.B \-n / \-\-n\-iterations [VALUE]
+.B \-n, \-\-n\-iterations [VALUE]
 Number of iterations. Default: 1
 .TP
-.B \-e / \-\-extinction\-law [VALUE]
+.B \-e, \-\-extinction\-law [VALUE]
 Extinction law to use for dereddening.
 
 Valid values are:
@@ -34,7 +34,7 @@ The logarithmic extinction at H beta.  By default, this is calculated from the B
 .B \-nelow, \-nemed, \-nehigh, \-telow, \-temed, \-tehigh [VALUE]
 By default, electron densities and temperatures are calculated from the available diagnostics, but their values can be overridden with these commands.  The required units are cm\-3 for densities and K for temperatures.
 .TP
-.B \-he / \-\-helium\-data [VALUE]
+.B \-he, \-\-helium\-data [VALUE]
 The atomic data to use for He I abundances
 
 Valid values are:
@@ -42,7 +42,7 @@ Valid values are:
  \fBP12\fR: Porter et al., 2012, MNRAS, 425, 28
 Default: S96
 .TP
-.B \-icf / \-\-ionisation\-correction\-scheme [VALUE]
+.B \-icf, \-\-ionisation\-correction\-scheme [VALUE]
 The ICF scheme to be used to correct for unseen ions
 
 Valid values are:
@@ -51,7 +51,7 @@ Valid values are:
  \fBDI14\fR: Delgado\-Inglada, Morisset & Stasinska (2014, MNRAS, 440, 536)
 Default: KB94
 .TP
-.B \-v / \-\-verbosity [VALUE]
+.B \-v, \-\-verbosity [VALUE]
 Amount of output to write for each derived quantity. This option has no effect unless \-n or \-u is specified.
 
 Valid values are:
@@ -60,7 +60,7 @@ Valid values are:
  3: write out summary files only
 Default: 3
 .TP
-.B \-id / \-\-identify
+.B \-id, \-\-identify
 This option triggers an algorithm which attempts to convert observed wavelengths into rest wavelengths. If the option is not present, NEAT assumes that the input line list already has rest wavelengths in the first column
 .TP
 .B \-norp
