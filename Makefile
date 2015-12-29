@@ -29,8 +29,7 @@
 FC=gfortran
 LD=gfortran
 FFLAGS=-ffree-line-length-0 -Jsource/
-MANDIR=/usr/share/man/man1
-PREFIX=
+MANDIR=${DESTDIR}/usr/share/man/man1
 
 ifeq ($(FC),gfortran)
   ifeq ($(CO),debug)
@@ -59,7 +58,7 @@ ifeq ($(FC),ifort)
   endif
 endif
 
-.PHONY: all clean install
+.PHONY: all clean install uninstall
 
 all: neat
 
@@ -75,9 +74,16 @@ clean:
 	rm -f neat source/*.o source/*.mod
 
 install:
-	test -e ${PREFIX}/etc/neat || mkdir ${PREFIX}/etc/neat
-	install -m 644 Atomic-data/*.* ${PREFIX}/etc/neat
-	install -m 644 source/Ilines_levs ${PREFIX}/etc/neat
-	install neat ${PREFIX}/usr/bin
+	test -e ${DESTDIR}/usr/share/neat || mkdir -p ${DESTDIR}/usr/share/neat
+	test -e ${DESTDIR}/usr/bin || mkdir -p ${DESTDIR}/usr/bin
+	test -e ${MANDIR} || mkdir -p ${MANDIR}
+	install -m 644 Atomic-data/*.* ${DESTDIR}/usr/share/neat
+	install -m 644 source/Ilines_levs ${DESTDIR}/usr/share/neat
+	install neat ${DESTDIR}/usr/bin
 	install -g 0 -o 0 -m 644 man/neat.1 ${MANDIR}
-	gzip -f ${MANDIR}/neat.1 
+	gzip -f ${MANDIR}/neat.1
+
+uninstall:
+	rm -rf ${DESTDIR}/usr/share/neat
+	rm -f ${DESTDIR}/usr/bin/neat
+	rm -f ${MANDIR}/neat.1.gz
