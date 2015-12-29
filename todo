@@ -1,29 +1,13 @@
-1. read in all lines, fluxes, uncertainties
-2. call routines to identify them
-3. put them into arrays, or just add ID to a structure?
-4. analyse
-
-read all atomic data before the loop - some RL atomic data is being read every time
-
 deblending:
 1. compile list of blended lines
 2. check isolated lines of same element, subtract flux from blend
 3. start with He, then OII, then CIII
 
 1. improve the reading of line list.  should do the following:
-
-  - check for 2, 3 or 4 columns.
-    - 2 columns = rest wavelength + flux, no uncertainty
-    - 3 columns = rest wavelength + flux + uncertainty
-    - 4 columns = obs, rest, flux, uncertainty
   - read and identify before the loop
+  - put them into arrays, or add ID to a structure?
   - identify blends and treat them sensibly, eg 7320/7330, use blended line wavelength
 
 2. line finder, try fitting a 5th order polynomial or something instead of a simple linear shift
 
-3. use configuration files to determine which diagnostics will be used and which multiplets included in OII and NII abundances
 
-bug investigations
-
-1. check ashkbiz run, why does it report an O ORL abundance and why do some ICFs end up inf?  
-2. get all data types consistent, avoid real=4 <--> real=8 conversions
