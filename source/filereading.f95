@@ -123,7 +123,7 @@ subroutine read_linelist(filename,linelist,listlength,ncols,errstat)
 !if no fatal errors, proceed to copying line data into the array
 
         I = 1
-        OPEN(100, file='utilities/complete_line_list', iostat=IO, status='old')
+        OPEN(100, file='/usr/share/neat/complete_line_list', iostat=IO, status='old')
           DO WHILE (IO >= 0)
             READ(100,"(A1)",end=101) blank
             I = I + 1

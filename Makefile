@@ -79,6 +79,7 @@ install:
 	test -e ${MANDIR} || mkdir -p ${MANDIR}
 	install -m 644 Atomic-data/*.* ${DESTDIR}/usr/share/neat
 	install -m 644 source/Ilines_levs ${DESTDIR}/usr/share/neat
+	install -m 644 utilities/complete_line_list ${DESTDIR}/usr/share/neat
 	install neat ${DESTDIR}/usr/bin
 	install -g 0 -o 0 -m 644 man/neat.1 ${MANDIR}
 	gzip -f ${MANDIR}/neat.1
