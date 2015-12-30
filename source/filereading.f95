@@ -27,10 +27,12 @@ subroutine read_linelist(filename,linelist,listlength,ncols,errstat)
         errstat=0
         I = 0
         OPEN(199, file=filename, iostat=IO, status='old')
-                DO WHILE (IO >= 0)
-                        READ(199,*,end=111) blank
-                        I = I + 1
-                END DO
+          DO WHILE (IO >= 0)
+            READ(199,*,end=111) blank
+            if (blank.ne."#") then
+              I = I + 1
+            endif
+          END DO
         111 continue
         listlength=I
 
@@ -61,19 +63,28 @@ subroutine read_linelist(filename,linelist,listlength,ncols,errstat)
 
         rewind(199)
         rowdata2=-1.0d-27
-        read(199,"(A)") rowdata
 
         do while (io>=0)
-          read (rowdata,*,end=113) rowdata2(:)
+          read (199,"(A)") rowdata
+          if (index(rowdata,"#") .ne. 1) then
+            read (rowdata,*,end=113) rowdata2(:)
+          endif
         enddo
 
 113     ncols=count(rowdata2 .ne. -1.0d-27)
         invar="               "
 
         REWIND (199)
+        I=1
+        DO while (I.le.listlength)
+          read(199,"(A)",end=110) rowdata
 
-        DO I=1,listlength
-          READ(199,*,end=110) invar(1:ncols)
+          if (index(rowdata,"#") .ne. 1) then !not a comment, read in the columns
+            READ(rowdata,*) invar(1:ncols)
+          else !do nothing with comment lines
+            cycle
+          endif
+
           if (ncols .eq. 4) then
             read (invar(2),*) linelist(i)%wavelength
           else
@@ -98,6 +109,7 @@ subroutine read_linelist(filename,linelist,listlength,ncols,errstat)
             endif
           endif
           linelist(i)%latextext = ""
+          i=i+1
         END DO
 
         110 continue
