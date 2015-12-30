@@ -42,7 +42,7 @@ xcorr_array%match = 0
 !1. read NEAT line list in
 
         I = 1
-        OPEN(100, file='utilities/complete_line_list', iostat=IO, status='old')
+        OPEN(100, file='/usr/share/neat/complete_line_list', iostat=IO, status='old')
                 DO WHILE (IO >= 0)
                         READ(100,"(A200)",end=101) null
                         I = I + 1
