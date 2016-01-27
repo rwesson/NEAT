@@ -1,5 +1,5 @@
 ! NEAT, the nebular abundance analysis tool
-! (C) 2006-2012 Roger Wesson, Dave Stock, Peter Scicluna
+! (C) 2006- Roger Wesson, Dave Stock, Peter Scicluna
 ! NEAT incorporates aspects of several codes developed over decades at UCL:
 ! equib, by I. Howarth and S. Adams, updated significantly by B. Ercolano
 ! MIDAS scripts written by X-W. Liu for calculating recombination line abundances
