@@ -80,7 +80,7 @@ program neat
 
 !RP effect switch
 
-        logical :: norp=.false.
+        logical :: norp=.true.
 
 !binning and uncertainties
 
@@ -133,7 +133,7 @@ program neat
         runs=1
         switch_ext="S" !Howarth 1983 Galactic law
         switch_he="S"  !Smits 1996 data
-        switch_icf="K" !KB94 ICF
+        switch_icf="D" !DI14 ICF
         filename=""
         meanextinction=0.D0
         diagnostic_array=0.D0
@@ -227,8 +227,8 @@ program neat
                 if ((trim(options(i))=="-nbins") .and. (i+1).le. Narg) then
                    read (options(i+1),*) nbins
                 endif
-                if (trim(options(i))=="-norp") then
-                   norp=.true.
+                if (trim(options(i))=="-rp") then
+                   norp=.false.
                 endif
         !  to be fully implemented:
         !  -R                     : R (default 3.1) - only used with CCM at the moment
