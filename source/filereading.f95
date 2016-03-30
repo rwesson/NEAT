@@ -396,7 +396,7 @@ use mod_atomicdata
     integer :: I,J,K,L,N,NCOMS,ID(2),JD(2),KP1,NLEV1,GX,ionl,dummy
     character(len=1) :: comments(78)
     character(len=10) :: ionname
-    character(len=25) :: filename
+    character(len=128) :: filename
     real(kind=dp) :: WN,AX,QX
 
     id = 0
