@@ -29,7 +29,8 @@
 FC=gfortran
 LD=gfortran
 FFLAGS=-ffree-line-length-0 -Jsource/
-MANDIR=${DESTDIR}/usr/share/man/man1
+PREFIX=/usr
+MANDIR=${DESTDIR}/${PREFIX}/share/man/man1
 
 ifeq ($(FC),gfortran)
   ifeq ($(CO),debug)
@@ -74,19 +75,19 @@ clean:
 	rm -f neat source/*.o source/*.mod
 
 install:
-	test -e ${DESTDIR}/usr/share/neat || mkdir -p ${DESTDIR}/usr/share/neat
-	test -e ${DESTDIR}/usr/share/neat/example || mkdir -p ${DESTDIR}/usr/share/neat/example
-	test -e ${DESTDIR}/usr/bin || mkdir -p ${DESTDIR}/usr/bin
+	test -e ${DESTDIR}/${PREFIX}/share/neat || mkdir -p ${DESTDIR}/${PREFIX}/share/neat
+	test -e ${DESTDIR}/${PREFIX}/share/neat/example || mkdir -p ${DESTDIR}/${PREFIX}/share/neat/example
+	test -e ${DESTDIR}/${PREFIX}/bin || mkdir -p ${DESTDIR}/${PREFIX}/bin
 	test -e ${MANDIR} || mkdir -p ${MANDIR}
-	install -m 644 Atomic-data/*.* ${DESTDIR}/usr/share/neat
-	install -m 644 source/Ilines_levs ${DESTDIR}/usr/share/neat
-	install -m 644 utilities/complete_line_list ${DESTDIR}/usr/share/neat
-	install -m 644 example/* ${DESTDIR}/usr/share/neat/example
-	install neat ${DESTDIR}/usr/bin
+	install -m 644 Atomic-data/*.* ${DESTDIR}/${PREFIX}/share/neat
+	install -m 644 source/Ilines_levs ${DESTDIR}/${PREFIX}/share/neat
+	install -m 644 utilities/complete_line_list ${DESTDIR}/${PREFIX}/share/neat
+	install -m 644 example/* ${DESTDIR}/${PREFIX}/share/neat/example
+	install neat ${DESTDIR}/${PREFIX}/bin
 	install -g 0 -o 0 -m 644 man/neat.1 ${MANDIR}
 	gzip -f ${MANDIR}/neat.1
 
 uninstall:
-	rm -rf ${DESTDIR}/usr/share/neat
-	rm -f ${DESTDIR}/usr/bin/neat
+	rm -rf ${DESTDIR}/${PREFIX}/share/neat
+	rm -f ${DESTDIR}/${PREFIX}/bin/neat
 	rm -f ${MANDIR}/neat.1.gz
