@@ -28,8 +28,8 @@
 
 FC=gfortran
 LD=gfortran
-FFLAGS=-ffree-line-length-0 -Jsource/
 PREFIX=/usr
+FFLAGS=-ffree-line-length-0 -Jsource/ -cpp -DPREFIX=\"${PREFIX}\"
 MANDIR=${DESTDIR}${PREFIX}/share/man/man1
 
 ifeq ($(FC),gfortran)
@@ -90,4 +90,4 @@ install:
 uninstall:
 	rm -rf ${DESTDIR}${PREFIX}/share/neat
 	rm -f ${DESTDIR}${PREFIX}/bin/neat
-	rm -f ${MANDIR}neat.1.gz
+	rm -f ${MANDIR}/neat.1.gz

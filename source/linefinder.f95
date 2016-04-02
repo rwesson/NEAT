@@ -31,6 +31,9 @@ integer :: I, J, n_neatlines, IO, assign_1, assign_2, count
 real(kind=dp) :: temp_wave, diff, shift, rms
 character(len=1) :: null
 character(len=5) :: temp_ion1, temp_ion2
+character(len=128) :: datapath ! value taken from make file by preprocessor, default is /usr
+
+datapath=PREFIX
 
 xcorr = 0.D0
 xcorr_array%restwavelength = 0.D0
@@ -42,7 +45,7 @@ xcorr_array%match = 0
 !1. read NEAT line list in
 
         I = 1
-        OPEN(100, file='/usr/share/neat/complete_line_list', iostat=IO, status='old')
+        OPEN(100, file=trim(datapath)//'/share/neat/complete_line_list', iostat=IO, status='old')
                 DO WHILE (IO >= 0)
                         READ(100,"(A200)",end=101) null
                         I = I + 1

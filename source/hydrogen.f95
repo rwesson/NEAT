@@ -16,8 +16,11 @@ implicit none
 character(len=1) :: junk
 character(len=20), dimension(8) :: invar
 integer :: i,j,k,l !counters
+character(len=128) :: datapath ! value taken from make file by preprocessor, default is /usr
 
-open (unit=357, file="/usr/share/neat/RHi.dat")
+datapath=PREFIX
+
+open (unit=357, file=trim(datapath)//"/share/neat/RHi.dat")
 read (357,*) junk !first line is a comment
 read (357,"(I3,I3)") ntemps, ndens !second line has number of temperatures and densities
 nlevs=25 ! maximum number of levels shown in intrat data file

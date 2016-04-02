@@ -14,10 +14,13 @@ integer, parameter :: dp = kind(1.d0)
 integer :: i,j
 character(len=7) :: x
 character(len=5) :: in1, in2
+character(len=128) :: datapath ! value taken from make file by preprocessor, default is /usr
+
+datapath=PREFIX
 
 !read data files
 
-open (999, file="/usr/share/neat/te_oii.dat")
+open (999, file=trim(datapath)//"/share/neat/te_oii.dat")
 do i=1,4
   read (999,*) x !4 lines of comments ignored
 enddo
