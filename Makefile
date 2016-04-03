@@ -84,7 +84,7 @@ install:
 	install -m 644 utilities/complete_line_list ${DESTDIR}${PREFIX}/share/neat
 	install -m 644 example/* ${DESTDIR}${PREFIX}/share/neat/example
 	install neat ${DESTDIR}${PREFIX}/bin
-	install -g 0 -o 0 -m 644 man/neat.1 ${MANDIR}
+	install -m 644 man/neat.1 ${MANDIR}
 	gzip -f ${MANDIR}/neat.1
 
 uninstall:
