@@ -110,7 +110,9 @@ program neat
         abundances_format = "(X,A,ES14.3,SP,ES14.3,ES14.3,S)"
         adf_format = "(X,A,F8.2,SP,F8.2,F8.2,S)"
 
-!read command line arguments
+        print *,"NEAT, the Nebular Empirical Analysis Tool: v1.8"
+        print *,"-----------------------------------------------"
+        print *
 
         Narg = IARGC() !count input arguments
 
@@ -145,10 +147,6 @@ program neat
 
 ! start the logging output to terminal
 
-        print *,"NEAT, the Nebular Empirical Analysis Tool"
-        print *,"-----------------------------------------"
-
-        print *
         print *,gettime(),": starting code"
         print *,gettime(),": command line: ",trim(commandline)
 
@@ -368,7 +366,7 @@ program neat
 
         call read_ilines(ILs, Iint,iion,ionlist)
 
-        print *,gettime(), ": reading atomic data from ",trim(PREFIX)
+        print *,gettime(), ": reading atomic data from ",trim(PREFIX),"/share/neat"
 
 !CELs read, can now read in atomic data
 
