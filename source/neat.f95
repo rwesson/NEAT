@@ -368,7 +368,7 @@ program neat
 
         call read_ilines(ILs, Iint,iion,ionlist)
 
-        print *,gettime(), ": reading atomic data"
+        print *,gettime(), ": reading atomic data from ",trim(PREFIX)
 
 !CELs read, can now read in atomic data
 
