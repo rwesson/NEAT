@@ -21,9 +21,6 @@ subroutine read_linelist(filename,linelist,listlength,ncols,errstat)
         END TYPE
 
         type(neat_line), dimension(:), allocatable :: neatlines
-        character(len=128) :: datapath ! value taken from make file by preprocessor, default is /usr
-
-        datapath=PREFIX
 
 ! first get number of rows
 
@@ -138,7 +135,7 @@ subroutine read_linelist(filename,linelist,listlength,ncols,errstat)
 !if no fatal errors, proceed to copying line data into the array
 
         I = 1
-        OPEN(100, file=trim(datapath)//'/share/neat/complete_line_list', iostat=IO, status='old')
+        OPEN(100, file=trim(PREFIX)//'/share/neat/complete_line_list', iostat=IO, status='old')
           DO WHILE (IO >= 0)
             READ(100,"(A1)",end=101) blank
             I = I + 1
@@ -167,14 +164,11 @@ subroutine read_ilines(ILs, Iint,iion,ionlist)
         TYPE(line), DIMENSION(:), allocatable :: ILs
         INTEGER :: Iint, Iread,iion
         character(len=10) :: ionlist(40)
-        character(len=128) :: datapath ! value taken from make file by preprocessor, default is /usr
-
-        datapath=PREFIX
 
         Iint = 1
 
         301 FORMAT(A11, 1X, A6, 1X, F7.2, 1X, A20,1X,A4,1X,A15)
-        OPEN(201, file=trim(datapath)//"/share/neat/Ilines_levs", status='old')
+        OPEN(201, file=trim(PREFIX)//"/share/neat/Ilines_levs", status='old')
                 READ (201,*) Iread
                 ALLOCATE (ILs(Iread))
                 ILs%intensity=0.D0 !otherwise it seems you can get random very small numbers in the array.
@@ -404,15 +398,13 @@ use mod_atomicdata
     character(len=10) :: ionname
     character(len=128) :: filename
     real(kind=dp) :: WN,AX,QX
-    character(len=128) :: datapath ! value taken from make file by preprocessor, default is /usr
 
-    datapath=PREFIX
     id = 0
     jd = 0
     ionname = ion%ion
 !    print*,'Reading atomic data ion',ionname
     ionl = index(ionname,' ') - 1
-    filename = trim(datapath)//'/share/neat/'//ionname(1:IONL)//'.dat'
+    filename = trim(PREFIX)//'/share/neat/'//ionname(1:IONL)//'.dat'
     OPEN(unit=1, status = 'OLD', file=filename,ACTION='READ')
 
 !read # of comment lines and skip them
@@ -508,13 +500,10 @@ implicit none
 real(kind=dp), dimension(21,15,44) :: heidata
 integer :: i,j,tpos,npos,io
 real(kind=dp), dimension(46) :: temp
-character(len=128) :: datapath ! value taken from make file by preprocessor, default is /usr
-
-datapath=PREFIX
 
 !read data
 
-OPEN(100, file=trim(datapath)//'/share/neat/RHei_porter2012.dat', iostat=IO, status='old')
+OPEN(100, file=trim(PREFIX)//'/share/neat/RHei_porter2012.dat', iostat=IO, status='old')
 
 ! read in the data
 
@@ -537,15 +526,12 @@ implicit none
 real(kind=dp), dimension(3,6,44) :: heidata
 integer :: i,j,k,io
 real(kind=dp), dimension(18) :: temp
-character(len=128) :: datapath ! value taken from make file by preprocessor, default is /usr
-
-datapath=PREFIX
 
 !read data
 !fitted fourth order polynomials to the Smits 1996 emissivities
 !the data file contains the coefficients for log(ne)=2,4,6
 
-OPEN(100, file=trim(datapath)//'/share/neat/RHei_smits1996_coeffs.dat', iostat=IO, status='old')
+OPEN(100, file=trim(PREFIX)//'/share/neat/RHei_smits1996_coeffs.dat', iostat=IO, status='old')
 
 ! read in the data
 

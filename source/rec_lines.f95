@@ -136,9 +136,6 @@
 
         IMPLICIT NONE
         integer :: i, nlines
-        character(len=128) :: datapath ! value taken from make file by preprocessor, default is /usr
-
-        datapath=PREFIX
 
         ! read in OII data
 
@@ -146,7 +143,7 @@
      & 1X, A3, 1X, F7.4, 1X, A3, 1X, A7, 3X, F11.4, A1, A1, 1X, I2, &
      &1X, A1, 1X, A9, 1X, F13.4, 1X, A1, A1, 1X, I2, 1X, A1, 1X, A9, 1X,&
      & F7.4, 1X, F7.4, 1X, F7.4)!, 1X, E10.4, 1X, E10.4, 1X)
-            OPEN(201, file=trim(datapath)//"/share/neat/Roii.dat", status='old')
+            OPEN(201, file=trim(PREFIX)//"/share/neat/Roii.dat", status='old')
             read(201,*) nlines
             allocate(oiiRLs(nlines))
             oiiRLs%Int = 0.d0
@@ -252,7 +249,7 @@ oii_A_3p2S_low => oii_coefficients(36,:)
      & 1X, A3, 1X, F7.4, 1X, A3, 1X, A7, 3X, F11.4, A1, A1, 1X, I2, &
      &1X, A1, 1X, A9, 1X, F13.4, 1X, A1, A1, 1X, I2, 1X, A1, 1X, A9, 1X,&
      & F7.4, 1X, F7.4, 1X, F7.4)!, 1X, E10.4, 1X, E10.4, 1X)
-            OPEN(201, file=trim(datapath)//"/share/neat/Rnii.dat", status='old')
+            OPEN(201, file=trim(PREFIX)//"/share/neat/Rnii.dat", status='old')
             read(201,*) nlines
             allocate(niiRLs(nlines))
             niiRLs%Int = 0.d0
@@ -332,7 +329,7 @@ oii_A_3p2S_low => oii_coefficients(36,:)
 ! read in CII data
 
       303 FORMAT (F7.2, 1X, F6.4, 1X, F7.4, 1X, F7.4, 1X, F7.4, 1X, F7.4)
-      OPEN(201, file=trim(datapath)//"/share/neat/Rcii.dat", status='old')
+      OPEN(201, file=trim(PREFIX)//"/share/neat/Rcii.dat", status='old')
       read(201,*) nlines
       allocate(ciiRLs(nlines))
       ciiRLs%Int = 0.d0
@@ -347,7 +344,7 @@ oii_A_3p2S_low => oii_coefficients(36,:)
           ! read in NeII data
 
       304 FORMAT (F7.2, 1X, F6.3, 1X, F6.3, 1X, F6.3, 1X, F6.3, 1X, F7.4, 1X, F6.3)
-      OPEN(201, file=trim(datapath)//"/share/neat/Rneii.dat", status='old')
+      OPEN(201, file=trim(PREFIX)//"/share/neat/Rneii.dat", status='old')
       read(201,*) nlines
       allocate(neiiRLs(nlines))
       neiiRLs%Int = 0.d0
@@ -362,7 +359,7 @@ oii_A_3p2S_low => oii_coefficients(36,:)
         ! read in XIII data
 
       305 FORMAT (A3,1X,F7.2, 1X, F5.3, 1X, F6.3, 1X, F5.3, 1X, F5.3, 1X, F5.4)
-      OPEN(201, file=trim(datapath)//"/share/neat/Rxiii.dat", status='old')
+      OPEN(201, file=trim(PREFIX)//"/share/neat/Rxiii.dat", status='old')
       read(201,*) nlines
       allocate(xiiiRLs(nlines))
       xiiiRLs%Int = 0.d0
