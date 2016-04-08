@@ -1281,51 +1281,9 @@ if (binsize .gt. 0d0) then
      binned_quantity_result(i,2)=dble(nperbin)/dble(runs)/binwidth !probability density in the current bin
   enddo
 
-!then, go through the quantized array and count the number of occurrences of each value
-!!$
-!!$  comp=bintemp(1)
-!!$  bincount=0
-!!$  ii=1
-!!$
-!!$  do i=1,arraysize
-!!$    if (bintemp(i).eq.comp) then
-!!$      bincount=bincount+1
-!!$    else
-!!$      binned_quantity_result(ii,:)=(/comp, dble(bincount)/)
-!!$      comp=bintemp(i)
-!!$      bincount=0
-!!$      ii=ii+1
-!!$    endif
-!!$  enddo
+!get median and 1 sigma limits
 
-!mode of distribution is the value with the highest bin count
-
-  maxpos=maxloc(binned_quantity_result(:,2))
-  uncertainty_array(2)=binned_quantity_result(maxpos(1),1)
-
-!now find the value in the unbinned array that's closest to the mode
-
-  bintemp=0.D0
-  bintemp = abs(input_array - uncertainty_array(2))
-  i = minloc(bintemp,1)
-  uncertainty_array(2)=input_array(i)
-
-!now find the values such that 68.2% of all values lie within the uncertainties
-
-  abovepos = i+nint(0.341*arraysize)
-  belowpos = i-nint(0.341*arraysize)
-
-  if (abovepos>arraysize) then
-    uncertainty_array(3) = input_array(arraysize) - uncertainty_array(2)
-  else
-    uncertainty_array(3) = input_array(abovepos) - uncertainty_array(2)
-  endif
-
-  if (belowpos<1) then
-    uncertainty_array(1) = uncertainty_array(2) ! no lower limit so the negative uncertainty is equal to the value
-  else
-    uncertainty_array(1) = uncertainty_array(2) - input_array(belowpos)
-  endif
+  uncertainty_array = (/ input_array(nint(0.5d0*arraysize))-input_array(nint(0.159*arraysize)), input_array(nint(0.5d0*arraysize)), input_array(nint(0.841*arraysize))-input_array(nint(0.5d0*arraysize)) /)
 
 !simple test for normality - calculate the mean and standard deviation of the array, determine the number of values within 1, 2 and 3 sigma of the mean.
 !if the fractions are close to 68.27, 95.45 and 99.73 then it's normal
