@@ -438,7 +438,10 @@ program neat
                 print *
                 print "(X,A9,X,A)",gettime(), ": starting Monte Carlo calculations"
                 print *,gettime(), ": completed ",0,"%"
+!$OMP PARALLEL default(firstprivate) shared(all_linelists,listlength,norp,switch_ext,R,calculate_extinction,ILs,Iint,diagnostic_array,iion,atomicdata,maxlevs,maxtemps,switch_he,switch_icf,all_results)
+!$OMP DO
                 DO I=1,runs
+
                          if ( (10.0*dble(i)/dble(runs)) == int(10*i/runs) ) print *,gettime(),": completed ",100*i/runs,"%"
 !                        print*, "iteration ", i, "of", runs
 
@@ -449,10 +452,11 @@ program neat
                         all_linelists(:,i)=linelist
                         all_results(i)=iteration_result(1)
                         !restore the unrandomized line list ready for the next iteration
+!print *,i,linelist(175)%wavelength,linelist(175)%abundance, iteration_result(1)%ratio_5876_4471, iteration_result(1)%Te_5876_4471
                         linelist = linelist_original
-
                 END DO
-
+!$OMP END DO
+!$OMP END PARALLEL
         else
                 print*, gettime(), ": error: I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."
                 stop
