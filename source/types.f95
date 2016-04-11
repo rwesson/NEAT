@@ -193,6 +193,11 @@ TYPE resultarray
 
 end type
 
+type arraycount
+  real(kind=dp) :: value
+  integer :: counts
+end type
+
 end module mod_resultarrays
 
 module mod_atomicdata

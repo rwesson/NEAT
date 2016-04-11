@@ -85,7 +85,7 @@ program neat
 !binning and uncertainties
 
         real(kind=dp), dimension(3) :: uncertainty_array=0d0
-        real(kind=dp), dimension (:,:), allocatable :: binned_quantity_result
+        type(arraycount), dimension (:), allocatable :: binned_quantity_result
         logical :: unusual
         integer :: verbosity,nbins,nperbin
 
@@ -1137,7 +1137,7 @@ subroutine write_uncertainties(input_array, uncertainty_array, plaintext, latext
 implicit none
 real(kind=dp) :: input_array(:)
 real(kind=dp), intent(out) :: uncertainty_array(3)
-real(kind=dp), dimension (:,:), allocatable :: binned_quantity_result
+type(arraycount), dimension (:), allocatable :: binned_quantity_result
 character(len=35), intent(in) :: plaintext, latextext
 character(len=35), intent(in) :: itemformat
 character(len=512), intent(in) :: filename
@@ -1172,8 +1172,8 @@ if (verbosity .lt. 3) then
   ! this hacky condition is because for reasons I can't work out right now, the
   ! number of bins allocated to the array is always too large and the last few end
   ! up being full of zeros.  to be fixed soon hopefully.  RW 16/11/2012
-      if (binned_quantity_result(i,1) .gt. 0. .and. binned_quantity_result(i,2) .gt. 0) then
-        write(unit = 850,FMT=*) binned_quantity_result(i,1),binned_quantity_result(i,2)
+      if (binned_quantity_result(i)%value .gt. 0. .and. binned_quantity_result(i)%counts .gt. 0) then
+        write(unit = 850,FMT=*) binned_quantity_result(i)%value,binned_quantity_result(i)%counts
       endif
     end do
     close(850)
@@ -1220,9 +1220,11 @@ real(kind=dp) :: input_array(:)
 real(kind=dp), intent(out) :: uncertainty_array(3)
 real(kind=dp), dimension(:), allocatable :: bintemp
 real(kind=dp) :: binsize=0d0
-real(kind=dp), dimension (:,:), allocatable, intent(out) :: binned_quantity_result
+type(arraycount), dimension (:), allocatable, intent(out) :: binned_quantity_result
 integer :: arraysize, abovepos, belowpos
 integer :: nbins, nperbin, runs
+integer :: bincount, ii
+real(kind=dp) :: comp
 integer, dimension(1) :: maxpos
 real(kind=dp) :: mean=0d0, sd=0d0
 real(kind=dp) :: mean_log=0d0, sd_log=0d0
@@ -1231,7 +1233,6 @@ real(kind=dp), dimension(3,3) :: sds=0d0
 real(kind=dp) :: tolerance=0d0
 real(kind=dp) :: binstart,binend,binwidth
 logical :: unusual !if not true, then the distribution is normal, log normal or exp normal
-
 
 unusual = .false.
 
@@ -1252,36 +1253,38 @@ arraysize = size(input_array)
 
 call qsort(input_array)
 
-! bin the array
+! bin the array. use 1/25 x 1 sigma above median as bin size
 
 arraysize = size(input_array)
-binsize=(input_array(nint(0.841*arraysize)) - input_array(nint(0.159*arraysize)))/5d0
+binsize=input_array(nint(0.841*arraysize))/25d0
 
 if (binsize .gt. 0d0) then
 
 !quantize the input array by taking the integer of each value divided by the binsize, and multiplying by the binsize.
 
   allocate(bintemp(arraysize))
-!  bintemp = binsize*nint(input_array/binsize)
-!  nbins=abs(nint((maxval(bintemp)-minval(bintemp))/binsize))+1
-  allocate(binned_quantity_result(nbins,2))
+  bintemp = binsize*nint(input_array/binsize)
+  nbins=nint(maxval(bintemp)/binsize)-nint(minval(bintemp)/binsize)
+  allocate(binned_quantity_result(nbins))
+  binned_quantity_result%value=0.D0
+  binned_quantity_result%counts=0
 
-  binned_quantity_result=0.D0
+!then, go through the quantized array and count the number of occurrences of each value
 
-  do i=1,nbins
-     if(i.eq.1) then
-        binstart=input_array(1)/2d0
-        binend=(input_array(1+(i)*nperbin)+input_array((i)*nperbin))/2d0
-     elseif(i.eq.nbins) then
-        binstart=(input_array(1+(i-1)*nperbin)+input_array((i-1)*nperbin))/2d0
-        binend=input_array(arraysize)*2d0
-     else
-        binstart=(input_array(1+(i-1)*nperbin)+input_array((i-1)*nperbin))/2d0
-        binend=(input_array(1+(i)*nperbin)+input_array((i)*nperbin))/2d0
-     endif
-     binwidth=binend-binstart
-     binned_quantity_result(i,1)=(binstart+binend)/2d0
-     binned_quantity_result(i,2)=dble(nperbin)/dble(runs)/binwidth !probability density in the current bin
+  comp=bintemp(1)
+  bincount=0
+  ii=1
+
+  do i=1,arraysize
+    if (bintemp(i).eq.comp) then
+      bincount=bincount+1
+    else
+      binned_quantity_result(ii)%value=comp
+      binned_quantity_result(ii)%counts=bincount
+      comp=bintemp(i)
+      bincount=0
+      ii=ii+1
+    endif
   enddo
 
 !get median and 1 sigma limits
