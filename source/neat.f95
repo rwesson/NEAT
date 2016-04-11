@@ -1163,7 +1163,7 @@ call get_uncertainties(input_array, binned_quantity_result, uncertainty_array, u
 
 if (verbosity .lt. 3) then
 
-  if (allocated(binned_quantity_result) .and. maxval(uncertainty_array) .gt. 0.) then
+  if (allocated(binned_quantity_result) .and. maxval(uncertainty_array) .ne. minval(uncertainty_array)) then
     OPEN(850, FILE=trim(filename)//"_"//trim(suffix)//"_binned", STATUS='REPLACE',ACCESS='SEQUENTIAL', ACTION='WRITE')
     write(unit = 850,FMT=*) uncertainty_array(2),uncertainty_array(2)-uncertainty_array(1),uncertainty_array(3)+uncertainty_array(2)
     write(unit = 850,FMT=*)
