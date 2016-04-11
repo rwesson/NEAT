@@ -9,10 +9,10 @@ neat carries out a comprehensive empirical analysis on a list of nebular emissio
 .SH OPTIONS
 .TP
 .B \-i, \-\-input [FILENAME]
-NEAT requires as input a plain text file containing a list of emission line fluxes. The file can contain two, three or four columns. If two columns are found, the code assumes they contain the the laboratory wavelength of the line (λ0) and its flux (F). Three columns are assumed to be λ0, F, and the uncertainty on F (ΔF). Four columns are assumed to be the observed wavelength of the line, λobs, λ0, F, and ΔF. The rest wavelengths should correspond exactly to those listed in the file /usr/share/neat/complete_line_list. The flux column should be a flux per unit wavelength (any units are fine), and the uncertainty on the flux should be given in the same units. Examples can be found in the /usr/share/neat/example/ directory.
+NEAT requires as input a plain text file containing a list of emission line fluxes. The file can contain two, three or four columns. If two columns are found, the code assumes they contain the the laboratory wavelength of the line (λ0) and its flux (F). Three columns are assumed to be λ0, F, and the uncertainty on F (ΔF). Four columns are assumed to be the observed wavelength of the line, λobs, λ0, F, and ΔF. The rest wavelengths should correspond exactly to those listed in the file /usr/share/neat/complete_line_list. The flux column can use any units, and the uncertainty on the flux should be given in the same units. Examples can be found in the /usr/share/neat/example/ directory.
 .TP
 .B \-u, \-\-uncertainties
-Calculate uncertainties, using 20,000 iterations.  If this option is specified, the \-n option will be ignored
+Calculate uncertainties, using 10,000 iterations.  If this option is specified, the \-n option will be ignored
 .TP
 .B \-n, \-\-n\-iterations [VALUE]
 Number of iterations. Default: 1
