@@ -89,6 +89,9 @@ program neat
         logical :: unusual
         integer :: verbosity,nbins,nperbin
 
+!OpenMP
+
+        integer :: omp_get_num_threads
 !CEL array
 
         TYPE(line), DIMENSION(:), allocatable :: ILs
@@ -435,10 +438,13 @@ program neat
 
                 !main loop
 
-                print *
-                print "(X,A9,X,A)",gettime(), ": starting Monte Carlo calculations"
-                print *,gettime(), ": completed ",0,"%"
 !$OMP PARALLEL default(firstprivate) shared(all_linelists,listlength,norp,switch_ext,R,calculate_extinction,ILs,Iint,diagnostic_array,iion,atomicdata,maxlevs,maxtemps,switch_he,switch_icf,all_results)
+!$OMP MASTER
+
+                print *
+                print "(X,A9,X,A,I2,A)",gettime(), ": starting Monte Carlo calculations, using ",omp_get_num_threads()," processors"
+                print *,gettime(), ": completed ",0,"%"
+!$OMP END MASTER
 !$OMP DO schedule(dynamic)
                 DO I=1,runs
 
