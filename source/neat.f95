@@ -442,7 +442,11 @@ program neat
 !$OMP MASTER
 
                 print *
-                print "(X,A9,X,A,I2,A)",gettime(), ": starting Monte Carlo calculations, using ",omp_get_num_threads()," processors"
+                if (omp_get_num_threads().gt.1) then
+                  print "(X,A9,X,A,I2,A)",gettime(), ": starting Monte Carlo calculations, using ",omp_get_num_threads()," processors"
+                else
+                  print "(X,A9,X,A)",gettime(), ": starting Monte Carlo calculations"
+                endif
                 print *,gettime(), ": completed ",0,"%"
 !$OMP END MASTER
 !$OMP DO schedule(dynamic)
