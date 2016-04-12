@@ -1196,7 +1196,7 @@ endif
 !write derived value and uncertainties to the summary files
 
   if (maxval(uncertainty_array) .gt. 0.) then !if this condition is not true, array will be full of zeroes
-    if (unusual) write (650,itemformat) "Warning! Unusual probability distribution.  You should inspect this one:"
+!    if (unusual) write (650,itemformat) "Warning! Unusual probability distribution.  You should inspect this one:"
     write (650,itemformat) plaintext,uncertainty_array(2),uncertainty_array(3),-uncertainty_array(1)
 !    write (651,*) latextext," & $",trim(latex_number(uncertainty_array(2))),"^{",trim(latex_number(uncertainty_array(3))),"}_{",trim(latex_number(-uncertainty_array(1))),"}$ \\"
     if (uncertainty_array(1) .eq. uncertainty_array(3)) then
