@@ -75,7 +75,14 @@
       real(kind=dp) :: valtest(3)
       integer :: test
 
-          ndim1t3=3*ndim1
+! check if ratio is meaningful
+
+      if (inratio .le. 0.d0 .or. inratio .gt. 1.e10) then
+        result=0.d0
+        return
+      endif
+
+      ndim1t3=3*ndim1
       g=0
       itrana=0
       itranb=0

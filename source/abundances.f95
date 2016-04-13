@@ -14,7 +14,7 @@ use mod_hydrogen
         implicit none
         integer, parameter :: dp = kind(1.d0)
 
-        INTEGER :: count, Iint, i, j, ion_no1, ion_no2, ion_no3, ion_no4, ion_no5, ion_no6
+        INTEGER :: counter, Iint, i, j, ion_no1, ion_no2, ion_no3, ion_no4, ion_no5, ion_no6
         integer, intent(in) :: listlength
         TYPE(line), dimension(listlength) :: linelist, linelist_orig
         CHARACTER :: switch_ext !switch for extinction laws
@@ -292,311 +292,111 @@ use mod_hydrogen
       lowtemp = 10000.0
 
       do i = 1,2
-        oiiDens=0
-        siiDens=0
-         count = 0
-         if (oiiNratio .gt. 0 .and. oiiNratio .lt. 1e10) then
-           call get_diagnostic("oii       ","1,2/                ","1,3/                ",oiiNratio,"D",lowtemp, oiiDens,maxlevs,maxtemps,atomicdata,iion)
-           count = count + 1
-           if (oiidens .lt. 0d0) then
-              count=count-1
-              oiidens=0d0
-           endif
-         endif
 
-         if (siiNratio .gt. 0 .and. siiNratio .lt. 1e10) then
-           call get_diagnostic("sii       ","1,2/                ","1,3/                ",siiNratio,"D",lowtemp, siiDens,maxlevs,maxtemps,atomicdata,iion)
-           count = count + 1
-           if (siidens .lt. 0d0) then
-              count=count-1
-              siidens=0d0
-           endif
-         endif
+        oiiDens=0.d0
+        siiDens=0.d0
+        counter=0
 
-         if (count .eq. 0 .and. diagnostic_array(1) .eq. 0) then
-           lowdens = 1000.0
-         elseif (diagnostic_array(1) .gt. 0.0) then
-           lowdens = diagnostic_array(1)
-         else
-           lowdens = (oiiDens + siiDens) / count
-         endif
+        call get_diagnostic("oii       ","1,2/                ","1,3/                ",oiiNratio,"D",lowtemp, oiiDens,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("sii       ","1,2/                ","1,3/                ",siiNratio,"D",lowtemp, siiDens,maxlevs,maxtemps,atomicdata,iion)
 
-         count = 0
+        if (oiidens .gt. 0.d0) counter=counter+1
+        if (siidens .gt. 0.d0) counter=counter+1
 
-         if (oiiTratio .gt. 0 .and. oiiTratio .lt. 1e10) then
-           call get_diagnostic("oii       ","2,4,2,5,3,4,3,5/    ","1,2,1,3/            ",oiiTratio,"T",lowdens,oiiTemp,maxlevs,maxtemps,atomicdata,iion)
-           count = count + 1
+        if (counter .eq. 0 .and. diagnostic_array(1) .eq. 0) then
+          lowdens = 1000.0
+        elseif (diagnostic_array(1) .gt. 0.0) then
+          lowdens = diagnostic_array(1)
+        else
+          lowdens = (oiiDens + siiDens) / counter
+        endif
 
-                 if (oiitemp .lt. 0d0) then
-                    count=count-1
-                    oiitemp=0d0
-                 elseif(oiitemp .ge. 34999.5)then !same value as the other diagnostics now that atomic data has been updated
-                        count=count-1
-                        oiitemp=-1
-                 endif
+        counter=0
 
-         else
-           oiiTemp = 0.0
-         endif
+        call get_diagnostic("oii       ","2,4,2,5,3,4,3,5/    ","1,2,1,3/            ",oiiTratio,"T",lowdens,oiiTemp,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("sii       ","1,2,1,3/            ","1,4,1,5/            ",siiTratio,"T",lowdens,siiTemp,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("nii       ","2,4,3,4/            ","4,5/                ",niiTratio,"T",lowdens,niitemp,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("ci        ","2,4,3,4/            ","4,5/                ",ciTratio,"T",lowdens,citemp,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("oi        ","1,4,2,4/            ","4,5/                ",oiTratio,"T",lowdens,oitemp,maxlevs,maxtemps,atomicdata,iion)
 
-         if (siiTratio .gt. 0 .and. siiTratio .lt. 1e10) then
-           call get_diagnostic("sii       ","1,2,1,3/            ","1,4,1,5/            ",siiTratio,"T",lowdens,siiTemp,maxlevs,maxtemps,atomicdata,iion)
-           count = count + 1
+        if (oiiTemp .gt. 0.d0) counter=counter+1
+        if (siiTemp .gt. 0.d0) counter=counter+1
+        if (niiTemp .gt. 0.d0) counter=counter+5
+        if (ciTemp .gt. 0.d0) counter=counter+1
+        if (oiTemp .gt. 0.d0) counter=counter+1
 
-                 if (siitemp .lt. 0d0) then
-                    count=count-1
-                    siitemp=0d0
-                 elseif(siitemp .ge. 34999.5)then
-                        count=count-1
-                        siitemp=-1
-                 endif
-
-         else
-           siiTemp = 0.0
-         endif
-
-         if (niiTratio .gt. 0 .and. niiTratio .lt. 1e10) then
-           call get_diagnostic("nii       ","2,4,3,4/            ","4,5/                ",niiTratio,"T",lowdens,niitemp,maxlevs,maxtemps,atomicdata,iion)
-           count = count + 5
-
-                 if (niitemp .lt. 0d0) then
-                    count=count-5
-                    niitemp=0d0
-                 elseif(niitemp .ge. 34999.5)then
-                        count=count-5
-                        niitemp=-1
-                 endif
-
-         else
-           niitemp = 0.0
-         endif
-
-         if (ciTratio .gt. 0 .and. ciTratio .lt. 1e10) then
-           call get_diagnostic("ci        ","2,4,3,4/            ","4,5/                ",ciTratio,"T",lowdens,citemp,maxlevs,maxtemps,atomicdata,iion)
-           count = count + 1
-
-                 if (citemp .lt. 0d0) then
-                    count=count-1
-                    citemp=0d0
-                 elseif(citemp .ge. 34999.5)then
-                        count=count-1
-                        citemp=-1
-                 endif
-
-          else
-           citemp = 0.0
-         endif
-
-         if (oiTratio .gt. 0 .and. oiTratio .lt. 1e10) then
-           call get_diagnostic("oi        ","1,4,2,4/            ","4,5/                ",oiTratio,"T",lowdens,oitemp,maxlevs,maxtemps,atomicdata,iion)
-           count = count + 1
-
-         if (oitemp .lt. 0d0) then
-                 count=count-1
-                 oitemp=0d0
-         elseif(oitemp .ge. 34999.5)then
-                 count=count-1
-                 oitemp=-1
-         endif
-         else
-           oitemp = 0.0
-         endif
-
-         if (count .gt. 0 .and. diagnostic_array(4) .eq. 0) then
-           lowtemp = ((5*niitemp) + siitemp + oiitemp + oitemp + citemp) / count
-         elseif (diagnostic_array(4) .gt. 0.0) then
-           lowtemp = diagnostic_array(4)
-         else
-           lowtemp = 10000.d0
-         endif
+        if (counter .gt. 0 .and. diagnostic_array(4) .eq. 0) then
+          lowtemp = ((5*niitemp) + siitemp + oiitemp + oitemp + citemp) / counter
+        elseif (diagnostic_array(4) .gt. 0.0) then
+          lowtemp = diagnostic_array(4)
+        else
+          lowtemp = 10000.d0
+        endif
 
       enddo
 
 ! medium ionisation
-        cliiiDens = 0.D0
-        ciiiDens = 0.D0
-        arivDens = 0.D0
-        oiiiIRdens = 0.D0
-        ariiiIRdens = 0.D0
-        siiiIRdens = 0.D0
-        neiiiIRdens = 0.D0
+      cliiiDens = 0.D0
+      ciiiDens = 0.D0
+      arivDens = 0.D0
+      oiiiIRdens = 0.D0
+      ariiiIRdens = 0.D0
+      siiiIRdens = 0.D0
+      neiiiIRdens = 0.D0
 
       medtemp = lowtemp
 
       do i = 1,2
 
-         count = 0
-         if (cliiiNratio .gt. 0 .and. cliiiNratio .lt. 1e10) then
-           call get_diagnostic("cliii     ","1,2/                ","1,3/                ",cliiiNratio,"D",medtemp, cliiiDens,maxlevs,maxtemps,atomicdata,iion)
-           count = count + 1
-           if (cliiidens .lt. 0d0) then
-              count=count-1
-              cliiidens=0d0
-           endif
-         else
-           cliiiDens=0
-         endif
-         if (ciiiNratio .gt. 0 .and. ciiiNratio .lt. 1e10) then
-           call get_diagnostic("ciii      ","1,3/                ","1,4/                ",ciiiNratio,"D",medtemp, ciiiDens,maxlevs,maxtemps,atomicdata,iion)
-           count = count + 1
-           if (ciiidens .lt. 0d0) then
-              count=count-1
-              ciiidens=0d0
-           endif
-         else
-           ciiiDens=0
-         endif
-         if (arivNratio .gt. 0 .and. arivNratio .lt. 1e10) then
-           call get_diagnostic("ariv      ","1,2/                ","1,3/                ",arivNratio,"D",medtemp, arivDens,maxlevs,maxtemps,atomicdata,iion)
-           count = count + 1
-           if (arivdens .lt. 0d0) then
-              count=count-1
-              arivdens=0d0
-           endif
-         else
-           arivDens=0
-         endif
-
+        counter = 0
+        call get_diagnostic("cliii     ","1,2/                ","1,3/                ",cliiiNratio,"D",medtemp, cliiiDens,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("ciii      ","1,3/                ","1,4/                ",ciiiNratio,"D",medtemp, ciiiDens,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("ariv      ","1,2/                ","1,3/                ",arivNratio,"D",medtemp, arivDens,maxlevs,maxtemps,atomicdata,iion)
 ! IR densities, not included in average
 !Ar, S, Ne, O
+        call get_diagnostic("oiii      ","1,2/                ","2,3/                ",oiiiIRNratio,"D",medtemp, oiiiIRDens,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("ariii     ","1,2/                ","2,3/                ",ariiiIRNratio,"D",medtemp, ariiiIRDens,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("siii      ","1,2/                ","2,3/                ",siiiIRNratio,"D",medtemp, siiiIRDens,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("neiii     ","1,2/                ","2,3/                ",neiiiIRNratio,"D",medtemp, neiiiIRDens,maxlevs,maxtemps,atomicdata,iion)
 
-         if (oiiiIRNratio .gt. 0 .and. oiiiIRNratio .lt. 1e10) then
-           call get_diagnostic("oiii      ","1,2/                ","2,3/                ",oiiiIRNratio,"D",medtemp, oiiiIRDens,maxlevs,maxtemps,atomicdata,iion)
-           if (oiiiIRdens .lt. 0d0) then
-              oiiiirdens=0d0
-           endif
-         endif
+        if (cliiiDens .gt. 0) counter=counter+1
+        if (ciiiDens .gt. 0) counter=counter+1
+        if (arivDens .gt. 0) counter=counter+1
 
-         if (ariiiIRNratio .gt. 0 .and. ariiiIRNratio .lt. 1e10) then
-           call get_diagnostic("ariii     ","1,2/                ","2,3/                ",ariiiIRNratio,"D",medtemp, ariiiIRDens,maxlevs,maxtemps,atomicdata,iion)
-           if (ariiiIRdens .lt. 0d0) then
-              ariiiirdens=0d0
-           endif
-         endif
+        if (counter .eq. 0 .and. diagnostic_array(2) .eq. 0) then
+          meddens = lowdens
+        elseif (diagnostic_array(2) .gt. 0.0) then
+          meddens = diagnostic_array(2)
+        else
+          meddens = (ciiiDens + cliiiDens + arivDens) / counter
+        endif
 
-         if (siiiIRNratio .gt. 0 .and. siiiIRNratio .lt. 1e10) then
-           call get_diagnostic("siii      ","1,2/                ","2,3/                ",siiiIRNratio,"D",medtemp, siiiIRDens,maxlevs,maxtemps,atomicdata,iion)
-           if (siiiIRdens .lt. 0d0) then
-              siiiirdens=0d0
-           endif
-         endif
+        counter = 0
 
-         if (neiiiIRNratio .gt. 0 .and. neiiiIRNratio .lt. 1e10) then
-           call get_diagnostic("neiii     ","1,2/                ","2,3/                ",neiiiIRNratio,"D",medtemp, neiiiIRDens,maxlevs,maxtemps,atomicdata,iion)
-           if (neiiiIRdens .lt. 0d0) then
-              neiiiirdens=0d0
-           endif
-         endif
-
-         if (count .eq. 0 .and. diagnostic_array(2) .eq. 0) then
-           meddens = lowdens
-         elseif (diagnostic_array(2) .gt. 0.0) then
-           meddens = diagnostic_array(2)
-         else
-           meddens = (ciiiDens + cliiiDens + arivDens) / count
-         endif
-
-         count = 0
-
-         if (oiiiTratio .gt. 0 .and. oiiiTratio .lt. 1e10) then
-           call get_diagnostic("oiii      ","2,4,3,4/            ","4,5/                ",oiiiTratio,"T",meddens,oiiiTemp,maxlevs,maxtemps,atomicdata,iion)
-           count = count + 4
-                 if (oiiitemp .lt. 0d0) then
-                    count=count-4
-                    oiiitemp=0d0
-                 elseif(oiiitemp .ge. 34999.5)then
-                         count=count-4
-                         oiiitemp=-1
-                 endif
-         else
-           oiiiTemp = 0.0
-         endif
-
-         if (siiiTratio .gt. 0 .and. siiiTratio .lt. 1e10) then
-           call get_diagnostic("siii      ","2,4,3,4/            ","4,5/                ",siiiTratio,"T",meddens,siiiTemp,maxlevs,maxtemps,atomicdata,iion)
-           count = count + 1
-
-                if (siiitemp .lt. 0d0) then
-                    count=count-1
-                    siiitemp=0d0
-                 elseif(siiitemp .ge. 19999.5)then !limit needs updating here too
-                         count=count-1
-                         siiitemp=-1
-                 endif
-
-         else
-           siiiTemp = 0.0
-         endif
-
-         if (ariiiTratio .gt. 0 .and. ariiiTratio .lt. 1e10) then
-           call get_diagnostic("ariii     ","1,4,2,4/            ","4,5/                ",ariiiTratio,"T",meddens,ariiitemp,maxlevs,maxtemps,atomicdata,iion)
-           count = count + 2
-                 if (ariiitemp .lt. 0d0) then
-                    count=count-2
-                    ariiitemp=0d0
-                 elseif(ariiitemp .ge. 34999.5)then
-                         count=count-2
-                         ariiitemp=-1
-                 endif
-         else
-           ariiitemp = 0.0
-         endif
-
-         if (neiiiTratio .gt. 0 .and. neiiiTratio .lt. 1e10) then
-           call get_diagnostic("neiii     ","1,4,2,4/            ","4,5/                ",neiiiTratio,"T",meddens,neiiitemp,maxlevs,maxtemps,atomicdata,iion)
-           count = count + 2
-                if (neiiitemp .lt. 0d0) then
-                    count=count-2
-                    neiiitemp=0d0
-                 elseif(neiiitemp .ge. 34999.5)then
-                         count=count-2
-                         neiiitemp=-1
-                 endif
-
-         else
-           neiiitemp = 0.0
-         endif
-
+        call get_diagnostic("oiii      ","2,4,3,4/            ","4,5/                ",oiiiTratio,"T",meddens,oiiiTemp,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("siii      ","2,4,3,4/            ","4,5/                ",siiiTratio,"T",meddens,siiiTemp,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("ariii     ","1,4,2,4/            ","4,5/                ",ariiiTratio,"T",meddens,ariiitemp,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("neiii     ","1,4,2,4/            ","4,5/                ",neiiiTratio,"T",meddens,neiiitemp,maxlevs,maxtemps,atomicdata,iion)
 !extra IR temperatures, not included in the average at the moment but could be if we decide that would be good
-
-         if (neiiiIRTratio .gt. 0 .and. neiiiIRTratio .lt. 1.e10) then
-           call get_diagnostic("neiii     ","1,4,2,4/            ","1,2/                ",neiiiIRTratio,"T",meddens,neiiiIRtemp,maxlevs,maxtemps,atomicdata,iion)
-           if (neiiiirtemp .lt. 0d0) then
-              neiiiirtemp = 0d0
-           endif
-         else
-           neiiiIRtemp = 0.0
-         endif
-
-         if (oiiiIRTratio .gt. 0 .and. oiiiIRTratio .lt. 1.e10) then
-           call get_diagnostic("oiii      ","2,4,3,4/            ","2,3/                ",oiiiIRTratio,"T",oiiiIRdens,oiiiIRtemp,maxlevs,maxtemps,atomicdata,iion)
-           if (oiiiirtemp .lt. 0d0) then
-              oiiiirtemp = 0d0
-           endif
-         else
-           oiiiIRtemp = 0.0
-         endif
-
+        call get_diagnostic("neiii     ","1,4,2,4/            ","1,2/                ",neiiiIRTratio,"T",meddens,neiiiIRtemp,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("oiii      ","2,4,3,4/            ","2,3/                ",oiiiIRTratio,"T",oiiiIRdens,oiiiIRtemp,maxlevs,maxtemps,atomicdata,iion)
 !oiii UV temperature, also not included in the average at the moment
-
-         if (oiiiUVTratio .gt. 0 .and. oiiiUVTratio .lt. 1.e10) then
-           call get_diagnostic("oiii      ","2,4,3,4/            ","3,6/                ",oiiiUVTratio,"T",oiidens,oiiiUVtemp,maxlevs,maxtemps,atomicdata,iion)
-           if (oiiiuvtemp .lt. 0d0) then
-              oiiiuvtemp = 0d0
-           endif
-         else
-           oiiiUVtemp = 0.0
-         endif
+        call get_diagnostic("oiii      ","2,4,3,4/            ","3,6/                ",oiiiUVTratio,"T",oiidens,oiiiUVtemp,maxlevs,maxtemps,atomicdata,iion)
 
 !averaging
 
-         if (count .gt. 0 .and. diagnostic_array(5) .eq. 0.0) then
-           medtemp = (4*oiiitemp + siiitemp + 2*ariiitemp + 2*neiiitemp) / count
-         elseif (diagnostic_array(5) .gt. 0.0) then
-           medtemp = diagnostic_array(5)
-         else
-           medtemp = lowtemp
-         endif
+       if (oiiiTemp .gt. 0.d0) counter=counter+4
+       if (siiiTemp .gt. 0.d0) counter=counter+1
+       if (ariiiTemp .gt. 0.d0) counter=counter+2
+       if (neiiiTemp .gt. 0.d0) counter=counter+2
+
+       if (counter .gt. 0 .and. diagnostic_array(5) .eq. 0.0) then
+         medtemp = (4*oiiitemp + siiitemp + 2*ariiitemp + 2*neiiitemp) / counter
+       elseif (diagnostic_array(5) .gt. 0.0) then
+         medtemp = diagnostic_array(5)
+       else
+         medtemp = lowtemp
+       endif
 
 !if there is no lowtemp, set it to medtemp
 !this would break if lowtemp was actually calculated to be 10000.d0 but I think the probability of that is low enough that we can live without checking for it
@@ -669,53 +469,32 @@ use mod_hydrogen
 
       do i = 1,2
 
-         if (neivNratio .gt. 0 .and. neivNratio .lt. 1e10) then
-           call get_diagnostic("neiv      ","1,2/                ","1,3/                ",neivNratio,"D",hightemp, neivDens,maxlevs,maxtemps,atomicdata,iion)
-           highdens = neivdens
-           if (neivdens .lt. 0d0) then
-              neivdens = 0d0
-              highdens = meddens
-           endif
-         else
-           neivDens = 0.0
-           highdens = meddens
-         endif
+        call get_diagnostic("neiv      ","1,2/                ","1,3/                ",neivNratio,"D",hightemp, neivDens,maxlevs,maxtemps,atomicdata,iion)
 
-         if (diagnostic_array(3) .gt. 0.0) then
-           highdens = diagnostic_array(3)
-         endif
+        if (diagnostic_array(3) .gt. 0.0) then
+          highdens = diagnostic_array(3)
+        elseif (neivdens .le. 0d0) then
+          neivdens = 0d0
+          highdens = meddens
+        else
+          highdens = neivDens
+        endif
 
-         count = 0
+        counter = 0
 
-         if (arvTratio .gt. 0 .and. arvTratio .lt. 1e10) then
-           call get_diagnostic("arv       ","2,4,3,4/            ","4,5/                ",arvTratio,"T",highdens,arvTemp,maxlevs,maxtemps,atomicdata,iion)
-           count = count + 1
-           if (arvtemp .lt. 0d0) then !should we include checks for temperature upper limits here as well?
-              count=count-1
-              arvtemp = 0d0
-           endif
-         else
-           arvTemp = 0.0
-         endif
+        call get_diagnostic("arv       ","2,4,3,4/            ","4,5/                ",arvTratio,"T",highdens,arvTemp,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("nev       ","2,4,3,4/            ","4,5/                ",nevTratio,"T",highdens,nevtemp,maxlevs,maxtemps,atomicdata,iion)
 
-         if (nevTratio .gt. 0 .and. nevTratio .lt. 1e10) then
-           call get_diagnostic("nev       ","2,4,3,4/            ","4,5/                ",nevTratio,"T",highdens,nevtemp,maxlevs,maxtemps,atomicdata,iion)
-           count = count + 1
-           if (nevtemp .lt. 0d0) then
-              count=count-1
-              nevtemp = 0d0
-           endif
-         else
-           nevtemp = 0.0
-         endif
+        if (arvTemp .gt. 0.d0) counter=counter+1
+        if (nevTemp .gt. 0.d0) counter=counter+1
 
-         if (count .gt. 0 .and. diagnostic_array(6) .eq. 0) then
-           hightemp = (arvtemp + nevtemp) / count
-         elseif (diagnostic_array(6) .gt. 0.0) then
-           hightemp = diagnostic_array(6)
-         else
-           hightemp = medtemp
-         endif
+        if (counter .gt. 0 .and. diagnostic_array(6) .eq. 0) then
+          hightemp = (arvtemp + nevtemp) / counter
+        elseif (diagnostic_array(6) .gt. 0.0) then
+          hightemp = diagnostic_array(6)
+        else
+          hightemp = medtemp
+        endif
 
       enddo
 !done calculating, now write results and ratios to arrays.
