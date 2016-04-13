@@ -11,7 +11,7 @@
 # at runtime, and bounds-checking.
 # This option is slow (about 2x slower than make all)
 #
-#     > make CO=debug2, debug2, pedantic
+#     > make CO=debug2, debug3, pedantic
 # offer further levels of checks in case of problems
 #
 #     > make new
@@ -30,6 +30,7 @@ FC=gfortran
 LD=gfortran
 PREFIX=/usr
 FFLAGS=-ffree-line-length-0 -Jsource/ -cpp -DPREFIX=\"${PREFIX}\" -fopenmp
+LDFLAGS=
 MANDIR=${DESTDIR}${PREFIX}/share/man/man1
 
 ifeq ($(FC),gfortran)
