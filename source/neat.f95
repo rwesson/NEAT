@@ -516,7 +516,7 @@ program neat
 !dereddened flux
                 quantity_result = all_linelists(j,:)%int_dered
 
-                call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins,nperbin,runs)
+                call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins)
 
                 if (all_linelists(j,1)%intensity .ne. 0.d0 .or. all_linelists(j,1)%blend_intensity .ne. 0.d0) then
                   if (uncertainty_array(1) .ne. uncertainty_array(3)) then
@@ -541,7 +541,7 @@ program neat
 !todo: add an option to choose whether or not to put abundances in the line list table
 
                 quantity_result = all_linelists(j,:)%abundance
-                call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins,nperbin,runs)
+                call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins)
                 if (uncertainty_array(2) .ne. 0.D0) then
                   if (uncertainty_array(1) .ne. uncertainty_array(3)) then
                     write (650,"(ES10.2,SP,ES10.2,SP,ES10.2)") uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
@@ -1041,7 +1041,7 @@ program neat
 ! this writes the results to the plain text and latex summary files
 
           quantity_result=resultprocessingarray(j,:)
-          call write_uncertainties(quantity_result,uncertainty_array,resultprocessingtext(j,1),resultprocessingtext(j,2),resultprocessingtext(j,3),filename, resultprocessingtext(j,4), verbosity,nbins,nperbin,runs)
+          call write_uncertainties(quantity_result,uncertainty_array,resultprocessingtext(j,1),resultprocessingtext(j,2),resultprocessingtext(j,3),filename, resultprocessingtext(j,4), verbosity,nbins)
 
         enddo
 
@@ -1139,7 +1139,7 @@ contains
           DEALLOCATE(seed)
         END SUBROUTINE
 
-subroutine write_uncertainties(input_array, uncertainty_array, plaintext, latextext, itemformat, filename, suffix, verbosity,nbins,nperbin,runs)
+subroutine write_uncertainties(input_array, uncertainty_array, plaintext, latextext, itemformat, filename, suffix, verbosity,nbins)
 
 !wrapper for the get_uncertainties routine, if called it will do the
 !uncertainty calculation and also write the binned and unbinned results to files
@@ -1154,7 +1154,7 @@ character(len=512), intent(in) :: filename
 character(len=25), intent(in) :: suffix
 logical :: unusual
 integer :: verbosity !1 = write summaries, binned and full results; 2=write summaries and binned results; 3=write summaries only
-integer :: nbins,nperbin,runs
+integer :: nbins
 
 if(size(input_array) .eq. 1) then
 !just one iteration, write out the result without uncertainties
@@ -1167,7 +1167,7 @@ if(size(input_array) .eq. 1) then
   endif
 else
 
-call get_uncertainties(input_array, binned_quantity_result, uncertainty_array, unusual,nbins,nperbin,runs)
+call get_uncertainties(input_array, binned_quantity_result, uncertainty_array, unusual,nbins)
 
 !write out the binned results with the mode+-uncertainties at the top
 
@@ -1223,7 +1223,7 @@ endif !end of condition checking whether one or more iterations were done
 
 end subroutine write_uncertainties
 
-subroutine get_uncertainties(input_array, binned_quantity_result, uncertainty_array, unusual,nbins,nperbin,runs)
+subroutine get_uncertainties(input_array, binned_quantity_result, uncertainty_array, unusual,nbins)
 
 implicit none
 real(kind=dp) :: input_array(:)
@@ -1231,17 +1231,15 @@ real(kind=dp), intent(out) :: uncertainty_array(3)
 real(kind=dp), dimension(:), allocatable :: bintemp
 real(kind=dp) :: binsize=0d0
 type(arraycount), dimension (:), allocatable, intent(out) :: binned_quantity_result
-integer :: arraysize, abovepos, belowpos
-integer :: nbins, nperbin, runs
+integer :: arraysize
+integer :: nbins
 integer :: bincount, ii
 real(kind=dp) :: comp
-integer, dimension(1) :: maxpos
 real(kind=dp) :: mean=0d0, sd=0d0
 real(kind=dp) :: mean_log=0d0, sd_log=0d0
 real(kind=dp) :: mean_exp=0d0, sd_exp=0d0
 real(kind=dp), dimension(3,3) :: sds=0d0
 real(kind=dp) :: tolerance=0d0
-real(kind=dp) :: binstart,binend,binwidth
 logical :: unusual !if not true, then the distribution is normal, log normal or exp normal
 
 unusual = .false.
