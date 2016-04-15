@@ -1,15 +1,15 @@
 .\" Manpage for neat.
-.TH man 1 "08 Dec 2015" "1.9" "neat man page"
+.TH man 1 "15 Apr 2016" "1.9" "neat man page"
 .SH NAME
-neat \- nebular empirical analysis tool
+\fBneat\fR \- nebular empirical analysis tool
 .SH SYNOPSIS
-neat [option1] [value1] ...
+\fBneat\fR [option1] [value1] ...
 .SH DESCRIPTION
-neat carries out a comprehensive empirical analysis on a list of nebular emission line fluxes. If uncertainties are required, it evaluates them using a Monte Carlo approach.  NEAT's philosophy is that abundance determinations should be as objective as possible, and so user input should be minimised. A number of choices can be made by the user, but the default options should yield meaningful results.
+\fBneat\fR carries out a comprehensive empirical analysis on a list of nebular emission line fluxes. If uncertainties are required, it evaluates them using a Monte Carlo approach.  \fBneat\fR's philosophy is that abundance determinations should be as objective as possible, and so user input should be minimised. A number of choices can be made by the user, but the default options should yield meaningful results.
 .SH OPTIONS
 .TP
 .B \-i, \-\-input [FILENAME]
-NEAT requires as input a plain text file containing a list of emission line fluxes. The file can contain two, three or four columns. If two columns are found, the code assumes they contain the the laboratory wavelength of the line (λ0) and its flux (F). Three columns are assumed to be λ0, F, and the uncertainty on F (ΔF). Four columns are assumed to be the observed wavelength of the line, λobs, λ0, F, and ΔF. The rest wavelengths should correspond exactly to those listed in the file /usr/share/neat/complete_line_list. The flux column can use any units, and the uncertainty on the flux should be given in the same units. Examples can be found in the /usr/share/neat/example/ directory.
+The line list to be analysed.  Plain text files containing two, three or four columns of numbers can be understood by \fBneat\fR.  Full details of the input format are given in the "methodology" section below.
 .TP
 .B \-u, \-\-uncertainties
 Calculate uncertainties, using 10,000 iterations.  If this option is specified, the \-n option will be ignored
@@ -65,12 +65,120 @@ Valid values are:
 Default: 3
 .TP
 .B \-id, \-\-identify
-This option triggers an algorithm which attempts to convert observed wavelengths into rest wavelengths. If the option is not present, NEAT assumes that the input line list already has rest wavelengths in the first column
+This option triggers an algorithm which attempts to convert observed wavelengths into rest wavelengths. If the option is not present, \fBneat\fR assumes that the input line list already has rest wavelengths in the first column
 .TP
 .B \-rp
-When calculating Monte Carlo uncertainties, NEAT's default behaviour is to assume that all uncertainties are Gaussian.  If -rp is specified, it will compensate for the upward bias affecting weak lines described by Rola and Pelat (1994), assuming log normal probability distributions for weaker lines.
+When calculating Monte Carlo uncertainties, \fBneat\fR's default behaviour is to assume that all uncertainties are Gaussian.  If -rp is specified, it will compensate for the upward bias affecting weak lines described by Rola and Pelat (1994), assuming log normal probability distributions for weaker lines.
 
 Until version 1.8, the default behaviour was the opposite; log normal probability distributions were assumed unless \fB-norp\fR was specified.  This was changed after our discovery that the effect described by Rola and Pelat only occurred under extremely specific conditions: see Wesson et al. 2016 for details.
+
+.SH USING NEAT
+.SS Input file format
+
+\fBneat\fR requires as input a plain text file containing a list of emission line fluxes. The file can contain two, three or four columns. If two columns are found, the code assumes they contain the the laboratory wavelength of the line (λ0) and its flux (F). Three columns are assumed to be λ0, F, and the uncertainty on F (ΔF). Four columns are assumed to be the observed wavelength of the line, λobs, λ0, F, and ΔF. The rest wavelengths should correspond exactly to those listed in the file /usr/share/neat/complete_line_list. The flux column can use any units, and the uncertainty on the flux should be given in the same units. Examples can be found in the /usr/share/neat/example/ directory.
+
+.SS Rest wavelengths
+\fBneat\fR identifies lines by comparing the quoted wavelength to its list of rest wavelengths. However, rest wavelengths of lines can differ by up to a few tenths of an Angstrom depending on the source. Making sure that \fBneat\fR is identifying your lines properly is probably the most important step in using the code, and misidentifications are the first thing to suspect if you get unexpected results. To assist with preparing the line list, the command line option \fB-id\fR can be used. This applies a very simple algorithm to the input line list to determine their rest wavelengths, which works as follows:
+
+ 1. A reference list of 10 rest wavelengths of common bright emission lines is compared to the wavelengths of the 20 brightest lines in the observed spectrum.
+ 2. Close matches are identified and the mean offset between observed and rest wavelengths is calculated.
+ 3. The shift is applied, and then an RMS scatter between shifted and rest wavelengths is calculated.
+ 4. This RMS scatter is then used as a tolerance to assign line IDs based on close coincidences between shifted observed wavelengths and the full catalogue of rest wavelengths listed in utilities/complete_line_list
+
+The routine is not intended to provide 100% accuracy and one should always check very carefully whether the lines are properly identified, particularly in the case of high resolution spectra.
+
+.SS Line blends
+
+In low resolution spectra, lines of comparable intensity may be blended into a single feature. These can be indicated with an asterisk instead of a flux in the input line list. Currently, \fBneat\fR has only limited capabilities for dealing with blends: lines marked as blends are not used in any abundance calculations, and apart from a few cases, it assumes that all other line fluxes represent unblended or deblended intensities. The exceptions are some collisionally excited lines which are frequently blended, such as the [O II] lines at 3727/3729Å. In these cases the blended flux can be given with the mean wavelength of the blend, and the code will treat it properly. These instances are indicated in the utilities/complete_line_list file by a "b" after the ion name.
+
+.SS Uncertainties
+
+The uncertainty column of the input file is of crucial importance if you want to estimate uncertainties on the results you derive. Points to bear in mind are that the more realistic your estimate of the line flux measurement uncertainties, the more realistic the estimate of the uncertainties on the results will be, and that in all cases, the final reported uncertainties are a lower limit to the actual uncertainty on the results, because they account only for the propagation of the statistical errors on the line fluxes and not on sources of systematic uncertainty.
+
+In some cases you may not need or wish to propagate uncertainties. In this case you can run just one iteration of the code, and the uncertainty values are ignored if present.
+
+.SH RUNNING THE CODE
+Assuming you have a line list prepared as above, you can now run the code. In line with our philosophy that \fBneat\fR should be as simple and objective as possible, this should be extremely straightforward. To use the code in its simplest form on one of the example linelists, you would type
+
+ % cp /usr/share/neat/example/ngc6543_3cols.dat .
+ % neat -i ngc6543_3cols.dat
+
+This would run a single iteration of the code, not propagating uncertainties. You'll see some logging output to the terminal, and the calculated results will have been written to the file ngc6543_3cols.dat_results. If this is all you need, then the job's done and you can write a paper now.
+
+Your results will be enhanced greatly, though, if you can estimate the uncertainty associated with them. To do this, invoke the code as follows:
+
+ % neat -i ngc6543_3cols.dat -u
+
+The -u switch causes the code to run 10,000 times. In each iteration, the line flux is drawn from a normal distribution with a mean of the quoted flux and a standard deviation of the quoted uncertainty.  By repeating this randomisation process lots of times, you build up a realistic picture of the uncertainties associated with the derived quantities. The more iterations you run, the more accurate the results; 10,000 is a sensible number to achieve well sampled probability distributions. If you want to run a different number of iterations for any reason, you can use the -n command line option to specify your preferred value
+
+If the \fB-rp\fR option is specified, then for lines with a signal to noise ratio of less than 6, the line flux is drawn from a log-normal distribution which becomes more skewed the lower the signal to noise ratio is. This corrects the low SNR lines for the upward bias in their measurement described by Rola & Pelat (1994). The full procedure is described in Wesson et al. (2012).  However, use of this option is no longer recommended as the bias is highly dependent on the fitting procedure - see Wesson et al. (2016).
+
+.SH METHODOLOGY
+
+.SS Extinction correction
+
+The code corrects for interstellar reddening using the ratios of the Hα, Hβ, Hγ and Hδ lines. Intrinsic ratios of the lines are first calculated assuming a temperature of 10,000K and a density of 1000cm-3. The line list is then dereddened, and temperatures and densities are then calculated as described below. The temperatures and densities are then used to recalculate the intrinsic Balmer line ratios, and the original line list is then dereddened using this value.
+
+.SS Temperatures and densities
+
+\fBneat\fR determines temperatures, densities and abundances by dividing emission lines into low, medium and high excitation lines. In each zone, the diagnostics are calculated as follows:
+
+ 1. A temperature of 10000K is initially assumed, and the density is then calculated from the line ratios relevant to the zone.
+ 2. The temperature is then calculated from the temperature diagnostic line ratios, using the derived density.
+ 3. The density is recalculated using the appropriately weighted average of the temperature diagnostics.
+ 4. The temperature is recalculated using this density.
+
+This iterative procedure is carried out successively for low-, medium- and high-ionization zones, and in each case if no diagnostics are available, the temperature and/or density will be taken to be that derived for the previous zone. Temperatures and densities for each zone can also be specified on the command line with the \fB-telow, -temed, -tehigh\fR and \fB-nelow, -nemed, -nehigh\fR options.
+
+\fBneat\fR also calculates a number of diagnostics from recombination line diagnostics. These are:
+
+ 1. The Balmer jump temperature is calculated using equation 3 of Liu et al. (2001)
+ 2. The Paschen jump temperature is calculated using equation 7 of Fang et al. (2011)
+ 3. A density is derived from the Balmer and Paschen decrements if any lines from H10-H25 or P10-P25 are observed. Their ratios relative to Hβ are compared to theoretical ratios from Storey & Hummer (1995), and a density for each line calculated by linear interpolation. The final density is calculated as the flux-weighted average of all the densities.
+ 4. Temperatures are estimated from helium line ratios, using equations derived from fits to tabulated values of 5876/4471 and 6678/4471. The tables are calculated at ne=5000cm-3 only. We plan to improve this calculation in future releases.
+ 5. OII recombination line ratios are used to derive a temperature and density, using the diagnostic diagram in Figure 1. of McNabb et al. (2013). Values are found by linearly interpolating the logarithmic values.
+ 6. Recomination line contributions to CELs of N+, O+ and O2+ are estimated using equations 1-3 of Liu et al. (2000).
+
+These recombination line diagnostics are not used in abundance calculations. Nor are the temperature diagnostics corrected for the recombination line contributions. Whether or not to do so is an unfortunately subjective choice which we leave to the user.
+
+.SS Ionic abundances
+
+Ionic abundances are calculated from collisionally excited lines (CELs) using the temperature and density appropriate to their ionization potential. Where several lines from a given ion are present, the ionic abundance adopted is found by averaging the abundances from each ion, weighting according to the observed intensity of the line.
+
+Recombination lines (RLs) are also used to derive ionic abundances for helium and heavier elements. The method by which the helium abundance is determined depends on the atomic data set being used; \fBneat\fR includes atomic data from Smits (1996) and from Porter et al. (2012, 2013). The Smits data is given for seven temperatures between 312.5K and 20000K, and for densities of 1e2, 1e4 and 1e6 cm-3; we fitted fourth order polynomials to the coefficient for each line at each density. \fBneat\fR then calculates the emissivities for each density using these equations, and interpolates logarithmically to the correct density.
+
+For the Porter et al. data, the emissivities are tabulated between 5000 and 25000K, and for densities up to 1e14cm-3. \fBneat\fR interpolates logarithmically in temperature and density between the tabulated values to determine the appropriate emissivity.
+
+In deep spectra, many more RLs may be available than CELs. The code calculates the ionic abundance from each individual RL intensity using the atomic data listed in Table 1 of Wesson et al. (2012). Then, to determine the ionic abundance to adopt, it first derives an ionic abundance for each individual multiplet from the multiplet’s co-added intensity, and then averages the abundances derived for each multiplet to obtain the ionic abundance used in subsequent calculations.
+
+.SS Total abundances
+
+Total elemental abundances are estimated using the ionisation correction scheme selected from Kingsburgh and Barlow (1994), Peimbert, Torres-Peimbert and Ruiz (1992), or Delgado-Inglada et al. (2014). Total oxygen abundances estimated from several strong line methods are also reported.
+
+Where ionic or total abundances are available from both collisionally excited lines and recombination lines, the code calculates the measured discrepancy between the two values.
+
+.SH OUTPUTS
+
+The code prints some logging messages to the terminal, so that you can see which iteration it is on, and if anything has gone wrong. The results are written to a summary file, and a linelist file, the paths to which are indicated in the terminal output. In the case of a single iteration, these files are the only output.
+
+If you have run multiple iterations, you can also use the \fB-v\fR option to tell the code to create additional results files for each quantity calculated: \fB -v 1\fR tells the code to write out for each quantity all the individual results, and a binned probability distribution file; with \fB-v 2\fR, only the binned distributions are written out, and with \fB-v 3\fR - the default - no additional results files are created.
+
+.SS Normality test
+
+The code now applies a simple test to the probability distributions to determine whether they are well described by a normal, log-normal or exp-normal distribution. The test applied is that the code calculates the mean and standard deviation of the measured values, their logarithm and their exponent, and calculates in each case the fraction of values lying within 1, 2 and 3σ of the mean. If the fractions are close to the expected values of 68.3%, 95.5% and 99.7%, then the relevant distribution is considered to apply. In these cases, the summary file contains the calculated mean and reports the standard deviation as the 1σ uncertainty.
+
+If the file is not well described by a normal-type distribution, then the code reports the median of the distribution and takes the values at 15.9% and 84.1% of the distribution as the lower and upper limits.
+
+.SS Inspecting the output
+
+It is often useful to directly inspect the probability distributions. In the utilities directory there is a small shell script, utilities/plot.sh, which will plot the histogram of results together with a bar showing the value and its uncertainty as derived above. It will create PNG graphics files for easy inspection.
+
+The script requires that you ran the code with \fB-v 1\fR or \fB-v 2\fR, and that you have gnuplot installed. It takes one optional parameter, the prefix of the files generated by neat. So, for example, if you've run 10,000 iterations on example/ngc6543_3cols.dat, then there will now be roughly 150 files in the example directory, with names like example/ngc6543_3cols.dat_mean_cHb, example/ngc6543_3cols.dat_Oii_abund_CEL, etc. You can then generate plots of the probability distributions for the results by typing:
+
+ % /usr/share/neat/utilities/plot.sh ngc6453.dat
+
+Running the code without the optional parameter will generate plots for all files with names ending in "binned" in the working directory.
+
 .SH SEE ALSO
 alfa, equib06, mocassin
 .SH BUGS
