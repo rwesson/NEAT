@@ -77,14 +77,14 @@ clean:
 
 install:
 	test -e ${DESTDIR}${PREFIX}/share/neat || mkdir -p ${DESTDIR}${PREFIX}/share/neat
-	test -e ${DESTDIR}${PREFIX}/share/neat/example || mkdir -p ${DESTDIR}${PREFIX}/share/neat/example
+	test -e ${DESTDIR}${PREFIX}/share/doc/neat/examples || mkdir -p ${DESTDIR}${PREFIX}/share/doc/neat/examples
 	test -e ${DESTDIR}${PREFIX}/bin || mkdir -p ${DESTDIR}${PREFIX}/bin
 	test -e ${MANDIR} || mkdir -p ${MANDIR}
 	install -m 644 Atomic-data/*.* ${DESTDIR}${PREFIX}/share/neat
 	install -m 644 source/Ilines_levs ${DESTDIR}${PREFIX}/share/neat
 	install -m 644 utilities/complete_line_list ${DESTDIR}${PREFIX}/share/neat
 	install -m 644 utilities/plot.sh ${DESTDIR}${PREFIX}/share/neat
-	install -m 644 example/* ${DESTDIR}${PREFIX}/share/neat/example
+	install -m 644 example/* ${DESTDIR}${PREFIX}/share/doc/neat/examples
 	install neat ${DESTDIR}${PREFIX}/bin
 	install -m 644 man/neat.1 ${MANDIR}
 	gzip -f ${MANDIR}/neat.1
