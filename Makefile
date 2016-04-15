@@ -83,6 +83,7 @@ install:
 	install -m 644 Atomic-data/*.* ${DESTDIR}${PREFIX}/share/neat
 	install -m 644 source/Ilines_levs ${DESTDIR}${PREFIX}/share/neat
 	install -m 644 utilities/complete_line_list ${DESTDIR}${PREFIX}/share/neat
+	install -m 644 utilities/plot.sh ${DESTDIR}${PREFIX}/share/neat
 	install -m 644 example/* ${DESTDIR}${PREFIX}/share/neat/example
 	install neat ${DESTDIR}${PREFIX}/bin
 	install -m 644 man/neat.1 ${MANDIR}
