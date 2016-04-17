@@ -19,9 +19,9 @@ subroutine calc_extinction_coeffs(H_Balmer, c1, c2, c3, meanextinction, switch_e
 !galactic, howarth
 
 if (switch_ext=="S") then ! howarth galactic
-        fl_ha = flambda(dble(10000./6562.77),5)
-        fl_hg = flambda(dble(10000./4340.47),4)
-        fl_hd = flambda(dble(10000./4101.74),4)
+        fl_ha = flambda_How(dble(10000./6562.77),5)
+        fl_hg = flambda_How(dble(10000./4340.47),4)
+        fl_hd = flambda_How(dble(10000./4101.74),4)
 elseif (switch_ext=="H") then ! howarth lmc
         fl_ha = flambdaLMC(dble(10000./6562.77),3)
         fl_hg = flambdaLMC(dble(10000./4340.47),2)
@@ -169,31 +169,31 @@ end function
 
 !-------SEATON GALACTIC LAW-------------------------------!
 
-real(kind=dp) function flambda(X,switch)
+real(kind=dp) function flambda_How(X,switch)
         IMPLICIT NONE
         real(kind=dp) :: X
         INTEGER :: switch
         !Howarth 1983 Galactic + Seaton 1979
         if(switch == 1) then
-            flambda = ((16.07 - (3.20 * X) + (0.2975*X**2))) !far UV
+            flambda_How = ((16.07 - (3.20 * X) + (0.2975*X**2))) !far UV
         elseif(switch == 2) then
-            flambda = ((2.19 + (0.848*X) + (1.01/(((X-4.60)**2) + 0.280)))) !mid UV
+            flambda_How = ((2.19 + (0.848*X) + (1.01/(((X-4.60)**2) + 0.280)))) !mid UV
         elseif(switch == 3) then
-            flambda = ((1.46 + (1.048*X) + (1.01/(((X-4.60)**2) + 0.280)))) !near UV
+            flambda_How = ((1.46 + (1.048*X) + (1.01/(((X-4.60)**2) + 0.280)))) !near UV
         elseif(switch == 4) then
-            flambda = ((3.1 + (2.56*(X-1.83)) - (0.993*(X-1.83)**2) )) ! optical (3)
+            flambda_How = ((3.1 + (2.56*(X-1.83)) - (0.993*(X-1.83)**2) )) ! optical (3)
         elseif(switch == 5) then
-            flambda = (( (1.86*X**2) - (0.48*X**3) - (0.1*X))) ! IR (4)
+            flambda_How = (( (1.86*X**2) - (0.48*X**3) - (0.1*X))) ! IR (4)
         else
             print *, "He's not the messiah!"
-            flambda = 0.0
+            flambda_How = 0.0
         endif
 
-        flambda = (flambda / 3.63) - 1 ! R+0.53
+        flambda_How = (flambda_How / 3.63) - 1 ! R+0.53
 
 end function
 
-subroutine deredden(lines, extinction)
+subroutine deredden_How(lines, extinction)
         IMPLICIT NONE
         TYPE(line), DIMENSION(:) :: lines
         real(kind=dp) :: extinction, fl
@@ -208,23 +208,23 @@ subroutine deredden(lines, extinction)
                 endif
 
                 if( (lines(i)%freq .gt. 7.14) .AND. (lines(i)%freq .lt. 10.0))then !far UV
-                        fl = flambda(lines(i)%freq, 1)
+                        fl = flambda_How(lines(i)%freq, 1)
                         lines(i)%int_dered = lines(i)%intensity * 10**(extinction*fl)
                         lines(i)%blend_int_dered = lines(i)%blend_intensity * 10**(extinction*fl)
                 elseif((lines(i)%freq .gt. 3.65) .AND. (lines(i)%freq .lt. 7.14))then ! mid UV
-                        fl = flambda(lines(i)%freq, 2)
+                        fl = flambda_How(lines(i)%freq, 2)
                         lines(i)%int_dered = lines(i)%intensity * 10**(extinction*fl)
                         lines(i)%blend_int_dered = lines(i)%blend_intensity * 10**(extinction*fl)
                 elseif((lines(i)%freq .gt. 2.75) .AND. (lines(i)%freq .lt. 3.65))then ! near UV
-                        fl = flambda(lines(i)%freq, 3)
+                        fl = flambda_How(lines(i)%freq, 3)
                         lines(i)%int_dered = lines(i)%intensity * 10**(extinction*fl)
                         lines(i)%blend_int_dered = lines(i)%blend_intensity * 10**(extinction*fl)
                 elseif((lines(i)%freq .gt. 1.83) .AND. (lines(i)%freq .lt. 2.75))then ! optical
-                        fl = flambda(lines(i)%freq, 4)
+                        fl = flambda_How(lines(i)%freq, 4)
                         lines(i)%int_dered = lines(i)%intensity * 10**(extinction*fl)
                         lines(i)%blend_int_dered = lines(i)%blend_intensity * 10**(extinction*fl)
                 elseif(lines(i)%freq .lt. 1.83)then !IR
-                        fl = flambda(lines(i)%freq, 5)
+                        fl = flambda_How(lines(i)%freq, 5)
                         lines(i)%int_dered = lines(i)%intensity * 10**(extinction*fl)
                         lines(i)%blend_int_dered = lines(i)%blend_intensity * 10**(extinction*fl)
                 endif

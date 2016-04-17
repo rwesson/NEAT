@@ -134,7 +134,7 @@ use mod_hydrogen
             print *, "   Estimating from observed H alpha and specified c(Hb)" !do we really want this to be printed out 10000 times?
 !todo: make this select the right flambda according to the specified extinction law
             print "(4X,F6.2,A5,F6.3,A13)",H_Balmer(1)%intensity," and ",meanextinction," respectively"
-            H_Balmer(2)%intensity=(H_Balmer(1)%intensity/2.85)*10.**(meanextinction*flambda(dble(1.524),5))
+            H_Balmer(2)%intensity=(H_Balmer(1)%intensity/2.85)*10.**(meanextinction*flambda_How(dble(1.524),5))
             print "(4X,A9,F6.2)","H beta = ",(H_Balmer(2)%intensity)
           else
             print *,"   Specify the extinction from the command line with the -c option to proceed"
@@ -162,12 +162,12 @@ use mod_hydrogen
         !actual dereddening
 
         if (switch_ext == "S") then
-                call deredden(ILs, meanextinction)
-                call deredden(H_Balmer, meanextinction)
-                call deredden(H_Paschen, meanextinction)
-                call deredden(HeI_lines, meanextinction)
-                call deredden(HeII_lines, meanextinction)
-                call deredden(linelist, meanextinction)
+                call deredden_How(ILs, meanextinction)
+                call deredden_How(H_Balmer, meanextinction)
+                call deredden_How(H_Paschen, meanextinction)
+                call deredden_How(HeI_lines, meanextinction)
+                call deredden_How(HeII_lines, meanextinction)
+                call deredden_How(linelist, meanextinction)
         elseif (switch_ext == "H") then
                 call deredden_LMC(ILs, meanextinction)
                 call deredden_LMC(H_Balmer, meanextinction)
@@ -422,12 +422,12 @@ use mod_hydrogen
 
           linelist = linelist_orig
           if (switch_ext == "S") then
-                  call deredden(ILs, meanextinction)
-                  call deredden(H_Balmer, meanextinction)
-                  call deredden(H_Paschen, meanextinction)
-                  call deredden(HeI_lines, meanextinction)
-                  call deredden(HeII_lines, meanextinction)
-                  call deredden(linelist, meanextinction)
+                  call deredden_How(ILs, meanextinction)
+                  call deredden_How(H_Balmer, meanextinction)
+                  call deredden_How(H_Paschen, meanextinction)
+                  call deredden_How(HeI_lines, meanextinction)
+                  call deredden_How(HeII_lines, meanextinction)
+                  call deredden_How(linelist, meanextinction)
           elseif (switch_ext == "H") then
                   call deredden_LMC(ILs, meanextinction)
                   call deredden_LMC(H_Balmer, meanextinction)
