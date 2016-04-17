@@ -193,14 +193,13 @@ real(kind=dp) function flambda(X,switch)
 
 end function
 
-subroutine deredden(lines, number, m_ext)
+subroutine deredden(lines, m_ext)
         IMPLICIT NONE
         TYPE(line), DIMENSION(:) :: lines
-        INTEGER :: number
         real(kind=dp) :: m_ext, fl
         INTEGER :: i
 
-        do i = 1,number
+        do i = 1,size(lines)
 
                 if (lines(i)%wavelength<500) then ! allows line list to contain IR lines with wavelengths in microns.
                         lines(i)%freq = DBLE(1) / DBLE(lines(i)%wavelength)
@@ -256,14 +255,13 @@ real(kind=dp) function flambdaLMC(X,switch)
 
 end function
 
-subroutine deredden_LMC(lines, number, m_ext)
+subroutine deredden_LMC(lines, m_ext)
         IMPLICIT NONE
         TYPE(line), DIMENSION(:) :: lines
-        INTEGER :: number
         real(kind=dp) :: m_ext, fl
         INTEGER :: i
 
-        do i = 1,number
+        do i = 1,size(lines)
 
                 if (lines(i)%wavelength<500) then ! allows line list to contain IR lines with wavelengths in microns.
                         lines(i)%freq = DBLE(1) / DBLE(lines(i)%wavelength)
@@ -326,14 +324,13 @@ real(kind=dp) function flambdaCCM(X,switch, R)
 
 end function
 
-subroutine deredden_CCM(lines, number, m_ext, R)
+subroutine deredden_CCM(lines, m_ext, R)
         IMPLICIT NONE
         TYPE(line), DIMENSION(:) :: lines
-        INTEGER :: number
         real(kind=dp) :: m_ext, fl, R
         INTEGER :: i
 
-        do i = 1,number
+        do i = 1,size(lines)
 
                 if (lines(i)%wavelength<500) then ! allows line list to contain IR lines with wavelengths in microns.
                         lines(i)%freq = DBLE(1) / DBLE(lines(i)%wavelength)
@@ -385,14 +382,13 @@ real(kind=dp) function flambdaSMC(X,switch)
 
 end function
 
-subroutine deredden_SMC(lines, number, m_ext)
+subroutine deredden_SMC(lines, m_ext)
         IMPLICIT NONE
         TYPE(line), DIMENSION(:) :: lines
-        INTEGER :: number
         real(kind=dp) :: m_ext, fl
         INTEGER :: i
 
-        do i = 1,number
+        do i = 1,size(lines)
 
                 if (lines(i)%wavelength<500) then ! allows line list to contain IR lines with wavelengths in microns.
                         lines(i)%freq = DBLE(1) / DBLE(lines(i)%wavelength)
@@ -457,14 +453,13 @@ real(kind=dp) function flambdaFitz(X,switch) !based on FM90 with values taken fr
 
 end function
 
-subroutine deredden_Fitz(lines, number, m_ext) !Uses Seaton/Howarth for IR, optical and near UV, as fit for Fitzpatrick law is poor at wavelengths longer than 2700 Angstroms
+subroutine deredden_Fitz(lines, m_ext) !Uses Seaton/Howarth for IR, optical and near UV, as fit for Fitzpatrick law is poor at wavelengths longer than 2700 Angstroms
         IMPLICIT NONE
         TYPE(line), DIMENSION(:) :: lines
-        INTEGER :: number
         real(kind=dp) :: m_ext, fl
         INTEGER :: i
 
-        do I = 1, number
+        do I = 1, size(lines)
 
                 if (lines(i)%wavelength<500) then ! allows line list to contain IR lines with wavelengths in microns.
                         lines(i)%freq = DBLE(1) / DBLE(lines(i)%wavelength)
