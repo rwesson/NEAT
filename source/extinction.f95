@@ -167,6 +167,27 @@ real(kind=dp) function calc_balmer_ratios(temp, dens, line)
 
 end function
 
+subroutine deredden(lines, extinction, R, switch_ext)
+!this subroutine calls the appropriate dereddening subroutine so that in abundances.f95, we can just call a single routine
+        IMPLICIT NONE
+        TYPE(line), DIMENSION(:) :: lines
+        real(kind=dp) :: extinction, fl, R
+        character(len=1) :: switch_ext
+
+        if (switch_ext == "S") then
+                  call deredden_How(lines, extinction)
+        elseif (switch_ext == "H") then
+                  call deredden_LMC(lines, extinction)
+        elseif (switch_ext == "C") then
+                  call deredden_CCM(lines, extinction, R)
+        elseif (switch_ext == "P") then
+                  call deredden_SMC(lines, extinction)
+        elseif (switch_ext == "F") then
+                  call deredden_Fitz(lines, extinction)
+        endif
+
+end subroutine deredden
+
 !-------SEATON GALACTIC LAW-------------------------------!
 
 real(kind=dp) function flambda_How(X,switch)
