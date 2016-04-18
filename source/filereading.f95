@@ -257,6 +257,7 @@ subroutine element_assign(ILs, linelist, Iint, listlength)
         TYPE(line), DIMENSION(:) :: linelist
         INTEGER, INTENT(IN) :: Iint, listlength
         INTEGER :: i, j
+        character(len=11) :: temp
 
         ILs%location=0
 
@@ -264,7 +265,9 @@ subroutine element_assign(ILs, linelist, Iint, listlength)
                 ILs(i)%location = 0 !initialise first to prevent random integers appearing and breaking things
                 do j = 1, listlength
                         if(linelist(j)%wavelength == ILs(i)%wavelength)then
-                                ILs(i) = linelist(j)
+                                temp=ILs(i)%name !store the ion name in a temporary variable
+                                ILs(i) = linelist(j) !copy all other parameters
+                                ILs(i)%name=temp !restore the ion name, it is used in all the abundance calculations
                                 ILs(i)%int_err   = linelist(j)%int_err
                                 ILs(i)%location = j !recording where the line is in linelist array so that its abundance can be copied back in
                                 cycle
