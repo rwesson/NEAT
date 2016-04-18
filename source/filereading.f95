@@ -174,6 +174,7 @@ subroutine read_ilines(ILs, Iint,iion,ionlist)
                 ILs%intensity=0.D0 !otherwise it seems you can get random very small numbers in the array.
                 Ils%wavelength=0d0
                 ils%int_err=0d0
+                ils%flambda=0d0
                 ils%abundance=0d0
                 ils%freq=0d0
                 ils%int_dered=0d0

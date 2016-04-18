@@ -267,8 +267,13 @@ subroutine deredden(lines, extinction)
         TYPE(line), DIMENSION(:) :: lines
         real(kind=dp) :: extinction
 
-        lines%int_dered = lines%intensity * 10**(extinction*lines%flambda)
-        lines%blend_int_dered = lines%blend_intensity * 10**(extinction*lines%flambda)
+        where (lines%intensity .gt. 0.d0)
+          lines%int_dered = lines%intensity * 10**(extinction*lines%flambda)
+          lines%blend_int_dered = lines%blend_intensity * 10**(extinction*lines%flambda)
+        elsewhere
+          lines%int_dered = 0.d0
+          lines%blend_int_dered = 0.d0
+        endwhere
 
 end subroutine deredden
 
