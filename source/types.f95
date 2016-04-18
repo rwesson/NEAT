@@ -11,6 +11,7 @@ TYPE line
         real(kind=dp) :: wavelength_observed !for use with output from ALFA
         real(kind=dp) :: intensity
         real(kind=dp) :: int_err
+        real(kind=dp) :: flambda
         real(kind=dp) :: int_dered
         real(kind=dp) :: blend_intensity !intensity for blended lines copied to this, set to zero for abundance calculations, then copied back for linelist
         real(kind=dp) :: blend_int_dered
