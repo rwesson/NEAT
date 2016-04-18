@@ -10,4 +10,8 @@ deblending:
 
 2. line finder, try fitting a 5th order polynomial or something instead of a simple linear shift
 
-
+3. replace current ILs, H, He, etc routines with simpler and clearer line assignment using pointers:
+      set linelist as target
+      define H, He, ILs, etc as pointers
+      define arrays of wavelengths, to set up the pointer arrays
+      do all this before loop, then can operate equivalently on the whole linelist array for eg dereddening, or parts for eg ne(Balmer)
