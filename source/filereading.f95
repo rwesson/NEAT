@@ -258,11 +258,13 @@ subroutine element_assign(ILs, linelist, Iint, listlength)
         INTEGER, INTENT(IN) :: Iint, listlength
         INTEGER :: i, j
 
+        ILs%location=0
+
         do i = 1, Iint
                 ILs(i)%location = 0 !initialise first to prevent random integers appearing and breaking things
                 do j = 1, listlength
                         if(linelist(j)%wavelength == ILs(i)%wavelength)then
-                                ILs(i)%intensity = linelist(j)%intensity
+                                ILs(i) = linelist(j)
                                 ILs(i)%int_err   = linelist(j)%int_err
                                 ILs(i)%location = j !recording where the line is in linelist array so that its abundance can be copied back in
                                 cycle
@@ -336,8 +338,7 @@ subroutine get_HeI(HeI_lines, linelist,listlength)
         do i = 1, 44
           do j = 1, listlength
             if(abs(linelist(j)%wavelength - HeI_lines(i)%wavelength) .lt.  0.005) then
-              Hei_lines(i)%intensity = linelist(j)%intensity
-              Hei_lines(i)%int_err = linelist(j)%int_err
+              Hei_lines(i) = linelist(j)
               Hei_lines(i)%location = j
             endif
           end do
@@ -367,8 +368,7 @@ subroutine get_HeII(HeII_lines, linelist,listlength)
         do i = 1, 1
           do j = 1, listlength
             if(abs(linelist(j)%wavelength-Heii_lines(i)%wavelength).lt.0.005) then
-              Heii_lines(i)%intensity = linelist(j)%intensity
-              Heii_lines(i)%int_err = linelist(j)%int_err
+              Heii_lines(i) = linelist(j)
               Heii_lines(i)%location = j
             endif
           end do
