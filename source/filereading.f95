@@ -302,13 +302,11 @@ subroutine get_H(H_Balmer, H_Paschen, linelist, listlength)
         do i = 1, 38
           do j = 1, listlength
             if (abs(linelist(j)%wavelength-H_Balmer(i)%wavelength).lt.0.005) then
-              H_Balmer(i)%intensity = linelist(j)%intensity
-              H_Balmer(i)%int_err = linelist(j)%int_err
+              H_Balmer(i) = linelist(j)
               H_Balmer(i)%location = j
             endif
             if (abs(linelist(j)%wavelength-H_Paschen(i)%wavelength).lt.0.005) then
-              H_Paschen(i)%intensity = linelist(j)%intensity
-              H_Paschen(i)%int_err = linelist(j)%int_err
+              H_Paschen(i) = linelist(j)
               H_Paschen(i)%location = j
             endif
           end do
