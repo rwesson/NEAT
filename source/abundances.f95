@@ -132,9 +132,8 @@ use mod_hydrogen
           print *,"   No H beta found"
           if (H_Balmer(1)%intensity .gt. 0.D0 .and. calculate_extinction .eqv. .false.) then
             print *, "   Estimating from observed H alpha and specified c(Hb)" !do we really want this to be printed out 10000 times?
-!todo: make this select the right flambda according to the specified extinction law
             print "(4X,F6.2,A5,F6.3,A13)",H_Balmer(1)%intensity," and ",meanextinction," respectively"
-            H_Balmer(2)%intensity=(H_Balmer(1)%intensity/2.85)*10.**(meanextinction*flambda_How(dble(1.524),5))
+            H_Balmer(2)%intensity=(H_Balmer(1)%intensity/2.85)*10.**(meanextinction*H_Balmer(1)%flambda)
             print "(4X,A9,F6.2)","H beta = ",(H_Balmer(2)%intensity)
           else
             print *,"   Specify the extinction from the command line with the -c option to proceed"
@@ -161,12 +160,12 @@ use mod_hydrogen
         endif
         !actual dereddening
 
-        call deredden(ILs, meanextinction, R, switch_ext)
-        call deredden(H_Balmer, meanextinction, R, switch_ext)
-        call deredden(H_Paschen, meanextinction, R, switch_ext)
-        call deredden(HeI_lines, meanextinction, R, switch_ext)
-        call deredden(HeII_lines, meanextinction, R, switch_ext)
-        call deredden(linelist, meanextinction, R, switch_ext)
+        call deredden(ILs, meanextinction)
+        call deredden(H_Balmer, meanextinction)
+        call deredden(H_Paschen, meanextinction)
+        call deredden(HeI_lines, meanextinction)
+        call deredden(HeII_lines, meanextinction)
+        call deredden(linelist, meanextinction)
 
 !diagnostics
         call get_diag("ciii1909   ","ciii1907   ", ciiiNratio)        ! ciii ratio
@@ -390,12 +389,12 @@ use mod_hydrogen
           endif
 
           linelist = linelist_orig
-          call deredden(ILs, meanextinction, R, switch_ext)
-          call deredden(H_Balmer, meanextinction, R, switch_ext)
-          call deredden(H_Paschen, meanextinction, R, switch_ext)
-          call deredden(HeI_lines, meanextinction, R, switch_ext)
-          call deredden(HeII_lines, meanextinction, R, switch_ext)
-          call deredden(linelist, meanextinction, R, switch_ext)
+          call deredden(ILs, meanextinction)
+          call deredden(H_Balmer, meanextinction)
+          call deredden(H_Paschen, meanextinction)
+          call deredden(HeI_lines, meanextinction)
+          call deredden(HeII_lines, meanextinction)
+          call deredden(linelist, meanextinction)
 
         endif ! end of exinction calculating
 

@@ -337,6 +337,8 @@ program neat
 
         print *
 
+! select reddening law, get flambda from functions if one of the five, otherwise read from file
+
         if (switch_ext == "S") then
                 print *,gettime(), ": using Howarth (1983) galactic extinction law"
         elseif (switch_ext == "H") then
@@ -348,6 +350,8 @@ program neat
         elseif (switch_ext == "F") then
                 print *,gettime(), ": using Fitzpatrick (1990) galactic extinction law"
         endif
+
+        call get_flambda(linelist, switch_ext, R)
 
         if (switch_he == "S") then
                 print *,gettime(), ": using Smits (1996) He I emissivities"
@@ -413,7 +417,7 @@ program neat
             if(atomicdata(i)%nlevs .gt. maxlevs) maxlevs = atomicdata(i)%nlevs
             if(atomicdata(i)%ntemps .gt. maxtemps) maxtemps = atomicdata(i)%ntemps
         enddo
-!        print*,maxlevs,maxtemps
+
 !now check number of iterations.  If 1, line list is fine as is.  If more than one, randomize the fluxes
 
         allocate(all_results(runs))
