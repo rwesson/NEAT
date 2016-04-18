@@ -2054,7 +2054,7 @@ contains
 
         factor1=1.+(atomicdata(get_atomicdata(ion,atomicdata))%A_coeffs(level2,level3)/atomicdata(get_atomicdata(ion,atomicdata))%A_coeffs(level2,level1) * (atomicdata(get_atomicdata(ion,atomicdata))%waveno(level2)-atomicdata(get_atomicdata(ion,atomicdata))%waveno(level3))/(atomicdata(get_atomicdata(ion,atomicdata))%waveno(level2)-atomicdata(get_atomicdata(ion,atomicdata))%waveno(level1)))
         factor2=1.+(1./(factor1-1.))
-print *,ion,factor1,factor2
+
         !now calculate the diagnostic ratio
 
         if(((ILs(ion_no1)%int_dered .gt. 0) .AND. (ILs(ion_no2)%int_dered .gt. 0)) .and. (ILs(ion_no3)%int_dered .gt. 0 ))then
