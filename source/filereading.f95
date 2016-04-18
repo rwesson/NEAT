@@ -183,6 +183,7 @@ subroutine read_ilines(ILs, Iint,iion,ionlist)
                 ils%location=0
                 ils%ion='                   '
                 ils%latextext='               '
+                ils%linedata='                                                                           '
                 DO WHILE (Iint .le. Iread)!(.true.)
                         READ(201,301) ILs(Iint)%name, ILs(Iint)%ion, ILs(Iint)%wavelength, ILs(Iint)%transition ,ILs(Iint)%zone, ILs(Iint)%latextext!end condition breaks loop.
                         if(Iint .eq. 1) then
