@@ -411,12 +411,8 @@ program neat
 
 !find maximum #levels and temperatures - pass to equib to reduce footprint
 
-        maxlevs = atomicdata(1)%nlevs
-        maxtemps = atomicdata(1)%ntemps
-        do i=2,iion
-            if(atomicdata(i)%nlevs .gt. maxlevs) maxlevs = atomicdata(i)%nlevs
-            if(atomicdata(i)%ntemps .gt. maxtemps) maxtemps = atomicdata(i)%ntemps
-        enddo
+        maxlevs = maxval(atomicdata%nlevs)
+        maxtemps = maxval(atomicdata%ntemps)
 
 !now check number of iterations.  If 1, line list is fine as is.  If more than one, randomize the fluxes
 
