@@ -42,7 +42,6 @@ use mod_hydrogen
         logical :: calculate_extinction
 
         TYPE(line), DIMENSION(Iint) :: ILs
-        TYPE(line), DIMENSION(44) :: HeI_lines
         TYPE(line), DIMENSION(1) :: HeII_lines
         TYPE(line), DIMENSION(2) :: Balmer_jump, Paschen_jump
 
@@ -50,6 +49,7 @@ use mod_hydrogen
 
         integer, dimension(3:40) :: H_balmer
         integer, dimension(4:39) :: H_paschen
+        integer, DIMENSION(44) :: HeI_lines
 
 !atomic data
 
@@ -96,7 +96,6 @@ use mod_hydrogen
 
         linelist_orig = linelist
 
-        HeI_lines%intensity = 0
         HeII_lines%intensity = 0
 
         !store fluxes of blends for later retrieval
@@ -114,14 +113,12 @@ use mod_hydrogen
 
         ILs%abundance = 0
         ILs%int_dered = 0
-        HeI_lines%abundance = 0
-        HeI_lines%int_dered = 0
         HeII_lines%abundance = 0
         HeII_lines%int_dered = 0
 
         !first find hydrogen and helium lines
         CALL get_H(H_Balmer, H_Paschen, linelist)
-        call get_Hei(Hei_lines, linelist, listlength)
+        call get_Hei(Hei_lines, linelist)
         call get_Heii(Heii_lines, linelist, listlength)
 
         !is H beta detected? if not, we can't do anything.
@@ -160,7 +157,6 @@ use mod_hydrogen
         !actual dereddening
 
         call deredden(ILs, meanextinction)
-        call deredden(HeI_lines, meanextinction)
         call deredden(HeII_lines, meanextinction)
         call deredden(linelist, meanextinction)
 
@@ -373,7 +369,6 @@ use mod_hydrogen
         if (calculate_extinction) then
 
           ILs%int_dered = 0
-          HeI_lines%int_dered = 0
           HeII_lines%int_dered = 0
 
         !update extinction. DS 22/10/11
@@ -386,7 +381,6 @@ use mod_hydrogen
 
           linelist = linelist_orig
           call deredden(ILs, meanextinction)
-          call deredden(HeI_lines, meanextinction)
           call deredden(HeII_lines, meanextinction)
           call deredden(linelist, meanextinction)
 
@@ -564,9 +558,9 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 ! He I
 
         if (switch_he=="S") then
-          call get_hei_smits_new(medtemp,meddens,HeI_lines,heidata, heiabund)
+          call get_hei_smits_new(linelist,medtemp,meddens,HeI_lines,heidata, heiabund)
         else
-          call get_hei_porter(medtemp,meddens,HeI_lines,heidata, heiabund)
+          call get_hei_porter(linelist,medtemp,meddens,HeI_lines,heidata, heiabund)
         endif
 
         hetotabund = heiabund + heiiabund
@@ -636,15 +630,15 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         Te_5876_4471=0.d0
         Te_6678_4471=0.d0
 
-        if (HeI_lines(10)%int_dered .gt. 0.d0 .and. HeI_lines(15)%int_dered .gt.0.d0) then
-          ratio_5876_4471=HeI_lines(15)%int_dered/HeI_lines(10)%int_dered
+        if (linelist(HeI_lines(10))%int_dered .gt. 0.d0 .and. linelist(HeI_lines(15))%int_dered .gt.0.d0) then
+          ratio_5876_4471=linelist(HeI_lines(15))%int_dered/linelist(HeI_lines(10))%int_dered
           if (ratio_5876_4471.lt. 4.2 .and. ratio_5876_4471.gt. 2.84) then
             Te_5876_4471 = 6858*ratio_5876_4471**4 - 99452.0*ratio_5876_4471**3 + 541944.8*ratio_5876_4471**2 - 1317918.7*ratio_5876_4471 + 1210016.1 + 23.21/(ratio_5876_4471-2.833)
           endif
         endif
 
-        if (HeI_lines(10)%int_dered .gt. 0.d0 .and. HeI_lines(16)%int_dered .gt.0.d0) then
-          ratio_6678_4471=HeI_lines(16)%int_dered/HeI_lines(10)%int_dered
+        if (linelist(HeI_lines(10))%int_dered .gt. 0.d0 .and. linelist(HeI_lines(16))%int_dered .gt.0.d0) then
+          ratio_6678_4471=linelist(HeI_lines(16))%int_dered/linelist(HeI_lines(10))%int_dered
           if (ratio_6678_4471 .lt. 0.775 .and. ratio_6678_4471 .gt. 0.59) then
             Te_6678_4471 = -64152.4*ratio_6678_4471**2 + 33203.3*ratio_6678_4471 + 22553.1
           elseif (ratio_6678_4471 .ge. 0.775 .and. ratio_6678_4471 .lt. 1.2) then
@@ -1993,10 +1987,9 @@ do i=4,39
 end do
 
 do i=1,44
-  if (HeI_lines(i)%location .gt. 0) then
-    linelist(HeI_lines(i)%location)%abundance = HeI_lines(i)%abundance
-    linelist(HeI_lines(i)%location)%name = "He I"
-    linelist(HeI_lines(i)%location)%latextext = "He~{\sc i}"
+  if (HeI_lines(i) .gt. 0) then
+    linelist(HeI_lines(i))%name = "He I"
+    linelist(HeI_lines(i))%latextext = "He~{\sc i}"
   endif
 end do
 

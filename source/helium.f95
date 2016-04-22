@@ -18,14 +18,15 @@
 
       end subroutine
 
-      subroutine get_hei_porter(Te, ne, he_lines, heidata, Heiabund)
+      subroutine get_hei_porter(linelist,Te, ne, he_lines, heidata, Heiabund)
       use mod_abundtypes
 
       IMPLICIT NONE
       real(kind=dp) :: te, ne
       real(kind=dp) :: AB4471,AB5876,AB6678,heiabund
 
-      type(line), dimension(44) :: he_lines
+      type(line), dimension(:) :: linelist
+      integer, dimension(44) :: he_lines
       real(kind=dp), dimension(3) :: weights
       real(kind=dp), dimension(21,15,44), intent(in) :: heidata
       real(kind=dp), dimension(44) :: emissivities
@@ -36,12 +37,12 @@
 
       do i = 1,44
         call get_emissivity_porter(te,ne, i, emissivities(i), heidata)
-        He_lines(i)%abundance = He_lines(i)%int_dered/100. * 10.**(GAMM4861(TE,NE)-emissivities(i))
+        linelist(He_lines(i))%abundance = linelist(He_lines(i))%int_dered/100. * 10.**(GAMM4861(TE,NE)-emissivities(i))
       end do
 
-      AB4471 = He_lines(10)%abundance
-      AB5876 = He_lines(15)%abundance
-      AB6678 = He_lines(16)%abundance
+      AB4471 = linelist(He_lines(10))%abundance
+      AB5876 = linelist(He_lines(15))%abundance
+      AB6678 = linelist(He_lines(16))%abundance
 
            weights=0.D0
 
@@ -120,7 +121,7 @@
 
       end subroutine get_emissivity_porter
 
-      subroutine get_hei_smits_new(Te, ne, he_lines, heidata, Heiabund)
+      subroutine get_hei_smits_new(linelist,Te, ne, he_lines, heidata, Heiabund)
       use mod_abundtypes
 
       IMPLICIT NONE
@@ -128,7 +129,8 @@
       real(kind=dp) :: AB4471,AB5876,AB6678,heiabund
       real(kind=dp) :: c4471, c5876, c6678, d ! corrections for collisional excitation
 
-      type(line), dimension(44) :: he_lines
+      type(line), dimension(:) :: linelist
+      integer, dimension(44), intent(in) :: he_lines
       real(kind=dp), dimension(3) :: weights
       real(kind=dp), dimension(3,6,44), intent(in) :: heidata
       real(kind=dp), dimension(44,3) :: emissivities
@@ -152,10 +154,10 @@
           interpolatedemissivity=emissivities(i,3)
         endif
 
-        if (interpolatedemissivity.ne. 0.D0) then
-          He_lines(i)%abundance = He_lines(i)%int_dered/100. * 10.**(GAMM4861(TE,NE)-interpolatedemissivity)
+        if (interpolatedemissivity.ne. 0.D0 .and. He_lines(i) .gt. 0) then
+          linelist(He_lines(i))%abundance = linelist(He_lines(i))%int_dered/100. * 10.**(GAMM4861(TE,NE)-interpolatedemissivity)
         else
-          He_lines(i)%abundance = 0.D0
+          linelist(He_lines(i))%abundance = 0.D0
         endif
 
       end do
@@ -169,13 +171,13 @@
       C5876=(  6.78*tereduced**(0.07)*exp(-3.776/tereduced)  + 1.67*tereduced**(-0.15)*exp(-4.545/tereduced) + 0.60*tereduced**(-0.34)*exp(-4.901/tereduced)  )/D
       C6678=(  3.15*tereduced**(-0.54)*exp(-3.776/tereduced) + 0.51*tereduced**(-0.51)*exp(-4.545/tereduced) + 0.20*tereduced**(-0.66)*exp(-4.901/tereduced)  )/D
 
-      He_lines(10)%abundance=He_lines(10)%abundance/(1.+C4471)
-      He_lines(15)%abundance=He_lines(15)%abundance/(1.+C5876)
-      He_lines(16)%abundance=He_lines(16)%abundance/(1.+C6678)
+      linelist(He_lines(10))%abundance=linelist(He_lines(10))%abundance/(1.+C4471)
+      linelist(He_lines(15))%abundance=linelist(He_lines(15))%abundance/(1.+C5876)
+      linelist(He_lines(16))%abundance=linelist(He_lines(16))%abundance/(1.+C6678)
 
-      AB4471 = He_lines(10)%abundance
-      AB5876 = He_lines(15)%abundance
-      AB6678 = He_lines(16)%abundance
+      AB4471 = linelist(He_lines(10))%abundance
+      AB5876 = linelist(He_lines(15))%abundance
+      AB6678 = linelist(He_lines(16))%abundance
 
            weights=0.D0
 
