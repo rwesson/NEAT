@@ -42,12 +42,16 @@ use mod_hydrogen
         logical :: calculate_extinction
 
         TYPE(line), DIMENSION(Iint) :: ILs
-        TYPE(line), DIMENSION(38) :: H_Balmer, H_Paschen
         TYPE(line), DIMENSION(44) :: HeI_lines
         TYPE(line), DIMENSION(1) :: HeII_lines
         TYPE(line), DIMENSION(2) :: Balmer_jump, Paschen_jump
 
-        !atomic data
+! index arrays to locate lines of interest in the main line list
+
+        integer, dimension(3:40) :: H_balmer
+        integer, dimension(4:39) :: H_paschen
+
+!atomic data
 
         integer :: iion !# of ions in Ilines
         integer :: maxlevs,maxtemps
@@ -92,7 +96,6 @@ use mod_hydrogen
 
         linelist_orig = linelist
 
-        H_Balmer%intensity = 0
         HeI_lines%intensity = 0
         HeII_lines%intensity = 0
 
@@ -111,30 +114,26 @@ use mod_hydrogen
 
         ILs%abundance = 0
         ILs%int_dered = 0
-        H_Balmer%abundance = 0
-        H_Balmer%int_dered = 0
-        H_Paschen%abundance = 0
-        H_Paschen%int_dered = 0
         HeI_lines%abundance = 0
         HeI_lines%int_dered = 0
         HeII_lines%abundance = 0
         HeII_lines%int_dered = 0
 
         !first find hydrogen and helium lines
-        CALL get_H(H_Balmer, H_Paschen, linelist, listlength)
+        CALL get_H(H_Balmer, H_Paschen, linelist)
         call get_Hei(Hei_lines, linelist, listlength)
         call get_Heii(Heii_lines, linelist, listlength)
 
         !is H beta detected? if not, we can't do anything.
         !todo: the calculation of expected Hbeta from Halpha and c(Hb) needs fixing as Hb=0 now triggers an error outside the loop - 15/05/2015
 
-        if (H_Balmer(2)%intensity .eq. 0.D0) then
+        if (linelist(H_Balmer(4))%intensity .eq. 0.D0) then
           print *,"   No H beta found"
-          if (H_Balmer(1)%intensity .gt. 0.D0 .and. calculate_extinction .eqv. .false.) then
+          if (linelist(H_Balmer(3))%intensity .gt. 0.D0 .and. calculate_extinction .eqv. .false.) then
             print *, "   Estimating from observed H alpha and specified c(Hb)" !do we really want this to be printed out 10000 times?
-            print "(4X,F6.2,A5,F6.3,A13)",H_Balmer(1)%intensity," and ",meanextinction," respectively"
-            H_Balmer(2)%intensity=(H_Balmer(1)%intensity/2.85)*10.**(meanextinction*H_Balmer(1)%flambda)
-            print "(4X,A9,F6.2)","H beta = ",(H_Balmer(2)%intensity)
+            print "(4X,F6.2,A5,F6.3,A13)",linelist(H_Balmer(3))%intensity," and ",meanextinction," respectively"
+            linelist(H_Balmer(4))%intensity=(linelist(H_Balmer(3))%intensity/2.85)*10.**(meanextinction*linelist(H_Balmer(3))%flambda)
+            print "(4X,A9,F6.2)","H beta = ",(linelist(H_Balmer(4))%intensity)
           else
             print *,"   Specify the extinction from the command line with the -c option to proceed"
             stop
@@ -145,7 +144,7 @@ use mod_hydrogen
 ! changes here may also need to be made in the subsequent section too
 
         if (calculate_extinction) then
-                CALL calc_extinction_coeffs(H_Balmer, c1, c2, c3, meanextinction, switch_ext, DBLE(10000.),DBLE(1000.), R)
+                CALL calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction, switch_ext, DBLE(10000.),DBLE(1000.), R)
 
                 if (meanextinction .lt. 0.0 .or. isnan(meanextinction)) then
                    meanextinction = 0.0
@@ -161,8 +160,6 @@ use mod_hydrogen
         !actual dereddening
 
         call deredden(ILs, meanextinction)
-        call deredden(H_Balmer, meanextinction)
-        call deredden(H_Paschen, meanextinction)
         call deredden(HeI_lines, meanextinction)
         call deredden(HeII_lines, meanextinction)
         call deredden(linelist, meanextinction)
@@ -376,13 +373,12 @@ use mod_hydrogen
         if (calculate_extinction) then
 
           ILs%int_dered = 0
-          H_Balmer%int_dered = 0
           HeI_lines%int_dered = 0
           HeII_lines%int_dered = 0
 
         !update extinction. DS 22/10/11
           meanextinction=0
-          CALL calc_extinction_coeffs(H_Balmer, c1, c2, c3, meanextinction, switch_ext, medtemp, lowdens, R)
+          CALL calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction, switch_ext, medtemp, lowdens, R)
 
           if (meanextinction .lt. 0.0 .or. isnan(meanextinction)) then
              meanextinction = 0.0
@@ -390,8 +386,6 @@ use mod_hydrogen
 
           linelist = linelist_orig
           call deredden(ILs, meanextinction)
-          call deredden(H_Balmer, meanextinction)
-          call deredden(H_Paschen, meanextinction)
           call deredden(HeI_lines, meanextinction)
           call deredden(HeII_lines, meanextinction)
           call deredden(linelist, meanextinction)
@@ -580,6 +574,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 !  Calculate T_e from Balmer Jump using equation 3 of Liu et al. (2001)
 
         Te_balmer = 0.0
+
         Balmer_jump(1)%int_dered = 0.0
         Balmer_jump(2)%int_dered = 0.0
 
@@ -588,8 +583,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
             if(linelist(i)%wavelength .eq. 3646.50) Balmer_jump(2) = linelist(i)
         enddo
 
-        if(Balmer_jump(1)%int_dered .gt. 0 .and. Balmer_jump(2)%int_dered .gt. 0 .and. H_Balmer(9)%intensity .gt. 0) then
-        Te_balmer = (Balmer_jump(1)%int_dered - Balmer_jump(2)%int_dered)/H_Balmer(9)%int_dered
+        if(Balmer_jump(1)%int_dered .gt. 0 .and. Balmer_jump(2)%int_dered .gt. 0 .and. linelist(H_Balmer(11))%intensity .gt. 0) then
+        Te_balmer = (Balmer_jump(1)%int_dered - Balmer_jump(2)%int_dered)/linelist(H_Balmer(11))%int_dered
         Te_balmer = Te_balmer**(-1.5)
         Te_balmer = Te_balmer*368
         Te_balmer = Te_balmer*(1+0.256*heiabund+3.409*heiiabund)
@@ -608,8 +603,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
             if(linelist(i)%wavelength .eq. 8400.d0) Paschen_jump(2) = linelist(i)
         enddo
 
-        if(Paschen_jump(1)%int_dered .gt. 0 .and. Paschen_jump(2)%int_dered .gt. 0 .and. H_Paschen(8)%intensity .gt. 0) then
-        Te_paschen = (Paschen_jump(1)%int_dered - Paschen_jump(2)%int_dered)/H_Paschen(8)%int_dered
+        if(Paschen_jump(1)%int_dered .gt. 0 .and. Paschen_jump(2)%int_dered .gt. 0 .and. linelist(H_Paschen(11))%intensity .gt. 0) then
+        Te_paschen = (Paschen_jump(1)%int_dered - Paschen_jump(2)%int_dered)/linelist(H_Paschen(11))%int_dered
         Te_paschen = Te_paschen**(-1.77)
         Te_paschen = Te_paschen*8.72
         Te_paschen = Te_paschen*(1+0.52*heiabund+4.40*heiiabund)
@@ -619,12 +614,12 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
 ! calculate n_e from Balmer decrement
 
-        call balmer_densities(H_Balmer,medtemp,balmerdec_density)
+        call balmer_densities(linelist,H_Balmer,medtemp,balmerdec_density)
         iteration_result%balmerdec_density=balmerdec_density
 
 ! and from Paschen decrement. todo: add to iteration result
 
-        call paschen_densities(H_Paschen,medtemp,paschendec_density)
+        call paschen_densities(linelist,H_Paschen,medtemp,paschendec_density)
         iteration_result%paschendec_density=paschendec_density
 
 ! get Te from He line ratios
@@ -1866,8 +1861,8 @@ endif
 !O N2 Pettini + Pagel 2004
 
 ion_no1 = get_ion("nii6584    ",ILs, Iint)
-if (ILs(ion_no1)%int_dered .gt. 0 .and. H_Balmer(1)%int_dered .gt. 0) then
-  N2 = ILs(ion_no1)%int_dered / H_Balmer(1)%int_dered
+if (ILs(ion_no1)%int_dered .gt. 0 .and. linelist(H_Balmer(3))%int_dered .gt. 0) then
+  N2 = ILs(ion_no1)%int_dered / linelist(H_Balmer(3))%int_dered
   O_N2 = 8.90 + (0.57 * N2)
   iteration_result(1)%O_N2 = O_N2
 endif
@@ -1875,8 +1870,8 @@ endif
 !O O3N2 Pettini + Pagel 2004
 
 ion_no2 = get_ion("oiii5007   ",ILs, Iint)
-if (ILS(ion_no1)%int_dered .gt. 0 .and. ILs(ion_no2)%int_dered .gt. 0 .and. H_Balmer(1)%int_dered .gt. 0) then
-  O3N2 = log10((ILS(ion_no2)%int_dered*H_Balmer(1)%int_dered)/(ILS(ion_no1)%int_dered * H_Balmer(2)%int_dered))
+if (ILS(ion_no1)%int_dered .gt. 0 .and. ILs(ion_no2)%int_dered .gt. 0 .and. linelist(H_Balmer(3))%int_dered .gt. 0) then
+  O3N2 = log10((ILS(ion_no2)%int_dered*linelist(H_Balmer(3))%int_dered)/(ILS(ion_no1)%int_dered * linelist(H_Balmer(3))%int_dered))
   O_O3N2 = 8.73 - (0.32*O3N2)
   iteration_result(1)%O_O3N2 = O_O3N2
 endif
@@ -1984,14 +1979,16 @@ endwhere
 
 !write ion names to array
 
-do i=1,38
-  if (H_Balmer(i)%location .gt. 0) then
-    linelist(H_Balmer(i)%location)%name = "H I"
-    linelist(H_Balmer(i)%location)%latextext = "H~{\sc i}"
+do i=3,40
+  if (H_Balmer(i) .gt. 0) then
+    linelist(H_Balmer(i))%name = "H I"
+    linelist(H_Balmer(i))%latextext = "H~{\sc i}"
   endif
-  if (H_Paschen(i)%location .gt. 0) then
-    linelist(H_Paschen(i)%location)%name = "H I"
-    linelist(H_Paschen(i)%location)%latextext = "H~{\sc i}"
+enddo
+do i=4,39
+  if (H_Paschen(i) .gt. 0) then
+    linelist(H_Paschen(i))%name = "H I"
+    linelist(H_Paschen(i))%latextext = "H~{\sc i}"
   endif
 end do
 

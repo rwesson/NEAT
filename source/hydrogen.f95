@@ -48,12 +48,13 @@ close (357)
 
 end subroutine read_hydrogen
 
-subroutine balmer_densities(H_Balmer,medtemp,density)
+subroutine balmer_densities(linelist,H_Balmer,medtemp,density)
 
 implicit none
 integer, parameter :: dp = kind(1.d0)
 
-type(line), dimension(:) :: H_Balmer
+integer, dimension(:), intent(in) :: H_Balmer
+type(line), dimension(:), intent(in) :: linelist
 real(kind=dp), dimension(10:25) :: ratios,densities
 real(kind=dp), dimension(:,:,:), allocatable :: searcharray
 real(kind=dp) :: density, interp_t, weight
@@ -65,10 +66,9 @@ integer :: H ! temporary, which line to look at
 density=0.d0
 weight=0.d0
 
-!nb H_Balmer indexing is such that entry 1 contains H3, etc
-!Thus H10 is in entry 8
+!H_Balmer indexing is such that entry 3 contains H3, etc
 !allocate arrays to store values, high order lines (n>10) only
-ratios = H_Balmer(8:23)%int_dered/H_Balmer(2)%int_dered
+ratios = linelist(H_Balmer(10):H_balmer(25))%int_dered/linelist(H_Balmer(4))%int_dered
 densities=0.d0
 
 !allocate the search array.  emissivities array has dimensions of temperature, density, level 1, level 2
@@ -99,7 +99,7 @@ endif
 !intrat data only goes up to n=25
 
 do H=10,25
-  if (H_Balmer(H-2)%int_dered .gt. 0.d0) then !line is present, calculate a density
+  if (H_Balmer(H) .gt. 0) then !line is present, calculate a density
     if (ratios(H) .lt. (searcharray(1,H,2)/searcharray(1,4,2))) then
       densities(H) = 2.
     elseif (ratios(H) .gt. (searcharray(ndens,H,2)/searcharray(ndens,4,2))) then
@@ -120,8 +120,8 @@ end do
 
 do i=10,25
   if (densities(i).gt.0.d0) then
-    density=density+H_Balmer(i-2)%int_dered*densities(i)
-    weight=weight+H_Balmer(i-2)%int_dered
+    density=density+linelist(H_Balmer(i))%int_dered*densities(i)
+    weight=weight+linelist(H_Balmer(i))%int_dered
   endif
 enddo
 
@@ -143,13 +143,14 @@ deallocate(searcharray)
 
 end subroutine balmer_densities
 
-subroutine paschen_densities(H_Paschen,medtemp,density)
+subroutine paschen_densities(linelist,H_Paschen,medtemp,density)
 ! computed using ratios of Paschen lines to Hbeta
 ! will change to P9, checking if it is observed
 implicit none
 integer, parameter :: dp = kind(1.d0)
 
-type(line), dimension(:) :: H_Paschen
+integer, dimension(:),intent(in) :: H_Paschen
+type(line), dimension(:), intent(in) :: linelist
 real(kind=dp), dimension(10:25) :: ratios,densities
 real(kind=dp), dimension(:,:,:), allocatable :: searcharray
 real(kind=dp) :: density, interp_t, weight
@@ -161,10 +162,11 @@ integer :: H ! temporary, which line to look at
 density=0.d0
 weight=0.d0
 
-!nb H_Paschen indexing is such that entry 1 contains H4, etc
-!Thus H10 is in entry 7
+!H_Paschen indexing is such that entry 4 contains P4, etc
 !allocate arrays to store values, high order lines (n>10) only
-ratios = H_Paschen(7:22)%int_dered/100.d0
+!todo: this will be wrong if spectrum is not normalised to Hb=100
+!should check for this
+ratios = linelist(H_Paschen(10):H_Paschen(25))%int_dered/100.d0
 densities=0.d0
 
 !allocate the search array.  emissivities array has dimensions of temperature, density, level 1, level 2
@@ -195,7 +197,7 @@ endif
 !intrat data only goes up to n=25
 
 do H=10,25
-  if (H_Paschen(H-3)%int_dered .gt. 0.d0) then !line is present, calculate a density
+  if (H_Paschen(H) .gt. 0) then !line is present, calculate a density
     if (ratios(H) .lt. (searcharray(1,H,3)/searcharray(1,4,2))) then
       densities(H) = 2.
     elseif (ratios(H) .gt. (searcharray(ndens,H,3)/searcharray(ndens,4,2))) then
@@ -216,8 +218,8 @@ end do
 
 do i=10,25
   if (densities(i).gt.0.d0) then
-    density=density+H_Paschen(i-3)%int_dered*densities(i)
-    weight=weight+H_Paschen(i-3)%int_dered
+    density=density+linelist(H_Paschen(i))%int_dered*densities(i)
+    weight=weight+linelist(H_Paschen(i))%int_dered
   endif
 enddo
 

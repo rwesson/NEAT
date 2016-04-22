@@ -277,7 +277,43 @@ subroutine element_assign(ILs, linelist, Iint, listlength)
 
 end subroutine
 
-subroutine get_H(H_Balmer, H_Paschen, linelist, listlength)
+subroutine get_H(H_Balmer, H_paschen, linelist)
+  implicit none
+  integer, dimension(3:40), intent(out) :: H_balmer ! indexing starts at 3 so that it represents the upper level of the line
+  integer, dimension(4:39), intent(out) :: H_paschen ! indexing starts at 4 for the same reason
+  real, dimension(3:40) :: balmerwavelengths
+  real, dimension(4:39) :: paschenwavelengths
+  type(line), dimension(:) :: linelist
+  integer :: i,j
+
+  balmerwavelengths = (/ 6562.77D0, 4861.33D0, 4340.47D0, 4101.74D0, 3970.07D0, 3889.05D0, 3835.38D0, 3797.90D0, 3770.63D0, 3750.15D0, 3734.37D0, 3721.94D0, 3711.97D0, 3703.85D0, 3697.15D0, 3691.55D0, 3686.83D0, 3682.81D0, 3679.35D0, 3676.36D0, 3673.76D0, 3671.48D0, 3669.46D0, 3667.68D0, 3666.10D0, 3664.68D0, 3663.40D0, 3662.26D0, 3661.22D0, 3660.28D0, 3659.42D0, 3658.64D0, 3657.92D0, 3657.27D0, 3656.66D0, 3656.11D0, 3655.59D0, 3655.12D0 /)
+
+  paschenwavelengths = (/ 18751.01d0, 12818.08d0, 10938.10d0, 10049.37d0, 9545.97d0, 9229.01d0, 9014.91d0, 8862.78d0, 8750.47d0, 8665.02d0, 8598.39d0, 8545.38d0, 8502.48d0, 8467.25d0, 8437.95d0, 8413.32d0, 8392.40d0, 8374.48d0, 8359.00d0, 8345.47d0, 8333.78d0, 8323.42d0, 8314.26d0, 8306.11d0, 8298.83d0, 8292.31d0, 8286.43d0, 8281.12d0, 8276.31d0, 8271.93d0, 8267.94d0, 8264.28d0, 8260.93d0, 8255.02d0, 8252.40d0, 8249.97d0 /)
+
+  H_balmer = 0
+  H_paschen = 0
+
+  do i=1,size(linelist)
+    do j=3,40
+      if (abs(linelist(i)%wavelength - balmerwavelengths(j)) .lt. 0.005) then
+        H_balmer(j)=i
+        cycle
+      endif
+    enddo
+  enddo
+
+  do i=1,size(linelist)
+    do j=4,39
+      if (abs(linelist(i)%wavelength - paschenwavelengths(j)) .lt. 0.005) then
+        H_paschen(j)=i
+        cycle
+      endif
+    enddo
+  enddo
+
+end subroutine
+
+subroutine get_H_old(H_Balmer, H_Paschen, linelist, listlength)
         IMPLICIT NONE
         TYPE(line), DIMENSION(38), INTENT(OUT) :: H_Balmer, H_Paschen
         TYPE(line), DIMENSION(:) :: linelist
