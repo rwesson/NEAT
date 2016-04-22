@@ -336,30 +336,22 @@ subroutine get_HeI(HeI_lines, linelist)
 
 end subroutine
 
-subroutine get_HeII(HeII_lines, linelist,listlength)
+subroutine get_HeII(HeII_lines, linelist)
         IMPLICIT NONE
-        TYPE(line), DIMENSION(1), INTENT(OUT) :: HeII_lines
+        integer, DIMENSION(1), INTENT(OUT) :: HeII_lines
         TYPE(line), DIMENSION(:), INTENT(IN) :: linelist
-        INTEGER :: i, j, listlength
+        real, dimension(1) :: wavelengths
+        INTEGER :: i, j
 
-        heii_lines%wavelength = (/ 4685.68D0 /)
-        heii_lines%location = 0
-        HeIi_lines%intensity=0.D0
-        HeIi_lines%int_err=0d0
-        HeIi_lines%abundance=0d0
-        HeIi_lines%freq=0d0
-        HeIi_lines%int_dered=0d0
-        HeIi_lines%zone='    '
-        HeIi_lines%name='           '
-        HeIi_lines%transition='                    '
-        HeIi_lines%ion='                   '
-        HeIi_lines%latextext='               '
+        wavelengths = (/ 4685.68D0 /)
+
+        heii_lines = 0
 
         do i = 1, 1
-          do j = 1, listlength
-            if(abs(linelist(j)%wavelength-Heii_lines(i)%wavelength).lt.0.005) then
-              Heii_lines(i) = linelist(j)
-              Heii_lines(i)%location = j
+          do j = 1, size(linelist)
+            if(abs(linelist(j)%wavelength-wavelengths(i)).lt.0.005) then
+              Heii_lines(i) = j
+              cycle
             endif
           end do
         end do

@@ -42,14 +42,14 @@ use mod_hydrogen
         logical :: calculate_extinction
 
         TYPE(line), DIMENSION(Iint) :: ILs
-        TYPE(line), DIMENSION(1) :: HeII_lines
         TYPE(line), DIMENSION(2) :: Balmer_jump, Paschen_jump
 
 ! index arrays to locate lines of interest in the main line list
 
         integer, dimension(3:40) :: H_balmer
         integer, dimension(4:39) :: H_paschen
-        integer, DIMENSION(44) :: HeI_lines
+        integer, dimension(44) :: HeI_lines
+        integer, dimension(1) :: HeII_lines
 
 !atomic data
 
@@ -96,8 +96,6 @@ use mod_hydrogen
 
         linelist_orig = linelist
 
-        HeII_lines%intensity = 0
-
         !store fluxes of blends for later retrieval
 
         where (linelist%blend_intensity .gt. 0.d0)
@@ -113,13 +111,11 @@ use mod_hydrogen
 
         ILs%abundance = 0
         ILs%int_dered = 0
-        HeII_lines%abundance = 0
-        HeII_lines%int_dered = 0
 
         !first find hydrogen and helium lines
         CALL get_H(H_Balmer, H_Paschen, linelist)
         call get_Hei(Hei_lines, linelist)
-        call get_Heii(Heii_lines, linelist, listlength)
+        call get_Heii(Heii_lines, linelist)
 
         !is H beta detected? if not, we can't do anything.
         !todo: the calculation of expected Hbeta from Halpha and c(Hb) needs fixing as Hb=0 now triggers an error outside the loop - 15/05/2015
@@ -157,7 +153,6 @@ use mod_hydrogen
         !actual dereddening
 
         call deredden(ILs, meanextinction)
-        call deredden(HeII_lines, meanextinction)
         call deredden(linelist, meanextinction)
 
 !diagnostics
@@ -369,7 +364,6 @@ use mod_hydrogen
         if (calculate_extinction) then
 
           ILs%int_dered = 0
-          HeII_lines%int_dered = 0
 
         !update extinction. DS 22/10/11
           meanextinction=0
@@ -381,7 +375,6 @@ use mod_hydrogen
 
           linelist = linelist_orig
           call deredden(ILs, meanextinction)
-          call deredden(HeII_lines, meanextinction)
           call deredden(linelist, meanextinction)
 
         endif ! end of extinction calculating
@@ -552,8 +545,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 ! Helium abundances
 ! He II
 
-        call get_heii_abund(medtemp,meddens,Heii_lines(1)%int_dered,heiiabund)
-        Heii_lines(1)%abundance = heiiabund
+        call get_heii_abund(medtemp,meddens,linelist(Heii_lines(1))%int_dered,heiiabund)
+        linelist(Heii_lines(1))%abundance = heiiabund
 
 ! He I
 
@@ -1993,10 +1986,9 @@ do i=1,44
   endif
 end do
 
-if (HeII_lines(1)%location .gt. 0) then
-    linelist(HeII_lines(1)%location)%abundance = HeII_lines(1)%abundance
-    linelist(HeII_lines(1)%location)%name = "He II"
-    linelist(HeII_lines(1)%location)%latextext = "He~{\sc ii}"
+if (HeII_lines(1) .gt. 0) then
+    linelist(HeII_lines(1))%name = "He II"
+    linelist(HeII_lines(1))%latextext = "He~{\sc ii}"
 endif
 
 contains
