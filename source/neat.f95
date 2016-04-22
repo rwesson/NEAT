@@ -137,7 +137,7 @@ program neat
 
         runs=1
         switch_ext="S" !Howarth 1983 Galactic law
-        switch_he="S"  !Smits 1996 data
+        switch_he="P"  !Porter 2012 data
         switch_icf="D" !DI14 ICF
         filename=""
         meanextinction=0.D0
