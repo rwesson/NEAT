@@ -396,7 +396,7 @@ use mod_hydrogen
           call deredden(HeII_lines, meanextinction)
           call deredden(linelist, meanextinction)
 
-        endif ! end of exinction calculating
+        endif ! end of extinction calculating
 
       enddo ! end of diagnostic iteration
 
