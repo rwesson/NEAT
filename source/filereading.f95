@@ -253,11 +253,11 @@ integer function get_atomicdata(ionname, atomicdatatable)
 
 end function
 
-subroutine element_assign(ILs, linelist, Iint, listlength)
+subroutine element_assign(ILs, linelist, Iint)
         IMPLICIT NONE
         TYPE(line), DIMENSION(:), INTENT(OUT) :: ILs
         TYPE(line), DIMENSION(:) :: linelist
-        INTEGER, INTENT(IN) :: Iint, listlength
+        INTEGER, INTENT(IN) :: Iint
         INTEGER :: i, j
         character(len=11) :: temp
 
@@ -265,7 +265,7 @@ subroutine element_assign(ILs, linelist, Iint, listlength)
 
         do i = 1, Iint
                 ILs(i)%location = 0 !initialise first to prevent random integers appearing and breaking things
-                do j = 1, listlength
+                do j = 1, size(linelist)
                         if(linelist(j)%wavelength == ILs(i)%wavelength)then
                                 ILs(i)%intensity = linelist(j)%intensity
                                 ILs(i)%int_err   = linelist(j)%int_err

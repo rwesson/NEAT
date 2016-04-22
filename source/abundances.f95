@@ -105,7 +105,7 @@ use mod_hydrogen
 
         !assign IDs to CELs
 
-        CALL element_assign(ILs, linelist, Iint, listlength)
+        CALL element_assign(ILs, linelist, Iint)
 
         !dereddening
 
