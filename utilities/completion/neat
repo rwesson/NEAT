@@ -9,11 +9,7 @@ _neat()
     prev="${COMP_WORDS[COMP_CWORD-1]}"
     opts="-i -u -n -e -c -nelow -nemed -nehigh -telow -temed -tehigh -he -icf -v -id -rp --input --uncertainties --n-iterations --extinction-law --helium-data --ionisation-correction-scheme --verbosity --identify"
 
-    if [[ "$cur" == -* ]]; then
-        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-    else
-        _filedir
-    fi
+    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
 
     case "${prev}" in
         --helium-data|-he)
@@ -37,6 +33,7 @@ _neat()
             return 0
             ;;
         --input|-i)
+            COMPREPLY=()
             _filedir
             return 0
             ;;
