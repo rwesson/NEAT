@@ -123,7 +123,6 @@ do H=10,25
       enddo
     endif
   endif
-print *,H,ratios(H),densities(H)
 end do
 
 !now we have an array with all the densities implied by the ratios.  Derive a flux weighted value
