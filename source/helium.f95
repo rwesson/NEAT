@@ -37,7 +37,9 @@
 
       do i = 1,44
         call get_emissivity_porter(te,ne, i, emissivities(i), heidata)
-        linelist(He_lines(i))%abundance = linelist(He_lines(i))%int_dered/100. * 10.**(GAMM4861(TE,NE)-emissivities(i))
+        if (He_lines(i).gt.0) then
+          linelist(He_lines(i))%abundance = linelist(He_lines(i))%int_dered/100. * 10.**(GAMM4861(TE,NE)-emissivities(i))
+        endif
       end do
 
       AB4471 = linelist(He_lines(10))%abundance

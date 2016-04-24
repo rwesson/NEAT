@@ -6,49 +6,47 @@ integer, parameter :: dp = kind(1.d0)
 
 contains
 
-subroutine calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction, switch_ext, temp, dens, R)
+subroutine calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction, temp, dens, R)
         IMPLICIT NONE
         integer, parameter :: dp = kind(1.d0)
         type(line), dimension(:), intent(in) :: linelist
         integer, dimension(3:40) :: H_Balmer
         real(kind=dp) :: c1, c2, c3, meanextinction, R
-        real(kind=dp) :: fl_ha, fl_hg, fl_hd
-        character :: switch_ext
         real(kind=dp) :: temp, dens
 
 !Section with interpolations for Balmer ratios for T_e (temp) and N_e (dens)
 !interpolating over 6 Te points, 5,7.5,10,12.5,15,20kK and 3 Ne points 10^2, 10^3 10^4 cm^(-3)
 
-if (linelist(H_Balmer(3))%intensity .gt. 0 .and. linelist(H_Balmer(4))%intensity .gt. 0) then
-        c1 = log10( ( DBLE(linelist(H_Balmer(3))%intensity) / DBLE(linelist(H_Balmer(4))%intensity) )/ calc_balmer_ratios(temp, dens, 1)    )/(-linelist(H_Balmer(3))%flambda)
-else
-        c1 = 0.0
-endif
+        if (linelist(H_Balmer(3))%intensity .gt. 0 .and. linelist(H_Balmer(4))%intensity .gt. 0) then
+          c1 = log10( ( DBLE(linelist(H_Balmer(3))%intensity) / DBLE(linelist(H_Balmer(4))%intensity) )/ calc_balmer_ratios(temp, dens, 1)    )/(-linelist(H_Balmer(3))%flambda)
+        else
+          c1 = 0.0
+        endif
 
-if (linelist(H_Balmer(5))%intensity .gt. 0 .and. linelist(H_Balmer(4))%intensity .gt. 0) then
-        c2 = log10( ( DBLE(linelist(H_Balmer(5))%intensity) / DBLE(linelist(H_Balmer(4))%intensity) )/ calc_balmer_ratios(temp, dens, 2) )/(-linelist(H_Balmer(5))%flambda)
-else
-        c2=0.0
-endif
+        if (linelist(H_Balmer(5))%intensity .gt. 0 .and. linelist(H_Balmer(4))%intensity .gt. 0) then
+          c2 = log10( ( DBLE(linelist(H_Balmer(5))%intensity) / DBLE(linelist(H_Balmer(4))%intensity) )/ calc_balmer_ratios(temp, dens, 2) )/(-linelist(H_Balmer(5))%flambda)
+        else
+          c2=0.0
+        endif
 
-if (linelist(H_Balmer(6))%intensity .gt. 0 .and. linelist(H_Balmer(4))%intensity .gt. 0) then
-        c3 = log10( ( DBLE(linelist(H_Balmer(6))%intensity) / DBLE(linelist(H_Balmer(4))%intensity) )/ calc_balmer_ratios(temp, dens, 3) )/(-linelist(H_Balmer(6))%flambda)
-else
-        c3 = 0.0
-endif
+        if (linelist(H_Balmer(6))%intensity .gt. 0 .and. linelist(H_Balmer(4))%intensity .gt. 0) then
+          c3 = log10( ( DBLE(linelist(H_Balmer(6))%intensity) / DBLE(linelist(H_Balmer(4))%intensity) )/ calc_balmer_ratios(temp, dens, 3) )/(-linelist(H_Balmer(6))%flambda)
+        else
+          c3 = 0.0
+        endif
 
-if (c1<0) then
+        if (c1<0) then
 !        print *,"Warning: c(Ha) less than zero"
-        c1=0
-endif
-if (c2<0) then
+          c1=0
+        endif
+        if (c2<0) then
 !        print *,"Warning: c(Hg) less than zero"
-        c2=0
-endif
-if (c3<0) then
+          c2=0
+        endif
+        if (c3<0) then
 !        print *,"Warning: c(Hd) less than zero"
-        c3=0
-endif
+          c3=0
+        endif
 
         meanextinction = (c1*linelist(H_Balmer(3))%intensity + c2*linelist(H_Balmer(5))%intensity + c3*linelist(H_Balmer(6))%intensity) / (linelist(H_Balmer(3))%intensity + linelist(H_Balmer(5))%intensity + linelist(H_Balmer(6))%intensity)
 
@@ -145,7 +143,7 @@ subroutine get_flambda(linelist, switch_ext, R)
         type(line), dimension(:) :: linelist
         character(len=1) :: switch_ext
         real(kind=dp) :: R
-        real(kind=dp) :: x_0, c1, c2, c3, c4, gamma, D, F ! Fitzpatrick constants
+        real(kind=dp) :: x_0, c1, c2, c3, c4, gamma, F ! Fitzpatrick constants
         c1 = -0.38
         c2 =  0.74
         c3 =  3.96

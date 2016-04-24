@@ -1,4 +1,4 @@
-subroutine abundances(linelist, switch_ext, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, Iint, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf)
+subroutine abundances(linelist, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf)
 use mod_abundmaths
 use mod_abundtypes
 use mod_equib
@@ -12,10 +12,9 @@ use mod_oii_diagnostics
 use mod_hydrogen
 
         implicit none
-        integer :: counter, Iint, i, j
+        integer :: counter, i, j
         integer, intent(in) :: listlength
         type(line), dimension(listlength) :: linelist, linelist_orig
-        character :: switch_ext !switch for extinction laws
         character :: switch_he !switch for helium atomic data
         character :: switch_icf !switch for which ICF to use
         type(resultarray), dimension(1) :: iteration_result
@@ -128,7 +127,7 @@ use mod_hydrogen
 ! changes here may also need to be made in the subsequent section too
 
         if (calculate_extinction) then
-                call calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction, switch_ext, dble(10000.),dble(1000.), R)
+                call calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction, dble(10000.),dble(1000.), R)
 
                 if (meanextinction .lt. 0.0 .or. isnan(meanextinction)) then
                    meanextinction = 0.d0
@@ -353,7 +352,7 @@ use mod_hydrogen
 
         !update extinction. DS 22/10/11
           meanextinction=0
-          call calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction, switch_ext, medtemp, lowdens, R)
+          call calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction, medtemp, lowdens, R)
 
           if (meanextinction .lt. 0.0 .or. isnan(meanextinction)) then
              meanextinction = 0.d0
@@ -532,10 +531,10 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
         if (Heii_lines(1) .gt. 0) then
           call get_heii_abund(medtemp,meddens,linelist(Heii_lines(1))%int_dered,heiiabund)
+          linelist(Heii_lines(1))%abundance = heiiabund
         else
           heiiabund = 0.d0
         endif
-        linelist(Heii_lines(1))%abundance = heiiabund
 
 ! He I
 

@@ -53,7 +53,7 @@ subroutine balmer_densities(linelist,H_Balmer,medtemp,density)
 implicit none
 integer, parameter :: dp = kind(1.d0)
 
-integer, dimension(:), intent(in) :: H_Balmer
+integer, dimension(3:40), intent(in) :: H_Balmer
 type(line), dimension(:), intent(in) :: linelist
 real(kind=dp), dimension(10:25) :: ratios,densities
 real(kind=dp), dimension(:,:,:), allocatable :: searcharray
@@ -68,7 +68,16 @@ weight=0.d0
 
 !H_Balmer indexing is such that entry 3 contains H3, etc
 !allocate arrays to store values, high order lines (n>10) only
-ratios = linelist(H_Balmer(10):H_balmer(25))%int_dered/linelist(H_Balmer(4))%int_dered
+!todo: make this more efficient, previously vectorised but change to indexing instead of copying array means that we have to check if the index is meaningful where previously there would just have been a zero flux.  Make indices point to a null line placed after the linelist array?
+
+do i=10,25
+  if (H_balmer(i).gt.0) then
+    ratios(i) = linelist(H_Balmer(i))%int_dered/linelist(H_Balmer(4))%int_dered
+  else
+    ratios(i) = 0
+  endif
+enddo
+
 densities=0.d0
 
 !allocate the search array.  emissivities array has dimensions of temperature, density, level 1, level 2
@@ -114,6 +123,7 @@ do H=10,25
       enddo
     endif
   endif
+print *,H,ratios(H),densities(H)
 end do
 
 !now we have an array with all the densities implied by the ratios.  Derive a flux weighted value
@@ -149,7 +159,7 @@ subroutine paschen_densities(linelist,H_Paschen,medtemp,density)
 implicit none
 integer, parameter :: dp = kind(1.d0)
 
-integer, dimension(:),intent(in) :: H_Paschen
+integer, dimension(4:39),intent(in) :: H_Paschen
 type(line), dimension(:), intent(in) :: linelist
 real(kind=dp), dimension(10:25) :: ratios,densities
 real(kind=dp), dimension(:,:,:), allocatable :: searcharray
@@ -166,7 +176,15 @@ weight=0.d0
 !allocate arrays to store values, high order lines (n>10) only
 !todo: this will be wrong if spectrum is not normalised to Hb=100
 !should check for this
-ratios = linelist(H_Paschen(10):H_Paschen(25))%int_dered/100.d0
+!todo: make more efficient, as above for the Balmer routine
+do i=10,25
+  if (H_Paschen(i).gt.0) then
+    ratios(i) = linelist(H_Paschen(i))%int_dered/100.d0
+  else
+    ratios(i) = 0
+  endif
+enddo
+
 densities=0.d0
 
 !allocate the search array.  emissivities array has dimensions of temperature, density, level 1, level 2

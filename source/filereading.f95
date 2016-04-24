@@ -166,7 +166,7 @@ subroutine read_celdata(ILs, ionlist)
         implicit none
         type(cel), dimension(82) :: ILs !todo: restore this to allocatable once I've worked out why assumed shape caused it to become undefined on entry to abundances
         character(len=20), dimension(22) :: ionlist !todo: find a clever way of counting this instead of hard coding it if possible.
-        integer :: i, iint, iion, numberoflines
+        integer :: iint, iion, numberoflines
 
         Iint = 1
 
@@ -304,7 +304,6 @@ subroutine get_cels(ILs, linelist)
         type(cel), dimension(:) :: ILs
         type(line), dimension(:) :: linelist
         integer :: i, j
-        character(len=11) :: temp
 
         ILs%location=0
 
