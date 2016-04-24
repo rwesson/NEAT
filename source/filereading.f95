@@ -159,46 +159,43 @@ subroutine read_linelist(filename,linelist,listlength,ncols,errstat)
 
 end subroutine read_linelist
 
-subroutine read_ilines(ILs, Iint,iion,ionlist)
-        IMPLICIT NONE
-        TYPE(line), DIMENSION(:), allocatable :: ILs
-        INTEGER :: Iint, Iread,iion
-        character(len=10) :: ionlist(40)
+subroutine read_celdata(ILs, ionlist)
+!this subroutine reads in the parameters of CEL diagnostic lines - the line id, ion name, wavelength, energy levels, and zone.  the index locating the line in the main line list is filled in later.
+!the routine also populates the list of ions which is then used to read in the relevant atomic data
+
+        implicit none
+        type(cel), dimension(82) :: ILs !todo: restore this to allocatable once I've worked out why assumed shape caused it to become undefined on entry to abundances
+        character(len=20), dimension(22) :: ionlist !todo: find a clever way of counting this instead of hard coding it if possible.
+        integer :: i, iint, iion, numberoflines
 
         Iint = 1
 
-        301 FORMAT(A11, 1X, A6, 1X, F7.2, 1X, A20,1X,A4,1X,A15)
-        OPEN(201, file=trim(PREFIX)//"/share/neat/Ilines_levs", status='old')
-                READ (201,*) Iread
-                ALLOCATE (ILs(Iread))
-                ILs%intensity=0.D0 !otherwise it seems you can get random very small numbers in the array.
-                Ils%wavelength=0d0
-                ils%int_err=0d0
-                ils%flambda=0d0
-                ils%abundance=0d0
-                ils%freq=0d0
-                ils%int_dered=0d0
-                ils%zone='    '
-                ils%name='           '
-                ils%transition='                    '
-                ils%location=0
-                ils%ion='                   '
-                ils%latextext='               '
-                ils%linedata='                                                                           '
-                DO WHILE (Iint .le. Iread)!(.true.)
-                        READ(201,301) ILs(Iint)%name, ILs(Iint)%ion, ILs(Iint)%wavelength, ILs(Iint)%transition ,ILs(Iint)%zone, ILs(Iint)%latextext!end condition breaks loop.
+        301 format(A11, 1X, A6, 1X, F7.2, 1X, A20,1X,A4,1X,A15)
+        open(201, file=trim(PREFIX)//"/share/neat/Ilines_levs", status='old')
+                read (201,*) numberoflines !number of lines to read in is given at the top of the file
+!                allocate (ILs(numberoflines)) todo: restore
+                Ils%name='           '
+                Ils%ion='                   '
+                Ils%wavelength=0.d0
+                Ils%transition='                    '
+                Ils%zone='    '
+                Ils%latextext='               '
+                Ils%location=0
+                do while (Iint .le. numberoflines)
+                        read(201,301) ILs(Iint)%name, ILs(Iint)%ion, ILs(Iint)%wavelength, ILs(Iint)%transition ,ILs(Iint)%zone, ILs(Iint)%latextext!end condition breaks loop.
                         if(Iint .eq. 1) then
                             Iion = 1
-                            Ionlist(iion) = ILs(Iint)%ion(1:10)
+                            Ionlist(iion) = ILs(Iint)%ion
                         elseif(ILs(Iint)%ion .ne. ILs(Iint - 1)%ion) then
                             Iion = iion + 1
-                            Ionlist(iion) = ILs(Iint)%ion(1:10)
+                            Ionlist(iion) = ILs(Iint)%ion
                         endif
                         Iint = Iint + 1
                 END DO
                 Iint = Iint - 1 !count ends up one too high
         CLOSE(201)
-end subroutine
+
+end subroutine read_celdata
 
 end module
 
@@ -206,40 +203,88 @@ module mod_abundmaths
 use mod_abundtypes
 use mod_atomicdata
 implicit none
+integer, parameter :: dp=kind(1.d0)
 
 contains
 
 !this fantastically ugly function gets the location of certain ions in the important ions array using their name as a key.
+!April 2016: made it yet uglier so that it:
+! - gets the ion's location in the CELs array
+! - if the line is in the CEL array, then look up its dereddened flux in the main linelist array
+!todo: check if we ever need the undereddened flux
 
-integer function get_ion(ionname, iontable, Iint)
-        IMPLICIT NONE
-        CHARACTER(len=11) :: ionname
-        TYPE(line), DIMENSION(:) :: iontable
-        INTEGER :: i
-        INTEGER, INTENT(IN) :: Iint
+real(kind=dp) function get_cel_flux(ionname, linelist, ILs)
+        implicit none
+        character(len=11) :: ionname
+        type(cel), dimension(:) :: ILs
+        type(line), dimension(:) :: linelist
+        integer :: i
 
-        do i = 1, Iint
+        get_cel_flux=0.d0
 
-                !PRINT*, trim(iontable(i)%name), trim(ionname)
+        do i = 1, size(ILs)
+          if(trim(ILs(i)%name) == trim(ionname))then
+            if (ILs(i)%location .gt. 0) then
+              get_cel_flux=linelist(ILs(i)%location)%int_dered
+            else
+              get_cel_flux=0.d0
+            endif
+            return
+          endif
+        end do
 
-                if(trim(iontable(i)%name) == trim(ionname))then
-                        get_ion = i
-                        return
-                endif
+end function get_cel_flux
+
+real(kind=dp) function get_cel_abundance(ionname, linelist, ILs)
+!another ugly function to get an abundance for a cel
+        implicit none
+        character(len=11) :: ionname
+        type(cel), dimension(:) :: ILs
+        type(line), dimension(:) :: linelist
+        integer :: i
+
+        get_cel_abundance=0.d0
+
+        do i = 1, size(ILs)
+          if(trim(ILs(i)%name) == trim(ionname))then
+            if (ILs(i)%location .gt. 0) then
+              get_cel_abundance=linelist(ILs(i)%location)%abundance
+            else
+              get_cel_abundance=0.d0
+            endif
+            return
+          endif
+        end do
+
+end function get_cel_abundance
+
+!this fantastically ugly function gets the location of certain ions in the important ions array using their name as a key.
+
+integer function get_ion(ionname, ILs)
+        implicit none
+        character(len=11) :: ionname
+        type(cel), dimension(:) :: ILs
+        integer :: i
+
+        do i = 1, size(ILs)
+          if(trim(ILs(i)%name) == trim(ionname))then
+            get_ion = i
+            return
+          endif
         end do
 
         get_ion = 0
-        PRINT*, "Nudge Nudge, wink, wink error. Ion not found, say no more.", ionname
+        print*, "Nudge Nudge, wink, wink error. Ion not found, say no more.", ionname
 
 end function
 
 !same as above for getting the location of ion within atomic data array. equally ugly.
 
 integer function get_atomicdata(ionname, atomicdatatable)
-        IMPLICIT NONE
-        CHARACTER(len=20) :: ionname
-        TYPE(atomic_data), DIMENSION(:) :: atomicdatatable
-        INTEGER :: i
+        implicit none
+        character(len=20) :: ionname
+        type(atomic_data), dimension(:) :: atomicdatatable
+        integer :: i
 
         do i = 1, size(atomicdatatable)
           if(trim(atomicdatatable(i)%ion) == trim(ionname))then
@@ -249,40 +294,39 @@ integer function get_atomicdata(ionname, atomicdatatable)
         end do
 
         get_atomicdata = 0
-        PRINT*, "My hovercraft is full of eels.  Atomic data not found.", ionname
+        print*, "My hovercraft is full of eels.  Atomic data not found. ", ionname
 
 end function
 
-subroutine element_assign(ILs, linelist, Iint)
-        IMPLICIT NONE
-        TYPE(line), DIMENSION(:), INTENT(OUT) :: ILs
-        TYPE(line), DIMENSION(:) :: linelist
-        INTEGER, INTENT(IN) :: Iint
-        INTEGER :: i, j
+subroutine get_cels(ILs, linelist)
+!index the locations of CELs within the main line list
+        implicit none
+        type(cel), dimension(:) :: ILs
+        type(line), dimension(:) :: linelist
+        integer :: i, j
         character(len=11) :: temp
 
         ILs%location=0
 
-        do i = 1, Iint
-                ILs(i)%location = 0 !initialise first to prevent random integers appearing and breaking things
-                do j = 1, size(linelist)
-                        if(linelist(j)%wavelength == ILs(i)%wavelength)then
-                                ILs(i)%intensity = linelist(j)%intensity
-                                ILs(i)%int_err   = linelist(j)%int_err
-                                ILs(i)%location = j !recording where the line is in linelist array so that its abundance can be copied back in
-                                cycle
-                        endif
-                end do
+        do i = 1, size(ILs)
+          do j = 1, size(linelist)
+            if(linelist(j)%wavelength .eq. ILs(i)%wavelength)then
+              ILs(i)%location = j
+              cycle
+            endif
+          end do
         end do
 
 end subroutine
 
 subroutine get_H(H_Balmer, H_paschen, linelist)
+!index the location of Balmer and Paschen lines in the main array
   implicit none
+  integer, parameter :: dp = kind(1.d0)
   integer, dimension(3:40), intent(out) :: H_balmer ! indexing starts at 3 so that it represents the upper level of the line
   integer, dimension(4:39), intent(out) :: H_paschen ! indexing starts at 4 for the same reason
-  real, dimension(3:40) :: balmerwavelengths
-  real, dimension(4:39) :: paschenwavelengths
+  real(kind=dp), dimension(3:40) :: balmerwavelengths
+  real(kind=dp), dimension(4:39) :: paschenwavelengths
   type(line), dimension(:) :: linelist
   integer :: i,j
 
@@ -314,11 +358,13 @@ subroutine get_H(H_Balmer, H_paschen, linelist)
 end subroutine
 
 subroutine get_HeI(HeI_lines, linelist)
-        IMPLICIT NONE
-        integer, DIMENSION(44), INTENT(OUT) :: HeI_lines
-        TYPE(line), DIMENSION(:), INTENT(IN) :: linelist
-        real, dimension(44) :: wavelengths
-        INTEGER :: i, j
+!index the locations of He I lines in the main linelist array
+        implicit none
+        integer, parameter :: dp = kind(1.d0)
+        integer, dimension(44), intent(out) :: HeI_lines
+        type(line), dimension(:), intent(in) :: linelist
+        real(kind=dp), dimension(44) :: wavelengths
+        integer :: i, j
 
 
         wavelengths = (/ 2945.10D0,3188.74D0,3613.64D0,3888.65D0,3964.73D0,4026.21D0,4120.82D0,4387.93D0,4437.55D0,4471.50D0,4713.17D0,4921.93D0,5015.68D0,5047.74D0,5875.66D0,6678.16D0,7065.25D0,7281.35D0,9463.58D0,10830.25D0,11013.07D0,11969.06D0,12527.49D0,12755.69D0,12784.92D0,12790.50D0,12845.98D0,12968.43D0,12984.88D0,13411.69D0,15083.65D0,17002.40D0,18555.57D0,18685.33D0,18697.21D0,19089.36D0,19543.19D0,20424.97D0,20581.28D0,20601.76D0,21120.12D0,21132.03D0,21607.80D0,21617.01D0 /)
@@ -337,11 +383,13 @@ subroutine get_HeI(HeI_lines, linelist)
 end subroutine
 
 subroutine get_HeII(HeII_lines, linelist)
-        IMPLICIT NONE
-        integer, DIMENSION(1), INTENT(OUT) :: HeII_lines
-        TYPE(line), DIMENSION(:), INTENT(IN) :: linelist
-        real, dimension(1) :: wavelengths
-        INTEGER :: i, j
+!index the location of He II lines (only 4686 at the moment) in the linelist array
+        implicit none
+        integer, parameter :: dp = kind(1.d0)
+        integer, dimension(1), intent(out) :: HeII_lines
+        type(line), dimension(:), intent(in) :: linelist
+        real(kind=dp), dimension(1) :: wavelengths
+        integer :: i, j
 
         wavelengths = (/ 4685.68D0 /)
 
@@ -371,7 +419,7 @@ integer, parameter :: dp = kind(1.d0)
 contains
 subroutine read_atomic_data(ion)
 use mod_atomicdata
-    IMPLICIT NONE
+    implicit none
     type(atomic_data) :: ion
     integer :: I,J,K,L,N,NCOMS,ID(2),JD(2),KP1,NLEV1,GX,ionl,dummy
     character(len=1) :: comments(78)
@@ -385,10 +433,10 @@ use mod_atomicdata
 !    print*,'Reading atomic data ion',ionname
     ionl = index(ionname,' ') - 1
     filename = trim(PREFIX)//'/share/neat/'//ionname(1:IONL)//'.dat'
-    OPEN(unit=1, status = 'OLD', file=filename,ACTION='READ')
+    open(unit=1, status = 'old', file=filename,action='read')
 
 !read # of comment lines and skip them
-        READ(1,*)NCOMS
+        read(1,*)NCOMS
         do I = 1,NCOMS
                 read(1,1003) comments
         end do
@@ -426,8 +474,8 @@ use mod_atomicdata
         QX=1
         K = 1
 !        print*,'Reading collision strengths'
-        DO WHILE (QX .gt. 0)
-                READ(1,*) ID(2), JD(2), QX
+        DO while (QX .gt. 0)
+                read(1,*) ID(2), JD(2), QX
                 IF (QX.eq.0.D0) exit
                 if (ID(2) .eq. 0) then
                    ID(2) = ID(1)
@@ -453,22 +501,22 @@ use mod_atomicdata
       DO K = 1,NLEV1
         KP1 = K + 1
           DO L = KP1, ion%NLEVS
-            READ (1,*) I, J, AX  !read transition probabilities
+            read (1,*) I, J, AX  !read transition probabilities
             ion%A_coeffs(J,I) = AX
-          ENDDO
+          enddo
 
-    ENDDO
+    enddo
 
     DO I=1,ion%NLEVS
-          READ(1,*) N, GX, WN !read wavenumbers
+          read(1,*) N, GX, WN !read wavenumbers
         ion%G(N) = GX
         ion%waveno(N) = WN
     enddo
 
-    CLOSE(UNIT=1)
+    close(unit=1)
 
-1002 FORMAT(A20)
-1003 FORMAT(78A1)
+1002 format(A20)
+1003 format(78A1)
 end subroutine read_atomic_data
 
 !read in tables of helium emissivities from Porter et al.
@@ -483,7 +531,7 @@ real(kind=dp), dimension(46) :: temp
 
 !read data
 
-OPEN(100, file=trim(PREFIX)//'/share/neat/RHei_porter2012.dat', iostat=IO, status='old')
+open(100, file=trim(PREFIX)//'/share/neat/RHei_porter2012.dat', iostat=IO, status='old')
 
 ! read in the data
 
@@ -511,7 +559,7 @@ real(kind=dp), dimension(18) :: temp
 !fitted fourth order polynomials to the Smits 1996 emissivities
 !the data file contains the coefficients for log(ne)=2,4,6
 
-OPEN(100, file=trim(PREFIX)//'/share/neat/RHei_smits1996_coeffs.dat', iostat=IO, status='old')
+open(100, file=trim(PREFIX)//'/share/neat/RHei_smits1996_coeffs.dat', iostat=IO, status='old')
 
 ! read in the data
 

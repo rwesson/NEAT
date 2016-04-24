@@ -66,7 +66,7 @@ program neat
 
 !atomic data
 
-        character(len=10) :: ionlist(40) !list of ion names
+        character(len=20), dimension(22) :: ionlist !list of ion names
         integer :: iion !# of ions in Ilines
         integer :: Iint
         integer :: maxlevs,maxtemps
@@ -94,7 +94,7 @@ program neat
         integer :: omp_get_num_threads
 !CEL array
 
-        TYPE(line), DIMENSION(:), allocatable :: ILs
+        type(cel), dimension(82) :: ILs ! todo:work out why assumed shape causes problems
 
 !diagnostic array
 
@@ -103,6 +103,10 @@ program neat
 !output formats
 
         character(len=35) :: extinction_format, diagnostic_format, diagnostic_ratio_format, abundances_format, adf_format
+
+        iion=22 ! number of ions for which we can calculate abundances
+                ! todo: calculate this automatically
+                ! and replace it in calls to subroutines with getting the array size within the subroutine
 
 !multiple output formats defined as variables so they can be passed to
 !the printout subroutine
@@ -371,7 +375,13 @@ program neat
 
 ! read the CEL data
 
-        call read_ilines(ILs, Iint,iion,ionlist)
+        call read_celdata(ILs,ionlist)
+
+! do line identifying here
+
+!call get_cels(ILs2,linelist) ! need to move it to different module
+
+! todo, fix all the references to ilines to use new procedure
 
         print *,gettime(), ": reading atomic data from ",trim(PREFIX),"/share/neat"
 

@@ -25,6 +25,16 @@ TYPE line
         CHARACTER(len=85) :: linedata
 END TYPE
 
+type CEL
+        integer :: location
+        CHARACTER(len=11) :: name
+        CHARACTER(len=20) :: ion
+        real(kind=dp) :: wavelength
+        CHARACTER(len=20) :: transition
+        CHARACTER(len=4) :: zone !high, medium or low ionisation zone
+        CHARACTER(len=15) :: latextext ! ion name in latex format
+end type CEL
+
 end module mod_abundtypes
 
 module mod_resultarrays
