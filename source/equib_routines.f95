@@ -221,7 +221,7 @@
                  DD = QQ(1) +                                           &
      &            (QQ(2) - QQ(1))/(T(2) - T(1)) * (TLOGT - T(1))
               else
-                CALL CFY(TLOGT, DD, T, QQ, NTEMP, NDIM1, D)
+                call CFY(TLOGT, DD, T, QQ, NTEMP, NDIM1, D)
               endif
               if (IRATS.EQ.0.D+00) then
                 CS(I-1,J) = DD
@@ -267,7 +267,7 @@
             enddo
           enddo
                                               !Solve matrices for populations
-          CALL LUSLV(X,Y,NLEV1,NDIM2)
+          call LUSLV(X,Y,NLEV1,NDIM2)
           do I = NLEV, 2, -1
             N(I) = Y(I-1)
           enddo
@@ -541,8 +541,8 @@
             WRITE (6,*)                                                 &
      &      'Coll. strengths available for 2 Te only - linear interp'
           else
-            CALL SPLMAT(T, NTEMP, IOPT, NDIM1, NDIM1T3, HMH)
-            CALL CFD(TLOGT,T,NTEMP,NDIM1,HMH,D)
+            call SPLMAT(T, NTEMP, IOPT, NDIM1, NDIM1T3, HMH)
+            call CFD(TLOGT,T,NTEMP,NDIM1,HMH,D)
           endif
           do I = 2, NLEV
             do J = I, NLEV
@@ -564,7 +564,7 @@
                  DD = QQ(1) +                                           &
      &            (QQ(2) - QQ(1))/(T(2) - T(1)) * (TLOGT - T(1))
               else
-                CALL CFY(TLOGT, DD, T, QQ, NTEMP, NDIM1, D)
+                call CFY(TLOGT, DD, T, QQ, NTEMP, NDIM1, D)
               endif
               if (IRATS.EQ.0.D+00) then
                 CS(I-1,J) = DD
@@ -610,7 +610,7 @@
             enddo
           enddo
                                               !Solve matrices for populations
-          CALL LUSLV(X,Y,NLEV1,NDIM2)
+          call LUSLV(X,Y,NLEV1,NDIM2)
           do I = NLEV, 2, -1
             N(I) = Y(I-1)
           enddo
@@ -715,8 +715,8 @@
 #ifdef CO
         print *,"subroutine: luslv"
 #endif
-      CALL LURED(A,N,M)
-      CALL RESLV(A,B,N,M)
+      call LURED(A,N,M)
+      call RESLV(A,B,N,M)
       return
       END subroutine luslv
 !
@@ -794,10 +794,10 @@
 #endif
 
       NPM=NPT-2
-      CALL GHGEN(GH,XX,NPT,IOPT,NDIM,NDIMT3)
+      call GHGEN(GH,XX,NPT,IOPT,NDIM,NDIMT3)
       NELEM=3*NPM-2
-      CALL ELU(GH,NPM,NDIMT3)
-      CALL HGEN(XX,GH,Y,NPT,IOPT,NDIM,NDIMT3,HMH)
+      call ELU(GH,NPM,NDIMT3)
+      call HGEN(XX,GH,Y,NPT,IOPT,NDIM,NDIMT3,HMH)
       return
       END subroutine splmat
 !
@@ -869,7 +869,7 @@
             XY(I)=XX(K+I)
           enddo
           K=1+(NPT-1)*(J-1)
-          CALL DERIV(XY,D,XX(K),NIP,NDIM3)
+          call DERIV(XY,D,XX(K),NIP,NDIM3)
           do I=1,NIP
             C(J,I)=D(I)
           enddo
