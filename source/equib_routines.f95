@@ -712,6 +712,9 @@
 
       integer :: M, N
       real(kind=dp) :: A(M,M),B(M)
+#ifdef CO
+        print *,"subroutine: luslv"
+#endif
       CALL LURED(A,N,M)
       CALL RESLV(A,B,N,M)
       return
@@ -724,6 +727,11 @@
 
       integer :: N, NR, NM1, I, J, K, IP1
       real(kind=dp) :: A(NR,NR), FACT
+
+#ifdef CO
+        print *,"subroutine: lured"
+#endif
+
       if (N.EQ.1) return
       NM1=N-1
       do I=1,NM1
@@ -746,6 +754,11 @@
 
       integer :: N, NR, NM1, I, J, K, L, IP1
       real(kind=dp) :: A(NR,NR),B(NR)
+
+#ifdef CO
+        print *,"subroutine: reslv"
+#endif
+
       if (N.EQ.1) GOTO 1
       NM1=N-1
       do I=1,NM1
@@ -775,6 +788,11 @@
 
       integer :: NDIM, NDIMT3, NPT, IOPT, NPM, NELEM
       real(kind=dp) :: XX(NDIM),GH(NDIMT3),Y(NDIM), HMH(NDIM,NDIM)
+
+#ifdef CO
+        print *,"subroutine: splmat"
+#endif
+
       NPM=NPT-2
       CALL GHGEN(GH,XX,NPT,IOPT,NDIM,NDIMT3)
       NELEM=3*NPM-2
@@ -794,6 +812,11 @@
 
       integer :: N ,NDIM, I, J, K
       real(kind=dp) :: XY(NDIM),D(NDIM), X, P1, P2, S
+
+#ifdef CO
+        print *,"subroutine: deriv"
+#endif
+
       do I=1,N
         P1=1.
         S=0.
@@ -832,12 +855,14 @@
      & INDX
       real(kind=dp) :: XX(NDIM), GH(NDIMT3), Y(NDIM), HMH(NDIM,NDIM),             &
      & XY(5),D(5),C(2,5), A0, AN1, H1, H2
-                                   !Case of derivative boundary condition, with
-      if (IOPT.EQ.2) then
-                                   !derivatives from NIP-point Lagrange at
-        NDIM3=5
-                                   !internal points
-        NIP=3
+
+#ifdef CO
+        print *,"subroutine: hgen"
+#endif
+
+      if (IOPT.EQ.2) then          !Case of derivative boundary condition, with
+        NDIM3=5                    !derivatives from NIP-point Lagrange at
+        NIP=3                      !internal points
         do J=1,2
           do I=1,NIP
             K=(NPT-NIP)*(J-1)
@@ -934,6 +959,11 @@
 
       integer :: NPT, IOPT, NDIM, NDIMT3, INDX, NPTM, I, J, IP, JP, IK
       real(kind=dp) :: XX(NDIM),GH(NDIMT3)
+
+#ifdef CO
+        print *,"subroutine: ghgen"
+#endif
+
       INDX=0
       NPTM=NPT-1
       do I=2,NPTM
@@ -965,6 +995,11 @@
 
       integer :: N, NDIM, INDX, I, J, JP
       real(kind=dp) :: GH(NDIM)
+
+#ifdef CO
+        print *,"subroutine: elu"
+#endif
+
       INDX=0
       do I=1,N
         do J=1,3
@@ -992,6 +1027,11 @@
 
       integer :: NPT, NDIM, J
       real(kind=dp) :: XX(NDIM),YY(NDIM), D(NDIM), X, Y, TT
+
+#ifdef CO
+        print *,"subroutine: cfy"
+#endif
+
       if (X.LT.XX(1)) then
         Y=YY(1)
       endif
@@ -1014,6 +1054,11 @@
 
       integer :: NPT, NDIM, NPTM, I, J
       real(kind=dp) :: X, XX(NDIM), HMH(NDIM,NDIM), D(NDIM), X1, X2, A1, A2, HI
+
+#ifdef CO
+        print *,"subroutine: cfd"
+#endif
+
       if (X.LT.XX(1)) then
         !WRITE(6,400) XX(1)
         return
