@@ -704,8 +704,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         nivCELabund = 0.d0
 
         do i= get_ion("niv1483    ", ILs), get_ion("niv1485b   ", ILs) ! would screw up if blend and non blends were both given
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-20) nivCELabund = nivCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-20) weight = weight + linelist(ILs(i)%location)%intensity
+          if (ILs(i)%location .gt. 0) nivCELabund = nivCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
+          if (ILs(i)%location .gt. 0) weight = weight + linelist(ILs(i)%location)%intensity
         enddo
         if (weight .ge. 1e-20) then
           nivCELabund = nivCELabund / weight
@@ -755,8 +755,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 oiiiCELabund = 0.d0
         weight = 0.d0
         do i=get_ion("oiii4959   ", ILs), get_ion("oiii5007   ", ILs)
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-20) oiiiCELabund = oiiiCELabund + linelist(ILs(i)%location)%abundance *linelist(ILs(i)%location)%intensity
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-20) weight = weight + linelist(ILs(i)%location)%intensity
+          if (ILs(i)%location .gt. 0) oiiiCELabund = oiiiCELabund + linelist(ILs(i)%location)%abundance *linelist(ILs(i)%location)%intensity
+          if (ILs(i)%location .gt. 0) weight = weight + linelist(ILs(i)%location)%intensity
         enddo
         if (weight .ge. 1e-20) then
           oiiiCELabund = oiiiCELabund / weight
@@ -768,8 +768,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 oiiiIRCELabund = 0.d0
         weight = 0.d0
         do i=get_ion("oiii52um   ", ILs), get_ion("oiii88um   ", ILs)
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-20) oiiiIRCELabund = oiiiIRCELabund + linelist(ILs(i)%location)%abundance *linelist(ILs(i)%location)%intensity
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-20) weight = weight + linelist(ILs(i)%location)%intensity
+          if (ILs(i)%location .gt. 0) oiiiIRCELabund = oiiiIRCELabund + linelist(ILs(i)%location)%abundance *linelist(ILs(i)%location)%intensity
+          if (ILs(i)%location .gt. 0) weight = weight + linelist(ILs(i)%location)%intensity
         enddo
         if (weight .ge. 1e-20) then
           oiiiIRCELabund = oiiiIRCELabund / weight
@@ -786,8 +786,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 neiiiCELabund = 0.d0
         weight = 0.d0
         do i=get_ion("neiii3868  ", ILs), get_ion("neiii3967  ", ILs)
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-20) neiiiCELabund = neiiiCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-20) weight = weight + linelist(ILs(i)%location)%intensity
+          if (ILs(i)%location .gt. 0) neiiiCELabund = neiiiCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
+          if (ILs(i)%location .gt. 0) weight = weight + linelist(ILs(i)%location)%intensity
         enddo
         if (weight .ge. 1e-20) then
           neiiiCELabund = neiiiCELabund / weight
@@ -800,8 +800,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 neivCELabund = 0.d0
         weight = 0.d0
         do i=get_ion("neiv2423   ", ILs), get_ion("neiv4725b  ", ILs) ! would screw up if blends and non blends were given
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-20) neivCELabund = neivCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-20) weight = weight + linelist(ILs(i)%location)%intensity
+          if (ILs(i)%location .gt. 0) neivCELabund = neivCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
+          if (ILs(i)%location .gt. 0) weight = weight + linelist(ILs(i)%location)%intensity
         enddo
         if (weight .ge. 1e-20) then
           neivCELabund = neivCELabund / weight
@@ -813,8 +813,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 siiCELabund = 0.d0
         weight = 0.d0
         do i=get_ion("sii4068    ", ILs), get_ion("sii6731    ", ILs)
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-20) siiCELabund = siiCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-20) weight = weight + linelist(ILs(i)%location)%intensity
+          if (ILs(i)%location .gt. 0) siiCELabund = siiCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
+          if (ILs(i)%location .gt. 0) weight = weight + linelist(ILs(i)%location)%intensity
         enddo
         if (weight .ge. 1e-20) then
           siiCELabund = siiCELabund / weight
@@ -868,8 +868,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 cliiiCELabund = 0.d0
         weight = 0.d0
         do i=get_ion("cliii5517  ", ILs), get_ion("cliii5537  ", ILs)
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-20) cliiiCELabund = cliiiCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-20) then
+          if (ILs(i)%location .gt. 0) cliiiCELabund = cliiiCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
+          if (ILs(i)%location .gt. 0) then
             weight = weight + linelist(ILs(i)%location)%intensity
           endif
         enddo
@@ -883,8 +883,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 ariiiCELabund = 0.d0
         weight = 0.d0
         do i=get_ion("ariii7135  ", ILs), get_ion("ariii7751  ", ILs)
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-20) ariiiCELabund = ariiiCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-20) then
+          if (ILs(i)%location .gt. 0) ariiiCELabund = ariiiCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
+          if (ILs(i)%location .gt. 0) then
             weight = weight + linelist(ILs(i)%location)%intensity
           endif
         enddo
@@ -899,7 +899,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         weight = 0.d0
         do i=get_ion("ariv4711   ", ILs), get_ion("ariv4740   ", ILs)
         arivCELabund = arivCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-20) then
+          if (ILs(i)%location .gt. 0) then
             weight = weight + linelist(ILs(i)%location)%intensity
           endif
         enddo
@@ -918,7 +918,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 ciiiCELabund = 0.d0
         weight = 0.d0
         do i=get_ion("ciii1907   ", ILs), get_ion("ciii1909b  ", ILs) ! would screw up if blend and non-blend were given.
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-20) then
+          if (ILs(i)%location .gt. 0) then
             ciiiCELabund = ciiiCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
             weight = weight + linelist(ILs(i)%location)%intensity
           endif
@@ -933,8 +933,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 neivCELabund = 0.d0
         weight = 0.d0
         do i=get_ion("neiv2423   ", ILs), get_ion("neiv2424b  ", ILs)! would break if blend and individual lines were both specified
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-20) neivCELabund = neivCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-20) then
+          if (ILs(i)%location .gt. 0) neivCELabund = neivCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
+          if (ILs(i)%location .gt. 0) then
             weight = weight + linelist(ILs(i)%location)%intensity
           endif
         enddo
@@ -948,8 +948,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 nevCELabund = 0.d0
         weight = 0.d0
         do i=get_ion("nev3345    ", ILs), get_ion("nev3426    ", ILs)
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-20) nevCELabund = nevCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-20) then
+          if (ILs(i)%location .gt. 0) nevCELabund = nevCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
+          if (ILs(i)%location .gt. 0) then
             weight = weight + linelist(ILs(i)%location)%intensity
           endif
         enddo
@@ -963,8 +963,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 arvCELabund = 0.d0
         weight = 0.d0
         do i=get_ion("arv6435    ", ILs), get_ion("arv7005    ", ILs)
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-20) arvCELabund = arvCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-20) then
+          if (ILs(i)%location .gt. 0) arvCELabund = arvCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
+          if (ILs(i)%location .gt. 0) then
             weight = weight + linelist(ILs(i)%location)%intensity
           endif
         enddo
@@ -978,8 +978,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                  ciCELabund = 0.d0
         weight = 0.d0
         do i=get_ion("ci9824     ", ILs), get_ion("ci9850     ", ILs)
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-20) ciCELabund = ciCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-20) then
+          if (ILs(i)%location .gt. 0) ciCELabund = ciCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
+          if (ILs(i)%location .gt. 0) then
             weight = weight + linelist(ILs(i)%location)%intensity
           endif
         enddo
@@ -995,7 +995,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                  oiCELabund = 0.d0
         weight = 0.d0
         do i=get_ion("oi6300     ", ILs), get_ion("oi6364     ", ILs)
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-20) then
+          if (ILs(i)%location .gt. 0) then
             oiCELabund = oiCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
             weight = weight + linelist(ILs(i)%location)%intensity
           endif
