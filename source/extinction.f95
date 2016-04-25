@@ -6,12 +6,12 @@ integer, parameter :: dp = kind(1.d0)
 
 contains
 
-subroutine calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction, temp, dens, R)
+subroutine calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction, temp, dens)
         IMPLICIT NONE
         integer, parameter :: dp = kind(1.d0)
         type(line), dimension(:), intent(in) :: linelist
         integer, dimension(3:40) :: H_Balmer
-        real(kind=dp) :: c1, c2, c3, meanextinction, R
+        real(kind=dp) :: c1, c2, c3, meanextinction
         real(kind=dp) :: temp, dens
 
 !debugging
