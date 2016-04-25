@@ -39,9 +39,9 @@ ifeq ($(FC),gfortran)
   else ifeq ($(CO),debug2)
     FFLAGS += -g -pg -fbounds-check -Wall -Wuninitialized -DCO=\"${CO}\" #-ffpe-trap=zero,overflow,invalid,underflow,denormal
   else ifeq ($(CO),debug3)
-    FFLAGS += -g -pg -fbounds-check -Wall -Wuninitialized -ffpe-trap=zero,overflow,invalid,underflow,denormal -fbacktrace -fcheck=all -DCO=\"${CO}\"
+    FFLAGS += -g -pg -fbounds-check -Wall -Wuninitialized -ffpe-trap=zero,overflow,invalid,underflow,denormal -fbacktrace -fcheck=all -DCO=\"${CO}\" -DDEBUG=\"DEBUG\"
   else ifeq ($(CO),pedantic)
-    FFLAGS += -g -pg -fbounds-check -Wall -Wuninitialized -Werror -pedantic -ffpe-trap=zero,overflow,invalid,underflow,denormal -DCO=\"${CO}\"
+    FFLAGS += -g -pg -fbounds-check -Wall -Wuninitialized -Werror -pedantic -ffpe-trap=zero,overflow,invalid,underflow,denormal -DCO=\"${CO}\" -DDEBUG=\"DEBUG\"
   else
     FFLAGS += -O3 -fno-backtrace
   endif

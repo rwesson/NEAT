@@ -77,7 +77,7 @@
 
 !debugging
 #ifdef CO
-        print *,"subroutine: get_diagnostic. ion=",ion
+        print *,"subroutine: get_diagnostic. ion=",ion,levu,levl,inratio,diagtype,fixedq
 #endif
 
 ! check if ratio is meaningful
@@ -712,7 +712,7 @@
 
       integer :: M, N
       real(kind=dp) :: A(M,M),B(M)
-#ifdef CO
+#ifdef DEBUG
         print *,"subroutine: luslv"
 #endif
       call LURED(A,N,M)
@@ -728,7 +728,7 @@
       integer :: N, NR, NM1, I, J, K, IP1
       real(kind=dp) :: A(NR,NR), FACT
 
-#ifdef CO
+#ifdef DEBUG
         print *,"subroutine: lured"
 #endif
 
@@ -755,7 +755,7 @@
       integer :: N, NR, NM1, I, J, K, L, IP1
       real(kind=dp) :: A(NR,NR),B(NR)
 
-#ifdef CO
+#ifdef DEBUG
         print *,"subroutine: reslv"
 #endif
 
@@ -789,7 +789,7 @@
       integer :: NDIM, NDIMT3, NPT, IOPT, NPM, NELEM
       real(kind=dp) :: XX(NDIM),GH(NDIMT3),Y(NDIM), HMH(NDIM,NDIM)
 
-#ifdef CO
+#ifdef DEBUG
         print *,"subroutine: splmat"
 #endif
 
@@ -813,7 +813,7 @@
       integer :: N ,NDIM, I, J, K
       real(kind=dp) :: XY(NDIM),D(NDIM), X, P1, P2, S
 
-#ifdef CO
+#ifdef DEBUG
         print *,"subroutine: deriv"
 #endif
 
@@ -856,7 +856,7 @@
       real(kind=dp) :: XX(NDIM), GH(NDIMT3), Y(NDIM), HMH(NDIM,NDIM),             &
      & XY(5),D(5),C(2,5), A0, AN1, H1, H2
 
-#ifdef CO
+#ifdef DEBUG
         print *,"subroutine: hgen"
 #endif
 
@@ -960,7 +960,7 @@
       integer :: NPT, IOPT, NDIM, NDIMT3, INDX, NPTM, I, J, IP, JP, IK
       real(kind=dp) :: XX(NDIM),GH(NDIMT3)
 
-#ifdef CO
+#ifdef DEBUG
         print *,"subroutine: ghgen"
 #endif
 
@@ -996,7 +996,7 @@
       integer :: N, NDIM, INDX, I, J, JP
       real(kind=dp) :: GH(NDIM)
 
-#ifdef CO
+#ifdef DEBUG
         print *,"subroutine: elu"
 #endif
 
@@ -1028,7 +1028,7 @@
       integer :: NPT, NDIM, J
       real(kind=dp) :: XX(NDIM),YY(NDIM), D(NDIM), X, Y, TT
 
-#ifdef CO
+#ifdef DEBUG
         print *,"subroutine: cfy"
 #endif
 
@@ -1055,7 +1055,7 @@
       integer :: NPT, NDIM, NPTM, I, J
       real(kind=dp) :: X, XX(NDIM), HMH(NDIM,NDIM), D(NDIM), X1, X2, A1, A2, HI
 
-#ifdef CO
+#ifdef DEBUG
         print *,"subroutine: cfd"
 #endif
 
