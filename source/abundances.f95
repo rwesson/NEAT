@@ -725,7 +725,6 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
         if(get_cel_flux("oii3728b   ",linelist,ILs) .gt. 0.0)then
                 !calc abundance from doublet blend
-!XXXX sort out the referencing, get_ion finds the location in the ILs array, which gives us the location in the main array
                 oiiCELabund = get_cel_abundance("oii3728b   ",linelist,ILs)
 
         else if(get_cel_flux("oii3729    ",linelist,ILs) .gt. 0.0 .and. get_cel_flux("oii3726    ",linelist,ILs) .gt. 0.0 )then
