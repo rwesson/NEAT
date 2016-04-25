@@ -22,6 +22,11 @@ subroutine read_linelist(filename,linelist,listlength,ncols,errstat)
 
         type(neat_line), dimension(:), allocatable :: neatlines
 
+!debugging
+#ifdef CO
+        print *,"subroutine: read_linelist"
+#endif
+
 ! first get number of rows
 
         errstat=0
@@ -168,6 +173,11 @@ subroutine read_celdata(ILs, ionlist)
         character(len=20), dimension(22) :: ionlist !todo: find a clever way of counting this instead of hard coding it if possible.
         integer :: iint, iion, numberoflines
 
+!debugging
+#ifdef CO
+        print *,"subroutine: read_celdata"
+#endif
+
         Iint = 1
 
         301 format(A11, 1X, A6, 1X, F7.2, 1X, A20,1X,A4,1X,A15)
@@ -220,6 +230,11 @@ real(kind=dp) function get_cel_flux(ionname, linelist, ILs)
         type(line), dimension(:) :: linelist
         integer :: i
 
+!debugging
+#ifdef CO
+        !print *,"function: get_cel_flux"
+#endif
+
         get_cel_flux=0.d0
 
         do i = 1, size(ILs)
@@ -242,6 +257,11 @@ real(kind=dp) function get_cel_abundance(ionname, linelist, ILs)
         type(cel), dimension(:) :: ILs
         type(line), dimension(:) :: linelist
         integer :: i
+
+!debugging
+#ifdef CO
+        !print *,"function: get_cel_abundance"
+#endif
 
         get_cel_abundance=0.d0
 
@@ -266,6 +286,11 @@ integer function get_ion(ionname, ILs)
         type(cel), dimension(:) :: ILs
         integer :: i
 
+!debugging
+#ifdef CO
+        print *,"subroutine: get_ion"
+#endif
+
         do i = 1, size(ILs)
           if(trim(ILs(i)%name) == trim(ionname))then
             get_ion = i
@@ -286,6 +311,11 @@ integer function get_atomicdata(ionname, atomicdatatable)
         type(atomic_data), dimension(:) :: atomicdatatable
         integer :: i
 
+!debugging
+#ifdef CO
+        !print *,"function: get_atomicdata"
+#endif
+
         do i = 1, size(atomicdatatable)
           if(trim(atomicdatatable(i)%ion) == trim(ionname))then
             get_atomicdata = i
@@ -304,6 +334,11 @@ subroutine get_cels(ILs, linelist)
         type(cel), dimension(:) :: ILs
         type(line), dimension(:) :: linelist
         integer :: i, j
+
+!debugging
+#ifdef CO
+        print *,"subroutine: get_cels"
+#endif
 
         ILs%location=0
 
@@ -328,6 +363,11 @@ subroutine get_H(H_Balmer, H_paschen, linelist)
   real(kind=dp), dimension(4:39) :: paschenwavelengths
   type(line), dimension(:) :: linelist
   integer :: i,j
+
+!debugging
+#ifdef CO
+        print *,"subroutine: get_H"
+#endif
 
   balmerwavelengths = (/ 6562.77D0, 4861.33D0, 4340.47D0, 4101.74D0, 3970.07D0, 3889.05D0, 3835.38D0, 3797.90D0, 3770.63D0, 3750.15D0, 3734.37D0, 3721.94D0, 3711.97D0, 3703.85D0, 3697.15D0, 3691.55D0, 3686.83D0, 3682.81D0, 3679.35D0, 3676.36D0, 3673.76D0, 3671.48D0, 3669.46D0, 3667.68D0, 3666.10D0, 3664.68D0, 3663.40D0, 3662.26D0, 3661.22D0, 3660.28D0, 3659.42D0, 3658.64D0, 3657.92D0, 3657.27D0, 3656.66D0, 3656.11D0, 3655.59D0, 3655.12D0 /)
 
@@ -365,6 +405,10 @@ subroutine get_HeI(HeI_lines, linelist)
         real(kind=dp), dimension(44) :: wavelengths
         integer :: i, j
 
+!debugging
+#ifdef CO
+        print *,"subroutine: get_HeI"
+#endif
 
         wavelengths = (/ 2945.10D0,3188.74D0,3613.64D0,3888.65D0,3964.73D0,4026.21D0,4120.82D0,4387.93D0,4437.55D0,4471.50D0,4713.17D0,4921.93D0,5015.68D0,5047.74D0,5875.66D0,6678.16D0,7065.25D0,7281.35D0,9463.58D0,10830.25D0,11013.07D0,11969.06D0,12527.49D0,12755.69D0,12784.92D0,12790.50D0,12845.98D0,12968.43D0,12984.88D0,13411.69D0,15083.65D0,17002.40D0,18555.57D0,18685.33D0,18697.21D0,19089.36D0,19543.19D0,20424.97D0,20581.28D0,20601.76D0,21120.12D0,21132.03D0,21607.80D0,21617.01D0 /)
 
@@ -389,6 +433,11 @@ subroutine get_HeII(HeII_lines, linelist)
         type(line), dimension(:), intent(in) :: linelist
         real(kind=dp), dimension(1) :: wavelengths
         integer :: i, j
+
+!debugging
+#ifdef CO
+        print *,"subroutine: get_HeII"
+#endif
 
         wavelengths = (/ 4685.68D0 /)
 
@@ -425,6 +474,11 @@ use mod_atomicdata
     character(len=10) :: ionname
     character(len=128) :: filename
     real(kind=dp) :: WN,AX,QX
+
+!debugging
+#ifdef CO
+        print *,"subroutine: read_atomic_data"
+#endif
 
     id = 0
     jd = 0
@@ -528,6 +582,11 @@ real(kind=dp), dimension(21,15,44) :: heidata
 integer :: i,j,tpos,npos,io
 real(kind=dp), dimension(46) :: temp
 
+!debugging
+#ifdef CO
+        print *,"subroutine: read_porter"
+#endif
+
 !read data
 
 open(100, file=trim(PREFIX)//'/share/neat/RHei_porter2012.dat', iostat=IO, status='old')
@@ -553,6 +612,11 @@ implicit none
 real(kind=dp), dimension(3,6,44) :: heidata
 integer :: i,j,k,io
 real(kind=dp), dimension(18) :: temp
+
+!debugging
+#ifdef CO
+        print *,"subroutine: read_smits"
+#endif
 
 !read data
 !fitted fourth order polynomials to the Smits 1996 emissivities

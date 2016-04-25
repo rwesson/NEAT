@@ -13,6 +13,11 @@
 
       real(kind=dp) :: A4686,TE,NE,IHeII4686,heiiabund
 
+!debugging
+#ifdef CO
+        print *,"subroutine: get_heii_abund"
+#endif
+
       A4686=10.**(GAMM4861(TE,NE)-GAMM4686(TE,NE))
       heiiabund=IHeII4686/100.*A4686
 
@@ -31,6 +36,11 @@
       real(kind=dp), dimension(21,15,44), intent(in) :: heidata
       real(kind=dp), dimension(44) :: emissivities
       integer :: i
+
+!debugging
+#ifdef CO
+        print *,"subroutine: get_hei_porter"
+#endif
 
 !      data is for the following lines, in this order: 2945.10,3188.74,3613.64,3888.65,3964.73,4026.21,4120.82,4387.93,4437.55,4471.50,4713.17,4921.93,5015.68,5047.74,5875.66,6678.16,7065.25,7281.35,9463.58,10830.25,11013.07,11969.06,12527.49,12755.69,12784.92,12790.50,12845.98,12968.43,12984.88,13411.69,15083.65,17002.40,18555.57,18685.33,18697.21,19089.36,19543.19,20424.97,20581.28,20601.76,21120.12,21132.03,21607.80,21617.01 /)
 
@@ -69,6 +79,11 @@
         real(kind=dp) :: interp_factor_te, interp_factor_ne, interp_t1, interp_t2, emissivity
         real(kind=dp), dimension(21,15,44), intent(in) :: heidata
         integer :: i,j, line
+
+!debugging
+#ifdef CO
+        print *,"subroutine: get_emissivity_porter"
+#endif
 
         ! ne needs to be logarithmic, input is linear
 
@@ -139,6 +154,11 @@
       real(kind=dp) :: interpolatedemissivity
       integer :: i,j
 
+!debugging
+#ifdef CO
+        print *,"subroutine: get_hei_smits_new"
+#endif
+
 !      data is for the following lines, in this order: 2945.10,3188.74,3613.64,3888.65,3964.73,4026.21,4120.82,4387.93,4437.55,4471.50,4713.17,4921.93,5015.68,5047.74,5875.66,6678.16,7065.25,7281.35,9463.58,10830.25,11013.07,11969.06,12527.49,12755.69,12784.92,12790.50,12845.98,12968.43,12984.88,13411.69,15083.65,17002.40,18555.57,18685.33,18697.21,19089.36,19543.19,20424.97,20581.28,20601.76,21120.12,21132.03,21607.80,21617.01 /)
 
       do i = 1,44
@@ -206,8 +226,12 @@
       real(kind=dp) TE,NE,AE2,AE3,AE4,AE5,AE6,AE7,AE8,AEFF,HCLL
       real(kind=dp) LNE, LTE
 
-                     ! = Log10 ( h * c / lambda(H-beta) ) - [ cgs units
-      HCLL=-11.38871
+!debugging
+#ifdef CO
+        !print *,"function: GAMM4861"
+#endif
+
+      HCLL=-11.38871 ! = Log10 ( h * c / lambda(H-beta) ) - [ cgs units
       LNE = log10(NE)
       LTE = log10(TE)
 !
@@ -287,8 +311,12 @@
       real(kind=dp) TE,NE,AE2,AE3,AE4,AE5,AE6,AE7,AE8,AEFF,HCLL
       real(kind=dp) LNE, LTE
 
-                     ! = Log10 ( h * c / lambda(4686) ) - [ cgs units ]
-      HCLL=-11.37272
+!debugging
+#ifdef CO
+        !print *,"function: GAMM4686"
+#endif
+
+      HCLL=-11.37272 ! = Log10 ( h * c / lambda(4686) ) - [ cgs units ]
       LNE = log10(NE)
       LTE = log10(TE)
 !
@@ -368,8 +396,12 @@
       real(kind=dp) TE,NE,AE2,AE3,AE4,AE5,AE6,AE7,AE8,AEFF,HCLL
       real(kind=dp) LNE, LTE
 
-                        ! = Log10 ( h * c / lambda(6683) ) - [ cgs units
-      HCLL=-11.52688452
+!debugging
+#ifdef CO
+        !print *,"function: GAMM6683"
+#endif
+
+      HCLL=-11.52688452 ! = Log10 ( h * c / lambda(6683) ) - [ cgs units
       LNE = log10(NE)
       LTE = log10(TE)
 !

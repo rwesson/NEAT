@@ -32,6 +32,11 @@ real(kind=dp) :: temp_wave, diff, shift, rms
 character(len=1) :: null
 character(len=5) :: temp_ion1, temp_ion2
 
+!debugging
+#ifdef CO
+        print *,"subroutine: linefinder"
+#endif
+
 xcorr = 0.D0
 xcorr_array%restwavelength = 0.D0
 xcorr_array%observedwavelength = 0.D0

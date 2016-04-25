@@ -1085,6 +1085,11 @@ contains
         real(kind=dp) :: half
         real(kind=dp) :: newmean, newsnr, snr
 
+!debugging
+#ifdef CO
+        print *,"subroutine: randomizer"
+#endif
+
         half = 0.5
 
         I = 1
@@ -1135,6 +1140,11 @@ contains
           INTEGER :: i, n, clock
           INTEGER, DIMENSION(:), ALLOCATABLE :: seed
 
+!debugging
+#ifdef CO
+        print *,"subroutine: init_random_seed"
+#endif
+
           n=20
           i=n
           CALL RANDOM_SEED(size = n)
@@ -1164,6 +1174,11 @@ character(len=25), intent(in) :: suffix
 logical :: unusual
 integer :: verbosity !1 = write summaries, binned and full results; 2=write summaries and binned results; 3=write summaries only
 integer :: nbins
+
+!debugging
+#ifdef CO
+        print *,"subroutine: write_uncertainties"
+#endif
 
 if(size(input_array) .eq. 1) then
 !just one iteration, write out the result without uncertainties
@@ -1250,6 +1265,11 @@ real(kind=dp) :: mean_exp=0d0, sd_exp=0d0
 real(kind=dp), dimension(3,3) :: sds=0d0
 real(kind=dp) :: tolerance=0d0
 logical :: unusual !if not true, then the distribution is normal, log normal or exp normal
+
+!debugging
+#ifdef CO
+        print *,"subroutine: write_uncertainties"
+#endif
 
 unusual = .false.
 
@@ -1371,6 +1391,11 @@ character(len=10) function gettime()
 implicit none
 character(len=10) :: time
 
+!debugging
+#ifdef CO
+        !print *,"function: gettime"
+#endif
+
   call DATE_AND_TIME(TIME=time)
   gettime = time(1:2)//":"//time(3:4)//":"//time(5:6)
   return
@@ -1381,6 +1406,11 @@ character(len=100) function latex_number(inputnumber)
 ! for any number in the form aEx, write it in latex format, ie a$\times$10$^{x}$
 real(kind=dp) :: inputnumber, mantissa
 integer :: exponent, pos
+
+!debugging
+#ifdef CO
+        !print *,"function: latex_number"
+#endif
 
 write (latex_number,"(ES14.6)") inputnumber
 pos = INDEX (latex_number,'E')

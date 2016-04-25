@@ -17,6 +17,11 @@ character(len=1) :: junk
 character(len=20), dimension(8) :: invar
 integer :: i,j,k,l !counters
 
+!debugging
+#ifdef CO
+        print *,"subroutine: read_hydrogen"
+#endif
+
 open (unit=357, file=trim(PREFIX)//"/share/neat/RHi.dat")
 read (357,*) junk !first line is a comment
 read (357,"(I3,I3)") ntemps, ndens !second line has number of temperatures and densities
@@ -62,6 +67,11 @@ real(kind=dp), intent(in) :: medtemp
 integer :: i,j !counters
 real(kind=dp) :: r1, r2
 integer :: H ! temporary, which line to look at
+
+!debugging
+#ifdef CO
+        print *,"subroutine: balmer_densities"
+#endif
 
 density=0.d0
 weight=0.d0
@@ -167,6 +177,11 @@ real(kind=dp), intent(in) :: medtemp
 integer :: i,j !counters
 real(kind=dp) :: r1, r2
 integer :: H ! temporary, which line to look at
+
+!debugging
+#ifdef CO
+        print *,"subroutine: paschendensities"
+#endif
 
 density=0.d0
 weight=0.d0

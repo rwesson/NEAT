@@ -15,6 +15,11 @@ integer :: i,j
 character(len=7) :: x
 character(len=5) :: in1, in2
 
+!debugging
+#ifdef CO
+        print *,"subroutine: read_oii_diagnosticdata"
+#endif
+
 !read data files
 
 open (999, file=trim(PREFIX)//"/share/neat/te_oii.dat")
@@ -46,6 +51,11 @@ implicit none
 real(kind=dp), dimension(4) :: a,b,c, x0, y0, d !equations of sides, locations of closest points on lines to value, distances to closest points
 real(kind=dp) :: obs4649_4089, obs4649_4662, oii_te, oii_ne
 integer :: i,j
+
+!debugging
+#ifdef CO
+        print *,"subroutine: oii_rl_diagnostics"
+#endif
 
 oii_te=0.d0
 oii_ne=0.d0

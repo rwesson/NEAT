@@ -75,6 +75,11 @@
       real(kind=dp) :: valtest(3)
       integer :: test
 
+!debugging
+#ifdef CO
+        print *,"subroutine: get_diagnostic"
+#endif
+
 ! check if ratio is meaningful
 
       if (inratio .le. 0.d0 .or. inratio .gt. 1.e10) then
@@ -464,7 +469,12 @@
 
       CHARACTER(len=20) :: levels
       real(kind=dp) :: iobs, abund
-!
+
+!debugging
+#ifdef CO
+        print *,"subroutine: get_abundance"
+#endif
+
       ndim1t3=3*ndim1
       g=0
       itrana=0

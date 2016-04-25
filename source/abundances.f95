@@ -75,6 +75,12 @@ use mod_hydrogen
 
         real(kind=dp) :: nii5754recCEL=0.d0, oii7325recCEL=0.d0, oiii4363recCEL=0.d0, nii5754recRL=0.d0, oii7325recRL=0.d0, oiii4363recRL=0.d0
 
+! debugging
+
+#ifdef CO
+        print *,"subroutine: abundances"
+#endif
+
 ! initialise some variables
 
         oiiRLabund = 0.d0
@@ -1929,26 +1935,31 @@ endif
 
 contains
 
-        subroutine get_diag(name1, name2, diag)
-                implicit none
-                integer, parameter :: dp = kind(1.d0)
+subroutine get_diag(name1, name2, diag)
+        implicit none
+        integer, parameter :: dp = kind(1.d0)
 
-                character(len=11) :: name1, name2
-                real(kind=dp) :: flux_no1, flux_no2
-                real(kind=dp) :: diag
+        character(len=11) :: name1, name2
+        real(kind=dp) :: flux_no1, flux_no2
+        real(kind=dp) :: diag
 
-                flux_no1 = get_cel_flux(name1, linelist, ILs)
-                flux_no2 = get_cel_flux(name2, linelist, ILs)
+!debugging
+#ifdef CO
+        print *,"subroutine: get_diag"
+#endif
 
-                if (flux_no1 .gt. 0 .and. flux_no2 .gt. 0) then
-                  diag = flux_no1 / flux_no2
-                else
-                  diag = 0.d0
-                endif
+         flux_no1 = get_cel_flux(name1, linelist, ILs)
+         flux_no2 = get_cel_flux(name2, linelist, ILs)
 
-        end subroutine
+         if (flux_no1 .gt. 0 .and. flux_no2 .gt. 0) then
+           diag = flux_no1 / flux_no2
+         else
+           diag = 0.d0
+         endif
 
-        subroutine get_Tdiag(name1, name2, name3, ion, ratio)
+end subroutine
+
+subroutine get_Tdiag(name1, name2, name3, ion, ratio)
         !this routine gets the ratio for nebular to auroral diagnostics.  In case one of nebular pair is not observed, it assumes the intensity of the other is given by the theoretical ratio
         implicit none
         integer, parameter :: dp = kind(1.d0)
@@ -1959,6 +1970,11 @@ contains
         real(kind=dp) :: flux1, flux2, flux3
         real(kind=dp) :: factor1, factor2, ratio, ratio2
         integer :: level1, level2, level3 !level2 is the upper level, level1 the lower of the two lower levels
+
+!debugging
+#ifdef CO
+        print *,"subroutine: get_Tdiag"
+#endif
 
         ion_no1 = get_ion(name1, ILs)
         ion_no2 = get_ion(name2, ILs)

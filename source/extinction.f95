@@ -14,6 +14,11 @@ subroutine calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction,
         real(kind=dp) :: c1, c2, c3, meanextinction, R
         real(kind=dp) :: temp, dens
 
+!debugging
+#ifdef CO
+        print *,"subroutine: calc_extinction_coeffs"
+#endif
+
 !Section with interpolations for Balmer ratios for T_e (temp) and N_e (dens)
 !interpolating over 6 Te points, 5,7.5,10,12.5,15,20kK and 3 Ne points 10^2, 10^3 10^4 cm^(-3)
 
@@ -57,6 +62,11 @@ real(kind=dp) function calc_balmer_ratios(temp, dens, line)
         integer :: i, j, line
         real(kind=dp) :: d1, d2, temp, dens
         real(kind=dp), dimension(6,3,4) :: HS
+
+!debugging
+#ifdef CO
+        !print *,"function: calc_balmer_ratios"
+#endif
 
         !Ha/Hb
         HS(1,1,:) = (/ 5000., 3.04, 3.02, 3.00/)
@@ -144,6 +154,12 @@ subroutine get_flambda(linelist, switch_ext, R)
         character(len=1) :: switch_ext
         real(kind=dp) :: R
         real(kind=dp) :: x_0, c1, c2, c3, c4, gamma, F ! Fitzpatrick constants
+
+!debugging
+#ifdef CO
+        print *,"subroutine: get_flambda"
+#endif
+
         c1 = -0.38
         c2 =  0.74
         c3 =  3.96
@@ -265,6 +281,11 @@ subroutine deredden(lines, extinction)
         IMPLICIT NONE
         TYPE(line), DIMENSION(:) :: lines
         real(kind=dp) :: extinction
+
+!debugging
+#ifdef CO
+        print *,"subroutine: deredden"
+#endif
 
         where (lines%intensity .gt. 0.d0 .or. lines%blend_intensity .gt. 0.d0)
           lines%int_dered = lines%intensity * 10**(extinction*lines%flambda)

@@ -139,6 +139,11 @@
 
         ! read in OII data
 
+!debugging
+#ifdef CO
+        print *,"subroutine: real_orl_data"
+#endif
+
             301 FORMAT (I5, 1X, F9.4, 1X, A1, A1, A1, A1, A1, F7.4,     &
      & 1X, A3, 1X, F7.4, 1X, A3, 1X, A7, 3X, F11.4, A1, A1, 1X, I2, &
      &1X, A1, 1X, A9, 1X, F13.4, 1X, A1, A1, 1X, I2, 1X, A1, 1X, A9, 1X,&
@@ -380,6 +385,11 @@ oii_A_3p2S_low => oii_coefficients(36,:)
 
       TYPE(oiiRL), DIMENSION(:) :: oiiRLs
 
+!debugging
+#ifdef CO
+        print *,"subroutine: oii_rec_lines"
+#endif
+
       call get_aeff_hb(te,ne, aeff_hb, em_hb)
 
 ! interpolate the a values
@@ -578,6 +588,11 @@ oii_A_3p2S_low => oii_coefficients(36,:)
       real(kind=dp) :: aeff_hb, Em_Hb, Te, Ne, abund, tered
 
       TYPE(niiRL), DIMENSION(:) :: niiRLs
+
+!debugging
+#ifdef CO
+        print *,"subroutine: nii_rec_lines"
+#endif
 
       call get_aeff_hb(te,ne, aeff_hb, em_hb)
 
@@ -812,6 +827,11 @@ oii_A_3p2S_low => oii_coefficients(36,:)
 
       TYPE(ciiRL), DIMENSION(:) :: ciiRLs
 
+!debugging
+#ifdef CO
+        print *,"subroutine: cii_rec_lines"
+#endif
+
       call get_aeff_hb(te,ne, aeff_hb, em_hb)
 
       tered = te/10000
@@ -832,9 +852,14 @@ oii_A_3p2S_low => oii_coefficients(36,:)
 
       TYPE(neiiRL), DIMENSION(:) :: neiiRLs
 
+!debugging
+#ifdef CO
+        print *,"subroutine: neii_rec_lines"
+#endif
+
       call get_aeff_hb(te,ne, aeff_hb, em_hb)
 
-      tered = te/10000
+      tered = te/10000.
 
       neiiRLs%aeff = neiiRLs%Br * 1e-14 * &
       &(neiiRLs%a*(tered**neiiRLs%f)) * (1 &
@@ -867,6 +892,11 @@ oii_A_3p2S_low => oii_coefficients(36,:)
       subroutine get_aeff_hb(te, ne, aeff_hb, em_hb)
       IMPLICIT NONE
       real(kind=dp) :: Te, Ne, AE2, AE3, AE4, AE5, AE6, AE7, AE8, aeff_hb, Em_Hb, logem
+
+!debugging
+#ifdef CO
+        print *,"subroutine: get_aeff_hb"
+#endif
 
       AE2 = -9.06524E+00 -2.69954E+00 * log10(te) + 8.80123E-01 * &
       &log10(te) ** 2 -1.57946E-01 * log10(te) ** 3 + &

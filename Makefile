@@ -29,7 +29,7 @@
 FC=gfortran
 LD=gfortran
 PREFIX=/usr
-FFLAGS+=-ffree-line-length-0 -Jsource/ -cpp -DPREFIX=\"${PREFIX}\" -fopenmp
+FFLAGS+=-ffree-line-length-0 -Jsource/ -cpp -DPREFIX=\"${PREFIX}\" -DCO=\"${CO}\" -fopenmp
 LDFLAGS+=
 MANDIR=${DESTDIR}${PREFIX}/share/man/man1
 
