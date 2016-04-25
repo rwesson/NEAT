@@ -1,5 +1,4 @@
-subroutine abundances(linelist, listlength, iteration_result, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf)
-use mod_abundmaths
+subroutine abundances(linelist, listlength, iteration_result, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf, H_Balmer, H_Paschen, HeI_lines, HeII_lines)
 use mod_abundtypes
 use mod_equib
 use mod_abundIO
@@ -12,6 +11,7 @@ use mod_oii_diagnostics
 use mod_hydrogen
 
         implicit none
+        integer, parameter :: dp=kind(1.d0)
         integer :: counter, i, j
         integer, intent(in) :: listlength
         type(line), dimension(listlength) :: linelist, linelist_orig
@@ -43,8 +43,8 @@ use mod_hydrogen
 
 ! index arrays to locate lines of interest in the main line list
 
-        integer, dimension(3:40) :: H_balmer
-        integer, dimension(4:39) :: H_paschen
+        integer, dimension(3:40) :: H_Balmer
+        integer, dimension(4:39) :: H_Paschen
         integer, dimension(44) :: HeI_lines
         integer, dimension(1) :: HeII_lines
         type(cel), dimension(82) :: ILs !todo: work out why this becomes undefined on entry if its shape is assumed
@@ -106,12 +106,6 @@ use mod_hydrogen
           linelist%intensity=0.d0
           linelist%int_err=0.d0
         endwhere
-
-        !first find H & He lines, and CELs
-        call get_H(H_Balmer, H_Paschen, linelist)
-        call get_Hei(Hei_lines, linelist)
-        call get_Heii(Heii_lines, linelist)
-        call get_cels(ILs,linelist)
 
         !is H beta detected? if not, we can't do anything.
         !todo: the calculation of expected Hbeta from Halpha and c(Hb) needs fixing as Hb=0 now triggers an error outside the loop - 15/05/2015

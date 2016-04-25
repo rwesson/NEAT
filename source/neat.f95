@@ -72,6 +72,14 @@ program neat
         type(atomic_data),allocatable :: atomicdata(:)
         real(kind=dp), dimension(:,:,:), allocatable :: heidata
 
+!line indexing arrays - these contain the location within the main array of the lines of interest, plus levels and zones for CELs
+
+        integer, dimension(3:40) :: H_Balmer
+        integer, dimension(4:39) :: H_Paschen
+        integer, dimension(44) :: HeI_lines
+        integer, dimension(1) :: HeII_lines
+        type(cel), dimension(82) :: ILs !todo: work out why this becomes undefined on entry if its shape is assumed
+
 !extinction
 
         logical :: calculate_extinction=.true.
@@ -91,9 +99,6 @@ program neat
 !OpenMP
 
         integer :: omp_get_num_threads
-!CEL array
-
-        type(cel), dimension(82) :: ILs ! todo:work out why assumed shape causes problems
 
 !diagnostic array
 
@@ -378,7 +383,11 @@ program neat
 
 ! do line identifying here
 
-!call get_cels(ILs2,linelist) ! need to move it to different module
+        !first find H & He lines, and CELs
+        call get_H(H_Balmer, H_Paschen, linelist)
+        call get_Hei(Hei_lines, linelist)
+        call get_Heii(Heii_lines, linelist)
+        call get_cels(ILs,linelist)
 
 ! todo, fix all the references to ilines to use new procedure
 
@@ -430,7 +439,7 @@ program neat
         if(runs == 1)then !calculates abundances without uncertainties
                 print *
                 print *,gettime(),": doing abundance calculations"
-                call abundances(linelist, listlength, iteration_result, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf)
+                call abundances(linelist, listlength, iteration_result, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf, H_Balmer, H_Paschen, HeI_lines, HeII_lines)
                 all_results(1)=iteration_result(1) ! copy the iteration result to all_results to simplify the writing out of results later
                 print *,gettime(),": finished abundance calculations"
         else if(runs > 1)then
@@ -465,7 +474,7 @@ program neat
 !                        print*, "iteration ", i, "of", runs
 
                         call randomizer(linelist, listlength, norp)
-                        call abundances(linelist, listlength, iteration_result, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf)
+                        call abundances(linelist, listlength, iteration_result, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf, H_Balmer, H_Paschen, HeI_lines, HeII_lines)
 
                         !store all line and derived quantity in arrays
                         all_linelists(:,i)=linelist

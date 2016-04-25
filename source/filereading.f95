@@ -1,5 +1,6 @@
 module mod_abundIO
 use mod_abundtypes
+use mod_atomicdata
 implicit none
 private :: dp
 integer, parameter :: dp = kind(1.d0)
@@ -206,16 +207,6 @@ subroutine read_celdata(ILs, ionlist)
         CLOSE(201)
 
 end subroutine read_celdata
-
-end module
-
-module mod_abundmaths
-use mod_abundtypes
-use mod_atomicdata
-implicit none
-integer, parameter :: dp=kind(1.d0)
-
-contains
 
 !this fantastically ugly function gets the location of certain ions in the important ions array using their name as a key.
 !April 2016: made it yet uglier so that it:
@@ -454,9 +445,7 @@ subroutine get_HeII(HeII_lines, linelist)
 
 end subroutine
 
-!extinction laws now in mod_extinction
-
-end module mod_abundmaths
+end module 
 
 module mod_atomic_read
 use mod_atomicdata
