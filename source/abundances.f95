@@ -1945,7 +1945,7 @@ subroutine get_diag(name1, name2, diag)
 
 !debugging
 #ifdef CO
-        print *,"subroutine: get_diag"
+        print *,"subroutine: get_diag. lines=",name1,name2
 #endif
 
          flux_no1 = get_cel_flux(name1, linelist, ILs)
@@ -1973,7 +1973,7 @@ subroutine get_Tdiag(name1, name2, name3, ion, ratio)
 
 !debugging
 #ifdef CO
-        print *,"subroutine: get_Tdiag"
+        print *,"subroutine: get_Tdiag. lines=",name1, name2, name3
 #endif
 
         ion_no1 = get_ion(name1, ILs)

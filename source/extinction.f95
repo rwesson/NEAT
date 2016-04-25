@@ -157,7 +157,7 @@ subroutine get_flambda(linelist, switch_ext, R)
 
 !debugging
 #ifdef CO
-        print *,"subroutine: get_flambda"
+        print *,"subroutine: get_flambda, switch=",switch_ext
 #endif
 
         c1 = -0.38

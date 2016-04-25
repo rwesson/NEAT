@@ -36,14 +36,14 @@
 
       subroutine get_diagnostic(ion,levu,levl,inratio,diagtype,fixedq,result,ndim2,ndim1,atomicdata,iion)
       use mod_atomicdata
-      IMPLICIT NONE
+      implicit none
       integer, parameter :: dp = kind(1.d0)
 
       integer :: NDIM1, NDIM2, NDIM1T3, MAXND
                                                       !Maximum no of Te & levels
                                              !NDIM1T3 should be at least 3*NDIM1
                                                    !Maximum no. of Ne increments
-      PARAMETER (MAXND=100)
+      parameter (MAXND=100)
       integer :: G(NDIM2),                                                 &
      &  ITRANA(2,NDIM2),ITRANB(2,NDIM2),ITRANC(2,NDIM2),LOOP
       type(atomic_data),dimension(:),intent(in) :: atomicdata
@@ -57,8 +57,8 @@
      & ROOTT(NDIM1), X(NDIM2,NDIM2), Y(NDIM2),                          &
      & X2(NDIM2,NDIM2), XKEEP(NDIM2,NDIM2), Y2(NDIM2), YKEEP(NDIM2),    &
      & HMH(NDIM1,NDIM1), D(NDIM1)
-      CHARACTER(len=20) :: LABEL(NDIM2)
-      CHARACTER(len=10) :: ION
+      character(len=20) :: LABEL(NDIM2)
+      character(len=10) :: ION
       integer :: I, I1, I2, J, KK, LL, JT, JJD,                            &
      & NLEV, NTEMP, IBIG, IRATS,                                        &
      & NLEV1, INT, IND, IOPT, IT, IM1, JM1, IP1,                        &
@@ -69,15 +69,15 @@
 
       real(kind=dp) :: fixedq
       real(kind=dp) :: inratio,result
-      CHARACTER(len=20) :: levu,levl
-      CHARACTER(len=1) :: diagtype
+      character(len=20) :: levu,levl
+      character(len=1) :: diagtype
       real(kind=dp), DIMENSION(:,:), ALLOCATABLE :: RESULTS
       real(kind=dp) :: valtest(3)
       integer :: test
 
 !debugging
 #ifdef CO
-        print *,"subroutine: get_diagnostic"
+        print *,"subroutine: get_diagnostic. ion=",ion
 #endif
 
 ! check if ratio is meaningful
@@ -95,8 +95,8 @@
       valtest=0
       test=0
 
-      READ(levu,*) ((ITRANA(LL,KK),LL=1,2),KK=1,ndim2)!150)
-      READ(levl,*) ((ITRANB(LL,KK),LL=1,2),KK=1,ndim2)!150)
+      read(levu,*) ((ITRANA(LL,KK),LL=1,2),KK=1,ndim2)!150)
+      read(levl,*) ((ITRANB(LL,KK),LL=1,2),KK=1,ndim2)!150)
 
 
 !Transfer atomic data to local variables
@@ -126,7 +126,7 @@
       ITRANC = 0
 
       !*****LOOP STARTS HERE*************************
-      DO LOOP = 1, 9
+      do LOOP = 1, 9
       if (diagtype .eq. "t" .or. diagtype .eq. "T") then
 
         if (LOOP .eq. 1) then
@@ -142,7 +142,7 @@
         dinc=0
         ind=1
 
-        ALLOCATE(RESULTS(3,INT))
+        allocate(RESULTS(3,INT))
 
       else
 
@@ -166,17 +166,17 @@
           if (tempi .lt. 5000) tempi=5000
 
                                                                !Start of Te loop
-      DO JT = 1, INT
+      do JT = 1, INT
         TEMP=TEMPI+(JT-1)*TINC
                                                                !Start of Ne loop
 
-        DO JJD = 1, IND
+        do JJD = 1, IND
           DENS=DENSI+(JJD-1)*DINC
-          IF (TEMP.LE.0.D0.OR.DENS.LE.0.D0) THEN
-            WRITE (6,6100)
+          if (TEMP.LE.0.D0.OR.DENS.LE.0.D0) then
+            write (6,6100)
                 print *,"Temp = ", TEMP, ", Dens = ", DENS, ", Ion = ",ion,diagtype
-            STOP
-          ENDIF
+            stop
+          endif
           DLOGD = LOG10 (DENS)
           TLOGT = LOG10 (TEMP)
           TEMP2= SQRT (TEMP)
@@ -189,105 +189,105 @@
           Y=0.0
 
           IOPT=0
-          IF (NTEMP.EQ.1) THEN
-            WRITE (6,*)
-            WRITE (6,*)                                                 &
+          if (NTEMP.EQ.1) then
+            write (6,*)
+            write (6,*)                                                 &
      &      'Coll. strengths available for 1 Te only - assuming const'
-          ELSEIF (NTEMP.EQ.2) THEN
-            WRITE (6,*)
-            WRITE (6,*)                                                 &
+          elseif (NTEMP.EQ.2) then
+            write (6,*)
+            write (6,*)                                                 &
      &      'Coll. strengths available for 2 Te only - linear interp'
-          ELSE
-            CALL SPLMAT(T, NTEMP, IOPT, NDIM1, NDIM1T3, HMH)
-            CALL CFD(TLOGT,T,NTEMP,NDIM1,HMH,D)
-          ENDIF
-          DO I = 2, NLEV
-            DO J = I, NLEV
+          else
+            call SPLMAT(T, NTEMP, IOPT, NDIM1, NDIM1T3, HMH)
+            call CFD(TLOGT,T,NTEMP,NDIM1,HMH,D)
+          endif
+          do I = 2, NLEV
+            do J = I, NLEV
                                                            !Negative!
               DELTEK = (E(I-1)-E(J))*1.4388463D0
               EXPE = EXP(DELTEK/TEMP)
-              DO IT = 1, NTEMP
-                IF (IRATS.EQ.0.D+00) THEN
+              do IT = 1, NTEMP
+                if (IRATS.EQ.0.D+00) then
                   QQ(IT) = QOM(IT,I-1,J)
-                ELSE
+                else
                                                       !Take out the exp. depend.
                   QQ(IT) = QOM(IT,I-1,J) / EXPE
                                                       !before interpolation
-                ENDIF
-              ENDDO
-              IF (NTEMP.EQ.1) THEN
+                endif
+              enddo
+              if (NTEMP.EQ.1) then
                  DD = QQ(1)
-              ELSEIF (NTEMP.EQ.2) THEN
+              elseif (NTEMP.EQ.2) then
                  DD = QQ(1) +                                           &
      &            (QQ(2) - QQ(1))/(T(2) - T(1)) * (TLOGT - T(1))
-              ELSE
+              else
                 CALL CFY(TLOGT, DD, T, QQ, NTEMP, NDIM1, D)
-              ENDIF
-              IF (IRATS.EQ.0.D+00) THEN
+              endif
+              if (IRATS.EQ.0.D+00) then
                 CS(I-1,J) = DD
-              ELSE
+              else
                 CS(I-1,J) = DD * EXPE
-              ENDIF
-              IF (IRATS .EQ. 0.D+00) THEN
+              endif
+              if (IRATS .EQ. 0.D+00) then
                 QEFF(I-1,J) = 8.63D-06*CS(I-1,J) * EXPE / (G(I-1)*TEMP2)
                 QEFF(J,I-1) = 8.63D-06 * CS(I-1,J) / (G(J)*TEMP2)
-              ELSE
+              else
                 QEFF(I-1,J) = CS(I-1,J) * 10. ** IRATS
                                                                      !Be careful
                 QEFF(J,I-1) = G(I-1) * QEFF(I-1,J) / (EXPE * G(J))
                                                                      !G integer!
-              ENDIF
-            ENDDO
-          ENDDO
-          DO I = 2, NLEV
-            DO J = 1, NLEV
-              IF (J.NE.I) THEN
+              endif
+            enddo
+          enddo
+          do I = 2, NLEV
+            do J = 1, NLEV
+              if (J.NE.I) then
                 X(I,J) = X(I,J) + DENS * QEFF(J,I)
                 X(I,I) = X(I,I) - DENS * QEFF(I,J)
-                IF (J.GT.I) THEN
+                if (J.GT.I) then
                   X(I,J) = X(I,J) + A(J,I)
-                ELSE
+                else
                   X(I,I) = X(I,I) - A(I,J)
-                ENDIF
-              ENDIF
-            ENDDO
-          ENDDO
-          DO I = 2, NLEV
+                endif
+              endif
+            enddo
+          enddo
+          do I = 2, NLEV
             IM1 = I - 1
             VALUE = 0.D0 - X(I,1)
             Y(IM1) = VALUE
             Y2(IM1) = VALUE
             YKEEP(IM1) = VALUE
-            DO J = 2, NLEV
+            do J = 2, NLEV
               JM1 = J - 1
               VALUE = X(I,J)
               X(IM1,JM1) = VALUE
               X2(IM1,JM1) = VALUE
               XKEEP(IM1,JM1) = VALUE
-            ENDDO
-          ENDDO
+            enddo
+          enddo
                                               !Solve matrices for populations
           CALL LUSLV(X,Y,NLEV1,NDIM2)
-          DO I = NLEV, 2, -1
+          do I = NLEV, 2, -1
             N(I) = Y(I-1)
-          ENDDO
+          enddo
           SUMN = 1.D0
-          DO I = 2, NLEV
+          do I = 2, NLEV
             SUMN = SUMN + N(I)
-          ENDDO
-          DO I = 2, NLEV
+          enddo
+          do I = 2, NLEV
             N(I) = N(I) / SUMN
-          ENDDO
+          enddo
           N(1) = 1.D0 / SUMN
                                                                   !Output data
           TTT=TEMP*1.0D-4
           TTP=TTT**(-0.87D0)
                                        !Eff. recombination coef. of Hb
           AHB=3.036D-14*TTP
-          DO I = 1, NLEV1
+          do I = 1, NLEV1
             IP1 = I + 1
-            DO J = IP1, NLEV
-               IF (A(J,I).NE.0.D0) THEN
+            do J = IP1, NLEV
+               if (A(J,I).NE.0.D0) then
                  EJI = E(J) - E(I)
                  WAV = 1.D8 / EJI
                  RLINT = A(J,I) * EJI
@@ -295,9 +295,9 @@
                  TNIJ(I,J)=RLINT
                  FINT=N(J)*A(J,I)*4861.D0/(DENS*AHB*WAV)
                  FINTIJ(I,J)=FINT
-               ENDIF
-            ENDDO
-          ENDDO
+               endif
+            enddo
+          enddo
                      !Search ITRANA, ITRANB & ITRANC for transitions & sum up
           SUMA=0.D0
           SUMB=0.D0
@@ -305,27 +305,27 @@
           IAPR=0
           IBPR=0
           ICPR=0
-          DO IKT = 1, NDIM2
+          do IKT = 1, NDIM2
             IA1=ITRANA(1,IKT)
             IA2=ITRANA(2,IKT)
-            IF(IA1.NE.0.AND.IA2.NE.0) THEN
+            if (IA1.NE.0.AND.IA2.NE.0) then
               SUMA=SUMA+TNIJ(IA1,IA2)
               IAPR=IAPR+1
-            ENDIF
+            endif
             IB1=ITRANB(1,IKT)
             IB2=ITRANB(2,IKT)
-            IF(IB1.NE.0.AND.IB2.NE.0) THEN
+            if (IB1.NE.0.AND.IB2.NE.0) then
              IBPR=IBPR+1
              SUMB=SUMB+TNIJ(IB1,IB2)
             ENDIf
 
             IC1=ITRANC(1,IKT)
             IC2=ITRANC(2,IKT)
-            IF(IC1.NE.0.AND.IC2.NE.0) THEN
+            if (IC1.NE.0.AND.IC2.NE.0) then
              ICPR=ICPR+1
              SUMC=SUMC+FINTIJ(IC1,IC2)
             ENDIf
-          ENDDO
+          enddo
           FRAT=SUMA/SUMB
           SUMC = 1./SUMC
 
@@ -338,29 +338,29 @@
             RESULTS(2, JJD) = DENS
             RESultS(3, JJD) = FRAT-inratio
           endif                                   !End of the Ne loop
-        ENDDO
+        enddo
 
-        DO IA = 1, IAPR
+        do IA = 1, IAPR
           I1=ITRANA(1,IA)
           I2=ITRANA(2,IA)
           DEE=E(I2)-E(I1)
           WAVA(IA)=1.D8/DEE
-        ENDDO
-        DO IB = 1, IBPR
+        enddo
+        do IB = 1, IBPR
           I1=ITRANB(1,IB)
           I2=ITRANB(2,IB)
           DEE=E(I2)-E(I1)
           WAVB(IB)=1.D8/DEE
-        ENDDO
-        DO IC = 1, ICPR
+        enddo
+        do IC = 1, ICPR
           I1=ITRANC(1,IC)
           I2=ITRANC(2,IC)
           DEE=E(I2)-E(I1)
           WAVC(IC)=1.D8/DEE
-        ENDDO
+        enddo
 
                                                          !End of the Te loop
-      ENDDO
+      enddo
 ! here, find the value in RESULTS which is closest to zero
 ! sort values in results to find two lowest values
 !print*,results
@@ -371,7 +371,7 @@
 
         ! loop through array and find out where the sign changes.
 
-        DO I=2,INT
+        do I=2,INT
             test=0
                 if (sign(results(3,I),results(3,1)) .ne. results(3,I)) then !when this condition is fulfilled, the values in the array are now a different sign to the first value in the array
                         valtest(:) = (results(:,I-1)) ! return the value before the sign change so that the next loop starts at a sensible value
@@ -416,7 +416,7 @@
 
         !LOOP = LOOP + 1
         DEALLOCATE(RESULTS) !thanks Bruce!
-      END DO
+      enddo
       !********LOOP WOULD END HERE**********************
 
       if (diagtype .eq. "D" .or. diagtype .eq. "d") then
@@ -425,7 +425,7 @@
         result = valtest(1)
       endif
 
-      RETURN
+      return
 
  6100 FORMAT (' PROCESSING COMPLETED'/                                  &
      & ' GOODBYE!!'///)
@@ -458,7 +458,8 @@
      & ROOTT(NDIM1), X(NDIM2,NDIM2), Y(NDIM2),                          &
      & X2(NDIM2,NDIM2), XKEEP(NDIM2,NDIM2), Y2(NDIM2), YKEEP(NDIM2),    &
      & HMH(NDIM1,NDIM1), D(NDIM1)
-      CHARACTER(len=20) :: LABEL(NDIM2), ION
+      character(len=20) :: LABEL(NDIM2)
+      character(len=10) :: ION
       integer :: I, I1, I2, J, KK, LL, JT, JJD,                            &
      & NLEV, NTEMP, IBIG, IRATS,                                        &
      & NLEV1, INT, IND, IOPT, IT, IM1, JM1, IP1,                        &
@@ -467,12 +468,12 @@
      & TEMP2, DD, DELTEK, EXPE, VALUE, SUMN, TTT, TTP, AHB, EJI, WAV,   &
      & RLINT, FINT, SUMA, SUMB, SUMC, FRAT, DEE
 
-      CHARACTER(len=20) :: levels
+      character(len=20) :: levels
       real(kind=dp) :: iobs, abund
 
 !debugging
 #ifdef CO
-        print *,"subroutine: get_abundance"
+        print *,"subroutine: get_abundance. ion=",ion
 #endif
 
       ndim1t3=3*ndim1
@@ -512,16 +513,16 @@
 
       NLEV1 = NLEV - 1
                                                                !Start of Te loop
-      DO JT = 1, INT
+      do JT = 1, INT
         TEMP=TEMPI+(JT-1)*TINC
 
                                                                !Start of Ne loop
-        DO JJD = 1, IND
+        do JJD = 1, IND
           DENS=DENSI+(JJD-1)*DINC
-          IF (TEMP.LE.0.D0.OR.DENS.LE.0.D0) THEN
+          if (TEMP.LE.0.D0.OR.DENS.LE.0.D0) then
             WRITE (6,6100)
             STOP
-          ENDIF
+          endif
           DLOGD = LOG10 (DENS)
           TLOGT = LOG10 (TEMP)
           TEMP2= SQRT (TEMP)
@@ -533,105 +534,105 @@
           Y=0.D0
 
           IOPT=0
-          IF (NTEMP.EQ.1) THEN
+          if (NTEMP.EQ.1) then
             WRITE (6,*)
             WRITE (6,*)                                                 &
      &      'Coll. strengths available for 1 Te only - assuming const'
-          ELSEIF (NTEMP.EQ.2) THEN
+          elseif (NTEMP.EQ.2) then
             WRITE (6,*)
             WRITE (6,*)                                                 &
      &      'Coll. strengths available for 2 Te only - linear interp'
-          ELSE
+          else
             CALL SPLMAT(T, NTEMP, IOPT, NDIM1, NDIM1T3, HMH)
             CALL CFD(TLOGT,T,NTEMP,NDIM1,HMH,D)
-          ENDIF
-          DO I = 2, NLEV
-            DO J = I, NLEV
+          endif
+          do I = 2, NLEV
+            do J = I, NLEV
                                                            !Negative!
               DELTEK = (E(I-1)-E(J))*1.4388463D0
               EXPE = EXP(DELTEK/TEMP)
-              DO IT = 1, NTEMP
-                IF (IRATS.EQ.0.D+00) THEN
+              do IT = 1, NTEMP
+                if (IRATS.EQ.0.D+00) then
                   QQ(IT) = QOM(IT,I-1,J)
-                ELSE
+                else
                                                       !Take out the exp. depend.
                   QQ(IT) = QOM(IT,I-1,J) / EXPE
                                                       !before interpolation
-                ENDIF
-              ENDDO
-              IF (NTEMP.EQ.1) THEN
+                endif
+              enddo
+              if (NTEMP.EQ.1) then
                  DD = QQ(1)
-              ELSEIF (NTEMP.EQ.2) THEN
+              elseif (NTEMP.EQ.2) then
                  DD = QQ(1) +                                           &
      &            (QQ(2) - QQ(1))/(T(2) - T(1)) * (TLOGT - T(1))
-              ELSE
+              else
                 CALL CFY(TLOGT, DD, T, QQ, NTEMP, NDIM1, D)
-              ENDIF
-              IF (IRATS.EQ.0.D+00) THEN
+              endif
+              if (IRATS.EQ.0.D+00) then
                 CS(I-1,J) = DD
-              ELSE
+              else
                 CS(I-1,J) = DD * EXPE
-              ENDIF
-              IF (IRATS .EQ. 0.D+00) THEN
+              endif
+              if (IRATS .EQ. 0.D+00) then
                 QEFF(I-1,J) = 8.63D-06*CS(I-1,J) * EXPE / (G(I-1)*TEMP2)
                 QEFF(J,I-1) = 8.63D-06 * CS(I-1,J) / (G(J)*TEMP2)
-              ELSE
+              else
                 QEFF(I-1,J) = CS(I-1,J) * 10. ** IRATS
                                                                      !Be careful
                 QEFF(J,I-1) = G(I-1) * QEFF(I-1,J) / (EXPE * G(J))
                                                                      !G integer!
-              ENDIF
-            ENDDO
-          ENDDO
-          DO I = 2, NLEV
-            DO J = 1, NLEV
-              IF (J.NE.I) THEN
+              endif
+            enddo
+          enddo
+          do I = 2, NLEV
+            do J = 1, NLEV
+              if (J.NE.I) then
                 X(I,J) = X(I,J) + DENS * QEFF(J,I)
                 X(I,I) = X(I,I) - DENS * QEFF(I,J)
-                IF (J.GT.I) THEN
+                if (J.GT.I) then
                   X(I,J) = X(I,J) + A(J,I)
-                ELSE
+                else
                   X(I,I) = X(I,I) - A(I,J)
-                ENDIF
-              ENDIF
-            ENDDO
-          ENDDO
-          DO I = 2, NLEV
+                endif
+              endif
+            enddo
+          enddo
+          do I = 2, NLEV
             IM1 = I - 1
             VALUE = 0.D0 - X(I,1)
             Y(IM1) = VALUE
             Y2(IM1) = VALUE
             YKEEP(IM1) = VALUE
-            DO J = 2, NLEV
+            do J = 2, NLEV
               JM1 = J - 1
               VALUE = X(I,J)
               X(IM1,JM1) = VALUE
               X2(IM1,JM1) = VALUE
               XKEEP(IM1,JM1) = VALUE
-            ENDDO
-          ENDDO
+            enddo
+          enddo
                                               !Solve matrices for populations
           CALL LUSLV(X,Y,NLEV1,NDIM2)
-          DO I = NLEV, 2, -1
+          do I = NLEV, 2, -1
             N(I) = Y(I-1)
-          ENDDO
+          enddo
           SUMN = 1.D0
-          DO I = 2, NLEV
+          do I = 2, NLEV
             SUMN = SUMN + N(I)
-          ENDDO
-          DO I = 2, NLEV
+          enddo
+          do I = 2, NLEV
             N(I) = N(I) / SUMN
-          ENDDO
+          enddo
           N(1) = 1.D0 / SUMN
                                                                   !Output data
           TTT=TEMP*1.0D-4
           TTP=TTT**(-0.87D0)
                                        !Eff. recombination coef. of Hb
           AHB=3.036D-14*TTP
-          DO I = 1, NLEV1
+          do I = 1, NLEV1
             IP1 = I + 1
-            DO J = IP1, NLEV
-               IF (A(J,I).NE.0.D0) THEN
+            do J = IP1, NLEV
+               if (A(J,I).NE.0.D0) then
                  EJI = E(J) - E(I)
                  WAV = 1.D8 / EJI
                  RLINT = A(J,I) * EJI
@@ -639,9 +640,9 @@
                  TNIJ(I,J)=RLINT
                  FINT=N(J)*A(J,I)*4861.D0/(DENS*AHB*WAV)
                  FINTIJ(I,J)=FINT
-               ENDIF
-            ENDDO
-          ENDDO
+               endif
+            enddo
+          enddo
                      !Search ITRANA, ITRANB & ITRANC for transitions & sum up
           SUMA=0.D0
           SUMB=0.D0
@@ -649,56 +650,56 @@
           IAPR=0
           IBPR=0
           ICPR=0
-          DO IKT = 1, NDIM2
+          do IKT = 1, NDIM2
             IA1=ITRANA(1,IKT)
             IA2=ITRANA(2,IKT)
-            IF(IA1.NE.0.AND.IA2.NE.0) THEN
+            if (IA1.NE.0.AND.IA2.NE.0) then
               SUMA=SUMA+TNIJ(IA1,IA2)
               IAPR=IAPR+1
-            ENDIF
+            endif
             IB1=ITRANB(1,IKT)
             IB2=ITRANB(2,IKT)
-            IF(IB1.NE.0.AND.IB2.NE.0) THEN
+            if (IB1.NE.0.AND.IB2.NE.0) then
              IBPR=IBPR+1
              SUMB=SUMB+TNIJ(IB1,IB2)
             ENDIf
 
             IC1=ITRANC(1,IKT)
             IC2=ITRANC(2,IKT)
-            IF(IC1.NE.0.AND.IC2.NE.0) THEN
+            if (IC1.NE.0.AND.IC2.NE.0) then
              ICPR=ICPR+1
              SUMC=SUMC+FINTIJ(IC1,IC2)
             ENDIf
-          ENDDO
+          enddo
           FRAT=SUMA/SUMB
           SUMC = 1./SUMC
           TDRAT(1,JJD)=DENS
           TDRAT(2,JJD)=FRAT
           abund = sumc*iobs/100
                                                        !End of the Ne loop
-        ENDDO
-        DO IA = 1, IAPR
+        enddo
+        do IA = 1, IAPR
           I1=ITRANA(1,IA)
           I2=ITRANA(2,IA)
           DEE=E(I2)-E(I1)
           WAVA(IA)=1.D8/DEE
-        ENDDO
-        DO IB = 1, IBPR
+        enddo
+        do IB = 1, IBPR
           I1=ITRANB(1,IB)
           I2=ITRANB(2,IB)
           DEE=E(I2)-E(I1)
           WAVB(IB)=1.D8/DEE
-        ENDDO
-        DO IC = 1, ICPR
+        enddo
+        do IC = 1, ICPR
           I1=ITRANC(1,IC)
           I2=ITRANC(2,IC)
           DEE=E(I2)-E(I1)
           WAVC(IC)=1.D8/DEE
-        ENDDO
+        enddo
                                                          !End of the Te loop
-      ENDDO
+      enddo
 
-      RETURN
+      return
 
  6100 FORMAT (' PROCESSING COMPLETED'/                                  &
      & ' GOODBYE!!'///)
@@ -707,7 +708,7 @@
 
 !---- PROC LUSLV
                                                        !Solving linear equations
-      SUBROUTINE LUSLV(A,B,N,M)
+      subroutine LUSLV(A,B,N,M)
       implicit none
       integer, parameter :: dp = kind(1.d0)
 
@@ -715,62 +716,62 @@
       real(kind=dp) :: A(M,M),B(M)
       CALL LURED(A,N,M)
       CALL RESLV(A,B,N,M)
-      RETURN
+      return
       END subroutine luslv
 !
 !---- PROC LURED
-      SUBROUTINE LURED(A,N,NR)
+      subroutine LURED(A,N,NR)
       implicit none
       integer, parameter :: dp = kind(1.d0)
 
       integer :: N, NR, NM1, I, J, K, IP1
       real(kind=dp) :: A(NR,NR), FACT
-      IF(N.EQ.1) RETURN
+      if (N.EQ.1) return
       NM1=N-1
-      DO I=1,NM1
+      do I=1,NM1
         IP1=I+1
-        DO K=IP1,N
+        do K=IP1,N
           FACT=A(K,I)/A(I,I)
-          DO J=IP1,N
+          do J=IP1,N
             A(K,J)=A(K,J)-A(I,J)*FACT
-          ENDDO
-        ENDDO
-      ENDDO
-      RETURN
+          enddo
+        enddo
+      enddo
+      return
       END subroutine lured
 !
 !---- PROC RESLV
                                                                !Resolve A with B
-      SUBROUTINE RESLV(A,B,N,NR)
+      subroutine RESLV(A,B,N,NR)
       implicit none
       integer, parameter :: dp = kind(1.d0)
 
       integer :: N, NR, NM1, I, J, K, L, IP1
       real(kind=dp) :: A(NR,NR),B(NR)
-      IF(N.EQ.1) GOTO 1
+      if (N.EQ.1) GOTO 1
       NM1=N-1
-      DO I=1,NM1
+      do I=1,NM1
         IP1=I+1
-        DO J=IP1,N
+        do J=IP1,N
           B(J)=B(J)-B(I)*A(J,I)/A(I,I)
-        ENDDO
-      ENDDO
+        enddo
+      enddo
       B(N)=B(N)/A(N,N)
-      DO I=1,NM1
+      do I=1,NM1
         K=N-I
         L=K+1
-        DO J=L,N
+        do J=L,N
           B(K)=B(K)-B(J)*A(K,J)
-        ENDDO
+        enddo
         B(K)=B(K)/A(K,K)
-      ENDDO
-      RETURN
+      enddo
+      return
     1 B(N)=B(N)/A(N,N)
-      RETURN
+      return
       END subroutine reslv
 !
 !---- PROC SPLMAT
-      SUBROUTINE SPLMAT(XX,NPT,IOPT,NDIM, NDIMT3, HMH)
+      subroutine SPLMAT(XX,NPT,IOPT,NDIM, NDIMT3, HMH)
       implicit none
       integer, parameter :: dp = kind(1.d0)
 
@@ -781,7 +782,7 @@
       NELEM=3*NPM-2
       CALL ELU(GH,NPM,NDIMT3)
       CALL HGEN(XX,GH,Y,NPT,IOPT,NDIM,NDIMT3,HMH)
-      RETURN
+      return
       END subroutine splmat
 !
 !---- PROC DERIV
@@ -789,28 +790,28 @@
 !     of a function F, tabulated at the N points XY(I), I=1 to N.
 !     The derivative is given as the coefficients of F(I), I=1 to N,
 !     in the array D(I), I=1 to N.
-      SUBROUTINE DERIV(XY,D,X,N,NDIM)
+      subroutine DERIV(XY,D,X,N,NDIM)
       implicit none
       integer, parameter :: dp = kind(1.d0)
 
       integer :: N ,NDIM, I, J, K
       real(kind=dp) :: XY(NDIM),D(NDIM), X, P1, P2, S
-      DO I=1,N
+      do I=1,N
         P1=1.
         S=0.
-        DO J=1,N
-          IF(J.NE.I) THEN
+        do J=1,N
+          if (J.NE.I) then
             P1=P1*(XY(I)-XY(J))
             P2=1.
-            DO K=1,N
-              IF(K.NE.I.AND.K.NE.J) P2=P2*(X-XY(K))
-            ENDDO
+            do K=1,N
+              if (K.NE.I.AND.K.NE.J) P2=P2*(X-XY(K))
+            enddo
             S=S+P2
-          ENDIF
-        ENDDO
+          endif
+        enddo
         D(I)=S/P1
-      ENDDO
-      RETURN
+      enddo
+      return
       END subroutine deriv
 !
 !---- PROC HGEN
@@ -825,7 +826,7 @@
 !     IOPT = 1  YP=0  at end points
 !     IOPT = 2  YP at end points from lagarnge interpolant of a set of
 !     internal points.
-      SUBROUTINE HGEN(XX,GH,Y,NPT,IOPT,NDIM,NDIMT3,HMH)
+      subroutine HGEN(XX,GH,Y,NPT,IOPT,NDIM,NDIMT3,HMH)
       implicit none
       integer, parameter :: dp = kind(1.d0)
 
@@ -834,102 +835,102 @@
       real(kind=dp) :: XX(NDIM), GH(NDIMT3), Y(NDIM), HMH(NDIM,NDIM),             &
      & XY(5),D(5),C(2,5), A0, AN1, H1, H2
                                    !Case of derivative boundary condition, with
-      IF(IOPT.EQ.2) THEN
+      if (IOPT.EQ.2) then
                                    !derivatives from NIP-point Lagrange at
         NDIM3=5
                                    !internal points
         NIP=3
-        DO J=1,2
-          DO I=1,NIP
+        do J=1,2
+          do I=1,NIP
             K=(NPT-NIP)*(J-1)
             XY(I)=XX(K+I)
-          ENDDO
+          enddo
           K=1+(NPT-1)*(J-1)
           CALL DERIV(XY,D,XX(K),NIP,NDIM3)
-          DO I=1,NIP
+          do I=1,NIP
             C(J,I)=D(I)
-          ENDDO
-        ENDDO
-      ENDIF
+          enddo
+        enddo
+      endif
                                              !Set up matrix equation G*YPP=HMH*Y
       A0=XX(2)-XX(1)
       AN1=XX(NPT)-XX(NPT-1)
       NPM=NPT-2
       hmh=0d0
-      DO I=1,NPM
+      do I=1,NPM
         H1=6./(XX(I+1)-XX(I))
         H2=6./(XX(I+2)-XX(I+1))
         HMH(I,I)=H1
         HMH(I,I+1)=-H1-H2
         HMH(I,I+2)=H2
-!        DO J=1,NPT
+!        do J=1,NPT
 !          HMH(I,J)=0.
-!          IF(J.EQ.I) HMH(I,J)=H1
-!          IF(J.EQ.I+2) HMH(I,J)=H2
-!          IF(J.EQ.I+1) HMH(I,J)=-H1-H2
-!        ENDDO
-      ENDDO
+!          if (J.EQ.I) HMH(I,J)=H1
+!          if (J.EQ.I+2) HMH(I,J)=H2
+!          if (J.EQ.I+1) HMH(I,J)=-H1-H2
+!        enddo
+      enddo
                                                  !Correct matrix for case of
-      IF(IOPT.EQ.1.OR.IOPT.EQ.2) THEN
+      if (IOPT.EQ.1.OR.IOPT.EQ.2) then
                                                  !derivative boundary conditions
         HMH(1,1)=HMH(1,1)+3/A0
         HMH(1,2)=HMH(1,2)-3/A0
         HMH(NPM,NPT-1)=HMH(NPM,NPT-1)-3/AN1
         HMH(NPM,NPT)=HMH(NPM,NPT)+3/AN1
-      ENDIF
-      IF(IOPT.EQ.2) THEN
-        DO J=1,NIP
+      endif
+      if (IOPT.EQ.2) then
+        do J=1,NIP
           HMH(1,J)=HMH(1,J)+3*C(1,J)
           K=NPT+J-NIP
           HMH(NPM,K)=HMH(NPM,K)-3*C(2,J)
-        ENDDO
-      ENDIF
+        enddo
+      endif
                                  !Solve matrix equation with results in the form
-      DO I=1,NPT
+      do I=1,NPT
                                  !YPP=HMH*Y. matrix g has been LU decomposed
         Y(1)=HMH(1,I)
         INDX=0
-        DO J=2,NPM
+        do J=2,NPM
           INDX=INDX+3
           Y(J)=HMH(J,I)-GH(INDX)*Y(J-1)
-        ENDDO
+        enddo
         INDX=INDX+1
         Y(NPM)=Y(NPM)/GH(INDX)
-        DO J=2,NPM
+        do J=2,NPM
           K=NPM-J+1
           INDX=INDX-3
           Y(K)=(Y(K)-GH(INDX+1)*Y(K+1))/GH(INDX)
-        ENDDO
+        enddo
 
         HMH(2:npm+1,I)=Y(1:npm)
                                     !Insert values for second derivative at end
         HMH(1,I)=0.
                                     !points: first and last rows of the matrix
         HMH(NPT,I)=0.
-      ENDDO
+      enddo
                                          !Case of derivative boundary conditions
-      IF(IOPT.GT.0) THEN
-        DO J=1,NPT
+      if (IOPT.GT.0) then
+        do J=1,NPT
           HMH(1,J)=-0.5*HMH(2,J)
           HMH(NPT,J)=-0.5*HMH(NPT-1,J)
-        ENDDO
+        enddo
         HMH(1,1)=HMH(1,1)-3/(A0*A0)
         HMH(1,2)=HMH(1,2)+3/(A0*A0)
         HMH(NPT,NPT-1)=HMH(NPT,NPT-1)+3/(AN1*AN1)
         HMH(NPT,NPT)=HMH(NPT,NPT)-3/(AN1*AN1)
-      ENDIF
-      IF(IOPT.EQ.2) THEN
-        DO J=1,NIP
+      endif
+      if (IOPT.EQ.2) then
+        do J=1,NIP
           HMH(1,J)=HMH(1,J)-3*C(1,J)/A0
           K=NPT+J-NIP
           HMH(NPT,K)=HMH(NPT,K)+3*C(2,J)/AN1
-        ENDDO
-      ENDIF
-      RETURN
+        enddo
+      endif
+      return
       END subroutine hgen
 !
 !---- PROC GHGEN
-      SUBROUTINE GHGEN(GH,XX,NPT,IOPT,NDIM,NDIMT3)
+      subroutine GHGEN(GH,XX,NPT,IOPT,NDIM,NDIMT3)
       implicit none
       integer, parameter :: dp = kind(1.d0)
 
@@ -937,108 +938,108 @@
       real(kind=dp) :: XX(NDIM),GH(NDIMT3)
       INDX=0
       NPTM=NPT-1
-      DO I=2,NPTM
+      do I=2,NPTM
         IP=I-1
-        DO J=1,3
+        do J=1,3
           JP=IP+J-2
-          IF(JP.GE.1.AND.JP.LE.NPTM-1) THEN
+          if (JP.GE.1.AND.JP.LE.NPTM-1) then
             INDX=INDX+1
-            IF(J.EQ.2) THEN
+            if (J.EQ.2) then
               GH(INDX)=2*(XX(I+1)-XX(I-1))
-            ELSE
+            else
               IK=I+(J-1)/2
               GH(INDX)=XX(IK)-XX(IK-1)
-            ENDIF
-          ENDIF
-        ENDDO
-      ENDDO
-      IF(IOPT.GE.1) THEN
+            endif
+          endif
+        enddo
+      enddo
+      if (IOPT.GE.1) then
         GH(1)=GH(1)-(XX(2)-XX(1))/2.
         GH(INDX)=GH(INDX)-(XX(NPT)-XX(NPT-1))/2.
-      ENDIF
-      RETURN
+      endif
+      return
       END subroutine ghgen
 !
 !---- PROC ELU
-      SUBROUTINE ELU(GH,N,NDIM)
+      subroutine ELU(GH,N,NDIM)
       implicit none
       integer, parameter :: dp = kind(1.d0)
 
       integer :: N, NDIM, INDX, I, J, JP
       real(kind=dp) :: GH(NDIM)
       INDX=0
-      DO I=1,N
-        DO J=1,3
+      do I=1,N
+        do J=1,3
           JP=I+J-2
-          IF(JP.GE.1.AND.JP.LE.N) THEN
+          if (JP.GE.1.AND.JP.LE.N) then
             INDX=INDX+1
-            IF(I.GT.1) THEN
-              IF(J.EQ.1) THEN
+            if (I.GT.1) then
+              if (J.EQ.1) then
                 GH(INDX)=GH(INDX)/GH(INDX-2)
-              ENDIF
-              IF(J.EQ.2) THEN
+              endif
+              if (J.EQ.2) then
                 GH(INDX)=GH(INDX)-GH(INDX-1)*GH(INDX-2)
-              ENDIF
-            ENDIF
-          ENDIF
-        ENDDO
-      ENDDO
-      RETURN
+              endif
+            endif
+          endif
+        enddo
+      enddo
+      return
       END subroutine elu
 !
 !---- PROC CFY
-      SUBROUTINE CFY(X,Y,XX,YY,NPT,NDIM,D)
+      subroutine CFY(X,Y,XX,YY,NPT,NDIM,D)
       implicit none
       integer, parameter :: dp = kind(1.d0)
 
       integer :: NPT, NDIM, J
       real(kind=dp) :: XX(NDIM),YY(NDIM), D(NDIM), X, Y, TT
-      IF(X.LT.XX(1)) THEN
+      if (X.LT.XX(1)) then
         Y=YY(1)
-      ENDIF
-      IF(X.GT.XX(NPT)) THEN
+      endif
+      if (X.GT.XX(NPT)) then
         Y=YY(NPT)
-      ENDIF
+      endif
       TT=0.
-      DO J=1,NPT
+      do J=1,NPT
         TT=TT+D(J)*YY(J)
-      ENDDO
+      enddo
       Y=TT
-      RETURN
+      return
 
       END subroutine cfy
 !
 !---- PROC CFD
-      SUBROUTINE CFD(X,XX,NPT,NDIM, HMH, D)
+      subroutine CFD(X,XX,NPT,NDIM, HMH, D)
       implicit none
       integer, parameter :: dp = kind(1.d0)
 
       integer :: NPT, NDIM, NPTM, I, J
       real(kind=dp) :: X, XX(NDIM), HMH(NDIM,NDIM), D(NDIM), X1, X2, A1, A2, HI
-      IF(X.LT.XX(1)) THEN
+      if (X.LT.XX(1)) then
         !WRITE(6,400) XX(1)
-        RETURN
-      ENDIF
-      IF(X.GT.XX(NPT)) THEN
+        return
+      endif
+      if (X.GT.XX(NPT)) then
         !WRITE(6,401) XX(NPT)
-        RETURN
-      ENDIF
+        return
+      endif
       NPTM=NPT-1
-      DO I=1,NPTM
-        IF(X.LT.XX(I+1)) THEN
+      do I=1,NPTM
+        if (X.LT.XX(I+1)) then
           X1=XX(I+1)-X
           X2=X-XX(I)
           HI=XX(I+1)-XX(I)
           A1=X1*(X1*X1/(6*HI)-HI/6)
           A2=X2*(X2*X2/(6*HI)-HI/6)
-          DO J=1,NPT
+          do J=1,NPT
             D(J)=(A1*HMH(I,J)+A2*HMH(I+1,J))
-          ENDDO
+          enddo
           D(I)=D(I)+X1/HI
           D(I+1)=D(I+1)+X2/HI
-          RETURN
-        ENDIF
-      ENDDO
+          return
+        endif
+      enddo
 
       END subroutine cfd
 

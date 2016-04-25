@@ -288,7 +288,7 @@ integer function get_ion(ionname, ILs)
 
 !debugging
 #ifdef CO
-        print *,"subroutine: get_ion"
+        print *,"subroutine: get_ion. ion=",ionname
 #endif
 
         do i = 1, size(ILs)
@@ -477,7 +477,7 @@ use mod_atomicdata
 
 !debugging
 #ifdef CO
-        print *,"subroutine: read_atomic_data"
+        print *,"subroutine: read_atomic_data, ion=",ion%ion
 #endif
 
     id = 0
