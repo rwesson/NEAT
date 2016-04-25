@@ -65,7 +65,7 @@
      & IAPR, IBPR, ICPR, IKT, IA, IB, IC, IA1, IA2, IB1, IB2, IC1, IC2
       real(kind=dp) :: TEMPI, TINC, DENSI, DINC, DENS, DLOGD, TEMP, TLOGT,        &
      & TEMP2, DD, DELTEK, EXPE, VALUE, SUMN, TTT, TTP, AHB, EJI, WAV,   &
-     & RLINT, FINT, SUMA, SUMB, SUMC, FRAT, DEE
+     & RLINT, FINT, SUMA, SUMB, FRAT, DEE
 
       real(kind=dp) :: fixedq
       real(kind=dp) :: inratio,result
@@ -301,7 +301,7 @@
                      !Search ITRANA, ITRANB & ITRANC for transitions & sum up
           SUMA=0.D0
           SUMB=0.D0
-          SUMC=0.D0
+
           IAPR=0
           IBPR=0
           ICPR=0
@@ -317,26 +317,24 @@
             if (IB1.NE.0.AND.IB2.NE.0) then
              IBPR=IBPR+1
              SUMB=SUMB+TNIJ(IB1,IB2)
-            ENDIf
+            endif
 
             IC1=ITRANC(1,IKT)
             IC2=ITRANC(2,IKT)
             if (IC1.NE.0.AND.IC2.NE.0) then
              ICPR=ICPR+1
-             SUMC=SUMC+FINTIJ(IC1,IC2)
-            ENDIf
+            endif
           enddo
           FRAT=SUMA/SUMB
-          SUMC = 1./SUMC
 
           if (diagtype .eq. "t" .or. diagtype .eq. "T") then
             RESULTS(1, JT) = TEMP
             RESULTS(2, JT) = DENS
-            RESultS(3, JT) = FRAT-inratio
+            RESULTS(3, JT) = FRAT-inratio
           else
             RESULTS(1, JJD) = TEMP
             RESULTS(2, JJD) = DENS
-            RESultS(3, JJD) = FRAT-inratio
+            RESULTS(3, JJD) = FRAT-inratio
           endif                                   !End of the Ne loop
         enddo
 
@@ -359,8 +357,8 @@
           WAVC(IC)=1.D8/DEE
         enddo
 
-                                                         !End of the Te loop
-      enddo
+      enddo                                              !End of the Te loop
+
 ! here, find the value in RESULTS which is closest to zero
 ! sort values in results to find two lowest values
 !print*,results
@@ -662,14 +660,14 @@
             if (IB1.NE.0.AND.IB2.NE.0) then
              IBPR=IBPR+1
              SUMB=SUMB+TNIJ(IB1,IB2)
-            ENDIf
+            endif
 
             IC1=ITRANC(1,IKT)
             IC2=ITRANC(2,IKT)
             if (IC1.NE.0.AND.IC2.NE.0) then
              ICPR=ICPR+1
              SUMC=SUMC+FINTIJ(IC1,IC2)
-            ENDIf
+            endif
           enddo
           FRAT=SUMA/SUMB
           SUMC = 1./SUMC
