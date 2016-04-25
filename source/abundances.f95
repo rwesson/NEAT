@@ -1,4 +1,4 @@
-subroutine abundances(linelist, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf)
+subroutine abundances(linelist, listlength, iteration_result, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf)
 use mod_abundmaths
 use mod_abundtypes
 use mod_equib
@@ -31,7 +31,7 @@ use mod_hydrogen
         real(kind=dp) :: CabundRL, CabundCEL, NabundRL, NabundCEL, OabundRL, OabundCEL, NeabundRL, NeabundCEL, SabundCEL, ArabundCEL, NOabundCEL, NCabundCEL, ClabundCEL
         real(kind=dp) :: adfC, adfN, adfO, adfNe, w1, w2, w3, w4
         real(kind=dp) :: adfC2plus, adfN2plus, adfO2plus, adfNe2plus
-        real(kind=dp) :: c1, c2, c3, meanextinction, R
+        real(kind=dp) :: c1, c2, c3, meanextinction
         real(kind=dp) :: heiabund,heiiabund,Hetotabund, heICFfactor, OICFfactor, upsilon, upsilonprime
         real(kind=dp) :: Te_balmer, Te_paschen
         real(kind=dp) :: oii4649, oii4089,oii4662,oii_te,oii_ne
@@ -133,7 +133,7 @@ use mod_hydrogen
 ! changes here may also need to be made in the subsequent section too
 
         if (calculate_extinction) then
-                call calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction, dble(10000.),dble(1000.), R)
+                call calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction, dble(10000.),dble(1000.))
 
                 if (meanextinction .lt. 0.0 .or. isnan(meanextinction)) then
                    meanextinction = 0.d0
@@ -358,7 +358,7 @@ use mod_hydrogen
 
         !update extinction. DS 22/10/11
           meanextinction=0
-          call calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction, medtemp, lowdens, R)
+          call calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction, medtemp, lowdens)
 
           if (meanextinction .lt. 0.0 .or. isnan(meanextinction)) then
              meanextinction = 0.d0

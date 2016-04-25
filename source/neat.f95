@@ -430,7 +430,7 @@ program neat
         if(runs == 1)then !calculates abundances without uncertainties
                 print *
                 print *,gettime(),": doing abundance calculations"
-                call abundances(linelist, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf)
+                call abundances(linelist, listlength, iteration_result, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf)
                 all_results(1)=iteration_result(1) ! copy the iteration result to all_results to simplify the writing out of results later
                 print *,gettime(),": finished abundance calculations"
         else if(runs > 1)then
@@ -447,7 +447,7 @@ program neat
 
                 !main loop
 
-!$OMP PARALLEL default(firstprivate) shared(all_linelists,listlength,norp,R,calculate_extinction,ILs,diagnostic_array,iion,atomicdata,maxlevs,maxtemps,switch_he,switch_icf,all_results)
+!$OMP PARALLEL default(firstprivate) shared(all_linelists,listlength,norp,calculate_extinction,ILs,diagnostic_array,iion,atomicdata,maxlevs,maxtemps,switch_he,switch_icf,all_results)
 !$OMP MASTER
 
                 print *
@@ -465,7 +465,7 @@ program neat
 !                        print*, "iteration ", i, "of", runs
 
                         call randomizer(linelist, listlength, norp)
-                        call abundances(linelist, listlength, iteration_result, R, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf)
+                        call abundances(linelist, listlength, iteration_result, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf)
 
                         !store all line and derived quantity in arrays
                         all_linelists(:,i)=linelist
