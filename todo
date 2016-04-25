@@ -18,4 +18,4 @@ deblending:
 
 4. more examples, with UV and IR lines, high and low excitation
 
-5. move line indexing to main program
+5. find out why sii T diagnostic gives FPE on debug3
