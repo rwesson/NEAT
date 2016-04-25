@@ -15,3 +15,7 @@ deblending:
      - compile
      - run on ngc 6543 line list
      - get time of run and results
+
+4. more examples, with UV and IR lines, high and low excitation
+
+5. move line indexing to main program
