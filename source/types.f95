@@ -6,7 +6,7 @@ integer, parameter :: dp = kind(1.d0)
 
 TYPE line
         CHARACTER(len=11) :: name
-        CHARACTER(len=20) :: ion
+        CHARACTER(len=10) :: ion
         real(kind=dp) :: wavelength
         real(kind=dp) :: wavelength_observed !for use with output from ALFA
         real(kind=dp) :: intensity
@@ -28,7 +28,7 @@ END TYPE
 type CEL
         integer :: location
         CHARACTER(len=11) :: name
-        CHARACTER(len=20) :: ion
+        CHARACTER(len=10) :: ion
         real(kind=dp) :: wavelength
         CHARACTER(len=20) :: transition
         CHARACTER(len=4) :: zone !high, medium or low ionisation zone

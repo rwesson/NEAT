@@ -66,7 +66,7 @@ program neat
 
 !atomic data
 
-        character(len=20), dimension(22) :: ionlist !list of ion names
+        character(len=10), dimension(22) :: ionlist !list of ion names
         integer :: iion !# of ions in Ilines
         integer :: maxlevs,maxtemps
         type(atomic_data),allocatable :: atomicdata(:)

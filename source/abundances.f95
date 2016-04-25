@@ -663,7 +663,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
         do i = 1,size(ILs)
           if (ILs(i)%location .gt. 0) then !the line is in the spectrum
-             linelist(ILs(i)%location)%name=ILs(i)%ion(1:11)
+             linelist(ILs(i)%location)%name=ILs(i)%ion
              if (ILs(i)%zone .eq. "low ") then
                call get_abundance(ILs(i)%ion, ILs(i)%transition, lowtemp, lowdens,linelist(ILs(i)%location)%int_dered, linelist(ILs(i)%location)%abundance,maxlevs,maxtemps,atomicdata,iion)
              elseif (ILs(i)%zone .eq. "med ") then

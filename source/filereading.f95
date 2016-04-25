@@ -57,7 +57,7 @@ subroutine read_linelist(filename,linelist,listlength,ncols,errstat)
         linelist%name='           '
         linelist%transition='                    '
         linelist%location=0
-        linelist%ion='                   '
+        linelist%ion='          '
         linelist%latextext='               '
         linelist%linedata='                                                                           '
 
@@ -170,7 +170,7 @@ subroutine read_celdata(ILs, ionlist)
 
         implicit none
         type(cel), dimension(82) :: ILs !todo: restore this to allocatable once I've worked out why assumed shape caused it to become undefined on entry to abundances
-        character(len=20), dimension(22) :: ionlist !todo: find a clever way of counting this instead of hard coding it if possible.
+        character(len=10), dimension(22) :: ionlist !todo: find a clever way of counting this instead of hard coding it if possible.
         integer :: iint, iion, numberoflines
 
 !debugging
@@ -185,7 +185,7 @@ subroutine read_celdata(ILs, ionlist)
                 read (201,*) numberoflines !number of lines to read in is given at the top of the file
 !                allocate (ILs(numberoflines)) todo: restore
                 Ils%name='           '
-                Ils%ion='                   '
+                Ils%ion='          '
                 Ils%wavelength=0.d0
                 Ils%transition='                    '
                 Ils%zone='    '
@@ -307,7 +307,7 @@ end function
 
 integer function get_atomicdata(ionname, atomicdatatable)
         implicit none
-        character(len=20) :: ionname
+        character(len=10) :: ionname
         type(atomic_data), dimension(:) :: atomicdatatable
         integer :: i
 
