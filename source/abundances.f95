@@ -263,11 +263,11 @@ use mod_hydrogen
         call get_diagnostic("ci        ","2,4,3,4/            ","4,5/                ",ciTratio,"T",lowdens,citemp,maxlevs,maxtemps,atomicdata,iion)
         call get_diagnostic("oi        ","1,4,2,4/            ","4,5/                ",oiTratio,"T",lowdens,oitemp,maxlevs,maxtemps,atomicdata,iion)
 
-        if (oiiTemp .eq. 0.d0 .or. oiiTemp .gt. 35000.) weights%oiiTemp = 0.d0
-        if (siiTemp .eq. 0.d0 .or. siiTemp .gt. 35000.) weights%siiTemp = 0.d0
-        if (niiTemp .eq. 0.d0 .or. niiTemp .gt. 35000.) weights%niiTemp = 0.d0
-        if (ciTemp .eq. 0.d0 .or. ciTemp .gt. 35000.) weights%ciTemp = 0.d0
-        if (oiTemp .eq. 0.d0 .or. oiTemp .gt. 35000.) weights%oiTemp = 0.d0
+        if (oiiTemp .eq. 0.d0 .or. oiiTemp .gt. 34999.) weights%oiiTemp = 0.d0
+        if (siiTemp .eq. 0.d0 .or. siiTemp .gt. 34999.) weights%siiTemp = 0.d0
+        if (niiTemp .eq. 0.d0 .or. niiTemp .gt. 34999.) weights%niiTemp = 0.d0
+        if (ciTemp .eq. 0.d0 .or. ciTemp .gt. 34999.) weights%ciTemp = 0.d0
+        if (oiTemp .eq. 0.d0 .or. oiTemp .gt. 34999.) weights%oiTemp = 0.d0
 
         if ((weights%oiiTemp + weights%siiTemp + weights%niiTemp + weights%ciTemp + weights%oiTemp) .gt. 0 .and. diagnostic_array(4) .eq. 0) then
           lowtemp = (weights%oiiTemp*oiiTemp + weights%siiTemp*siiTemp + weights%niiTemp*niiTemp + weights%ciTemp*ciTemp + weights%oiTemp*oiTemp) / (weights%oiiTemp + weights%siiTemp + weights%niiTemp + weights%ciTemp + weights%oiTemp)
@@ -331,23 +331,18 @@ use mod_hydrogen
 
 !averaging
 
-       if (oiiiTemp .eq. 0.d0 .or. oiiiTemp .gt. 35000.) weights%oiiiTemp = 0.d0
-       if (siiiTemp .eq. 0.d0 .or. siiiTemp .gt. 35000.) weights%siiiTemp = 0.d0
-       if (ariiiTemp .eq. 0.d0 .or. ariiiTemp .gt. 35000.) weights%ariiiTemp = 0.d0
-       if (neiiiTemp .eq. 0.d0 .or. neiiiTemp .gt. 35000.) weights%neiiiTemp = 0.d0
+        if (oiiiTemp .eq. 0.d0 .or. oiiiTemp .gt. 34999.) weights%oiiiTemp = 0.d0
+        if (siiiTemp .eq. 0.d0 .or. siiiTemp .gt. 34999.) weights%siiiTemp = 0.d0
+        if (ariiiTemp .eq. 0.d0 .or. ariiiTemp .gt. 34999.) weights%ariiiTemp = 0.d0
+        if (neiiiTemp .eq. 0.d0 .or. neiiiTemp .gt. 34999.) weights%neiiiTemp = 0.d0
 
-       if ((weights%oiiitemp + weights%siiitemp + weights%ariiitemp + weights%neiiitemp) .gt. 0 .and. diagnostic_array(5) .eq. 0.0) then
-         medtemp = (weights%oiiitemp*oiiitemp + weights%siiitemp*siiitemp + weights%ariiitemp*ariiitemp + weights%neiiitemp*neiiitemp) / (weights%oiiitemp + weights%siiitemp + weights%ariiitemp + weights%neiiitemp)
-       elseif (diagnostic_array(5) .gt. 0.0) then
-         medtemp = diagnostic_array(5)
-       else
-         medtemp = lowtemp
-       endif
-
-!if there is no lowtemp, set it to medtemp
-!this would break if lowtemp was actually calculated to be 10000.d0 but I think the probability of that is low enough that we can live without checking for it
-
-        if (lowtemp .eq. 10000.d0 .and. medtemp .ne. 10000.d0) lowtemp = medtemp
+        if ((weights%oiiitemp + weights%siiitemp + weights%ariiitemp + weights%neiiitemp) .gt. 0 .and. diagnostic_array(5) .eq. 0.0) then
+          medtemp = (weights%oiiitemp*oiiitemp + weights%siiitemp*siiitemp + weights%ariiitemp*ariiitemp + weights%neiiitemp*neiiitemp) / (weights%oiiitemp + weights%siiitemp + weights%ariiitemp + weights%neiiitemp)
+        elseif (diagnostic_array(5) .gt. 0.0) then
+          medtemp = diagnostic_array(5)
+        else
+          medtemp = lowtemp
+        endif
 
         !dereddening again
 
@@ -368,8 +363,12 @@ use mod_hydrogen
 
       enddo ! end of diagnostic iteration
 
-        iteration_result(1)%mean_cHb = meanextinction
+!if there is no lowtemp, set it to medtemp
+!this would break if lowtemp was actually calculated to be 10000.d0 but I think the probability of that is low enough that we can live without checking for it
 
+      if (lowtemp .eq. 10000.d0 .and. medtemp .ne. 10000.d0) lowtemp = medtemp
+
+      iteration_result(1)%mean_cHb = meanextinction
 
 ! high ionisation
       hightemp = medtemp
@@ -394,8 +393,8 @@ use mod_hydrogen
         call get_diagnostic("arv       ","2,4,3,4/            ","4,5/                ",arvTratio,"T",highdens,arvTemp,maxlevs,maxtemps,atomicdata,iion)
         call get_diagnostic("nev       ","2,4,3,4/            ","4,5/                ",nevTratio,"T",highdens,nevtemp,maxlevs,maxtemps,atomicdata,iion)
 
-        if (arvTemp .eq. 0.d0 .or. arvTemp .gt. 35000.) weights%arvTemp = 0.d0
-        if (nevTemp .eq. 0.d0 .or. nevTemp .gt. 35000.) weights%nevTemp = 0.d0
+        if (arvTemp .eq. 0.d0 .or. arvTemp .gt. 34999.) weights%arvTemp = 0.d0
+        if (nevTemp .eq. 0.d0 .or. nevTemp .gt. 34999.) weights%nevTemp = 0.d0
 
         if ((weights%arvTemp+weights%nevTemp) .gt. 0 .and. diagnostic_array(6) .eq. 0) then
           hightemp = (arvtemp*weights%arvTemp + nevtemp*weights%nevTemp) / (weights%arvTemp+weights%nevTemp)
