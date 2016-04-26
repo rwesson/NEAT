@@ -88,6 +88,8 @@ use mod_hydrogen
         weights%oiiDens = 1.d0
         weights%siiDens = 1.d0
 
+        weights%oiiTemp = 1.d0
+        weights%siiTemp = 1.d0
         weights%niiTemp = 5.d0
         weights%ciTemp = 1.d0
         weights%oiTemp = 1.d0
@@ -341,7 +343,7 @@ use mod_hydrogen
         elseif (diagnostic_array(2) .gt. 0.0) then
           meddens = diagnostic_array(2)
         else
-          meddens = (weights%cliiiDens*ciiiDens + weights%ciiiDens*cliiiDens + weights%arivDens*arivDens) / (weights%cliiiDens + weights%ciiiDens + weights%arivDens)
+          meddens = (weights%cliiiDens*ciiiDens + weights%cliiiDens*cliiiDens + weights%arivDens*arivDens) / (weights%cliiiDens + weights%ciiiDens + weights%arivDens)
         endif
 
         if (meddens .le. 1.d0) meddens = 1.d0 !todo: output warning
