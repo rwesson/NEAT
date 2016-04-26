@@ -669,7 +669,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
              elseif (ILs(i)%zone .eq. "high") then
                call get_abundance(ILs(i)%ion, ILs(i)%transition, hightemp, highdens,linelist(ILs(i)%location)%int_dered, linelist(ILs(i)%location)%abundance,maxlevs,maxtemps,atomicdata,iion)
              endif
-             if ((linelist(ILs(i)%location)%abundance .ge. 1e-10) .and. (linelist(ILs(i)%location)%abundance .lt. 10 ) ) then
+             if ((ILs(i)%location .gt. 0) .and. (linelist(ILs(i)%location)%abundance .lt. 10 ) ) then
              elseif ((linelist(ILs(i)%location)%abundance .ge. 10 ) .or. (linelist(ILs(i)%location)%abundance .lt. 1E-10 ) )then
                linelist(ILs(i)%location)%abundance = 0
              endif
@@ -683,8 +683,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 niiCELabund = 0.d0
         weight = 0.d0
         do i=get_ion("nii6548    ", ILs), get_ion("nii6584    ", ILs)
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-10) niiCELabund = niiCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
-          if (linelist(ILs(i)%location)%abundance .ge. 1e-10) weight = weight + linelist(ILs(i)%location)%intensity
+          if (ILs(i)%location .gt. 0) niiCELabund = niiCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
+          if (ILs(i)%location .gt. 0) weight = weight + linelist(ILs(i)%location)%intensity
         enddo
         if (weight .ge. 1e-20) then
           niiCELabund = niiCELabund / weight
@@ -717,7 +717,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
           nivCELabund = 0.d0
         endif
 
-        nvCELabund = linelist(get_ion("nv1240     ",ILs))%abundance
+        nvCELabund = get_cel_abundance("nv1240     ",linelist,ILs)
 
         !OII CEL routine fixed. DJS 23/11/10
 
@@ -732,7 +732,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
                 oiiCELabund = (w1*get_cel_abundance("oii3729    ",linelist,ILs) + w2*get_cel_abundance("oii3726    ",linelist,ILs))/(w1+w2)
 
-        else if((get_cel_flux("oii3728b   ",linelist,ILs) .eq. 0.0 .and. (get_cel_flux("oii3729    ",linelist,ILs) .eq. 0.0 .and. get_cel_flux("oii3726    ",linelist,ILs) .eq. 0.0 )) .and.  (get_cel_abundance("oii7330b   ",linelist,ILs) .gt. 0.0 .or. get_cel_abundance("oii7319b   ",linelist,ILs) .gt. 0.0)  )then
+        else if((get_cel_flux("oii3728b   ",linelist,ILs) .eq. 0.0 .and. (get_cel_flux("oii3729    ",linelist,ILs) .eq. 0.0 .and. get_cel_flux("oii3726    ",linelist,ILs) .eq. 0.0 )) .and.  (get_cel_abundance("oii7330b   ",linelist,ILs) .gt. 0.0 .or. get_cel_abundance("oii7319b   ",linelist,ILs) .gt. 0.0) )then
                 !calc abundance based on far red blends
                 w1 = linelist(get_ion("oii7330b   ", ILs))%intensity
                 w2 = linelist(get_ion("oii7319b   ", ILs))%intensity
@@ -782,12 +782,13 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
         oivCELabund = get_cel_abundance("oiv25p9um  ",linelist,ILs)
 
-        neiiIRCELabund = linelist(get_ion("neii12p8um ", ILs)  )%abundance
-        neiiiIRCELabund = linelist(get_ion("neiii15p5um ", ILs)  )%abundance
+        neiiIRCELabund = get_cel_abundance("neii12p8um ",linelist,ILs)
+        neiiiIRCELabund = get_cel_abundance("neiii15p5um ",linelist,ILs)
 
         celabundtemp = 0.d0
-                neiiiCELabund = 0.d0
+        neiiiCELabund = 0.d0
         weight = 0.d0
+
         do i=get_ion("neiii3868  ", ILs), get_ion("neiii3967  ", ILs)
           if (ILs(i)%location .gt. 0) neiiiCELabund = neiiiCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
           if (ILs(i)%location .gt. 0) weight = weight + linelist(ILs(i)%location)%intensity
@@ -854,18 +855,18 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
                 elseif(siiiCELabund .gt. (1.1 * 0.403) )then
                         !9531 absorbed
-                        siiiCELabund = linelist(get_ion("siii9069   ", ILs) )%abundance
+                        siiiCELabund = get_cel_abundance("siii9069   ",linelist,ILs)
 
                 elseif(siiiCELabund .lt. (0.9 * 0.403) )then
                         !9069 absorbed
-                        siiiCELabund = linelist(get_ion("siii9531   ", ILs) )%abundance
+                        siiiCELabund = get_cel_abundance("siii9531   ",linelist,ILs)
                 else
                         siiiCELabund=0.d0
                 endif
         endif
 
-        siiiIRCELabund = linelist(get_ion("siii18p7um ", ILs)   )%abundance
-        sivIRCELabund = linelist(get_ion("siv10p5um  ", ILs) )%abundance
+        siiiIRCELabund = get_cel_abundance("siii18p7um ",linelist,ILs)
+        sivIRCELabund = get_cel_abundance("siv10p5um  ",linelist,ILs)
 
         celabundtemp = 0.d0
                 cliiiCELabund = 0.d0
@@ -1281,27 +1282,27 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 ! calculate recombination contributions to CELs using equations 1-3 from Liu et al. 2000
 ! equations give recombination flux relative to Hb=1
 
-      if (linelist(get_ion("nii5754    ", ILs))%Int_dered .gt. 0.d0) then
+      if (get_cel_flux("nii5754    ",linelist,ILs) .gt. 0.d0) then
         if (niiicelabund .gt. 0.d0) then
-          nii5754recCEL=10000.*(3.19*(medtemp/1.e4)**0.30*niiicelabund)/linelist(get_ion("nii5754    ", ILs))%Int_dered
+          nii5754recCEL=10000.*(3.19*(medtemp/1.e4)**0.30*niiicelabund)/get_cel_flux("nii5754    ",linelist,ILs)
         endif
         if (niirlabund .gt. 0.d0) then
-          nii5754recRL=10000.*(3.19*(medtemp/1.e4)**0.30*niirlabund)/linelist(get_ion("nii5754    ", ILs))%Int_dered
+          nii5754recRL=10000.*(3.19*(medtemp/1.e4)**0.30*niirlabund)/get_cel_flux("nii5754    ",linelist,ILs)
         endif
       endif
 
-      if (linelist(get_ion("oii7320    ", ILs))%Int_dered .gt. 0 .and. linelist(get_ion("oii7330    ", ILs))%Int_dered .gt. 0) then
+      if (get_cel_flux("oii7320    ",linelist,ILs) .gt. 0 .and. get_cel_flux("oii7330    ",linelist,ILs) .gt. 0) then
         if (oiiicelabund .gt. 0) then
-          oii7325recCEL=10000.*(9.36*(medtemp/1.e4)**0.44*oiiicelabund)/(linelist(get_ion("oii7320    ", ILs))%Int_dered+linelist(get_ion("oii7330    ", ILs))%Int_dered)
+          oii7325recCEL=10000.*(9.36*(medtemp/1.e4)**0.44*oiiicelabund)/(get_cel_flux("oii7320    ",linelist,ILs)+get_cel_flux("oii7330    ",linelist,ILs))
         endif
         if (oiiRLabund .gt. 0) then
-          oii7325recRL=10000.*(9.36*(medtemp/1.e4)**0.44*oiirlabund)/(linelist(get_ion("oii7320    ", ILs))%Int_dered+linelist(get_ion("oii7330    ", ILs))%Int_dered)
+          oii7325recRL=10000.*(9.36*(medtemp/1.e4)**0.44*oiirlabund)/(get_cel_flux("oii7320    ",linelist,ILs)+get_cel_flux("oii7330    ",linelist,ILs))
         endif
       endif
 
-      if (linelist(get_ion("oiii4363   ", ILs))%Int_dered .gt. 0 .and. hetotabund .gt. 0) then
-        oiii4363recCEL=10000.*12.4*(hightemp/1.e4)**0.59*(((hetotabund/heiabund)**0.66666)-1)*(oiicelabund+oiiicelabund)/linelist(get_ion("oiii4363   ", ILs))%Int_dered
-        oiii4363recRL=10000.*12.4*(hightemp/1.e4)**0.59*(((hetotabund/heiabund)**0.66666)-1)*(oiiRLabund)/linelist(get_ion("oiii4363   ", ILs))%Int_dered
+      if (get_cel_flux("oiii4363   ",linelist,ILs) .gt. 0 .and. hetotabund .gt. 0) then
+        oiii4363recCEL=10000.*12.4*(hightemp/1.e4)**0.59*(((hetotabund/heiabund)**0.66666)-1)*(oiicelabund+oiiicelabund)/get_cel_flux("oiii4363   ",linelist,ILs)
+        oiii4363recRL=10000.*12.4*(hightemp/1.e4)**0.59*(((hetotabund/heiabund)**0.66666)-1)*(oiiRLabund)/get_cel_flux("oiii4363   ",linelist,ILs)
       endif
 
 ! ICFs
@@ -1417,7 +1418,7 @@ if (switch_icf .eq. "K") then
 ! Sulphur
      SabundCEL = 0.d0
      if (siiCELabund .ge. 1e-20 .and. siiiCELabund .ge. 1e-20 .and. sivIRCELabund .lt. 1e-20) then !both S+ and S2+
-       CELicfS = (1 - (  (1-(oiiCELabund/OabundCEL))**3.0  )   )**(-1.0/3.0) !KB94 A36
+       CELicfS = (1 - (  (1-(oiiCELabund/OabundCEL))**3.0  ) )**(-1.0/3.0) !KB94 A36
        SabundCEL = CELicfS * (siiCELabund + siiiCELabund) !KB94 A37
      elseif (siiCELabund .ge. 1e-20 .and. siiiCELabund .ge. 1e-20 .and. sivIRCELabund .ge. 1e-20) then !all states observed
        CELicfS = 1.
