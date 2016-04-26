@@ -216,8 +216,8 @@ program neat
                 if ((trim(options(i))=="-icf" .or. trim(options(i))=="--ionisation-correction-scheme") .and. (i+1) .le. Narg) then
                   if (trim(options(i+1))=="PT92") then
                     switch_icf="P"
-                  elseif (trim(options(i+1))=="DI14") then
-                    switch_icf="D"
+                  elseif (trim(options(i+1))=="KB94") then
+                    switch_icf="K"
                   endif
                 endif
                 if ((trim(options(i))=="-v" .or.  trim(options(i))=="--verbosity") .and. (i+1) .le. Narg) then
