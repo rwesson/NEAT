@@ -33,7 +33,7 @@
       type(line), dimension(:) :: linelist
       integer, dimension(44) :: he_lines
       real(kind=dp), dimension(3) :: weights
-      real(kind=dp), dimension(21,15,44), intent(in) :: heidata
+      real(kind=dp), dimension(21,14,44), intent(in) :: heidata
       real(kind=dp), dimension(44) :: emissivities
       integer :: i
 
@@ -77,7 +77,7 @@
 
         real(kind=dp) :: te, ne, testart, nestart, logne
         real(kind=dp) :: interp_factor_te, interp_factor_ne, interp_t1, interp_t2, emissivity
-        real(kind=dp), dimension(21,15,44), intent(in) :: heidata
+        real(kind=dp), dimension(21,14,44), intent(in) :: heidata
         integer :: i,j, line
 
 !debugging
@@ -106,20 +106,20 @@
         !now we have the array positions in i and j and the values in nestart and testart
         !check if we are within the Porter limits of 5000<Te<25000, 1<log(ne)<14
 
-        if (testart .lt. 5000) then !set variables to return emissivity for 5000K. todo: print warning
+        if (testart .le. 5000.) then !set variables to return emissivity for 5000K. todo: print warning
           testart=5000.
           te=5000.
           i=1
-        elseif (testart .gt. 25000) then !set variables to return emissivitity for 25000K. todo: print warning
+        elseif (testart .ge. 25000.) then !set variables to return emissivitity for 25000K. todo: print warning
           testart=24000.
           te=25000.
           i=20
         endif
-        if (nestart .lt. 1) then !return emissivity for log(ne)=1
+        if (nestart .le. 1) then !return emissivity for log(ne)=1
           nestart=1.
           logne=1.
           j=1
-        elseif (nestart .gt. 14) then !return emissivity for log(ne)=14
+        elseif (nestart .ge. 14) then !return emissivity for log(ne)=14
           nestart=13
           logne=14
           j=13
@@ -131,7 +131,7 @@
         interp_factor_ne = (logne-nestart)
 
         !get two interpolated values for each ne, then interpolate between those
-
+print *,i,j
         interp_t1 = heidata(i,j,line)+interp_factor_te*(heidata(i+1,j,line)-heidata(i,j,line))
         interp_t2 = heidata(i,j+1,line)+interp_factor_te*(heidata(i+1,j+1,line)-heidata(i,j+1,line))
 

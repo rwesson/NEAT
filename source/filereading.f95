@@ -567,7 +567,7 @@ end subroutine read_atomic_data
 subroutine read_porter(heidata)
 
 implicit none
-real(kind=dp), dimension(21,15,44) :: heidata
+real(kind=dp), dimension(21,14,44) :: heidata
 integer :: i,j,tpos,npos,io
 real(kind=dp), dimension(46) :: temp
 

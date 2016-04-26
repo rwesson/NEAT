@@ -54,7 +54,7 @@ use mod_hydrogen
         integer :: iion !# of ions in Ilines
         integer :: maxlevs,maxtemps
         type(atomic_data),dimension(22) :: atomicdata
-        real(kind=dp), dimension(21,15,44) :: heidata
+        real(kind=dp), dimension(21,14,44) :: heidata
 
 ! recombination line variables
 

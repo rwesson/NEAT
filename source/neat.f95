@@ -413,7 +413,7 @@ program neat
 
         print *,gettime(), ": reading helium emissivities"
         if (switch_he .eq. "P") then
-          allocate(heidata(21,15,44))
+          allocate(heidata(21,14,44))
           heidata = 0.D0
           call read_porter(heidata)
         elseif (switch_he .eq. "S") then
@@ -1121,7 +1121,7 @@ contains
 !                if (j==1) R=3.1+(0.15*fn_val)
 
           if (linelist(j)%intensity/linelist(j)%int_err .gt. 6.0 .or. norp) then !normal distribution
-
+!todo - if int_err is zero, FPE occurs
             temp4=linelist(j)%intensity+(fn_val*linelist(j)%int_err)
             if(temp4 < 0) temp4 = 0.D0
             linelist(j)%intensity = temp4
