@@ -1,4 +1,4 @@
-subroutine abundances(linelist, listlength, iteration_result, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf, H_Balmer, H_Paschen, HeI_lines, HeII_lines)
+subroutine abundances(linelist, listlength, iteration_result, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf, H_Balmer, H_Paschen, HeI_lines, HeII_lines, weights)
 use mod_abundtypes
 use mod_equib
 use mod_abundIO
@@ -82,37 +82,6 @@ use mod_hydrogen
 #ifdef CO
         print *,"subroutine: abundances"
 #endif
-
-! define weighting array. to be replaced with reading it in before the loop
-
-        weights%oiiDens = 1.d0
-        weights%siiDens = 1.d0
-
-        weights%oiiTemp = 1.d0
-        weights%siiTemp = 1.d0
-        weights%niiTemp = 5.d0
-        weights%ciTemp = 1.d0
-        weights%oiTemp = 1.d0
-
-        weights%cliiiDens = 1.d0
-        weights%ciiiDens = 1.d0
-        weights%arivDens = 1.d0
-        weights%oiiiIRDens = 0.d0
-        weights%ariiiIRDens = 0.d0
-        weights%siiiIRDens = 0.d0
-        weights%neiiiIRDens = 0.d0
-
-        weights%oiiiTemp = 4.d0
-        weights%siiiTemp = 1.d0
-        weights%ariiiTemp = 2.d0
-        weights%neiiiTemp = 2.d0
-        weights%neiiiIRTemp = 0.d0
-        weights%oiiiIRTemp = 0.d0
-        weights%oiiiUVTemp = 0.d0
-
-        weights%neivDens = 1.d0
-        weights%arvTemp = 1.d0
-        weights%nevTemp = 1.d0
 
 ! initialise some variables
 

@@ -89,6 +89,10 @@ program neat
 
         logical :: norp=.true.
 
+!diagnostics
+
+        type(weightingarray) :: weights
+
 !binning and uncertainties
 
         real(kind=dp), dimension(3) :: uncertainty_array=0d0
@@ -111,6 +115,37 @@ program neat
         iion=22 ! number of ions for which we can calculate abundances
                 ! todo: calculate this automatically
                 ! and replace it in calls to subroutines with getting the array size within the subroutine
+
+! define weighting array. to be replaced with reading it in from a configuration file
+
+        weights%oiiDens = 1.d0
+        weights%siiDens = 1.d0
+
+        weights%oiiTemp = 1.d0
+        weights%siiTemp = 1.d0
+        weights%niiTemp = 5.d0
+        weights%ciTemp = 1.d0
+        weights%oiTemp = 1.d0
+
+        weights%cliiiDens = 1.d0
+        weights%ciiiDens = 1.d0
+        weights%arivDens = 1.d0
+        weights%oiiiIRDens = 0.d0
+        weights%ariiiIRDens = 0.d0
+        weights%siiiIRDens = 0.d0
+        weights%neiiiIRDens = 0.d0
+
+        weights%oiiiTemp = 4.d0
+        weights%siiiTemp = 1.d0
+        weights%ariiiTemp = 2.d0
+        weights%neiiiTemp = 2.d0
+        weights%neiiiIRTemp = 0.d0
+        weights%oiiiIRTemp = 0.d0
+        weights%oiiiUVTemp = 0.d0
+
+        weights%neivDens = 1.d0
+        weights%arvTemp = 1.d0
+        weights%nevTemp = 1.d0
 
 !multiple output formats defined as variables so they can be passed to
 !the printout subroutine
@@ -439,7 +474,7 @@ program neat
         if(runs == 1)then !calculates abundances without uncertainties
                 print *
                 print *,gettime(),": doing abundance calculations"
-                call abundances(linelist, listlength, iteration_result, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf, H_Balmer, H_Paschen, HeI_lines, HeII_lines)
+                call abundances(linelist, listlength, iteration_result, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf, H_Balmer, H_Paschen, HeI_lines, HeII_lines, weights)
                 all_results(1)=iteration_result(1) ! copy the iteration result to all_results to simplify the writing out of results later
                 print *,gettime(),": finished abundance calculations"
         else if(runs .gt. 1)then
@@ -474,7 +509,7 @@ program neat
 !                        print*, "iteration ", i, "of", runs
 
                         call randomizer(linelist, listlength, norp)
-                        call abundances(linelist, listlength, iteration_result, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf, H_Balmer, H_Paschen, HeI_lines, HeII_lines)
+                        call abundances(linelist, listlength, iteration_result, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf, H_Balmer, H_Paschen, HeI_lines, HeII_lines, weights)
 
                         !store all line and derived quantity in arrays
                         all_linelists(:,i)=linelist
