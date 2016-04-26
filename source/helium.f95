@@ -82,19 +82,12 @@
 
 !debugging
 #ifdef CO
-        print *,"subroutine: get_emissivity_porter"
+        print "(A,F8.0,A,F8.0)"," subroutine: get_emissivity_porter. te=",te,", ne=",ne
 #endif
 
         ! ne needs to be logarithmic, input is linear
 
         logne=log10(ne)
-
-        ! check that data is within the ranges calculated by Porter
-
-        if (te .lt. 5000) te=5000.
-        if (te .gt. 25000) te=25000.
-        if (logne .lt. 1.) logne=1.
-        if (logne .gt. 14.) logne=14.
 
         !do bilinear interpolation of the log values
         !find starting values
@@ -103,26 +96,34 @@
         nestart=15.
 
         !find temperature box
-        do i=1,21
-          if (te .lt. dble(i*1000+4000)) then
-            testart=dble((i-1)*1000+4000)
-            exit
-          endif
-        end do
+        i=floor((te-4000)/1000.)
+        testart=1000.*floor(te/1000.)
 
         !find density box
-        do j=1,14
-          if (logne .lt. dble(j)) then
-            nestart=dble(j-1)
-            exit
-          endif
-        end do
+        j=floor(logne)
+        nestart=floor(logne)
 
-        i=i-1
-        j=j-1
+        !now we have the array positions in i and j and the values in nestart and testart
+        !check if we are within the Porter limits of 5000<Te<25000, 1<log(ne)<14
 
-        !now we have the array positions in i and j and the values in nestart and
-        !testart
+        if (testart .lt. 5000) then !set variables to return emissivity for 5000K. todo: print warning
+          testart=5000.
+          te=5000.
+          i=1
+        elseif (testart .gt. 25000) then !set variables to return emissivitity for 25000K. todo: print warning
+          testart=24000.
+          te=25000.
+          i=20
+        endif
+        if (nestart .lt. 1) then !return emissivity for log(ne)=1
+          nestart=1.
+          logne=1.
+          j=1
+        elseif (nestart .gt. 14) then !return emissivity for log(ne)=14
+          nestart=13
+          logne=14
+          j=13
+        endif
 
         !now interpolate first in T and then in ne
 
