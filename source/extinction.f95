@@ -23,24 +23,27 @@ subroutine calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction,
 !interpolating over 6 Te points, 5,7.5,10,12.5,15,20kK and 3 Ne points 10^2, 10^3 10^4 cm^(-3)
 
         if (H_Balmer(3) .gt. 0 .and. H_Balmer(4) .gt. 0) then
-          c1 = log10( ( DBLE(linelist(H_Balmer(3))%intensity) / DBLE(linelist(H_Balmer(4))%intensity) )/ calc_balmer_ratios(temp, dens, 1)    )/(-linelist(H_Balmer(3))%flambda)
+          c1 = log10( ( linelist(H_Balmer(3))%intensity / linelist(H_Balmer(4))%intensity )/ calc_balmer_ratios(temp, dens, 1)    )/(-linelist(H_Balmer(3))%flambda)
           w1 = linelist(H_Balmer(3))%intensity
         else
-          c1 = 0.0
+          c1 = 0.d0
+          w1 = 0.d0
         endif
 
         if (H_Balmer(5) .gt. 0 .and. H_Balmer(4) .gt. 0) then
-          c2 = log10( ( DBLE(linelist(H_Balmer(5))%intensity) / DBLE(linelist(H_Balmer(4))%intensity) )/ calc_balmer_ratios(temp, dens, 2) )/(-linelist(H_Balmer(5))%flambda)
+          c2 = log10( ( linelist(H_Balmer(5))%intensity / linelist(H_Balmer(4))%intensity )/ calc_balmer_ratios(temp, dens, 2) )/(-linelist(H_Balmer(5))%flambda)
           w2 = linelist(H_Balmer(5))%intensity
         else
-          c2=0.0
+          c2=0.d0
+          w2=0.d0
         endif
 
         if (H_Balmer(6) .gt. 0 .and. H_Balmer(4) .gt. 0) then
-          c3 = log10( ( DBLE(linelist(H_Balmer(6))%intensity) / DBLE(linelist(H_Balmer(4))%intensity) )/ calc_balmer_ratios(temp, dens, 3) )/(-linelist(H_Balmer(6))%flambda)
+          c3 = log10( ( linelist(H_Balmer(6))%intensity / linelist(H_Balmer(4))%intensity )/ calc_balmer_ratios(temp, dens, 3) )/(-linelist(H_Balmer(6))%flambda)
           w3 = linelist(H_Balmer(6))%intensity
         else
-          c3 = 0.0
+          c3 = 0.d0
+          w3 = 0.d0
         endif
 
         if (c1<0) then
@@ -210,7 +213,7 @@ subroutine get_flambda(linelist, switch_ext, R)
                     linelist%flambda = (((1.86*(linelist%freq**2)) - (0.48*(linelist%freq**3)) - (0.1*linelist%freq)))
                 elsewhere
 !                   print *,"Your mother was a hamster and your father smelt of elderberries."
-                    linelist%flambda = 0.0
+                    linelist%flambda = 0.d0
                 endwhere
 
                 linelist%flambda = (linelist%flambda / 3.57) - 1 ! R+0.47
@@ -235,7 +238,7 @@ subroutine get_flambda(linelist, switch_ext, R)
                                            & ((-1)*(0.527)*(linelist%freq**1.61))
                 elsewhere
 !                       print *, "What... is the air-speed velocity of an unladen swallow?"
-                        linelist%flambda = 0.0
+                        linelist%flambda = 0.d0
                 endwhere
 
                 linelist%flambda = (linelist%flambda / ((1.015452*R) + 0.461000)) - 1 ! 1.015452R + 0.461000
@@ -250,7 +253,7 @@ subroutine get_flambda(linelist, switch_ext, R)
                     linelist%flambda = (((1.86*(linelist%freq**2)) - (0.48*(linelist%freq**3)) - (0.1*linelist%freq))) !IR
                 elsewhere
 !                   print *,"We interrupt this program to annoy you and make things generally irritating."
-                    linelist%flambda = 0.0
+                    linelist%flambda = 0.d0
                 endwhere
 
                 linelist%flambda = (linelist%flambda / 3.242) - 1 ! R+0.142
@@ -274,7 +277,7 @@ subroutine get_flambda(linelist, switch_ext, R)
                                        & c4*(0.539*((linelist%freq-5.9)**2.0)) + (0.0564*((linelist%freq-5.9)**3.0))
                 elsewhere
 !                   print *,"No-one expects the spanish inquisition."
-                    linelist%flambda = 0.0
+                    linelist%flambda = 0.d0
                 endwhere
 
                 linelist%flambda = (linelist%flambda / 3.63) - 1 ! should be R+1.20, why is it same as Howarth galactic? RW
