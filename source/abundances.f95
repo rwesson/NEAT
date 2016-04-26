@@ -314,6 +314,8 @@ use mod_hydrogen
           meddens = (ciiiDens + cliiiDens + arivDens) / counter
         endif
 
+        if (meddens .le. 1.d0) meddens = 1.d0 !todo: output warning
+
         counter = 0
 
         call get_diagnostic("oiii      ","2,4,3,4/            ","4,5/                ",oiiiTratio,"T",meddens,oiiiTemp,maxlevs,maxtemps,atomicdata,iion)
@@ -383,6 +385,8 @@ use mod_hydrogen
         else
           highdens = neivDens
         endif
+
+        if (highdens .lt. 1.d0) highdens = 1.d0 !todo: output warning
 
         counter = 0
 
