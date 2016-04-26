@@ -18,4 +18,4 @@ deblending:
 
 4. more examples, with UV and IR lines, high and low excitation
 
-5. find out why sii T diagnostic gives FPE on debug3
+5. find out why sii T diagnostic gives FPE on debug3. happens in subroutine CFY, input value seems to be undefined somehow 
