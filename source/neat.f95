@@ -32,28 +32,28 @@ program neat
         use mod_hydrogen
         use mod_oii_diagnostics
 
-        IMPLICIT NONE
+        implicit none
 
-        CHARACTER :: switch_ext !switch for extinction laws
-        CHARACTER :: switch_he  !switch for helium atomic data
-        CHARACTER :: switch_icf !switch for which ICF scheme to use
-        INTEGER :: I, j, runs, Narg !runs = number of runs for randomiser
+        character :: switch_ext !switch for extinction laws
+        character :: switch_he  !switch for helium atomic data
+        character :: switch_icf !switch for which ICF scheme to use
+        integer :: I, j, runs, Narg !runs = number of runs for randomiser
 
 !input options
 
-        CHARACTER(len=2048), DIMENSION(:), allocatable :: options
-        CHARACTER(len=2048) :: commandline
+        character(len=2048), dimension(:), allocatable :: options
+        character(len=2048) :: commandline
 
 !file reading variables
 
-        LOGICAL :: file_exists
-        LOGICAL :: identifylines
-        TYPE(LINE),DIMENSION(:), allocatable :: linelist
-        TYPE(LINE),DIMENSION(:), allocatable :: linelist_original
-        TYPE(LINE),dimension(:,:), allocatable :: all_linelists
-        CHARACTER(len=512) :: filename
-        CHARACTER(len=1) :: blank
-        INTEGER :: listlength, ncols, errstat
+        logical :: file_exists
+        logical :: identifylines
+        type(line),dimension(:), allocatable :: linelist
+        type(line),dimension(:), allocatable :: linelist_original
+        type(line),dimension(:,:), allocatable :: all_linelists
+        character(len=512) :: filename
+        character(len=1) :: blank
+        integer :: listlength, ncols, errstat
         real(kind=dp) :: normalise
 
 !results and result processing
@@ -135,7 +135,7 @@ program neat
 
         call get_command(commandline)
 
-        ALLOCATE (options(Narg))
+        allocate (options(Narg))
 
         do i=1,Narg
                 call getarg(i,options(i))
@@ -285,8 +285,8 @@ program neat
                 print *,"            This can happen if it doesn't have three columns"
                 stop
         elseif (btest(errstat,1)) then
-                PRINT*, gettime(),": cheese shop error - no inputs"
-                STOP
+                print*, gettime(),": cheese shop error - no inputs"
+                stop
         elseif (btest(errstat,2) .and. runs .gt. 1) then !only relevant if uncertainties were requested
                 print*, gettime(),": warning: no uncertainties given, arbitrarily assuming 10 per cent for everything"
         else
@@ -396,10 +396,10 @@ program neat
 !CELs read, can now read in atomic data
 
         allocate(atomicdata(iion))
-        DO I=1,iion
+        do I=1,iion
             atomicdata(I)%ion = ionlist(I)
             call read_atomic_data(atomicdata(I))
-        ENDDO
+        enddo
 
 !read ORL data
         call read_orl_data
@@ -442,7 +442,7 @@ program neat
                 call abundances(linelist, listlength, iteration_result, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf, H_Balmer, H_Paschen, HeI_lines, HeII_lines)
                 all_results(1)=iteration_result(1) ! copy the iteration result to all_results to simplify the writing out of results later
                 print *,gettime(),": finished abundance calculations"
-        else if(runs > 1)then
+        else if(runs .gt. 1)then
 
 !save unrandomised line list
 
@@ -468,7 +468,7 @@ program neat
                 print *,gettime(), ": completed ",0,"%"
 !$OMP END MASTER
 !$OMP DO schedule(dynamic)
-                DO I=1,runs
+                do I=1,runs
 
                          if ( (10.0*dble(i)/dble(runs)) == int(10*i/runs) ) print *,gettime(),": completed ",100*i/runs,"%"
 !                        print*, "iteration ", i, "of", runs
@@ -481,7 +481,7 @@ program neat
                         all_results(i)=iteration_result(1)
                         !restore the unrandomized line list ready for the next iteration
                         linelist = linelist_original
-                END DO
+                enddo
 !$OMP END DO
 !$OMP END PARALLEL
         else
@@ -497,8 +497,8 @@ program neat
 
         allocate(quantity_result(runs))
         quantity_result=0d0
-        open (650,FILE=trim(filename)//"_linelist", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-        open (651,FILE=trim(filename)//"_linelist.tex", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+        open (650,file=trim(filename)//"_linelist", status='replace', access='sequential', action='write')
+        open (651,file=trim(filename)//"_linelist.tex", status='replace', access='sequential', action='write')
 
         write (650,*) "Lambda  Ion          F(line)             I(line)               Abundance"
         write (651,*) "\begin{longtable}{lrlrlllllll}"
@@ -573,7 +573,7 @@ program neat
 !                  write (651,*) "\\"
                 endif
 
-                end do
+                enddo
         else ! runs == 1, no uncertainties to write out
 
                 do i=1,listlength
@@ -593,7 +593,7 @@ program neat
                     write (650,"(X,F7.2,X,A11,A7,X,A7)") linelist(i)%wavelength,linelist(i)%name,"*      ","*      "
                     write (651,"(X,F7.2,X,'&',X,A7,X,'&',X,A7,X,A,'\\')") linelist(i)%wavelength,"*      ","*      ",linelist(i)%linedata
                   endif
-                end do
+                enddo
 
         endif
 
@@ -987,8 +987,8 @@ program neat
 
 !open the files and write the headers
 
-        open (650,FILE=trim(filename)//"_results", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
-        open (651,FILE=trim(filename)//"_results.tex", STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+        open (650,file=trim(filename)//"_results", status='replace', access='sequential', action='write')
+        open (651,file=trim(filename)//"_results.tex", status='replace', access='sequential', action='write')
 
         write (650,*) "NEAT (nebular empirical analysis tool)"
         write (650,*) "======================================"
@@ -1080,13 +1080,13 @@ program neat
 
 contains
 
-        subroutine randomizer(linelist, listlength, norp)
+subroutine randomizer(linelist, listlength, norp)
         ! from http://www.netlib.org/random/random.f90
 
-        TYPE(line), dimension(listlength) :: linelist
-        INTEGER :: IO, I, j, listlength
+        type(line), dimension(listlength) :: linelist
+        integer :: IO, I, j, listlength
         real(kind=dp) :: temp4
-        LOGICAL, intent(in) :: norp
+        logical, intent(in) :: norp
 
         real(kind=dp) :: fn_val
         real(kind=dp)     :: s = 0.449871, t = -0.386595, a = 0.19600, b = 0.25472,           &
@@ -1105,17 +1105,17 @@ contains
         IO=0
 
         do j = 1,listlength
-          DO
-            CALL RANDOM_NUMBER(u)
-            CALL RANDOM_NUMBER(v)
+          do
+            call random_number(u)
+            call random_number(v)
             v = 1.7156 * (v - half)
             x = u - s
-            y = ABS(v) - t
+            y = abs(v) - t
             q = x**2 + y*(a*y - b*x)
-            IF (q < r1) EXIT
-            IF (q > r2) CYCLE
-            IF (v**2 < -4.0*LOG(u)*u**2) EXIT
-          END DO
+            if (q .lt. r1) exit
+            if (q .gt. r2) cycle
+            if (v**2 .lt. -4.0*log(u)*u**2) exit
+          enddo
           fn_val = v/u
 
 !                if (j==1) R=3.1+(0.15*fn_val)
@@ -1123,7 +1123,7 @@ contains
           if (linelist(j)%intensity/linelist(j)%int_err .gt. 6.0 .or. norp) then !normal distribution
 !todo - if int_err is zero, FPE occurs
             temp4=linelist(j)%intensity+(fn_val*linelist(j)%int_err)
-            if(temp4 < 0) temp4 = 0.D0
+            if(temp4 .lt. 0) temp4 = 0.D0
             linelist(j)%intensity = temp4
 
           elseif (linelist(j)%int_err .ge. linelist(j)%intensity) then !it's an upper limit, take number from semi-gaussian distribution with peak at zero and 5 sigma = intensity
@@ -1137,17 +1137,17 @@ contains
                      !(fits to the data in Rola & Pelat's table 6)
                      !the distributions in table 6 give the mean and sigma of log-normal distributions of S/N(obs), given S/N(true).  We don't know S/N(true) but using the distributions as that of the factor by which line fluxes are overestimated is equivalent.  So,
             temp4 = exp(fn_val*newsnr + newmean)
-            if (temp4 < 0 ) temp4 = 0.D0
+            if (temp4 .lt. 0 ) temp4 = 0.D0
             linelist(j)%intensity = linelist(j)%intensity / temp4
 
           endif
-        end do
+        enddo
 
-        end subroutine
+end subroutine randomizer
 
-        SUBROUTINE init_random_seed()
-          INTEGER :: i, n, clock
-          INTEGER, DIMENSION(:), ALLOCATABLE :: seed
+subroutine init_random_seed()
+          integer :: i, n, clock
+          integer, dimension(:), allocatable :: seed
 
 !debugging
 #ifdef CO
@@ -1156,16 +1156,17 @@ contains
 
           n=20
           i=n
-          CALL RANDOM_SEED(size = n)
-          ALLOCATE(seed(n))
+          call random_seed(size = n)
+          allocate(seed(n))
 
-          CALL SYSTEM_CLOCK(COUNT=clock)
+          call system_clock(count=clock)
 
           seed = clock + 37 * (/ (i - 1, i = 1, n) /)
-          CALL RANDOM_SEED(PUT = seed)
+          call random_seed(put = seed)
 
-          DEALLOCATE(seed)
-        END SUBROUTINE
+          deallocate(seed)
+
+end subroutine init_random_seed
 
 subroutine write_uncertainties(input_array, uncertainty_array, plaintext, latextext, itemformat, filename, suffix, verbosity,nbins)
 
@@ -1207,18 +1208,18 @@ call get_uncertainties(input_array, binned_quantity_result, uncertainty_array, u
 if (verbosity .lt. 3) then
 
   if (allocated(binned_quantity_result) .and. maxval(uncertainty_array) .ne. minval(uncertainty_array)) then
-    OPEN(850, FILE=trim(filename)//"_"//trim(suffix)//"_binned", STATUS='REPLACE',ACCESS='SEQUENTIAL', ACTION='WRITE')
-    write(unit = 850,FMT=*) uncertainty_array(2),uncertainty_array(2)-uncertainty_array(1),uncertainty_array(3)+uncertainty_array(2)
-    write(unit = 850,FMT=*)
+    open(850, file=trim(filename)//"_"//trim(suffix)//"_binned", status='replace',access='sequential', action='write')
+    write(unit = 850,fmt=*) uncertainty_array(2),uncertainty_array(2)-uncertainty_array(1),uncertainty_array(3)+uncertainty_array(2)
+    write(unit = 850,fmt=*)
   !  do i=1,ii-1
     do i=1,size(binned_quantity_result, 1)
   ! this hacky condition is because for reasons I can't work out right now, the
   ! number of bins allocated to the array is always too large and the last few end
   ! up being full of zeros.  to be fixed soon hopefully.  RW 16/11/2012
       if (binned_quantity_result(i)%value .gt. 0. .and. binned_quantity_result(i)%counts .gt. 0) then
-        write(unit = 850,FMT=*) binned_quantity_result(i)%value,binned_quantity_result(i)%counts
+        write(unit = 850,fmt=*) binned_quantity_result(i)%value,binned_quantity_result(i)%counts
       endif
-    end do
+    enddo
     close(850)
   endif
 
@@ -1228,10 +1229,10 @@ endif
 
 if (verbosity .lt. 2) then
 
-  OPEN(850, FILE=trim(filename)//"_"//trim(suffix), STATUS='REPLACE', ACCESS='SEQUENTIAL', ACTION='WRITE')
+  open(850, file=trim(filename)//"_"//trim(suffix), status='replace', access='sequential', action='write')
   do i=1,size(input_array)
-    write(unit = 850,FMT=*) input_array(i)
-  end do
+    write(unit = 850,fmt=*) input_array(i)
+  enddo
   close(850)
 
 endif
@@ -1349,7 +1350,7 @@ if (binsize .gt. 0d0) then
     sd=sd+(input_array(i)-mean)**2
     sd_log=sd_log+(log(input_array(i))-mean_log)**2
     sd_exp=sd_exp+(exp(input_array(i))-mean_exp)**2
-  end do
+  enddo
 
   sd=(sd/arraysize)**0.5
   sd_log=(sd_log/arraysize)**0.5
@@ -1367,7 +1368,7 @@ if (binsize .gt. 0d0) then
     if (abs(exp(input_array(i))-mean_exp) .lt. sd_exp) sds(3,1)=sds(3,1)+1
     if (abs(exp(input_array(i))-mean_exp) .lt. (2*sd_exp)) sds(3,2)=sds(3,2)+1
     if (abs(exp(input_array(i))-mean_exp) .lt. (3*sd_exp)) sds(3,3)=sds(3,3)+1
-  end do
+  enddo
 
   sds=sds/arraysize
 
@@ -1405,7 +1406,7 @@ character(len=10) :: time
         !print *,"function: gettime"
 #endif
 
-  call DATE_AND_TIME(TIME=time)
+  call date_and_time(TIME=time)
   gettime = time(1:2)//":"//time(3:4)//":"//time(5:6)
   return
 
@@ -1422,7 +1423,7 @@ integer :: exponent, pos
 #endif
 
 write (latex_number,"(ES14.6)") inputnumber
-pos = INDEX (latex_number,'E')
+pos = index (latex_number,'E')
 read (latex_number(1:pos-1), '(F6.3)') mantissa
 read (latex_number(pos+1:14), '(I3)') exponent
 

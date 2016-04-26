@@ -101,7 +101,7 @@ do i=1,ntemps
   if (medtemp .lt. temperatures(i)) then
     exit
   endif
-end do
+enddo
 
 !interpolate linearly between temperatures to get line ratios with density at specified temperature
 !if temperature is outside data limits, it is just set to the limit
@@ -133,7 +133,7 @@ do H=10,25
       enddo
     endif
   endif
-end do
+enddo
 
 !now we have an array with all the densities implied by the ratios.  Derive a flux weighted value
 
@@ -212,7 +212,7 @@ do i=1,ntemps
   if (medtemp .lt. temperatures(i)) then
     exit
   endif
-end do
+enddo
 
 !interpolate linearly between temperatures to get line ratios with density at specified temperature
 !if temperature is outside data limits, it is just set to the limit
@@ -244,7 +244,7 @@ do H=10,25
       enddo
     endif
   endif
-end do
+enddo
 
 !now we have an array with all the densities implied by the ratios.  Derive a flux weighted value
 

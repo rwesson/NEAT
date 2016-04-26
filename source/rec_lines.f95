@@ -1,32 +1,32 @@
 ! conversion of MIDAS script Roii.prg, written by XWL, to F90
 ! RW May 2009
 
-      module mod_recombination_lines
+module mod_recombination_lines
 
       implicit none
       private :: dp
       integer, parameter :: dp = kind(1.d0)
 
-      TYPE oiiRL
-            CHARACTER(len=1) :: Hyb
-            CHARACTER(len=1) :: n_E1
-            CHARACTER(len=1) :: n_E1GA
-            CHARACTER(len=1) :: n_E2
-            CHARACTER(len=1) :: n_E2GA
-            CHARACTER(len=1) :: n_g1
-            CHARACTER(len=1) :: n_g2
-            CHARACTER(len=1) :: Rem1
-            CHARACTER(len=1) :: Rem2
-            CHARACTER(len=1) :: Rem3
-            CHARACTER(len=1) :: Rem4
-            CHARACTER(len=3) :: q_gf1
-            CHARACTER(len=3) :: q_gf2
-            CHARACTER(len=7) :: Mult
-            CHARACTER(len=9) :: Term1
-            CHARACTER(len=9) :: Term2
-            INTEGER :: g1
-            INTEGER :: g2
-            INTEGER :: ION
+      type oiiRL
+            character(len=1) :: Hyb
+            character(len=1) :: n_E1
+            character(len=1) :: n_E1GA
+            character(len=1) :: n_E2
+            character(len=1) :: n_E2GA
+            character(len=1) :: n_g1
+            character(len=1) :: n_g2
+            character(len=1) :: Rem1
+            character(len=1) :: Rem2
+            character(len=1) :: Rem3
+            character(len=1) :: Rem4
+            character(len=3) :: q_gf1
+            character(len=3) :: q_gf2
+            character(len=7) :: Mult
+            character(len=9) :: Term1
+            character(len=9) :: Term2
+            integer :: g1
+            integer :: g2
+            integer :: ION
             real(kind=dp) :: Wave
             real(kind=dp) :: E1
             real(kind=dp) :: E2
@@ -39,9 +39,9 @@
             real(kind=dp) :: gf2
             real(kind=dp) :: Obs
             real(kind=dp) :: abundance
-      END TYPE
+      end type oiiRL
 
-      TYPE(oiiRL), DIMENSION(:), allocatable :: oiiRLs
+      type(oiiRL), dimension(:), allocatable :: oiiRLs
 
       real(kind=dp), dimension(36,9), target :: oii_coefficients
       real(kind=dp), dimension(:), pointer :: oii_A_4f, oii_A_3d4F, oii_A_3d4D, oii_B_3d4D, oii_C_3d4D, oii_A_3d2F, oii_B_3d2F, oii_C_3d2F, oii_A_3d2D, oii_C_3d2D, oii_A_3d2P, oii_C_3d2P, oii_A_3p4D, oii_B_3p4D, oii_A_3p4P, oii_B_3p4P, oii_A_3p4S, oii_B_3p4S, oii_A_3p2D, oii_C_3p2D, oii_A_3p2P, oii_C_3p2P, oii_A_3p2S, oii_C_3p2S, oii_A_4f_low, oii_A_3d4F_low, oii_B_3d4D_low, oii_A_3d2F_low, oii_A_3d2D_low, oii_A_3d2P_low, oii_A_3p4D_low, oii_A_3p4P_low, oii_A_3p4S_low, oii_A_3p2D_low, oii_A_3p2P_low, oii_A_3p2S_low
@@ -49,26 +49,26 @@
       real(kind=dp), dimension(27,6), target :: nii_coefficients
       real(kind=dp), dimension(:), pointer :: nii_V3, nii_V4, nii_V5, nii_V8, nii_V12, nii_V13, nii_V15, nii_V17, nii_V19, nii_V20, nii_V21, nii_V22, nii_V24, nii_V26, nii_V28, nii_V29, nii_V30, nii_V31, nii_V36, nii_V39, nii_V58, nii_V48, nii_V55, nii_V43, nii_V61, nii_V39b, nii_V58a
 
-      TYPE niiRL
-            CHARACTER(len=1) :: Hyb
-            CHARACTER(len=1) :: n_E1
-            CHARACTER(len=1) :: n_E1GA
-            CHARACTER(len=1) :: n_E2
-            CHARACTER(len=1) :: n_E2GA
-            CHARACTER(len=1) :: n_g1
-            CHARACTER(len=1) :: n_g2
-            CHARACTER(len=1) :: Rem1
-            CHARACTER(len=1) :: Rem2
-            CHARACTER(len=1) :: Rem3
-            CHARACTER(len=1) :: Rem4
-            CHARACTER(len=3) :: q_gf1
-            CHARACTER(len=3) :: q_gf2
-            CHARACTER(len=7) :: Mult
-            CHARACTER(len=9) :: Term1
-            CHARACTER(len=9) :: Term2
-            INTEGER :: g1
-            INTEGER :: g2
-            INTEGER :: ION
+      type niiRL
+            character(len=1) :: Hyb
+            character(len=1) :: n_E1
+            character(len=1) :: n_E1GA
+            character(len=1) :: n_E2
+            character(len=1) :: n_E2GA
+            character(len=1) :: n_g1
+            character(len=1) :: n_g2
+            character(len=1) :: Rem1
+            character(len=1) :: Rem2
+            character(len=1) :: Rem3
+            character(len=1) :: Rem4
+            character(len=3) :: q_gf1
+            character(len=3) :: q_gf2
+            character(len=7) :: Mult
+            character(len=9) :: Term1
+            character(len=9) :: Term2
+            integer :: g1
+            integer :: g2
+            integer :: ION
             real(kind=dp) :: Wave
             real(kind=dp) :: E1
             real(kind=dp) :: E2
@@ -79,11 +79,11 @@
             real(kind=dp) :: gf2
             real(kind=dp) :: Obs
             real(kind=dp) :: abundance
-      END TYPE
+      end type niiRL
 
-      TYPE(niiRL), DIMENSION(:),allocatable :: niiRLs
+      type(niiRL), dimension(:),allocatable :: niiRLs
 
-      TYPE ciiRL
+      type ciiRL
             real(kind=dp) :: Wave
             real(kind=dp) :: a
             real(kind=dp) :: b
@@ -94,11 +94,11 @@
             real(kind=dp) :: Int
             real(kind=dp) :: Obs
             real(kind=dp) :: abundance
-      END TYPE
+      end type ciiRL
 
-      TYPE(ciiRL), DIMENSION(:),allocatable :: ciiRLs
+      type(ciiRL), dimension(:),allocatable :: ciiRLs
 
-      TYPE neiiRL
+      type neiiRL
             real(kind=dp) :: Wave
             real(kind=dp) :: a
             real(kind=dp) :: b
@@ -110,12 +110,12 @@
             real(kind=dp) :: Int
             real(kind=dp) :: Obs
             real(kind=dp) :: abundance
-      END TYPE
+      end type neiiRL
 
-      TYPE(neiiRL), DIMENSION(:),allocatable :: neiiRLs
+      type(neiiRL), dimension(:),allocatable :: neiiRLs
 
-      TYPE xiiiRL
-            CHARACTER(len=3) :: Ion
+      type xiiiRL
+            character(len=3) :: Ion
             real(kind=dp) :: Wave
             real(kind=dp) :: a
             real(kind=dp) :: b
@@ -126,44 +126,44 @@
             real(kind=dp) :: Int
             real(kind=dp) :: Obs
             real(kind=dp) :: abundance
-      END TYPE
+      end type xiiiRL
 
-      TYPE(xiiiRL), DIMENSION(:),allocatable :: xiiiRLs
+      type(xiiiRL), dimension(:),allocatable :: xiiiRLs
 
       contains
 
-      subroutine read_orl_data
+subroutine read_orl_data
 
-        IMPLICIT NONE
+        implicit none
         integer :: i, nlines
 
         ! read in OII data
 
 !debugging
 #ifdef CO
-        print *,"subroutine: real_orl_data"
+        print *,"subroutine: read_orl_data"
 #endif
 
-            301 FORMAT (I5, 1X, F9.4, 1X, A1, A1, A1, A1, A1, F7.4,     &
+            301 format (I5, 1X, F9.4, 1X, A1, A1, A1, A1, A1, F7.4,     &
      & 1X, A3, 1X, F7.4, 1X, A3, 1X, A7, 3X, F11.4, A1, A1, 1X, I2, &
      &1X, A1, 1X, A9, 1X, F13.4, 1X, A1, A1, 1X, I2, 1X, A1, 1X, A9, 1X,&
      & F7.4, 1X, F7.4, 1X, F7.4)!, 1X, E10.4, 1X, E10.4, 1X)
-            OPEN(201, file=trim(PREFIX)//"/share/neat/Roii.dat", status='old')
+            open(201, file=trim(PREFIX)//"/share/neat/Roii.dat", status='old')
             read(201,*) nlines
             allocate(oiiRLs(nlines))
             oiiRLs%Int = 0.d0
             oiiRLs%Obs=0.d0
             oiiRLs%abundance=0.d0
-            DO i = 1,nlines
-            READ(201,301) oiiRLs(i)%ION, oiiRLs(i)%Wave, oiiRLs(i)%Hyb, &
+            do i = 1,nlines
+            read(201,301) oiiRLs(i)%ion, oiiRLs(i)%Wave, oiiRLs(i)%Hyb, &
      &oiiRLs(i)%Rem1, oiiRLs(i)%Rem2, oiiRLs(i)%Rem3, oiiRLs(i)%Rem4,   &
      &oiiRLs(i)%gf1, oiiRLs(i)%q_gf1, oiiRLs(i)%gf2, oiiRLs(i)%q_gf2,   &
      &oiiRLs(i)%Mult, oiiRLs(i)%E1, oiiRLs(i)%n_E1, oiiRLs(i)%n_E1GA,   &
      &oiiRLs(i)%g1, oiiRLs(i)%n_g1, oiiRLs(i)%Term1, oiiRLs(i)%E2,      &
      &oiiRLs(i)%n_E2, oiiRLs(i)%n_E2GA, oiiRLs(i)%g2, oiiRLs(i)%n_g2,   &
      &oiiRLs(i)%Term2, oiiRLs(i)%Br_A, oiiRLs(i)%Br_B, oiiRLs(i)%Br_C
-            END DO
-      CLOSE(201)
+            enddo
+      close(201)
 
      ! coefficients from LSBC 1995, S94
      ! array consists of coefficients a2, a4, a5, a6, b, c and d, plus calculated values a and aeff
@@ -250,26 +250,26 @@ oii_A_3p2S_low => oii_coefficients(36,:)
 
      ! read in NII data
 
-            302 FORMAT (I5, 1X, F9.4, 1X, A1, A1, A1, A1, A1, 1X, F7.4, &
+            302 format (I5, 1X, F9.4, 1X, A1, A1, A1, A1, A1, 1X, F7.4, &
      & 1X, A3, 1X, F7.4, 1X, A3, 1X, A7, 3X, F11.4, A1, A1, 1X, I2, &
      &1X, A1, 1X, A9, 1X, F13.4, 1X, A1, A1, 1X, I2, 1X, A1, 1X, A9, 1X,&
      & F7.4, 1X, F7.4, 1X, F7.4)!, 1X, E10.4, 1X, E10.4, 1X)
-            OPEN(201, file=trim(PREFIX)//"/share/neat/Rnii.dat", status='old')
+            open(201, file=trim(PREFIX)//"/share/neat/Rnii.dat", status='old')
             read(201,*) nlines
             allocate(niiRLs(nlines))
             niiRLs%Int = 0.d0
             niiRLs%Obs=0.d0
             niiRLs%abundance=0.d0
-            DO i = 1,nlines
-            READ(201,302) niiRLs(i)%ION, niiRLs(i)%Wave, niiRLs(i)%Hyb, &
+            do i = 1,nlines
+            read(201,302) niiRLs(i)%ION, niiRLs(i)%Wave, niiRLs(i)%Hyb, &
      &niiRLs(i)%Rem1, niiRLs(i)%Rem2, niiRLs(i)%Rem3, niiRLs(i)%Rem4,   &
      &niiRLs(i)%gf1, niiRLs(i)%q_gf1, niiRLs(i)%gf2, niiRLs(i)%q_gf2,   &
      &niiRLs(i)%Mult, niiRLs(i)%E1, niiRLs(i)%n_E1, niiRLs(i)%n_E1GA,   &
      &niiRLs(i)%g1, niiRLs(i)%n_g1, niiRLs(i)%Term1, niiRLs(i)%E2,      &
      &niiRLs(i)%n_E2, niiRLs(i)%n_E2GA, niiRLs(i)%g2, niiRLs(i)%n_g2,   &
      &niiRLs(i)%Term2, niiRLs(i)%Br_LS
-            END DO
-      CLOSE(201)
+            enddo
+      close(201)
 
 ! arrays of NII fitting coefficients, consisting of a, b, c, d, Br, and aeff
 
@@ -333,57 +333,57 @@ oii_A_3p2S_low => oii_coefficients(36,:)
 
 ! read in CII data
 
-      303 FORMAT (F7.2, 1X, F6.4, 1X, F7.4, 1X, F7.4, 1X, F7.4, 1X, F7.4)
-      OPEN(201, file=trim(PREFIX)//"/share/neat/Rcii.dat", status='old')
+      303 format (F7.2, 1X, F6.4, 1X, F7.4, 1X, F7.4, 1X, F7.4, 1X, F7.4)
+      open(201, file=trim(PREFIX)//"/share/neat/Rcii.dat", status='old')
       read(201,*) nlines
       allocate(ciiRLs(nlines))
       ciiRLs%Int = 0.d0
       ciiRLs%Obs=0.d0
       ciiRLs%abundance=0.d0
-      DO i = 1,nlines
-        READ(201,303) ciiRLs(i)%Wave, ciiRLs(i)%a, ciiRLs(i)%b, &
+      do i = 1,nlines
+        read(201,303) ciiRLs(i)%Wave, ciiRLs(i)%a, ciiRLs(i)%b, &
         & ciiRLs(i)%c, ciiRLs(i)%d, ciiRLs(i)%f
-      END DO
-      CLOSE(201)
+      enddo
+      close(201)
 
           ! read in NeII data
 
-      304 FORMAT (F7.2, 1X, F6.3, 1X, F6.3, 1X, F6.3, 1X, F6.3, 1X, F7.4, 1X, F6.3)
-      OPEN(201, file=trim(PREFIX)//"/share/neat/Rneii.dat", status='old')
+      304 format (F7.2, 1X, F6.3, 1X, F6.3, 1X, F6.3, 1X, F6.3, 1X, F7.4, 1X, F6.3)
+      open(201, file=trim(PREFIX)//"/share/neat/Rneii.dat", status='old')
       read(201,*) nlines
       allocate(neiiRLs(nlines))
       neiiRLs%Int = 0.d0
       neiiRLs%Obs=0.d0
       neiiRLs%abundance=0.d0
-      DO i = 1,nlines
-        READ(201,304) neiiRLs(i)%Wave, neiiRLs(i)%a, neiiRLs(i)%b, &
+      do i = 1,nlines
+        read(201,304) neiiRLs(i)%Wave, neiiRLs(i)%a, neiiRLs(i)%b, &
         & neiiRLs(i)%c, neiiRLs(i)%d, neiiRLs(i)%f, neiiRLs(i)%Br
-      END DO
-      CLOSE(201)
+      enddo
+      close(201)
 
         ! read in XIII data
 
-      305 FORMAT (A3,1X,F7.2, 1X, F5.3, 1X, F6.3, 1X, F5.3, 1X, F5.3, 1X, F5.4)
-      OPEN(201, file=trim(PREFIX)//"/share/neat/Rxiii.dat", status='old')
+      305 format (A3,1X,F7.2, 1X, F5.3, 1X, F6.3, 1X, F5.3, 1X, F5.3, 1X, F5.4)
+      open(201, file=trim(PREFIX)//"/share/neat/Rxiii.dat", status='old')
       read(201,*) nlines
       allocate(xiiiRLs(nlines))
       xiiiRLs%Int = 0.d0
       xiiiRLs%Obs=0.d0
       xiiiRLs%abundance=0.d0
-      DO i = 1,nlines
-        READ(201,305) xiiiRLs(i)%ion, xiiiRLs(i)%Wave, xiiiRLs(i)%a, &
+      do i = 1,nlines
+        read(201,305) xiiiRLs(i)%ion, xiiiRLs(i)%Wave, xiiiRLs(i)%a, &
         & xiiiRLs(i)%b, xiiiRLs(i)%c, xiiiRLs(i)%d, xiiiRLs(i)%Br
-      END DO
-      CLOSE(201)
+      enddo
+      close(201)
 
-      end subroutine
+end subroutine read_orl_data
 
-      subroutine oii_rec_lines(te,ne,abund,oiiRLs)
+subroutine oii_rec_lines(te,ne,abund,oiiRLs)
 
-      IMPLICIT NONE
+      implicit none
       real(kind=dp) :: aeff, aeff_hb, Em_Hb, Te, Ne, abund, tered
 
-      TYPE(oiiRL), DIMENSION(:) :: oiiRLs
+      type(oiiRL), dimension(:) :: oiiRLs
 
 !debugging
 #ifdef CO
@@ -580,14 +580,14 @@ oii_A_3p2S_low => oii_coefficients(36,:)
         oiiRLs%Int = 100.*oiiRLs%Em / Em_hb*abund
       endwhere
 
-      end subroutine oii_rec_lines
+end subroutine oii_rec_lines
 
-      subroutine nii_rec_lines(te, ne, abund, niiRLs)
+subroutine nii_rec_lines(te, ne, abund, niiRLs)
 
-      IMPLICIT NONE
+      implicit none
       real(kind=dp) :: aeff_hb, Em_Hb, Te, Ne, abund, tered
 
-      TYPE(niiRL), DIMENSION(:) :: niiRLs
+      type(niiRL), dimension(:) :: niiRLs
 
 !debugging
 #ifdef CO
@@ -818,14 +818,14 @@ oii_A_3p2S_low => oii_coefficients(36,:)
         niiRLs%Int = 100 * niiRLs%Em / Em_Hb * abund
       endwhere
 
-      end subroutine nii_rec_lines
+end subroutine nii_rec_lines
 
-      subroutine cii_rec_lines(te, ne, abund, ciiRLs)
+subroutine cii_rec_lines(te, ne, abund, ciiRLs)
 
-      IMPLICIT NONE
+      implicit none
       real(kind=dp) :: aeff_Hb, Em_Hb, Te, Ne, abund, tered
 
-      TYPE(ciiRL), DIMENSION(:) :: ciiRLs
+      type(ciiRL), dimension(:) :: ciiRLs
 
 !debugging
 #ifdef CO
@@ -843,14 +843,14 @@ oii_A_3p2S_low => oii_coefficients(36,:)
       &)
       ciiRLs%Int = 100 * (ciiRLs%aeff/aeff_hb) * (4861.33/ciiRLs%Wave) * abund
 
-      end subroutine cii_rec_lines
+end subroutine cii_rec_lines
 
-      subroutine neii_rec_lines(te, ne, abund, neiiRLs)
+subroutine neii_rec_lines(te, ne, abund, neiiRLs)
 
-      IMPLICIT NONE
+      implicit none
       real(kind=dp) :: aeff_Hb, Em_Hb, Te, Ne, abund, tered
 
-      TYPE(neiiRL), DIMENSION(:) :: neiiRLs
+      type(neiiRL), dimension(:) :: neiiRLs
 
 !debugging
 #ifdef CO
@@ -869,14 +869,14 @@ oii_A_3p2S_low => oii_coefficients(36,:)
       &)
       neiiRLs%Int = 100 * (neiiRLs%aeff/aeff_hb) * (4861.33/neiiRLs%Wave) * abund
 
-      end subroutine neii_rec_lines
+end subroutine neii_rec_lines
 
-      subroutine xiii_rec_lines(te, ne, abund, xiiiRLs)
+subroutine xiii_rec_lines(te, ne, abund, xiiiRLs)
 
-      IMPLICIT NONE
+      implicit none
       real(kind=dp) :: aeff_Hb, Em_Hb, Te, Ne, abund, tered
 
-      TYPE(xiiiRL), DIMENSION(:) :: xiiiRLs
+      type(xiiiRL), dimension(:) :: xiiiRLs
 
       call get_aeff_hb(te,ne, aeff_hb, em_hb)
 
@@ -887,10 +887,10 @@ oii_A_3p2S_low => oii_coefficients(36,:)
       & (1 + (xiiiRLs%c * (tered**xiiiRLs%d)))
       xiiiRLs%Int = 100 * (xiiiRLs%aeff/aeff_hb) * (4861.33/xiiiRLs%Wave) * abund
 
-      end subroutine xiii_rec_lines
+end subroutine xiii_rec_lines
 
-      subroutine get_aeff_hb(te, ne, aeff_hb, em_hb)
-      IMPLICIT NONE
+subroutine get_aeff_hb(te, ne, aeff_hb, em_hb)
+      implicit none
       real(kind=dp) :: Te, Ne, AE2, AE3, AE4, AE5, AE6, AE7, AE8, aeff_hb, Em_Hb, logem
 
 !debugging
@@ -922,17 +922,17 @@ oii_A_3p2S_low => oii_coefficients(36,:)
 
       if (log10(ne) .lt. 2) then
             aeff_hb = ae2
-      elseif (log10(ne) .GE. 2 .AND. log10(ne) .LT. 3) then
+      elseif (log10(ne) .ge. 2 .and. log10(ne) .lt. 3) then
             aeff_hb = AE2 + (AE3 - AE2) * (log10(ne) - 2)
-      elseif (log10(ne) .GE. 3 .AND. log10(ne) .LT. 4) then
+      elseif (log10(ne) .ge. 3 .and. log10(ne) .lt. 4) then
             aeff_hb = AE3 + (AE4 - AE3) * (log10(ne) - 3)
-      elseif (log10(ne) .GE. 4 .AND. log10(ne) .LT. 5) then
+      elseif (log10(ne) .ge. 4 .and. log10(ne) .lt. 5) then
             aeff_hb = AE4 + (AE5 - AE4) * (log10(ne) - 4)
-      elseif (log10(ne) .GE. 5 .AND. log10(ne) .LT. 6) then
+      elseif (log10(ne) .ge. 5 .and. log10(ne) .lt. 6) then
             aeff_hb = AE5 + (AE6 - AE5) * (log10(ne) - 5)
-      elseif (log10(ne) .GE. 6 .AND. log10(ne) .LT. 7) then
+      elseif (log10(ne) .ge. 6 .and. log10(ne) .lt. 7) then
             aeff_hb = AE6 + (AE7 - AE6) * (log10(ne) - 6)
-      elseif (log10(ne) .GE. 7 .AND. log10(ne) .LT. 8) then
+      elseif (log10(ne) .ge. 7 .and. log10(ne) .lt. 8) then
             aeff_hb = AE7 + (AE8 - AE7) * (log10(ne) - 7)
       else
             aeff_hb = AE8
@@ -942,6 +942,6 @@ oii_A_3p2S_low => oii_coefficients(36,:)
       aeff_hb = 10**aeff_hb
       em_hb = 10**logem
 
-      end subroutine get_aeff_hb
+end subroutine get_aeff_hb
 
-      end module mod_recombination_lines
+end module mod_recombination_lines

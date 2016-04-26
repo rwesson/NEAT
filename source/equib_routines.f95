@@ -177,9 +177,9 @@
                 print *,"Temp = ", TEMP, ", Dens = ", DENS, ", Ion = ",ion,diagtype
             stop
           endif
-          DLOGD = LOG10 (DENS)
-          TLOGT = LOG10 (TEMP)
-          TEMP2= SQRT (TEMP)
+          DLOGD = log10(DENS)
+          TLOGT = log10(TEMP)
+          TEMP2= sqrt(TEMP)
                                                                  !Form matrices
 
           X=0.0
@@ -393,7 +393,7 @@
                 !print*,"Valtest failed"
                 !print*,ion,levu,levl,loop,inratio,diagtype
                 !print*,results
-                !STOP
+                !stop
             endif
         elseif(test .eq. 0 .and. loop .eq. 9) then !test fails if no change of sign
                              !this kicks in then, and checks if it should be upper or lower limit
@@ -408,7 +408,7 @@
                 !print*,"Valtest failed"
                 !print*,ion,levu,levl,loop,inratio,diagtype
                 !print*,results
-                !STOP
+                !stop
             endif
         endif
 
@@ -429,7 +429,7 @@
      & ' GOODBYE!!'///)
 
 
-      END subroutine get_diagnostic
+end subroutine get_diagnostic
 
       subroutine get_abundance(ion,levels,tempi,densi,iobs,abund,ndim2,ndim1,atomicdata,iion)
       use mod_atomicdata
@@ -518,12 +518,13 @@
         do JJD = 1, IND
           DENS=DENSI+(JJD-1)*DINC
           if (TEMP.LE.0.D0.OR.DENS.LE.0.D0) then
-            WRITE (6,6100)
-            STOP
+            write (6,6100)
+            print *,"Temp = ", TEMP, ", Dens = ", DENS, ", Ion = ",ion
+            stop
           endif
-          DLOGD = LOG10 (DENS)
-          TLOGT = LOG10 (TEMP)
-          TEMP2= SQRT (TEMP)
+          DLOGD = log10(DENS)
+          TLOGT = log10(TEMP)
+          TEMP2= sqrt(TEMP)
                                                                   !Form matrices
           X = 0.D0
           CS=0.D0
@@ -533,12 +534,12 @@
 
           IOPT=0
           if (NTEMP.EQ.1) then
-            WRITE (6,*)
-            WRITE (6,*)                                                 &
+            write (6,*)
+            write (6,*)                                                 &
      &      'Coll. strengths available for 1 Te only - assuming const'
           elseif (NTEMP.EQ.2) then
-            WRITE (6,*)
-            WRITE (6,*)                                                 &
+            write (6,*)
+            write (6,*)                                                 &
      &      'Coll. strengths available for 2 Te only - linear interp'
           else
             call SPLMAT(T, NTEMP, IOPT, NDIM1, NDIM1T3, HMH)
@@ -702,7 +703,7 @@
  6100 FORMAT (' PROCESSING COMPLETED'/                                  &
      & ' GOODBYE!!'///)
 
-      END subroutine get_abundance
+end subroutine get_abundance
 
 !---- PROC LUSLV
                                                        !Solving linear equations
@@ -718,7 +719,8 @@
       call LURED(A,N,M)
       call RESLV(A,B,N,M)
       return
-      END subroutine luslv
+
+end subroutine luslv
 !
 !---- PROC LURED
       subroutine LURED(A,N,NR)
@@ -744,7 +746,8 @@
         enddo
       enddo
       return
-      END subroutine lured
+
+end subroutine lured
 !
 !---- PROC RESLV
                                                                !Resolve A with B
@@ -779,7 +782,8 @@
       return
     1 B(N)=B(N)/A(N,N)
       return
-      END subroutine reslv
+
+end subroutine reslv
 !
 !---- PROC SPLMAT
       subroutine SPLMAT(XX,NPT,IOPT,NDIM, NDIMT3, HMH)
@@ -799,7 +803,8 @@
       call ELU(GH,NPM,NDIMT3)
       call HGEN(XX,GH,Y,NPT,IOPT,NDIM,NDIMT3,HMH)
       return
-      END subroutine splmat
+
+end subroutine splmat
 !
 !---- PROC DERIV
 !     Calculate the first derivative of the lagrangian interpolator
@@ -833,7 +838,8 @@
         D(I)=S/P1
       enddo
       return
-      END subroutine deriv
+
+end subroutine deriv
 !
 !---- PROC HGEN
 !     Cubic spline interpolation
@@ -950,7 +956,7 @@
         enddo
       endif
       return
-      END subroutine hgen
+end subroutine hgen
 !
 !---- PROC GHGEN
       subroutine GHGEN(GH,XX,NPT,IOPT,NDIM,NDIMT3)
@@ -986,7 +992,7 @@
         GH(INDX)=GH(INDX)-(XX(NPT)-XX(NPT-1))/2.
       endif
       return
-      END subroutine ghgen
+end subroutine ghgen
 !
 !---- PROC ELU
       subroutine ELU(GH,N,NDIM)
@@ -1018,7 +1024,7 @@
         enddo
       enddo
       return
-      END subroutine elu
+end subroutine elu
 !
 !---- PROC CFY
       subroutine CFY(X,Y,XX,YY,NPT,NDIM,D)
@@ -1045,7 +1051,7 @@
       Y=TT
       return
 
-      END subroutine cfy
+end subroutine cfy
 !
 !---- PROC CFD
       subroutine CFD(X,XX,NPT,NDIM, HMH, D)
@@ -1060,11 +1066,11 @@
 #endif
 
       if (X.LT.XX(1)) then
-        !WRITE(6,400) XX(1)
+        !write(6,400) XX(1)
         return
       endif
       if (X.GT.XX(NPT)) then
-        !WRITE(6,401) XX(NPT)
+        !write(6,401) XX(NPT)
         return
       endif
       NPTM=NPT-1
@@ -1084,6 +1090,6 @@
         endif
       enddo
 
-      END subroutine cfd
+end subroutine cfd
 
-      end module mod_equib
+end module mod_equib

@@ -5,8 +5,8 @@ private :: dp
 integer, parameter :: dp = kind(1.d0)
 
 TYPE line
-        CHARACTER(len=11) :: name
-        CHARACTER(len=10) :: ion
+        character(len=11) :: name
+        character(len=10) :: ion
         real(kind=dp) :: wavelength
         real(kind=dp) :: wavelength_observed !for use with output from ALFA
         real(kind=dp) :: intensity
@@ -17,22 +17,22 @@ TYPE line
         real(kind=dp) :: blend_int_dered
         real(kind=dp) :: blend_int_err
         real(kind=dp) :: freq
-        CHARACTER(len=20) :: transition
+        character(len=20) :: transition
         real(kind=dp) :: abundance
-        CHARACTER(len=4) :: zone !high, medium or low ionisation zone
-        INTEGER :: location !for CELs and He, this indicates the position of the line in the main linelist array, so that when its abundance is calculated it can be copied back into the linelist array for easy outputting
-        CHARACTER(len=15) :: latextext ! ion name in latex format
-        CHARACTER(len=85) :: linedata
+        character(len=4) :: zone !high, medium or low ionisation zone
+        integer :: location !for CELs and He, this indicates the position of the line in the main linelist array, so that when its abundance is calculated it can be copied back into the linelist array for easy outputting
+        character(len=15) :: latextext ! ion name in latex format
+        character(len=85) :: linedata
 END TYPE
 
 type CEL
         integer :: location
-        CHARACTER(len=11) :: name
-        CHARACTER(len=10) :: ion
+        character(len=11) :: name
+        character(len=10) :: ion
         real(kind=dp) :: wavelength
-        CHARACTER(len=20) :: transition
-        CHARACTER(len=4) :: zone !high, medium or low ionisation zone
-        CHARACTER(len=15) :: latextext ! ion name in latex format
+        character(len=20) :: transition
+        character(len=4) :: zone !high, medium or low ionisation zone
+        character(len=15) :: latextext ! ion name in latex format
 end type CEL
 
 end module mod_abundtypes
@@ -201,13 +201,12 @@ TYPE resultarray
         real(kind=dp) :: oiii4363recRL=0.d0
         real(kind=dp) :: balmerdec_density=0.d0
         real(kind=dp) :: paschendec_density=0.d0
-
-end type
+end type resultarray
 
 type arraycount
   real(kind=dp) :: value
   integer :: counts
-end type
+end type arraycount
 
 end module mod_resultarrays
 
@@ -231,6 +230,6 @@ type atomic_data
         real(kind=dp),allocatable :: A_coeffs(:,:)
         real(kind=dp),allocatable :: col_str(:,:,:)
 
-end type
+end type atomic_data
 
 end module mod_atomicdata

@@ -13,13 +13,13 @@ subroutine read_linelist(filename,linelist,listlength,ncols,errstat)
         character(len=1) :: blank
         type(line), dimension(:), allocatable :: linelist
         character(len=512) :: filename, rowdata
-        CHARACTER(len=15),dimension(4) :: invar !line fluxes and uncertainties are read as strings into these variables
+        character(len=15),dimension(4) :: invar !line fluxes and uncertainties are read as strings into these variables
         real(kind=dp),dimension(5) :: rowdata2 !to check number of columns, first row of file is read as character, then read as real into this array
 
-        TYPE neat_line
+        type neat_line
           real(kind=dp) :: wavelength
-          CHARACTER(len=85) :: linedata
-        END TYPE
+          character(len=85) :: linedata
+        end type neat_line
 
         type(neat_line), dimension(:), allocatable :: neatlines
 
@@ -32,13 +32,13 @@ subroutine read_linelist(filename,linelist,listlength,ncols,errstat)
 
         errstat=0
         I = 0
-        OPEN(199, file=filename, iostat=IO, status='old')
-          DO WHILE (IO >= 0)
-            READ(199,*,end=111) blank
+        open(199, file=filename, iostat=IO, status='old')
+          do while (IO .ge. 0)
+            read(199,*,end=111) blank
             if (blank.ne."#") then
               I = I + 1
             endif
-          END DO
+          enddo
         111 continue
         listlength=I
 
@@ -70,7 +70,7 @@ subroutine read_linelist(filename,linelist,listlength,ncols,errstat)
         rewind(199)
         rowdata2=-1.0d-27
 
-        do while (io>=0)
+        do while (IO .ge. 0)
           read (199,"(A)") rowdata
           if (index(rowdata,"#") .ne. 1) then
             read (rowdata,*,end=113) rowdata2(:)
@@ -80,13 +80,13 @@ subroutine read_linelist(filename,linelist,listlength,ncols,errstat)
 113     ncols=count(rowdata2 .ne. -1.0d-27)
         invar="               "
 
-        REWIND (199)
+        rewind (199)
         I=1
         DO while (I.le.listlength)
           read(199,"(A)",end=110) rowdata
 
           if (index(rowdata,"#") .ne. 1) then !not a comment, read in the columns
-            READ(rowdata,*) invar(1:ncols)
+            read(rowdata,*) invar(1:ncols)
           else !do nothing with comment lines
             cycle
           endif
@@ -116,10 +116,10 @@ subroutine read_linelist(filename,linelist,listlength,ncols,errstat)
           endif
           linelist(i)%latextext = ""
           i=i+1
-        END DO
+        enddo
 
         110 continue
-        CLOSE(199)
+        close(199)
 
 ! check for errors
 
@@ -141,27 +141,27 @@ subroutine read_linelist(filename,linelist,listlength,ncols,errstat)
 !if no fatal errors, proceed to copying line data into the array
 
         I = 1
-        OPEN(100, file=trim(PREFIX)//'/share/neat/complete_line_list', iostat=IO, status='old')
-          DO WHILE (IO >= 0)
-            READ(100,"(A1)",end=101) blank
+        open(100, file=trim(PREFIX)//'/share/neat/complete_line_list', iostat=IO, status='old')
+          do while (IO .ge. 0)
+            read(100,"(A1)",end=101) blank
             I = I + 1
-          END DO
+          enddo
         101 nlines=I-1
 
 !then allocate and read
         allocate (neatlines(nlines))
 
-        REWIND (100)
+        rewind (100)
         DO I=1,nlines
-          READ(100,"(F8.2,A85)",end=102) neatlines(i)%wavelength,neatlines(i)%linedata
+          read(100,"(F8.2,A85)",end=102) neatlines(i)%wavelength,neatlines(i)%linedata
           do j=1,listlength
             if (abs(linelist(j)%wavelength - neatlines(i)%wavelength) .lt. 0.011) then
               linelist(j)%linedata = neatlines(i)%linedata
             endif
           enddo
-        END DO
+        enddo
         102 print *
-        CLOSE(100)
+        close(100)
 
 end subroutine read_linelist
 
@@ -202,9 +202,9 @@ subroutine read_celdata(ILs, ionlist)
                             Ionlist(iion) = ILs(Iint)%ion
                         endif
                         Iint = Iint + 1
-                END DO
+                enddo
                 Iint = Iint - 1 !count ends up one too high
-        CLOSE(201)
+        close(201)
 
 end subroutine read_celdata
 
@@ -237,7 +237,7 @@ real(kind=dp) function get_cel_flux(ionname, linelist, ILs)
             endif
             return
           endif
-        end do
+        enddo
 
 end function get_cel_flux
 
@@ -265,7 +265,7 @@ real(kind=dp) function get_cel_abundance(ionname, linelist, ILs)
             endif
             return
           endif
-        end do
+        enddo
 
 end function get_cel_abundance
 
@@ -287,7 +287,7 @@ integer function get_ion(ionname, ILs)
             get_ion = i
             return
           endif
-        end do
+        enddo
 
         get_ion = 0
         print*, "Nudge Nudge, wink, wink error. Ion not found, say no more.", ionname
@@ -312,7 +312,7 @@ integer function get_atomicdata(ionname, atomicdatatable)
             get_atomicdata = i
             return
           endif
-        end do
+        enddo
 
         get_atomicdata = 0
         print*, "My hovercraft is full of eels.  Atomic data not found. ", ionname
@@ -339,10 +339,10 @@ subroutine get_cels(ILs, linelist)
               ILs(i)%location = j
               cycle
             endif
-          end do
-        end do
+          enddo
+        enddo
 
-end subroutine
+end subroutine get_cels
 
 subroutine get_H(H_Balmer, H_paschen, linelist)
 !index the location of Balmer and Paschen lines in the main array
@@ -385,7 +385,7 @@ subroutine get_H(H_Balmer, H_paschen, linelist)
     enddo
   enddo
 
-end subroutine
+end subroutine get_H
 
 subroutine get_HeI(HeI_lines, linelist)
 !index the locations of He I lines in the main linelist array
@@ -411,10 +411,10 @@ subroutine get_HeI(HeI_lines, linelist)
               Hei_lines(i) = j
               cycle
             endif
-          end do
-        end do
+          enddo
+        enddo
 
-end subroutine
+end subroutine get_HeI
 
 subroutine get_HeII(HeII_lines, linelist)
 !index the location of He II lines (only 4686 at the moment) in the linelist array
@@ -440,10 +440,10 @@ subroutine get_HeII(HeII_lines, linelist)
               Heii_lines(i) = j
               cycle
             endif
-          end do
-        end do
+          enddo
+        enddo
 
-end subroutine
+end subroutine get_HeII
 
 end module 
 
@@ -481,7 +481,7 @@ use mod_atomicdata
         read(1,*)NCOMS
         do I = 1,NCOMS
                 read(1,1003) comments
-        end do
+        enddo
 
 !read # levels and temps, then allocate arrays
         read(1,*) ion%NLEVS,ion%NTEMPS
@@ -588,12 +588,12 @@ do i=1,294
   npos=nint(temp(2))
   do j=1,44
     heidata(tpos,npos,j)=temp(j+2)
-  end do
-end do
+  enddo
+enddo
 
 close(100)
 
-end subroutine
+end subroutine read_porter
 
 subroutine read_smits(heidata)
 
@@ -620,13 +620,12 @@ do i=1,44
   do j=1,3
     do k=1,6
       heidata(j,k,i)=temp(k+((j-1)*6))
-    end do
-  end do
-end do
+    enddo
+  enddo
+enddo
 
 close(100)
 
-end subroutine
-
+end subroutine read_smits
 
 end module mod_atomic_read

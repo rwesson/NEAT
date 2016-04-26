@@ -61,7 +61,7 @@ use mod_hydrogen
         type RLabund
            character(len=7) :: Multiplet
            real(kind=dp) :: Abundance
-        end type
+        end type RLabund
 
         type (RLabund), dimension(12) :: oiimultiplets
         type (RLabund), dimension(7) :: niimultiplets
@@ -1888,8 +1888,8 @@ do i=1,size(ILs) !todo: remove this if necessary
   if (ILs(i)%location .gt. 0) then
     linelist(ILs(i)%location)%abundance = linelist(ILs(i)%location)%abundance
     linelist(ILs(i)%location)%latextext = ILs(i)%latextext
-  end if
-end do
+  endif
+enddo
 
 !copy blend fluxes back into their original location
 
@@ -1912,14 +1912,14 @@ do i=4,39
     linelist(H_Paschen(i))%name = "H I"
     linelist(H_Paschen(i))%latextext = "H~{\sc i}"
   endif
-end do
+enddo
 
 do i=1,44
   if (HeI_lines(i) .gt. 0) then
     linelist(HeI_lines(i))%name = "He I"
     linelist(HeI_lines(i))%latextext = "He~{\sc i}"
   endif
-end do
+enddo
 
 if (HeII_lines(1) .gt. 0) then
     linelist(HeII_lines(1))%name = "He II"
@@ -1950,7 +1950,7 @@ subroutine get_diag(name1, name2, diag)
            diag = 0.d0
          endif
 
-end subroutine
+end subroutine get_diag
 
 subroutine get_Tdiag(name1, name2, name3, ion, ratio)
         !this routine gets the ratio for nebular to auroral diagnostics.  In case one of nebular pair is not observed, it assumes the intensity of the other is given by the theoretical ratio
@@ -2008,8 +2008,8 @@ subroutine get_Tdiag(name1, name2, name3, ion, ratio)
               ratio = (factor1 * flux1) / flux3
             else
               ratio = 0.d0
-            end if
-          end if
+            endif
+          endif
 
         elseif(((flux1 .gt. 0) .and. (flux2 .eq. 0)) .and. (flux3 .gt. 0 ))then
           ratio = (flux1 * factor1) / flux3
@@ -2019,6 +2019,6 @@ subroutine get_Tdiag(name1, name2, name3, ion, ratio)
           ratio = 0.d0
         endif
 
-        end subroutine
+end subroutine get_Tdiag
 
 end subroutine abundances

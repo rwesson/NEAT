@@ -102,13 +102,13 @@ real(kind=dp) function calc_balmer_ratios(temp, dens, line)
                 if(temp .ge. HS(i,line,1) .and. temp .lt. HS(i+1,line, 1) )then
                         exit
                 endif
-        end do
+        enddo
 
         do j = 2,3
                 if(dens .ge. 10**j .and. dens .le. 10**(j+1) )then
                         exit
                 endif
-        end do
+        enddo
 
         if(temp .lt. HS(1,line,1))then
                 if(dens .lt. 10**2)then
@@ -281,7 +281,7 @@ subroutine get_flambda(linelist, switch_ext, R)
 
         endif
 
-end subroutine
+end subroutine get_flambda
 
 subroutine deredden(lines, extinction)
 !this subroutine calls the appropriate dereddening subroutine so that in abundances.f95, we can just call a single routine

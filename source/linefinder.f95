@@ -8,23 +8,23 @@ use mod_quicksort
 
 implicit none
 
-TYPE xcorrarray
+type xcorrarray
         real(kind=dp) :: restwavelength
         real(kind=dp) :: observedwavelength
         integer :: match ! 0 if the reference line is not observed, 1 if it is
-end TYPE
+end type xcorrarray
 
-TYPE neat_line
+type neat_line
         real(kind=dp) :: wavelength
-        CHARACTER(len=20) :: ion
-END TYPE
+        character(len=20) :: ion
+end type neat_line
 
 type(neat_line), dimension(:), allocatable :: neatlines
 type(xcorrarray), dimension(10) :: xcorr_array
 real(kind=dp), dimension(2001) :: xcorr
 integer, intent(in) :: listlength
-TYPE(line), dimension(listlength) :: linelist
-TYPE(line), dimension(listlength) :: linelist_copy
+type(line), dimension(listlength) :: linelist
+type(line), dimension(listlength) :: linelist_copy
 real(kind=dp), dimension(20) :: linelist_compare
 
 integer :: I, J, n_neatlines, IO, assign_1, assign_2, count
@@ -47,24 +47,24 @@ xcorr_array%match = 0
 !1. read NEAT line list in
 
         I = 1
-        OPEN(100, file=trim(PREFIX)//'/share/neat/complete_line_list', iostat=IO, status='old')
-                DO WHILE (IO >= 0)
-                        READ(100,"(A200)",end=101) null
+        open(100, file=trim(PREFIX)//'/share/neat/complete_line_list', iostat=IO, status='old')
+                do while (IO .ge. 0)
+                        read(100,"(A200)",end=101) null
                         I = I + 1
-                END DO
+                enddo
         101 n_neatlines=I-1
 
 !then allocate and read
         allocate (neatlines(n_neatlines))
 
-        REWIND (100)
-        DO I=1,n_neatlines
-                READ(100,*,end=102) temp_wave, null, temp_ion1, temp_ion2
+        rewind (100)
+        do I=1,n_neatlines
+                read(100,*,end=102) temp_wave, null, temp_ion1, temp_ion2
                 neatlines(i)%wavelength = temp_wave
                 neatlines(i)%ion = temp_ion1//temp_ion2
-        END DO
+        enddo
         102 print *
-        CLOSE(100)
+        close(100)
 
 !first, find shift
 
@@ -81,8 +81,8 @@ linelist_copy = linelist
 do i=1,listlength
   if (linelist_copy(i)%wavelength .lt. minval(xcorr_array%restwavelength)-10 .or. linelist_copy(i)%wavelength .gt. maxval(xcorr_array%restwavelength)+10) then
     linelist_copy(i)%intensity = 0.D0
-  end if
-end do
+  endif
+enddo
 
 ! then, copy across the 20 strongest lines
 
@@ -91,7 +91,7 @@ do i=1,20
   linelist_compare(i)=linelist_copy(maxloc(linelist_copy%intensity,1))%wavelength
   !replace that line with an intensity of zero so that we can repeat and get the next strongest
   linelist_copy(maxloc(linelist_copy%intensity))%intensity = 0.D0
-end do
+enddo
 
 !sort into wavelength order
 
@@ -114,8 +114,8 @@ xcorr = 0.D0
 do i=-1000,1000
   do j=1,10
     xcorr(i+1001)=xcorr(i+1001)+(abs(xcorr_array(j)%observedwavelength - xcorr_array(j)%restwavelength - 0.01*dble(i)) * dble(xcorr_array(j)%match))
-  end do
-end do
+  enddo
+enddo
 
 shift=(minloc(xcorr,1)-1001)*0.01
 linelist_compare = linelist_compare - shift
@@ -129,7 +129,7 @@ count=0
 do j=1,10
     rms = rms + (xcorr_array(j)%match*(xcorr_array(j)%observedwavelength - shift - xcorr_array(j)%restwavelength)**2)
     count = count + xcorr_array(j)%match
-end do
+enddo
 
 if (count .gt. 0) then
   rms = (rms/count)**0.5
