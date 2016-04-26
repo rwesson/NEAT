@@ -1224,7 +1224,7 @@ integer :: nbins
 
 !debugging
 #ifdef CO
-        print *,"subroutine: write_uncertainties"
+        print *,"subroutine: write_uncertainties, quantity=",suffix
 #endif
 
 if(size(input_array) .eq. 1) then
@@ -1456,7 +1456,7 @@ integer :: exponent, pos
 
 !debugging
 #ifdef CO
-        !print *,"function: latex_number"
+        print *,"function: latex_number, ",inputnumber
 #endif
 
 write (latex_number,"(ES14.6)") inputnumber
