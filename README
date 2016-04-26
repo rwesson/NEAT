@@ -10,11 +10,15 @@ http://github.com/rwesson/Atomic-data
 Installation
 ============
 
-It should be possible to compile the code simply by typing 
+To compile the code, type 
 
   make
 
-in the directory the files are in.  Our makefile assumes that you have gfortran installed.  Other compilers should work as well but may require some tweaks to the code.
+in the directory the files are in.  Our makefile assumes that you have gfortran installed.  Other compilers should work as well but may require some tweaks to the code.  Assuming that worked fine, then install the code by typing
+
+  sudo make install
+
+If you don't have root access, or just want to install the code to somewhere other than the standard linux directories, then you should edit the makefile and changed the value of the variable PREFIX accordingly.
 
 Manual
 ======
