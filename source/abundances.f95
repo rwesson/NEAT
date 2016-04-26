@@ -37,6 +37,8 @@ use mod_hydrogen
         real(kind=dp) :: oii4649, oii4089,oii4662,oii_te,oii_ne
         real(kind=dp) :: ratio_5876_4471, ratio_6678_4471, te_5876_4471, te_6678_4471
 
+        type(weightingarray) :: weights
+
         logical :: calculate_extinction
 
         type(line), dimension(2) :: Balmer_jump, Paschen_jump
@@ -80,6 +82,35 @@ use mod_hydrogen
 #ifdef CO
         print *,"subroutine: abundances"
 #endif
+
+! define weighting array. to be replaced with reading it in before the loop
+
+        weights%oiiDens = 1.d0
+        weights%siiDens = 1.d0
+
+        weights%niiTemp = 5.d0
+        weights%ciTemp = 1.d0
+        weights%oiTemp = 1.d0
+
+        weights%cliiiDens = 1.d0
+        weights%ciiiDens = 1.d0
+        weights%arivDens = 1.d0
+        weights%oiiiIRDens = 0.d0
+        weights%ariiiIRDens = 0.d0
+        weights%siiiIRDens = 0.d0
+        weights%neiiiIRDens = 0.d0
+
+        weights%oiiiTemp = 4.d0
+        weights%siiiTemp = 1.d0
+        weights%ariiiTemp = 2.d0
+        weights%neiiiTemp = 2.d0
+        weights%neiiiIRTemp = 0.d0
+        weights%oiiiIRTemp = 0.d0
+        weights%oiiiUVTemp = 0.d0
+
+        weights%neivDens = 1.d0
+        weights%arvTemp = 1.d0
+        weights%nevTemp = 1.d0
 
 ! initialise some variables
 
@@ -238,20 +269,19 @@ use mod_hydrogen
 
         oiiDens=0.d0
         siiDens=0.d0
-        counter=0
 
         call get_diagnostic("oii       ","1,2/                ","1,3/                ",oiiNratio,"D",lowtemp, oiiDens,maxlevs,maxtemps,atomicdata,iion)
         call get_diagnostic("sii       ","1,2/                ","1,3/                ",siiNratio,"D",lowtemp, siiDens,maxlevs,maxtemps,atomicdata,iion)
 
-        if (oiidens .gt. 0.d0) counter=counter+1
-        if (siidens .gt. 0.d0) counter=counter+1
+        if (oiidens .eq. 0.d0) weights%oiiDens = 0.d0
+        if (siidens .eq. 0.d0) weights%siiDens = 0.d0
 
-        if (counter .eq. 0 .and. diagnostic_array(1) .eq. 0) then
+        if ((weights%oiiDens + weights%siiDens) .eq. 0 .and. diagnostic_array(1) .eq. 0) then
           lowdens = 1000.d0
         elseif (diagnostic_array(1) .gt. 0.0) then
           lowdens = diagnostic_array(1)
         else
-          lowdens = (oiiDens + siiDens) / counter
+          lowdens = (weights%oiiDens*oiiDens + weights%siiDens*siiDens) / (weights%oiiDens + weights%siiDens)
         endif
 
         counter=0
@@ -262,14 +292,14 @@ use mod_hydrogen
         call get_diagnostic("ci        ","2,4,3,4/            ","4,5/                ",ciTratio,"T",lowdens,citemp,maxlevs,maxtemps,atomicdata,iion)
         call get_diagnostic("oi        ","1,4,2,4/            ","4,5/                ",oiTratio,"T",lowdens,oitemp,maxlevs,maxtemps,atomicdata,iion)
 
-        if (oiiTemp .gt. 0.d0) counter=counter+1
-        if (siiTemp .gt. 0.d0) counter=counter+1
-        if (niiTemp .gt. 0.d0) counter=counter+5
-        if (ciTemp .gt. 0.d0) counter=counter+1
-        if (oiTemp .gt. 0.d0) counter=counter+1
+        if (oiiTemp .eq. 0.d0 .or. oiiTemp .gt. 35000.) weights%oiiTemp = 0.d0
+        if (siiTemp .eq. 0.d0 .or. siiTemp .gt. 35000.) weights%siiTemp = 0.d0
+        if (niiTemp .eq. 0.d0 .or. niiTemp .gt. 35000.) weights%niiTemp = 0.d0
+        if (ciTemp .eq. 0.d0 .or. ciTemp .gt. 35000.) weights%ciTemp = 0.d0
+        if (oiTemp .eq. 0.d0 .or. oiTemp .gt. 35000.) weights%oiTemp = 0.d0
 
-        if (counter .gt. 0 .and. diagnostic_array(4) .eq. 0) then
-          lowtemp = ((5*niitemp) + siitemp + oiitemp + oitemp + citemp) / counter
+        if ((weights%oiiTemp + weights%siiTemp + weights%niiTemp + weights%ciTemp + weights%oiTemp) .gt. 0 .and. diagnostic_array(4) .eq. 0) then
+          lowtemp = (weights%oiiTemp*oiiTemp + weights%siiTemp*siiTemp + weights%niiTemp*niiTemp + weights%ciTemp*ciTemp + weights%oiTemp*oiTemp) / (weights%oiiTemp + weights%siiTemp + weights%niiTemp + weights%ciTemp + weights%oiTemp)
         elseif (diagnostic_array(4) .gt. 0.0) then
           lowtemp = diagnostic_array(4)
         else
@@ -302,16 +332,16 @@ use mod_hydrogen
         call get_diagnostic("siii      ","1,2/                ","2,3/                ",siiiIRNratio,"D",medtemp, siiiIRDens,maxlevs,maxtemps,atomicdata,iion)
         call get_diagnostic("neiii     ","1,2/                ","2,3/                ",neiiiIRNratio,"D",medtemp, neiiiIRDens,maxlevs,maxtemps,atomicdata,iion)
 
-        if (cliiiDens .gt. 0) counter=counter+1
-        if (ciiiDens .gt. 0) counter=counter+1
-        if (arivDens .gt. 0) counter=counter+1
+        if (cliiiDens .eq. 0.d0) weights%cliiiDens = 0.d0
+        if (ciiiDens .eq. 0.d0) weights%ciiiDens = 0.d0
+        if (arivDens .eq. 0.d0) weights%arivDens = 0.d0
 
-        if (counter .eq. 0 .and. diagnostic_array(2) .eq. 0) then
+        if ((weights%cliiiDens + weights%ciiiDens + weights%arivDens) .eq. 0 .and. diagnostic_array(2) .eq. 0) then
           meddens = lowdens
         elseif (diagnostic_array(2) .gt. 0.0) then
           meddens = diagnostic_array(2)
         else
-          meddens = (ciiiDens + cliiiDens + arivDens) / counter
+          meddens = (weights%cliiiDens*ciiiDens + weights%ciiiDens*cliiiDens + weights%arivDens*arivDens) / (weights%cliiiDens + weights%ciiiDens + weights%arivDens)
         endif
 
         if (meddens .le. 1.d0) meddens = 1.d0 !todo: output warning
@@ -330,13 +360,13 @@ use mod_hydrogen
 
 !averaging
 
-       if (oiiiTemp .gt. 0.d0) counter=counter+4
-       if (siiiTemp .gt. 0.d0) counter=counter+1
-       if (ariiiTemp .gt. 0.d0) counter=counter+2
-       if (neiiiTemp .gt. 0.d0) counter=counter+2
+       if (oiiiTemp .eq. 0.d0 .or. oiiiTemp .gt. 35000.) weights%oiiiTemp = 0.d0
+       if (siiiTemp .eq. 0.d0 .or. siiiTemp .gt. 35000.) weights%siiiTemp = 0.d0
+       if (ariiiTemp .eq. 0.d0 .or. ariiiTemp .gt. 35000.) weights%ariiiTemp = 0.d0
+       if (neiiiTemp .eq. 0.d0 .or. neiiiTemp .gt. 35000.) weights%neiiiTemp = 0.d0
 
-       if (counter .gt. 0 .and. diagnostic_array(5) .eq. 0.0) then
-         medtemp = (4*oiiitemp + siiitemp + 2*ariiitemp + 2*neiiitemp) / counter
+       if ((weights%oiiitemp + weights%siiitemp + weights%ariiitemp + weights%neiiitemp) .gt. 0 .and. diagnostic_array(5) .eq. 0.0) then
+         medtemp = (weights%oiiitemp*oiiitemp + weights%siiitemp*siiitemp + weights%ariiitemp*ariiitemp + weights%neiiitemp*neiiitemp) / (weights%oiiitemp + weights%siiitemp + weights%ariiitemp + weights%neiiitemp)
        elseif (diagnostic_array(5) .gt. 0.0) then
          medtemp = diagnostic_array(5)
        else
@@ -383,7 +413,7 @@ use mod_hydrogen
           neivdens = 0d0
           highdens = meddens
         else
-          highdens = neivDens
+          highdens = neivDens !(neivdens*weights%neivdens) / weights%neivdens but we only have one high density diagnostic
         endif
 
         if (highdens .lt. 1.d0) highdens = 1.d0 !todo: output warning
@@ -393,11 +423,11 @@ use mod_hydrogen
         call get_diagnostic("arv       ","2,4,3,4/            ","4,5/                ",arvTratio,"T",highdens,arvTemp,maxlevs,maxtemps,atomicdata,iion)
         call get_diagnostic("nev       ","2,4,3,4/            ","4,5/                ",nevTratio,"T",highdens,nevtemp,maxlevs,maxtemps,atomicdata,iion)
 
-        if (arvTemp .gt. 0.d0) counter=counter+1
-        if (nevTemp .gt. 0.d0) counter=counter+1
+        if (arvTemp .eq. 0.d0 .or. arvTemp .gt. 35000.) weights%arvTemp = 0.d0
+        if (nevTemp .eq. 0.d0 .or. nevTemp .gt. 35000.) weights%nevTemp = 0.d0
 
-        if (counter .gt. 0 .and. diagnostic_array(6) .eq. 0) then
-          hightemp = (arvtemp + nevtemp) / counter
+        if ((weights%arvTemp+weights%nevTemp) .gt. 0 .and. diagnostic_array(6) .eq. 0) then
+          hightemp = (arvtemp*weights%arvTemp + nevtemp*weights%nevTemp) / (weights%arvTemp+weights%nevTemp)
         elseif (diagnostic_array(6) .gt. 0.0) then
           hightemp = diagnostic_array(6)
         else

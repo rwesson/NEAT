@@ -35,6 +35,33 @@ type CEL
         character(len=15) :: latextext ! ion name in latex format
 end type CEL
 
+type weightingarray
+        real(kind=dp) :: oiiDens
+        real(kind=dp) :: siiDens
+        real(kind=dp) :: oiiTemp
+        real(kind=dp) :: siiTemp
+        real(kind=dp) :: niiTemp
+        real(kind=dp) :: ciTemp
+        real(kind=dp) :: oiTemp
+        real(kind=dp) :: cliiiDens
+        real(kind=dp) :: ciiiDens
+        real(kind=dp) :: arivDens
+        real(kind=dp) :: oiiiIRDens
+        real(kind=dp) :: ariiiIRDens
+        real(kind=dp) :: siiiIRDens
+        real(kind=dp) :: neiiiIRDens
+        real(kind=dp) :: oiiiTemp
+        real(kind=dp) :: siiiTemp
+        real(kind=dp) :: ariiiTemp
+        real(kind=dp) :: neiiiTemp
+        real(kind=dp) :: neiiiIRTemp
+        real(kind=dp) :: oiiiIRTemp
+        real(kind=dp) :: oiiiUVTemp
+        real(kind=dp) :: neivDens
+        real(kind=dp) :: arvTemp
+        real(kind=dp) :: nevTemp
+end type weightingarray
+
 end module mod_abundtypes
 
 module mod_resultarrays
