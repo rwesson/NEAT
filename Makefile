@@ -29,11 +29,12 @@
 FC=gfortran
 LD=gfortran
 PREFIX=/usr
-FFLAGS+=-ffree-line-length-0 -Jsource/ -cpp -DPREFIX=\"${PREFIX}\" -fopenmp
+FFLAGS+=-cpp -DPREFIX=\"${PREFIX}\"
 LDFLAGS+=
 MANDIR=${DESTDIR}${PREFIX}/share/man/man1
 
 ifeq ($(FC),gfortran)
+    FFLAGS += -ffree-line-length-0 -Jsource/ -fopenmp
   ifeq ($(CO),debug)
     FFLAGS += -fbounds-check -Wall -Wuninitialized -DCO=\"${CO}\" #-ffpe-trap=zero,overflow,invalid,underflow,denormal
   else ifeq ($(CO),debug2)
@@ -48,15 +49,15 @@ ifeq ($(FC),gfortran)
 endif
 
 ifeq ($(FC),ifort)
-  FFLAGS = -O0 #-warn all -warn errors
+  FFLAGS += -module source/ -openmp
   LD=ifort
   ifeq ($(CO),debug)
-    FFLAGS = -pg -g -check bounds -check uninit -warn all -warn nodeclarations -WB -zero -traceback -DCO=\"${CO}\" # -std
+    FFLAGS += -pg -g -check bounds -check uninit -warn all -warn nodeclarations -WB -zero -traceback -DCO=\"${CO}\" # -std
   else ifeq ($(CO),pedantic)
-    FFLAGS = -pg -g -check bounds -check uninit -warn all -warn nodeclarations -WB -zero -traceback -std -DCO=\"${CO}\"
+    FFLAGS += -pg -g -check bounds -check uninit -warn all -warn nodeclarations -WB -zero -traceback -std -DCO=\"${CO}\"
   else
-    FFLAGS = -axavx -msse3 -O3 -ip -ipo # for today's CPUs
-#    FFLAGS = -fast -tune pn4 # for older pentium 4
+    FFLAGS += -axavx -msse3 -O3 -ip -ipo # for today's CPUs
+#    FFLAGS += -fast -tune pn4 # for older pentium 4
   endif
 endif
 
