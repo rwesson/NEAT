@@ -3,8 +3,10 @@
 
 _neat() 
 {
-    local cur prev opts helium_options icf_options extinction_options verbosity_options
+    local cur prev words cword opts helium_options icf_options extinction_options verbosity_options
+    _init_completion || return
     COMPREPLY=()
+
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
     opts="-i -u -n -e -c -nelow -nemed -nehigh -telow -temed -tehigh -he -icf -v -id -rp --input --uncertainties --n-iterations --extinction-law --helium-data --ionisation-correction-scheme --verbosity --identify"
