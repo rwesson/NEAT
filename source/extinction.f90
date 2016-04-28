@@ -287,7 +287,7 @@ subroutine get_flambda(linelist, switch_ext, R)
 end subroutine get_flambda
 
 subroutine deredden(lines, extinction)
-!this subroutine calls the appropriate dereddening subroutine so that in abundances.f95, we can just call a single routine
+!this subroutine calls the appropriate dereddening subroutine so that in abundances.f90, we can just call a single routine
         IMPLICIT NONE
         TYPE(line), DIMENSION(:) :: lines
         real(kind=dp) :: extinction
