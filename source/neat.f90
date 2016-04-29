@@ -1158,7 +1158,6 @@ subroutine randomizer(linelist, listlength, norp)
           if (linelist(j)%int_err .eq. 0.d0) then ! can't calculate signal to noise
             linelist(j)%intensity = 0.d0
           elseif (linelist(j)%intensity/linelist(j)%int_err .gt. 6.0 .or. norp) then !normal distribution
-!todo - if int_err is zero, FPE occurs
             temp4=linelist(j)%intensity+(fn_val*linelist(j)%int_err)
             if(temp4 .lt. 0) temp4 = 0.D0
             linelist(j)%intensity = temp4
