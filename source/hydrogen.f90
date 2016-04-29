@@ -78,15 +78,12 @@ weight=0.d0
 
 !H_Balmer indexing is such that entry 3 contains H3, etc
 !allocate arrays to store values, high order lines (n>10) only
-!todo: make this more efficient, previously vectorised but change to indexing instead of copying array means that we have to check if the index is meaningful where previously there would just have been a zero flux.  Make indices point to a null line placed after the linelist array?
 
-do i=10,25
-  if (H_balmer(i).gt.0) then
-    ratios(i) = linelist(H_Balmer(i))%int_dered/linelist(H_Balmer(4))%int_dered
-  else
-    ratios(i) = 0
-  endif
-enddo
+where (H_balmer(10:25) .gt. 0)
+  ratios = linelist(H_balmer(10:25))%int_dered/linelist(H_Balmer(4))%int_dered
+elsewhere
+  ratios = 0.d0
+endwhere
 
 densities=0.d0
 
@@ -190,14 +187,12 @@ weight=0.d0
 !allocate arrays to store values, high order lines (n>10) only
 !todo: this will be wrong if spectrum is not normalised to Hb=100
 !should check for this
-!todo: make more efficient, as above for the Balmer routine
-do i=10,25
-  if (H_Paschen(i).gt.0) then
-    ratios(i) = linelist(H_Paschen(i))%int_dered/100.d0
-  else
-    ratios(i) = 0
-  endif
-enddo
+
+where (H_paschen(10:25) .gt. 0)
+  ratios = linelist(H_paschen(10:25))%int_dered/100.d0
+elsewhere
+  ratios = 0.d0
+endwhere
 
 densities=0.d0
 
