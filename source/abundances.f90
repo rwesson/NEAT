@@ -24,7 +24,7 @@ use mod_hydrogen
         real(kind=dp) :: oiiNratio, oiiDens, oiiiTratio, oiiiTemp, oiiiIRNratio, oiiiIRTratio, oiiiIRtemp, oiiiUVTratio, oiiiUVtemp, oiiiIRdens, niiTratio, niiTemp, ariiiIRNratio, ariiiIRdens, arivNratio, arivDens, cliiiNratio, cliiiDens, siiNratio, siiDens, siiTratio, siiTemp, siiiIRNratio, siiiIRdens, oiiTratio, oiiTemp, neiiiTratio, neiiiIRTratio, neiiiIRNratio, neiiiIRdens, neiiiTemp, neiiiIRTemp, oitemp, citemp
         real(kind=dp) :: ciiiNratio,neivNratio,nevTratio,siiiTratio,ariiiTratio,arvTratio,lowtemp,lowdens,medtemp,ciiidens,meddens,siiitemp,ariiitemp,hightemp,neivdens,highdens,arvtemp,nevtemp,oiTratio,ciTratio
         real(kind=dp) :: oiiRLabund, niiRLabund, ciiRLabund, cii4267rlabund, neiiRLabund, ciiiRLabund, niiiRLabund, RLabundtemp, weight
-        real(kind=dp) :: ciiiCELabund, niiCELabund, niiiIRCELabund, niiiUVCELabund, oiiCELabund, oiiiCELabund, oiiiIRCELabund, oivCELabund, neiiIRCELabund, neiiiIRCELabund, neiiiCELabund, neivCELabund, siiCELabund, siiiCELabund, siiiIRCELabund, sivIRCELabund, cliiCELabund, cliiiCELabund, clivCELabund, ariiiCELabund, arivCELabund, ariiiIRCELabund, nivCELabund, niiiCELabund, ciiCELabund, civCELabund, nvCELabund, nevCELabund, arvCELabund, CELabundtemp, ciCELabund, oiCELabund
+        real(kind=dp) :: ciiiCELabund, niiCELabund, niiiIRCELabund, niiiUVCELabund, oiiCELabund, oiiiCELabund, oiiiIRCELabund, oivCELabund, neiiIRCELabund, neiiiIRCELabund, neiiiCELabund, neivCELabund, siiCELabund, siiiCELabund, siiiIRCELabund, sivIRCELabund, cliiCELabund, cliiiCELabund, clivCELabund, ariiiCELabund, arivCELabund, ariiiIRCELabund, nivCELabund, niiiCELabund, ciiCELabund, civCELabund, nvCELabund, nevCELabund, arvCELabund, ciCELabund, oiCELabund
         real(kind=dp) :: fn4
         real(kind=dp) :: CELicfO, CELicfC, CELicfN, CELicfNe, CELicfAr, CELicfS, CELicfCl
         real(kind=dp) :: RLicfO, RLicfC, RLicfN, RLicfNe, RLicfHe
@@ -679,8 +679,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
 ! calculate averages
 
-        celabundtemp = 0.d0
-                niiCELabund = 0.d0
+        niiCELabund = 0.d0
         weight = 0.d0
         do i=get_ion("nii6548    ", ILs), get_ion("nii6584    ", ILs)
           if (ILs(i)%location .gt. 0) niiCELabund = niiCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
@@ -754,8 +753,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
                 oiiCELabund = 0.d0
         endif
 
-        celabundtemp = 0.d0
-                oiiiCELabund = 0.d0
+        oiiiCELabund = 0.d0
         weight = 0.d0
         do i=get_ion("oiii4959   ", ILs), get_ion("oiii5007   ", ILs)
           if (ILs(i)%location .gt. 0) oiiiCELabund = oiiiCELabund + linelist(ILs(i)%location)%abundance *linelist(ILs(i)%location)%intensity
@@ -767,8 +765,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
           oiiiCELabund = 0.d0
         endif
 
-        celabundtemp = 0.d0
-                oiiiIRCELabund = 0.d0
+        oiiiIRCELabund = 0.d0
         weight = 0.d0
         do i=get_ion("oiii52um   ", ILs), get_ion("oiii88um   ", ILs)
           if (ILs(i)%location .gt. 0) oiiiIRCELabund = oiiiIRCELabund + linelist(ILs(i)%location)%abundance *linelist(ILs(i)%location)%intensity
@@ -785,7 +782,6 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         neiiIRCELabund = get_cel_abundance("neii12p8um ",linelist,ILs)
         neiiiIRCELabund = get_cel_abundance("neiii15p5um ",linelist,ILs)
 
-        celabundtemp = 0.d0
         neiiiCELabund = 0.d0
         weight = 0.d0
 
@@ -800,8 +796,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         endif
 
 
-        celabundtemp = 0.d0
-                neivCELabund = 0.d0
+        neivCELabund = 0.d0
         weight = 0.d0
         do i=get_ion("neiv2423   ", ILs), get_ion("neiv4725b  ", ILs) ! would screw up if blends and non blends were given
           if (ILs(i)%location .gt. 0) neivCELabund = neivCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
@@ -813,8 +808,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
           neivCELabund = 0.d0
         endif
 
-        celabundtemp = 0.d0
-                siiCELabund = 0.d0
+        siiCELabund = 0.d0
         weight = 0.d0
         do i=get_ion("sii4068    ", ILs), get_ion("sii6731    ", ILs)
           if (ILs(i)%location .gt. 0) siiCELabund = siiCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
@@ -827,7 +821,6 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         endif
 
         !siiiCELabund = 0 ! ILs(28)%abundance
-        !celabundtemp = 0.
         !weight = 0.
         !do i=get_ion("siii9069   ", ILs), get_ion("siii9531   ", ILs)
         !  if (linelist(ILs(i)%location)%abundance .gt. 0) siiiCELabund = siiiCELabund + linelist(ILs(i)%location)%abundance/  ((ILs(i)%int_err/ linelist(ILs(i)%location)%intensity)  **2)
@@ -868,8 +861,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         siiiIRCELabund = get_cel_abundance("siii18p7um ",linelist,ILs)
         sivIRCELabund = get_cel_abundance("siv10p5um  ",linelist,ILs)
 
-        celabundtemp = 0.d0
-                cliiiCELabund = 0.d0
+        cliiiCELabund = 0.d0
         weight = 0.d0
         do i=get_ion("cliii5517  ", ILs), get_ion("cliii5537  ", ILs)
           if (ILs(i)%location .gt. 0) cliiiCELabund = cliiiCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
@@ -883,8 +875,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
           cliiiCELabund = 0.d0
         endif
 
-        celabundtemp = 0.d0
-                ariiiCELabund = 0.d0
+        ariiiCELabund = 0.d0
         weight = 0.d0
         do i=get_ion("ariii7135  ", ILs), get_ion("ariii7751  ", ILs)
           if (ILs(i)%location .gt. 0) ariiiCELabund = ariiiCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
@@ -898,8 +889,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
           ariiiCELabund = 0.d0
         endif
 
-        celabundtemp = 0.d0
-                arivCELabund = 0.d0
+        arivCELabund = 0.d0
         weight = 0.d0
         do i=get_ion("ariv4711   ", ILs), get_ion("ariv4740   ", ILs)
         arivCELabund = arivCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
@@ -918,8 +908,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         ciiCELabund = get_cel_abundance("cii2325    ",linelist,ILs)
         civCELabund = get_cel_abundance("civ1548    ",linelist,ILs)
 
-        celabundtemp = 0.d0
-                ciiiCELabund = 0.d0
+        ciiiCELabund = 0.d0
         weight = 0.d0
         do i=get_ion("ciii1907   ", ILs), get_ion("ciii1909b  ", ILs) ! would screw up if blend and non-blend were given.
           if (ILs(i)%location .gt. 0) then
@@ -933,8 +922,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
           ciiiCELabund = 0.d0
         endif
 
-        celabundtemp = 0.d0
-                neivCELabund = 0.d0
+        neivCELabund = 0.d0
         weight = 0.d0
         do i=get_ion("neiv2423   ", ILs), get_ion("neiv2424b  ", ILs)! would break if blend and individual lines were both specified
           if (ILs(i)%location .gt. 0) neivCELabund = neivCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
@@ -948,8 +936,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
           neivCELabund = 0.d0
         endif
 
-        celabundtemp = 0.d0
-                nevCELabund = 0.d0
+        nevCELabund = 0.d0
         weight = 0.d0
         do i=get_ion("nev3345    ", ILs), get_ion("nev3426    ", ILs)
           if (ILs(i)%location .gt. 0) nevCELabund = nevCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
@@ -963,8 +950,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
           nevCELabund = 0.d0
         endif
 
-        celabundtemp = 0.d0
-                arvCELabund = 0.d0
+        arvCELabund = 0.d0
         weight = 0.d0
         do i=get_ion("arv6435    ", ILs), get_ion("arv7005    ", ILs)
           if (ILs(i)%location .gt. 0) arvCELabund = arvCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
@@ -978,8 +964,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
           arvCELabund = 0.d0
         endif
 
-         celabundtemp = 0.d0
-                 ciCELabund = 0.d0
+        ciCELabund = 0.d0
         weight = 0.d0
         do i=get_ion("ci9824     ", ILs), get_ion("ci9850     ", ILs)
           if (ILs(i)%location .gt. 0) ciCELabund = ciCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
@@ -995,8 +980,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
         NCabundCEL = ciCELabund
 
-         celabundtemp = 0.d0
-                 oiCELabund = 0.d0
+        oiCELabund = 0.d0
         weight = 0.d0
         do i=get_ion("oi6300     ", ILs), get_ion("oi6364     ", ILs)
           if (ILs(i)%location .gt. 0) then
