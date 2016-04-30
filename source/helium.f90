@@ -23,24 +23,24 @@
 
 end subroutine get_heii_abund
 
-subroutine get_hei_porter(linelist,Te, ne, he_lines, heidata, Heiabund)
+subroutine get_hei_porter(linelist,Te, ne, he_lines, heidata, Heiabund, weight4471, weight5876, weight6678)
 
       use mod_abundtypes
 
       IMPLICIT NONE
       real(kind=dp) :: te, ne
       real(kind=dp) :: AB4471,AB5876,AB6678,heiabund
+      real(kind=dp) :: weight4471, weight5876, weight6678 ! weights for abundance determination
 
       type(line), dimension(:) :: linelist
       integer, dimension(44) :: he_lines
-      real(kind=dp), dimension(3) :: weights
       real(kind=dp), dimension(21,14,44), intent(in) :: heidata
       real(kind=dp), dimension(44) :: emissivities
       integer :: i
 
 !debugging
 #ifdef CO
-        print *,"subroutine: get_hei_porter"
+        print *,"subroutine: get_hei_porter. Te=",Te,", ne=",ne,",weights=",weight4471, weight5876, weight6678
 #endif
 
 !      data is for the following lines, in this order: 2945.10,3188.74,3613.64,3888.65,3964.73,4026.21,4120.82,4387.93,4437.55,4471.50,4713.17,4921.93,5015.68,5047.74,5875.66,6678.16,7065.25,7281.35,9463.58,10830.25,11013.07,11969.06,12527.49,12755.69,12784.92,12790.50,12845.98,12968.43,12984.88,13411.69,15083.65,17002.40,18555.57,18685.33,18697.21,19089.36,19543.19,20424.97,20581.28,20601.76,21120.12,21132.03,21607.80,21617.01 /)
@@ -57,14 +57,12 @@ subroutine get_hei_porter(linelist,Te, ne, he_lines, heidata, Heiabund)
       AB5876 = linelist(He_lines(15))%abundance
       AB6678 = linelist(He_lines(16))%abundance
 
-           weights=0.D0
+           if (AB4471 .eq. 0) weight4471 = 0.d0
+           if (AB5876 .eq. 0) weight5876 = 0.d0
+           if (AB6678 .eq. 0) weight6678 = 0.d0
 
-           if (AB4471 .gt. 0) weights(1) = 1.
-           if (AB5876 .gt. 0) weights(2) = 3.
-           if (AB6678 .gt. 0) weights(3) = 1.
-
-           if (weights(1)+weights(2)+weights(3).gt.0.0) then
-               heiabund = ((weights(1)*AB4471) + (weights(2)*AB5876) + (weights(3)*AB6678)) / (weights(1) + weights(2) + weights(3))
+           if (weight4471+weight5876+weight6678.gt.0.0) then
+               heiabund = ((weight4471*AB4471) + (weight5876*AB5876) + (weight6678*AB6678)) / (weight4471 + weight5876 + weight6678)
            else
                heiabund = 0.D0
            endif
@@ -142,7 +140,7 @@ subroutine get_emissivity_porter(te, ne, line, emissivity, heidata)
 
 end subroutine get_emissivity_porter
 
-subroutine get_hei_smits_new(linelist,Te, ne, he_lines, heidata, Heiabund)
+subroutine get_hei_smits_new(linelist,Te, ne, he_lines, heidata, Heiabund, weight4471, weight5876, weight6678)
 
       use mod_abundtypes
 
@@ -150,10 +148,10 @@ subroutine get_hei_smits_new(linelist,Te, ne, he_lines, heidata, Heiabund)
       real(kind=dp) :: te, ne, tereduced
       real(kind=dp) :: AB4471,AB5876,AB6678,heiabund
       real(kind=dp) :: c4471, c5876, c6678, d ! corrections for collisional excitation
+      real(kind=dp) :: weight4471, weight5876, weight6678 ! weights for abundance determination
 
       type(line), dimension(:) :: linelist
       integer, dimension(44), intent(in) :: he_lines
-      real(kind=dp), dimension(3) :: weights
       real(kind=dp), dimension(3,6,44), intent(in) :: heidata
       real(kind=dp), dimension(44,3) :: emissivities
       real(kind=dp) :: interpolatedemissivity
@@ -161,7 +159,7 @@ subroutine get_hei_smits_new(linelist,Te, ne, he_lines, heidata, Heiabund)
 
 !debugging
 #ifdef CO
-        print *,"subroutine: get_hei_smits_new"
+        print *,"subroutine: get_hei_smits_new. Te=",Te,", ne=",ne,",weights=",weight4471, weight5876, weight6678
 #endif
 
 !      data is for the following lines, in this order: 2945.10,3188.74,3613.64,3888.65,3964.73,4026.21,4120.82,4387.93,4437.55,4471.50,4713.17,4921.93,5015.68,5047.74,5875.66,6678.16,7065.25,7281.35,9463.58,10830.25,11013.07,11969.06,12527.49,12755.69,12784.92,12790.50,12845.98,12968.43,12984.88,13411.69,15083.65,17002.40,18555.57,18685.33,18697.21,19089.36,19543.19,20424.97,20581.28,20601.76,21120.12,21132.03,21607.80,21617.01 /)
@@ -206,14 +204,12 @@ subroutine get_hei_smits_new(linelist,Te, ne, he_lines, heidata, Heiabund)
       AB5876 = linelist(He_lines(15))%abundance
       AB6678 = linelist(He_lines(16))%abundance
 
-           weights=0.D0
+           if (AB4471 .eq. 0) weight4471 = 0.d0
+           if (AB5876 .eq. 0) weight5876 = 0.d0
+           if (AB6678 .eq. 0) weight6678 = 0.d0
 
-           if (AB4471 .gt. 0) weights(1) = 1.
-           if (AB5876 .gt. 0) weights(2) = 3.
-           if (AB6678 .gt. 0) weights(3) = 1.
-
-           if (weights(1)+weights(2)+weights(3).gt.0.0) then
-               heiabund = ((weights(1)*AB4471) + (weights(2)*AB5876) + (weights(3)*AB6678)) / (weights(1) + weights(2) + weights(3))
+           if (weight4471+weight5876+weight6678.gt.0.0) then
+               heiabund = ((weight4471*AB4471) + (weight5876*AB5876) + (weight6678*AB6678)) / (weight4471 + weight5876 + weight6678)
            else
                heiabund = 0.D0
            endif

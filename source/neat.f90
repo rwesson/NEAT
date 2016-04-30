@@ -147,6 +147,10 @@ program neat
         weights%arvTemp = 1.d0
         weights%nevTemp = 1.d0
 
+        weights%he4471 = 1.d0
+        weights%he5876 = 3.d0
+        weights%he6678 = 1.d0
+
 !multiple output formats defined as variables so they can be passed to
 !the printout subroutine
 

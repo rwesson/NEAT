@@ -543,9 +543,9 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 ! He I
 
         if (switch_he .eq. "S") then
-          call get_hei_smits_new(linelist,medtemp,meddens,HeI_lines,heidata, heiabund)
+          call get_hei_smits_new(linelist,medtemp,meddens,HeI_lines,heidata, Heiabund, weights%he4471, weights%he5876, weights%he6678)
         else
-          call get_hei_porter(linelist,medtemp,meddens,HeI_lines,heidata, heiabund)
+          call get_hei_porter(linelist,medtemp,meddens,HeI_lines,heidata, Heiabund, weights%he4471, weights%he5876, weights%he6678)
         endif
 
         hetotabund = heiabund + heiiabund
