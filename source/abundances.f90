@@ -129,7 +129,7 @@ use mod_hydrogen
 ! changes here may also need to be made in the subsequent section too
 
         if (calculate_extinction) then
-                call calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction, dble(10000.),dble(1000.))
+                call calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction, dble(10000.),dble(1000.),weights%ha,weights%hg,weights%hd)
 
                 if (meanextinction .lt. 0.0 .or. isnan(meanextinction)) then
                    meanextinction = 0.d0
@@ -350,7 +350,7 @@ use mod_hydrogen
 
         !update extinction. DS 22/10/11
           meanextinction=0
-          call calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction, medtemp, lowdens)
+          call calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction, medtemp, lowdens,weights%ha,weights%hg,weights%hd)
 
           if (meanextinction .lt. 0.0 .or. isnan(meanextinction)) then
              meanextinction = 0.d0

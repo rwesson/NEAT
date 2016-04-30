@@ -60,9 +60,15 @@ type weightingarray
         real(kind=dp) :: neivDens
         real(kind=dp) :: arvTemp
         real(kind=dp) :: nevTemp
+!balmer line weights for extinction calculation
+        real(kind=dp) :: ha
+        real(kind=dp) :: hg
+        real(kind=dp) :: hd
+!helium abundance weights
         real(kind=dp) :: he4471
         real(kind=dp) :: he5876
         real(kind=dp) :: he6678
+
 end type weightingarray
 
 end module mod_abundtypes

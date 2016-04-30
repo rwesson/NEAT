@@ -147,6 +147,10 @@ program neat
         weights%arvTemp = 1.d0
         weights%nevTemp = 1.d0
 
+        weights%ha = -1.d0
+        weights%hg = -1.d0
+        weights%hd = -1.d0
+
         weights%he4471 = 1.d0
         weights%he5876 = 3.d0
         weights%he6678 = 1.d0

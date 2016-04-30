@@ -6,44 +6,53 @@ integer, parameter :: dp = kind(1.d0)
 
 contains
 
-subroutine calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction, temp, dens)
+subroutine calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction, temp, dens, weightha, weighthg, weighthd)
         IMPLICIT NONE
         integer, parameter :: dp = kind(1.d0)
         type(line), dimension(:), intent(in) :: linelist
         integer, dimension(3:40) :: H_Balmer
-        real(kind=dp) :: c1, c2, c3, w1, w2, w3, meanextinction
+        real(kind=dp) :: c1, c2, c3, weightha, weighthg, weighthd, meanextinction
         real(kind=dp) :: temp, dens
 
 !debugging
 #ifdef CO
-        print *,"subroutine: calc_extinction_coeffs"
+        print *,"subroutine: calc_extinction_coeffs. Te=",temp,", ne=",dens,", weights=",weightha, weighthg, weighthd
 #endif
+
+!set up weights
+
+        if (weightha .eq. -1 .and. H_Balmer(3) .gt. 0) then
+          weightha = linelist(H_Balmer(3))%intensity
+        endif
+        if (weighthg .eq. -1 .and. H_Balmer(5) .gt. 0) then
+          weighthg = linelist(H_Balmer(5))%intensity
+        endif
+        if (weighthd .eq. -1 .and. H_Balmer(6) .gt. 0) then
+          weighthd = linelist(H_Balmer(6))%intensity
+        endif
 
 !Section with interpolations for Balmer ratios for T_e (temp) and N_e (dens)
 !interpolating over 6 Te points, 5,7.5,10,12.5,15,20kK and 3 Ne points 10^2, 10^3 10^4 cm^(-3)
 
         if (H_Balmer(3) .gt. 0 .and. H_Balmer(4) .gt. 0) then
           c1 = log10( ( linelist(H_Balmer(3))%intensity / linelist(H_Balmer(4))%intensity )/ calc_balmer_ratios(temp, dens, 1)    )/(-linelist(H_Balmer(3))%flambda)
-          w1 = linelist(H_Balmer(3))%intensity
         else
           c1 = 0.d0
-          w1 = 0.d0
+          weightha = 0.d0
         endif
 
         if (H_Balmer(5) .gt. 0 .and. H_Balmer(4) .gt. 0) then
           c2 = log10( ( linelist(H_Balmer(5))%intensity / linelist(H_Balmer(4))%intensity )/ calc_balmer_ratios(temp, dens, 2) )/(-linelist(H_Balmer(5))%flambda)
-          w2 = linelist(H_Balmer(5))%intensity
         else
           c2=0.d0
-          w2=0.d0
+          weighthg=0.d0
         endif
 
         if (H_Balmer(6) .gt. 0 .and. H_Balmer(4) .gt. 0) then
           c3 = log10( ( linelist(H_Balmer(6))%intensity / linelist(H_Balmer(4))%intensity )/ calc_balmer_ratios(temp, dens, 3) )/(-linelist(H_Balmer(6))%flambda)
-          w3 = linelist(H_Balmer(6))%intensity
         else
           c3 = 0.d0
-          w3 = 0.d0
+          weighthd = 0.d0
         endif
 
         if (c1<0) then
@@ -59,8 +68,8 @@ subroutine calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction,
           c3=0
         endif
 
-        if ((w1 + w2 + w3) .gt. 0) then
-          meanextinction = (c1*w1 + c2*w2 + c3*w3) / (w1 + w2 + w3)
+        if ((weightha + weighthg + weighthd) .gt. 0) then
+          meanextinction = (c1*weightha + c2*weighthg + c3*weighthd) / (weightha + weighthg + weighthd)
         else
           meanextinction = 0.d0 ! todo: print a warning here
         endif
