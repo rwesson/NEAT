@@ -350,10 +350,6 @@ program neat
 
         print *
 
-! set the weights to be used in the analysis.  currently hard coded in mod_weights, will be read in from file in the future
-
-        call setweights(weights,linelist)
-
 ! select reddening law, get flambda from functions if one of the five, otherwise read from file
 
         if (switch_ext == "S") then
@@ -398,12 +394,13 @@ program neat
         call get_Heii(Heii_lines, linelist)
         call get_cels(ILs,linelist)
 
-! todo, fix all the references to ilines to use new procedure
+! set the weights to be used in the analysis.  currently hard coded in mod_weights, will be read in from file in the future
 
-        print *,gettime(), ": reading atomic data from ",trim(PREFIX),"/share/neat"
+        call setweights(weights,linelist,ILs)
 
 !CELs read, can now read in atomic data
 
+        print *,gettime(), ": reading atomic data from ",trim(PREFIX),"/share/neat"
         allocate(atomicdata(iion))
         do I=1,iion
             atomicdata(I)%ion = ionlist(I)

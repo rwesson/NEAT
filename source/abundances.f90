@@ -679,160 +679,26 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
 ! calculate averages
 
-        niiCELabund = 0.d0
-        weight = 0.d0
-        do i=get_ion("nii6548    ", ILs), get_ion("nii6584    ", ILs)
-          if (ILs(i)%location .gt. 0) niiCELabund = niiCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
-          if (ILs(i)%location .gt. 0) weight = weight + linelist(ILs(i)%location)%intensity
-        enddo
-        if (weight .ge. 1e-20) then
-          niiCELabund = niiCELabund / weight
-        else
-          niiCELabund = 0.d0
-        endif
-
+        call get_average_abundance("nii5754    ","nii6584    ", niiCELabund)
         niiiIRCELabund = get_cel_abundance("niii57um   ",linelist,ILs)
         niiiUVCELabund = get_cel_abundance("niii1751   ",linelist,ILs)
-
-        if (niiiIRCELabund .ge. 1e-20 .and. niiiUVCELabund .ge. 1e-20) then
-          niiiCELabund = (niiiIRCELabund + niiiUVCELabund)/2
-        elseif (niiiIRCELabund .ge. 1e-20) then
-          niiiCELabund = niiiIRCELabund
-        elseif (niiiUVCELabund .ge. 1e-20) then
-          niiiCELabund = niiiUVCELabund
-        else
-          niiiCELabund = 0.d0
-        endif
-
-        nivCELabund = 0.d0
-
-        do i= get_ion("niv1483    ", ILs), get_ion("niv1485b   ", ILs) ! would screw up if blend and non blends were both given
-          if (ILs(i)%location .gt. 0) nivCELabund = nivCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
-          if (ILs(i)%location .gt. 0) weight = weight + linelist(ILs(i)%location)%intensity
-        enddo
-        if (weight .ge. 1e-20) then
-          nivCELabund = nivCELabund / weight
-        else
-          nivCELabund = 0.d0
-        endif
-
+        call get_average_abundance("niii57um   ","niii1751   ",niiiCELabund)
+        call get_average_abundance("niv1483    ","niv1485b   ",nivCELabund) !would screw up if blend and non blends were both in linelist
         nvCELabund = get_cel_abundance("nv1240     ",linelist,ILs)
 
-        !OII CEL routine fixed. DJS 23/11/10
-
-        if(get_cel_flux("oii3728b   ",linelist,ILs) .gt. 0.0)then
-                !calc abundance from doublet blend
-                oiiCELabund = get_cel_abundance("oii3728b   ",linelist,ILs)
-
-        else if(get_cel_flux("oii3729    ",linelist,ILs) .gt. 0.0 .and. get_cel_flux("oii3726    ",linelist,ILs) .gt. 0.0 )then
-                !calc abundance from doublet
-                w1 = linelist(get_ion("oii3729    ", ILs))%intensity
-                w2 = linelist(get_ion("oii3726    ", ILs))%intensity
-
-                oiiCELabund = (w1*get_cel_abundance("oii3729    ",linelist,ILs) + w2*get_cel_abundance("oii3726    ",linelist,ILs))/(w1+w2)
-
-        else if((get_cel_flux("oii3728b   ",linelist,ILs) .eq. 0.0 .and. (get_cel_flux("oii3729    ",linelist,ILs) .eq. 0.0 .and. get_cel_flux("oii3726    ",linelist,ILs) .eq. 0.0 )) .and.  (get_cel_abundance("oii7330b   ",linelist,ILs) .gt. 0.0 .or. get_cel_abundance("oii7319b   ",linelist,ILs) .gt. 0.0) )then
-                !calc abundance based on far red blends
-                w1 = linelist(get_ion("oii7330b   ", ILs))%intensity
-                w2 = linelist(get_ion("oii7319b   ", ILs))%intensity
-
-                oiiCELabund = (w1*get_cel_abundance("oii7330b   ",linelist,ILs) + w2*get_cel_abundance("oii7319b   ",linelist,ILs))/(w1+w2)
-
-        else if ((get_cel_flux("oii3728b   ",linelist,ILs) .eq. 0.0 .and. (get_cel_flux("oii3729    ",linelist,ILs) .eq. 0.0 .and. get_cel_flux("oii3726    ",linelist,ILs) .eq. 0.0 )) .and. ( (get_cel_abundance("oii7320    ",linelist,ILs) .gt. 0.0 .or. get_cel_abundance("oii7319    ",linelist,ILs) .gt. 0.0) .or.  (get_cel_abundance("oii7330    ",linelist,ILs) .gt. 0.0 .or. get_cel_abundance("oii7331    ",linelist,ILs) .gt. 0.0)) )then
-                !calc abundance based on far red quadruplet
-                if(linelist(get_ion("oii7319    ", ILs))%intensity .gt. 0) w1 = linelist(get_ion("oii7319    ", ILs))%intensity
-                if(linelist(get_ion("oii7320    ", ILs))%intensity .gt. 0) w2 = linelist(get_ion("oii7320    ", ILs))%intensity
-                if(linelist(get_ion("oii7330    ", ILs))%intensity .gt. 0) w3 = linelist(get_ion("oii7330    ", ILs))%intensity
-                if(linelist(get_ion("oii7331    ", ILs))%intensity .gt. 0) w4 = linelist(get_ion("oii7320    ", ILs))%intensity
-
-                !if statements stop non existent lines being granted infinite weight 1/(0/0)^2 = infinity, defaults to zero if no line detected which keeps the following calculation honest
-
-                oiiCELabund = (w1*get_cel_abundance("oii7319    ",linelist,ILs) + w2*get_cel_abundance("oii7320    ",linelist,ILs) + w3*get_cel_abundance("oii7330    ",linelist,ILs) + w4*get_cel_abundance("oii7331    ",linelist,ILs))/(w1+w2+w3+w4)
-
-        else
-                oiiCELabund = 0.d0
-        endif
-
-        oiiiCELabund = 0.d0
-        weight = 0.d0
-        do i=get_ion("oiii4959   ", ILs), get_ion("oiii5007   ", ILs)
-          if (ILs(i)%location .gt. 0) oiiiCELabund = oiiiCELabund + linelist(ILs(i)%location)%abundance *linelist(ILs(i)%location)%intensity
-          if (ILs(i)%location .gt. 0) weight = weight + linelist(ILs(i)%location)%intensity
-        enddo
-        if (weight .ge. 1e-20) then
-          oiiiCELabund = oiiiCELabund / weight
-        else
-          oiiiCELabund = 0.d0
-        endif
-
-        oiiiIRCELabund = 0.d0
-        weight = 0.d0
-        do i=get_ion("oiii52um   ", ILs), get_ion("oiii88um   ", ILs)
-          if (ILs(i)%location .gt. 0) oiiiIRCELabund = oiiiIRCELabund + linelist(ILs(i)%location)%abundance *linelist(ILs(i)%location)%intensity
-          if (ILs(i)%location .gt. 0) weight = weight + linelist(ILs(i)%location)%intensity
-        enddo
-        if (weight .ge. 1e-20) then
-          oiiiIRCELabund = oiiiIRCELabund / weight
-        else
-          oiiiIRCELabund = 0.d0
-        endif
-
-        oivCELabund = get_cel_abundance("oiv25p9um  ",linelist,ILs)
+        call get_average_abundance("oii3726    ","oii7330b   ",oiiCELabund) 
+        call get_average_abundance("oiii4363   ","oiii5007   ",oiiiCELabund)
+        call get_average_abundance("oiii52um   ","oiii88um   ",oiiiIRCELabund) 
+        oivCELabund = get_cel_abundance("oiv25p9um  ",linelist,ILs) 
 
         neiiIRCELabund = get_cel_abundance("neii12p8um ",linelist,ILs)
         neiiiIRCELabund = get_cel_abundance("neiii15p5um ",linelist,ILs)
+        call get_average_abundance("neiii3868  ","neiii3967  ",neiiiCELabund)
+        call get_average_abundance("neiv2423   ","neiv4725b  ",neivCELabund) ! would screw up if blends and non blends were given
 
-        neiiiCELabund = 0.d0
-        weight = 0.d0
+        call get_average_abundance("sii4068    ","sii6731    ",siiCELabund)
 
-        do i=get_ion("neiii3868  ", ILs), get_ion("neiii3967  ", ILs)
-          if (ILs(i)%location .gt. 0) neiiiCELabund = neiiiCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
-          if (ILs(i)%location .gt. 0) weight = weight + linelist(ILs(i)%location)%intensity
-        enddo
-        if (weight .ge. 1e-20) then
-          neiiiCELabund = neiiiCELabund / weight
-        else
-          neiiiCELabund = 0.d0
-        endif
-
-
-        neivCELabund = 0.d0
-        weight = 0.d0
-        do i=get_ion("neiv2423   ", ILs), get_ion("neiv4725b  ", ILs) ! would screw up if blends and non blends were given
-          if (ILs(i)%location .gt. 0) neivCELabund = neivCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
-          if (ILs(i)%location .gt. 0) weight = weight + linelist(ILs(i)%location)%intensity
-        enddo
-        if (weight .ge. 1e-20) then
-          neivCELabund = neivCELabund / weight
-        else
-          neivCELabund = 0.d0
-        endif
-
-        siiCELabund = 0.d0
-        weight = 0.d0
-        do i=get_ion("sii4068    ", ILs), get_ion("sii6731    ", ILs)
-          if (ILs(i)%location .gt. 0) siiCELabund = siiCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
-          if (ILs(i)%location .gt. 0) weight = weight + linelist(ILs(i)%location)%intensity
-        enddo
-        if (weight .ge. 1e-20) then
-          siiCELabund = siiCELabund / weight
-        else
-          siiCELabund = 0.d0
-        endif
-
-        !siiiCELabund = 0 ! ILs(28)%abundance
-        !weight = 0.
-        !do i=get_ion("siii9069   ", ILs), get_ion("siii9531   ", ILs)
-        !  if (linelist(ILs(i)%location)%abundance .gt. 0) siiiCELabund = siiiCELabund + linelist(ILs(i)%location)%abundance/  ((ILs(i)%int_err/ linelist(ILs(i)%location)%intensity)  **2)
-        !  if (linelist(ILs(i)%location)%abundance .gt. 0) weight = weight + 1/  ((ILs(i)%int_err/ linelist(ILs(i)%location)%intensity)  **2)
-        !enddo
-             !if (weight .gt. 0) then
-        !  siiiCELabund = siiiCELabund / weight
-        !else
-        !  siiiCELabund = 0.d0
-        !endif
-
-        ! SIII abundance section previously buggered. SIII 9069 and 9531 doublet special due to absorption lines. See Liu, Barlow etc 1995 (Far Red IR Lines in a PN), one of 9069/9531 is ALWAYS absorbed however the other is then always fine.  We can tell which is is by looking at the ratio 9069/9531.
+        ! SIII 9069 and 9531 doublet special due to absorption lines. See Liu, Barlow etc 1995 (Far Red IR Lines in a PN), one of 9069/9531 is ALWAYS absorbed but the other is then always fine.  We can tell which is is by looking at the ratio 9069/9531.
         if (get_cel_abundance("siii9069   ",linelist,ILs) .eq. 0 .and. get_cel_abundance("siii9531   ",linelist,ILs) .eq. 0) then
                 siiiCELabund = get_cel_abundance("siii6312   ",linelist,ILs)
         else !only calculate all the IR SIII telluric absorption if the lines are present.
@@ -861,139 +727,19 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         siiiIRCELabund = get_cel_abundance("siii18p7um ",linelist,ILs)
         sivIRCELabund = get_cel_abundance("siv10p5um  ",linelist,ILs)
 
-        cliiiCELabund = 0.d0
-        weight = 0.d0
-        do i=get_ion("cliii5517  ", ILs), get_ion("cliii5537  ", ILs)
-          if (ILs(i)%location .gt. 0) cliiiCELabund = cliiiCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
-          if (ILs(i)%location .gt. 0) then
-            weight = weight + linelist(ILs(i)%location)%intensity
-          endif
-        enddo
-        if (weight .ge. 1e-20) then
-          cliiiCELabund = cliiiCELabund / weight
-        else
-          cliiiCELabund = 0.d0
-        endif
-
-        ariiiCELabund = 0.d0
-        weight = 0.d0
-        do i=get_ion("ariii7135  ", ILs), get_ion("ariii7751  ", ILs)
-          if (ILs(i)%location .gt. 0) ariiiCELabund = ariiiCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
-          if (ILs(i)%location .gt. 0) then
-            weight = weight + linelist(ILs(i)%location)%intensity
-          endif
-        enddo
-        if (weight .ge. 1e-20) then
-          ariiiCELabund = ariiiCELabund / weight
-        else
-          ariiiCELabund = 0.d0
-        endif
-
-        arivCELabund = 0.d0
-        weight = 0.d0
-        do i=get_ion("ariv4711   ", ILs), get_ion("ariv4740   ", ILs)
-        arivCELabund = arivCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
-          if (ILs(i)%location .gt. 0) then
-            weight = weight + linelist(ILs(i)%location)%intensity
-          endif
-        enddo
-        if (weight .ge. 1e-20) then
-          arivCELabund = arivCELabund / weight
-        else
-          arivCELabund = 0.d0
-        endif
-
+        call get_average_abundance("cliii5517  ","cliii5537  ",cliiiCELabund)
+        call get_average_abundance("ariii7135  ","ariii7751  ",ariiiCELabund)
+        call get_average_abundance("ariv4711   ","ariv4740   ",arivCELabund)
         ariiiIRCELabund = get_cel_abundance("ariii9um   ",linelist,ILs)
-
         ciiCELabund = get_cel_abundance("cii2325    ",linelist,ILs)
         civCELabund = get_cel_abundance("civ1548    ",linelist,ILs)
-
-        ciiiCELabund = 0.d0
-        weight = 0.d0
-        do i=get_ion("ciii1907   ", ILs), get_ion("ciii1909b  ", ILs) ! would screw up if blend and non-blend were given.
-          if (ILs(i)%location .gt. 0) then
-            ciiiCELabund = ciiiCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
-            weight = weight + linelist(ILs(i)%location)%intensity
-          endif
-        enddo
-        if (weight .ge. 1e-20) then
-          ciiiCELabund = ciiiCELabund / weight
-        else
-          ciiiCELabund = 0.d0
-        endif
-
-        neivCELabund = 0.d0
-        weight = 0.d0
-        do i=get_ion("neiv2423   ", ILs), get_ion("neiv2424b  ", ILs)! would break if blend and individual lines were both specified
-          if (ILs(i)%location .gt. 0) neivCELabund = neivCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
-          if (ILs(i)%location .gt. 0) then
-            weight = weight + linelist(ILs(i)%location)%intensity
-          endif
-        enddo
-        if (weight .ge. 1e-20) then
-          neivCELabund = neivCELabund / weight
-        else
-          neivCELabund = 0.d0
-        endif
-
-        nevCELabund = 0.d0
-        weight = 0.d0
-        do i=get_ion("nev3345    ", ILs), get_ion("nev3426    ", ILs)
-          if (ILs(i)%location .gt. 0) nevCELabund = nevCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
-          if (ILs(i)%location .gt. 0) then
-            weight = weight + linelist(ILs(i)%location)%intensity
-          endif
-        enddo
-        if (weight .ge. 1e-20) then
-          nevCELabund = nevCELabund / weight
-        else
-          nevCELabund = 0.d0
-        endif
-
-        arvCELabund = 0.d0
-        weight = 0.d0
-        do i=get_ion("arv6435    ", ILs), get_ion("arv7005    ", ILs)
-          if (ILs(i)%location .gt. 0) arvCELabund = arvCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
-          if (ILs(i)%location .gt. 0) then
-            weight = weight + linelist(ILs(i)%location)%intensity
-          endif
-        enddo
-        if (weight .ge. 1e-20) then
-          arvCELabund = arvCELabund / weight
-        else
-          arvCELabund = 0.d0
-        endif
-
-        ciCELabund = 0.d0
-        weight = 0.d0
-        do i=get_ion("ci9824     ", ILs), get_ion("ci9850     ", ILs)
-          if (ILs(i)%location .gt. 0) ciCELabund = ciCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
-          if (ILs(i)%location .gt. 0) then
-            weight = weight + linelist(ILs(i)%location)%intensity
-          endif
-        enddo
-        if (weight .ge. 1e-20) then
-          ciCELabund = ciCELabund / weight
-        else
-          ciCELabund = 0.d0
-        endif
-
+        call get_average_abundance("ciii1907   ","ciii1909b  ",ciiiCELabund) ! would break if blend and individual lines were both specified
+        call get_average_abundance("neiv2423   ","neiv2424b  ",neivCELabund) ! would break if blend and individual lines were both specified
+        call get_average_abundance("nev3345    ","nev3426    ",nevCELabund)
+        call get_average_abundance("arv6435    ","arv7005    ",arvCELabund)
+        call get_average_abundance("ci9824     ","ci9850     ",ciCELabund)
         NCabundCEL = ciCELabund
-
-        oiCELabund = 0.d0
-        weight = 0.d0
-        do i=get_ion("oi6300     ", ILs), get_ion("oi6364     ", ILs)
-          if (ILs(i)%location .gt. 0) then
-            oiCELabund = oiCELabund + linelist(ILs(i)%location)%abundance*linelist(ILs(i)%location)%intensity
-            weight = weight + linelist(ILs(i)%location)%intensity
-          endif
-        enddo
-        if (weight .ge. 1e-20) then
-          oiCELabund = oiCELabund / weight
-        else
-          oiCELabund = 0.d0
-        endif
-
+        call get_average_abundance("oi6300     ","oi6364     ",oiCELabund)
         NOabundCEL = oiCELabund
 
 ! now get abundances for ORLs
@@ -2010,13 +1756,13 @@ subroutine get_Tdiag(name1, name2, name3, ion, ratio)
 
 end subroutine get_Tdiag
 
-subroutine get_average_abundance(startion,endion,abundance,weights)
+subroutine get_average_abundance(startion,endion,abundance)
 !calculates the average abundance given by a set of CELs using the chosen weighting scheme
         implicit none
         character(len=11) :: startion,endion
         real(kind=dp) :: abundance
         real(kind=dp), dimension(9) :: weights, abundances ! Ilines_levs contains at most 9 lines per ion. this might need updating in the future
-        integer :: startpos,endpos
+        integer :: startpos,endpos,i,j
 
 !debugging
 #ifdef CO
@@ -2024,16 +1770,19 @@ subroutine get_average_abundance(startion,endion,abundance,weights)
 #endif
 
         weights=0.d0
+        abundances=0.d0
         abundance=0.d0
+        j=1
 
         ! weights have already been processed to correctly replace -1 with observed intensity, and set to zero if line is not present.
         ! so it's really easy.
 
         do i=get_ion(startion,ILs),get_ion(endion,ILs)
           if (ILs(i)%location .gt. 0) then
-            abundances(i)=linelist(ILs(i)%location)%abundance
-            weights(i)=linelist(ILs(i)%location)%weight
+            abundances(j)=linelist(ILs(i)%location)%abundance
+            weights(j)=linelist(ILs(i)%location)%weight
           endif
+          j=j+1
         enddo
 
         if (sum(weights).gt.0.d0) then

@@ -69,6 +69,7 @@ type weightingarray
         real(kind=dp) :: he4471
         real(kind=dp) :: he5876
         real(kind=dp) :: he6678
+!CEL abundance weights are not set in the weights variable but in the linelist itself
 
 end type weightingarray
 
