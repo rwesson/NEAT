@@ -1021,7 +1021,6 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         endif
       endif
 
-print *,get_cel_flux("oii7319b   ",linelist,ILs)
       if (get_cel_flux("oii7319b   ",linelist,ILs) .gt. 0 .and. get_cel_flux("oii7330b   ",linelist,ILs) .gt. 0) then
         if (oiiicelabund .gt. 0) then
           oii7325recCEL=10000.*(9.36*(medtemp/1.e4)**0.44*oiiicelabund)/(get_cel_flux("oii7319b   ",linelist,ILs)+get_cel_flux("oii7330b   ",linelist,ILs))

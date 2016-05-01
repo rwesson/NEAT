@@ -163,8 +163,8 @@ program neat
 
 ! start the logging output to terminal
 
-        print *,gettime(),": starting code"
-        print *,gettime(),": command line: ",trim(commandline)
+        print *,gettime(),"starting code"
+        print *,gettime(),"command line: ",trim(commandline)
 
 ! process command line arguments
 
@@ -228,7 +228,7 @@ program neat
                 if ((trim(options(i))=="-v" .or.  trim(options(i))=="--verbosity") .and. (i+1) .le. Narg) then
                   read (options(i+1),*) verbosity
                   if (verbosity .lt. 1 .or. verbosity .gt. 3) then
-                    print *,gettime(),": warning: verbosity outside allowed range of 1-3. Set to 3."
+                    print *,gettime(),"warning: verbosity outside allowed range of 1-3. Set to 3."
                     verbosity=3
                   endif
                 endif
@@ -254,20 +254,20 @@ program neat
          endif
 
          if (filename=="") then
-                print *,gettime(),": error: No input file specified"
+                print *,gettime(),"error: No input file specified"
                 stop
          endif
 
          inquire(file=filename, exist=file_exists) ! see if the input file is present
 
          if (.not. file_exists) then
-                print *,gettime(),": error: input file ",trim(filename)," does not exist"
+                print *,gettime(),"error: input file ",trim(filename)," does not exist"
                 stop
          endif
 
 !check number of runs
 
-        if (runs .gt. 1 .and. runs .lt. 5000) print *,gettime(),": warning: number of iterations is low.  At least 5000 is recommended for good sampling of probability distributions"
+        if (runs .gt. 1 .and. runs .lt. 5000) print *,gettime(),"warning: number of iterations is low.  At least 5000 is recommended for good sampling of probability distributions"
         if (runs .gt. 1) nperbin=runs/nbins
         if (mod(runs,nbins) .gt. 0 .and. runs .gt. 1) then
            print*,gettime(),': error: number of iterations does not divide exactly by number of bins'
@@ -286,16 +286,16 @@ program neat
 ! test the two fatal errors first, then the warning.
 
         if (btest(errstat,0)) then
-                print *,gettime(),": error: line list reading failed"
+                print *,gettime(),"error: line list reading failed"
                 print *,"            This can happen if it doesn't have three columns"
                 stop
         elseif (btest(errstat,1)) then
-                print*, gettime(),": cheese shop error - no inputs"
+                print*, gettime(),"cheese shop error - no inputs"
                 stop
         elseif (btest(errstat,2) .and. runs .gt. 1) then !only relevant if uncertainties were requested
-                print*, gettime(),": warning: no uncertainties given, arbitrarily assuming 10 per cent for everything"
+                print*, gettime(),"warning: no uncertainties given, arbitrarily assuming 10 per cent for everything"
         else
-                print "(X,A,A,A,A,I3,A)", gettime(),": line list file ",trim(filename)," read successfully (",listlength," lines)"
+                print "(X,A,A,A,A,I3,A)", gettime(),"line list file ",trim(filename)," read successfully (",listlength," lines)"
         endif
 
         allocate (linelist_original(listlength))
@@ -324,7 +324,7 @@ program neat
         if (minval(abs(linelist(:)%wavelength - 4861.33)) .lt. 0.001) then
           normalise = 100.d0/linelist(minloc(abs(linelist(:)%wavelength - 4861.33),1))%intensity
         else
-          print *,gettime(),": error: no H beta detected"
+          print *,gettime(),"error: no H beta detected"
           print *,"            no further analysis possible"
           stop
         endif
@@ -338,14 +338,14 @@ program neat
           where (linelist%intensity .lt. 0)
             linelist%intensity = 0.D0
           endwhere
-        print *,gettime(),": warning: negative line fluxes set to zero"
+        print *,gettime(),"warning: negative line fluxes set to zero"
         endif
 
         if (minval(linelist%int_err) .lt. 0.) then
           where (linelist%int_err .lt. 0)
             linelist%int_err = abs(linelist%int_err)
           endwhere
-        print *,gettime(),": warning: negative flux uncertainties converted to positive"
+        print *,gettime(),"warning: negative flux uncertainties converted to positive"
         endif
 
         print *
@@ -353,31 +353,31 @@ program neat
 ! select reddening law, get flambda from functions if one of the five, otherwise read from file
 
         if (switch_ext == "S") then
-                print *,gettime(), ": using Howarth (1983) galactic extinction law"
+                print *,gettime(),"using Howarth (1983) galactic extinction law"
         elseif (switch_ext == "H") then
-                print *,gettime(), ": using Howarth (1983) LMC extinction law"
+                print *,gettime(),"using Howarth (1983) LMC extinction law"
         elseif (switch_ext == "C") then
-                print *,gettime(), ": using CCM (1989) galactic extinction law"
+                print *,gettime(),"using CCM (1989) galactic extinction law"
         elseif (switch_ext == "P") then
-                print *,gettime(), ": using Prevot et al. (1984) SMC extinction law"
+                print *,gettime(),"using Prevot et al. (1984) SMC extinction law"
         elseif (switch_ext == "F") then
-                print *,gettime(), ": using Fitzpatrick (1990) galactic extinction law"
+                print *,gettime(),"using Fitzpatrick (1990) galactic extinction law"
         endif
 
         call get_flambda(linelist, switch_ext, R)
 
         if (switch_he == "S") then
-                print *,gettime(), ": using Smits (1996) He I emissivities"
+                print *,gettime(),"using Smits (1996) He I emissivities"
         else
-                print *,gettime(), ": using Porter et al. (2012) He I emissivities"
+                print *,gettime(),"using Porter et al. (2012) He I emissivities"
         endif
 
         if (switch_ICF == "K") then
-                print *,gettime(), ": using Kingsburgh & Barlow (1994) ICF"
+                print *,gettime(),"using Kingsburgh & Barlow (1994) ICF"
         elseif (switch_ICF == "D") then
-                print *,gettime(), ": using Delgado-Inglada et al. (2014) ICF"
+                print *,gettime(),"using Delgado-Inglada et al. (2014) ICF"
         else
-                print *,gettime(), ": using Peimbert et al. (1992) ICF"
+                print *,gettime(),"using Peimbert et al. (1992) ICF"
         endif
 
         print *
@@ -400,7 +400,7 @@ program neat
 
 !CELs read, can now read in atomic data
 
-        print *,gettime(), ": reading atomic data from ",trim(PREFIX),"/share/neat"
+        print *,gettime(),"reading atomic data from ",trim(PREFIX),"/share/neat"
         allocate(atomicdata(iion))
         do I=1,iion
             atomicdata(I)%ion = ionlist(I)
@@ -412,12 +412,12 @@ program neat
 
 !read hydrogen emissivities
 
-        print *,gettime(), ": reading hydrogen emissivities"
+        print *,gettime(),"reading hydrogen emissivities"
         call read_hydrogen
 
 !read helium emissivities
 
-        print *,gettime(), ": reading helium emissivities"
+        print *,gettime(),"reading helium emissivities"
         if (switch_he .eq. "P") then
           allocate(heidata(21,14,44))
           heidata = 0.D0
@@ -430,7 +430,7 @@ program neat
 
 !read oii data for diagnostics
 
-        print *,gettime(), ": reading OII diagnostics data"
+        print *,gettime(),"reading OII diagnostics data"
         call read_oii_diagnosticdata
 
 !find maximum #levels and temperatures - pass to equib to reduce footprint
@@ -444,10 +444,10 @@ program neat
 
         if(runs == 1)then !calculates abundances without uncertainties
                 print *
-                print *,gettime(),": doing abundance calculations"
+                print *,gettime(),"doing abundance calculations"
                 call abundances(linelist, listlength, iteration_result, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf, H_Balmer, H_Paschen, HeI_lines, HeII_lines, weights)
                 all_results(1)=iteration_result(1) ! copy the iteration result to all_results to simplify the writing out of results later
-                print *,gettime(),": finished abundance calculations"
+                print *,gettime(),"finished abundance calculations"
         else if(runs .gt. 1)then
 
 !save unrandomised line list
@@ -467,16 +467,16 @@ program neat
 
                 print *
                 if (omp_get_num_threads().gt.1) then
-                  print "(X,A9,X,A,I2,A)",gettime(), ": starting Monte Carlo calculations, using ",omp_get_num_threads()," processors"
+                  print "(X,A10,X,A,I2,A)",gettime(),"starting Monte Carlo calculations, using ",omp_get_num_threads()," processors"
                 else
-                  print "(X,A9,X,A)",gettime(), ": starting Monte Carlo calculations"
+                  print "(X,A10,X,A)",gettime(),"starting Monte Carlo calculations"
                 endif
-                print *,gettime(), ": completed ",0,"%"
+                print *,gettime(),"completed ",0,"%"
 !$OMP END MASTER
 !$OMP DO schedule(dynamic)
                 do I=1,runs
 
-                         if ( (10.0*dble(i)/dble(runs)) == int(10*i/runs) ) print *,gettime(),": completed ",100*i/runs,"%"
+                         if ( (10.0*dble(i)/dble(runs)) == int(10*i/runs) ) print *,gettime(),"completed ",100*i/runs,"%"
 !                        print*, "iteration ", i, "of", runs
 
                         call randomizer(linelist, listlength, norp)
@@ -491,7 +491,7 @@ program neat
 !$OMP END DO
 !$OMP END PARALLEL
         else
-                print*, gettime(), ": error: I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."
+                print*, gettime(),"error: I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."
                 stop
         endif
 
@@ -499,7 +499,7 @@ program neat
 !linelist first
 
         print *
-        print *,gettime(),": Writing line list"
+        print *,gettime(),"Writing line list"
 
         allocate(quantity_result(runs))
         quantity_result=0d0
@@ -611,13 +611,13 @@ program neat
         close(650)
         close(651)
 
-        print *,gettime(),": Linelist written to files:"
+        print *,gettime(),"Linelist written to files:"
         print *,"              ",trim(filename),"_linelist"
         print *,"              ",trim(filename),"_linelist.tex"
 
 !now write out the summary files and all the binned data
 
-        print *,gettime(),": Writing summary files"
+        print *,gettime(),"Writing summary files"
 
 !first, define arrays with links to all the data that needs processing.
 !extinction, diagnostics, cel abundances, orl abundances, strong line
@@ -1076,12 +1076,12 @@ program neat
         close(650)
         close(651)
 
-        print *,gettime(),": Results written to files:"
+        print *,gettime(),"Results written to files:"
         print *,"              ",trim(filename),"_results"
         print *,"              ",trim(filename),"_results.tex"
 
         print *
-        print *,gettime(),": all done"
+        print *,gettime(),"all done"
         print *
 
 contains
@@ -1404,9 +1404,10 @@ endif
 
 end subroutine get_uncertainties
 
-character(len=10) function gettime()
+character(len=11) function gettime()
 implicit none
 character(len=10) :: time
+character(len=11), save :: oldtime
 
 !debugging
 #ifdef CO
@@ -1414,7 +1415,12 @@ character(len=10) :: time
 #endif
 
   call date_and_time(TIME=time)
-  gettime = time(1:2)//":"//time(3:4)//":"//time(5:6)
+  gettime = time(1:2)//":"//time(3:4)//":"//time(5:6)//" : "
+  if (gettime .eq. oldtime) then
+    gettime = "          "
+  else
+    oldtime = gettime
+  endif
   return
 
 end function gettime
