@@ -88,7 +88,7 @@ install:
 	install -m 644 example/* ${DESTDIR}${PREFIX}/share/doc/neat/examples
 	install neat ${DESTDIR}${PREFIX}/bin
 	install -m 644 man/neat.1 ${MANDIR}
-	test -e ${DESTDIR}${PREFIX}/share/bash-completion/completions && install -m 644 source/bashcompletion ${DESTDIR}${PREFIX}/share/bash-completion/completions/neat
+	-test -e ${DESTDIR}${PREFIX}/share/bash-completion/completions && install -m 644 source/bashcompletion ${DESTDIR}${PREFIX}/share/bash-completion/completions/neat
 	gzip -f ${MANDIR}/neat.1
 
 uninstall:
