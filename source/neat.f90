@@ -31,6 +31,7 @@ program neat
         use mod_linefinder
         use mod_hydrogen
         use mod_oii_diagnostics
+        use mod_weights
 
         implicit none
 
@@ -115,45 +116,6 @@ program neat
         iion=22 ! number of ions for which we can calculate abundances
                 ! todo: calculate this automatically
                 ! and replace it in calls to subroutines with getting the array size within the subroutine
-
-! define weighting array. to be replaced with reading it in from a configuration file
-
-        weights%oiiDens = 1.d0
-        weights%siiDens = 1.d0
-
-        weights%oiiTemp = 1.d0
-        weights%siiTemp = 1.d0
-        weights%niiTemp = 5.d0
-        weights%ciTemp = 1.d0
-        weights%oiTemp = 1.d0
-
-        weights%cliiiDens = 1.d0
-        weights%ciiiDens = 1.d0
-        weights%arivDens = 1.d0
-        weights%oiiiIRDens = 0.d0
-        weights%ariiiIRDens = 0.d0
-        weights%siiiIRDens = 0.d0
-        weights%neiiiIRDens = 0.d0
-
-        weights%oiiiTemp = 4.d0
-        weights%siiiTemp = 1.d0
-        weights%ariiiTemp = 2.d0
-        weights%neiiiTemp = 2.d0
-        weights%neiiiIRTemp = 0.d0
-        weights%oiiiIRTemp = 0.d0
-        weights%oiiiUVTemp = 0.d0
-
-        weights%neivDens = 1.d0
-        weights%arvTemp = 1.d0
-        weights%nevTemp = 1.d0
-
-        weights%ha = -1.d0
-        weights%hg = -1.d0
-        weights%hd = -1.d0
-
-        weights%he4471 = 1.d0
-        weights%he5876 = 3.d0
-        weights%he6678 = 1.d0
 
 !multiple output formats defined as variables so they can be passed to
 !the printout subroutine
@@ -387,6 +349,10 @@ program neat
         endif
 
         print *
+
+! set the weights to be used in the analysis.  currently hard coded in mod_weights, will be read in from file in the future
+
+        call setweights(weights,linelist)
 
 ! select reddening law, get flambda from functions if one of the five, otherwise read from file
 

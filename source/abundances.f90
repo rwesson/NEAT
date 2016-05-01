@@ -2010,4 +2010,36 @@ subroutine get_Tdiag(name1, name2, name3, ion, ratio)
 
 end subroutine get_Tdiag
 
+subroutine get_average_abundance(startion,endion,abundance,weights)
+!calculates the average abundance given by a set of CELs using the chosen weighting scheme
+        implicit none
+        character(len=11) :: startion,endion
+        real(kind=dp) :: abundance
+        real(kind=dp), dimension(9) :: weights, abundances ! Ilines_levs contains at most 9 lines per ion. this might need updating in the future
+        integer :: startpos,endpos
+
+!debugging
+#ifdef CO
+        print *,"subroutine: get_average_abundance. ",startion,endion
+#endif
+
+        weights=0.d0
+        abundance=0.d0
+
+        ! weights have already been processed to correctly replace -1 with observed intensity, and set to zero if line is not present.
+        ! so it's really easy.
+
+        do i=get_ion(startion,ILs),get_ion(endion,ILs)
+          if (ILs(i)%location .gt. 0) then
+            abundances(i)=linelist(ILs(i)%location)%abundance
+            weights(i)=linelist(ILs(i)%location)%weight
+          endif
+        enddo
+
+        if (sum(weights).gt.0.d0) then
+          abundance=sum(abundances*weights)/sum(weights)
+        endif
+
+end subroutine get_average_abundance
+
 end subroutine abundances

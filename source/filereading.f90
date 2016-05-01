@@ -47,6 +47,7 @@ subroutine read_linelist(filename,linelist,listlength,ncols,errstat)
 
         linelist%intensity = 0.D0
         linelist%abundance = 0.D0
+        linelist%weight = 0.d0
         linelist%freq=0d0
         linelist%wavelength=0d0
         linelist%wavelength_observed=0d0

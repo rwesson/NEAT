@@ -19,11 +19,12 @@ TYPE line
         real(kind=dp) :: freq
         character(len=20) :: transition
         real(kind=dp) :: abundance
+        real(kind=dp) :: weight ! to be used in abundance calculations
         character(len=4) :: zone !high, medium or low ionisation zone
         integer :: location !for CELs and He, this indicates the position of the line in the main linelist array, so that when its abundance is calculated it can be copied back into the linelist array for easy outputting
         character(len=15) :: latextext ! ion name in latex format
         character(len=85) :: linedata
-END TYPE
+end type
 
 type CEL
         integer :: location
