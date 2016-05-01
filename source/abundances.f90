@@ -29,7 +29,7 @@ use mod_hydrogen
         real(kind=dp) :: CELicfO, CELicfC, CELicfN, CELicfNe, CELicfAr, CELicfS, CELicfCl
         real(kind=dp) :: RLicfO, RLicfC, RLicfN, RLicfNe, RLicfHe
         real(kind=dp) :: CabundRL, CabundCEL, NabundRL, NabundCEL, OabundRL, OabundCEL, NeabundRL, NeabundCEL, SabundCEL, ArabundCEL, NOabundCEL, NCabundCEL, ClabundCEL
-        real(kind=dp) :: adfC, adfN, adfO, adfNe, w1, w2, w3, w4
+        real(kind=dp) :: adfC, adfN, adfO, adfNe, w1, w2
         real(kind=dp) :: adfC2plus, adfN2plus, adfO2plus, adfNe2plus
         real(kind=dp) :: c1, c2, c3, meanextinction
         real(kind=dp) :: heiabund,heiiabund,Hetotabund, heICFfactor, OICFfactor, upsilon, upsilonprime
@@ -1021,12 +1021,13 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         endif
       endif
 
-      if (get_cel_flux("oii7320    ",linelist,ILs) .gt. 0 .and. get_cel_flux("oii7330    ",linelist,ILs) .gt. 0) then
+print *,get_cel_flux("oii7319b   ",linelist,ILs)
+      if (get_cel_flux("oii7319b   ",linelist,ILs) .gt. 0 .and. get_cel_flux("oii7330b   ",linelist,ILs) .gt. 0) then
         if (oiiicelabund .gt. 0) then
-          oii7325recCEL=10000.*(9.36*(medtemp/1.e4)**0.44*oiiicelabund)/(get_cel_flux("oii7320    ",linelist,ILs)+get_cel_flux("oii7330    ",linelist,ILs))
+          oii7325recCEL=10000.*(9.36*(medtemp/1.e4)**0.44*oiiicelabund)/(get_cel_flux("oii7319b   ",linelist,ILs)+get_cel_flux("oii7330b   ",linelist,ILs))
         endif
         if (oiiRLabund .gt. 0) then
-          oii7325recRL=10000.*(9.36*(medtemp/1.e4)**0.44*oiirlabund)/(get_cel_flux("oii7320    ",linelist,ILs)+get_cel_flux("oii7330    ",linelist,ILs))
+          oii7325recRL=10000.*(9.36*(medtemp/1.e4)**0.44*oiirlabund)/(get_cel_flux("oii7319b   ",linelist,ILs)+get_cel_flux("oii7330b   ",linelist,ILs))
         endif
       endif
 
@@ -1762,7 +1763,7 @@ subroutine get_average_abundance(startion,endion,abundance)
         character(len=11) :: startion,endion
         real(kind=dp) :: abundance
         real(kind=dp), dimension(9) :: weights, abundances ! Ilines_levs contains at most 9 lines per ion. this might need updating in the future
-        integer :: startpos,endpos,i,j
+        integer :: i,j
 
 !debugging
 #ifdef CO

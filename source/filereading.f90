@@ -239,6 +239,7 @@ real(kind=dp) function get_cel_flux(ionname, linelist, ILs)
             return
           endif
         enddo
+!        print *,"It's just a flesh wound.  ion ",ionname," not found"
 
 end function get_cel_flux
 
