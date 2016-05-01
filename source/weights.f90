@@ -10,6 +10,7 @@ subroutine setweights(configfile,weights,linelist,ILs)
         integer, parameter :: dp=kind(1.d0)
         character(len=512) :: configfile
         character(len=16) :: quantity
+        character(len=24) :: filecheck
         real(kind=dp) :: weight
         type(weightingarray) :: weights
         type(line),dimension(:) :: linelist
@@ -18,7 +19,14 @@ subroutine setweights(configfile,weights,linelist,ILs)
 
 !open config file
 
-        open(631, file=trim(configfile),iostat=io)
+        open(631, file=trim(configfile),iostat=io,status="old")
+        read(631,"(24A)") filecheck
+
+        if (filecheck .ne. "#NEAT configuration file") then
+          print *,"           ",trim(configfile)," doesn't appear to be a NEAT configuration file"
+          stop
+        endif
+
         do while (IO .ge. 0)
           read(631,*,end=111) quantity
           if (quantity(1:1).ne."#") then
