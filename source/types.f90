@@ -37,38 +37,38 @@ type CEL
 end type CEL
 
 type weightingarray
-        real(kind=dp) :: oiiDens
-        real(kind=dp) :: siiDens
-        real(kind=dp) :: oiiTemp
-        real(kind=dp) :: siiTemp
-        real(kind=dp) :: niiTemp
-        real(kind=dp) :: ciTemp
-        real(kind=dp) :: oiTemp
-        real(kind=dp) :: cliiiDens
-        real(kind=dp) :: ciiiDens
-        real(kind=dp) :: arivDens
-        real(kind=dp) :: oiiiIRDens
-        real(kind=dp) :: ariiiIRDens
-        real(kind=dp) :: siiiIRDens
-        real(kind=dp) :: neiiiIRDens
-        real(kind=dp) :: oiiiTemp
-        real(kind=dp) :: siiiTemp
-        real(kind=dp) :: ariiiTemp
-        real(kind=dp) :: neiiiTemp
-        real(kind=dp) :: neiiiIRTemp
-        real(kind=dp) :: oiiiIRTemp
-        real(kind=dp) :: oiiiUVTemp
-        real(kind=dp) :: neivDens
-        real(kind=dp) :: arvTemp
-        real(kind=dp) :: nevTemp
+        real(kind=dp) :: oiiDens = 0.d0
+        real(kind=dp) :: siiDens = 0.d0
+        real(kind=dp) :: oiiTemp = 0.d0
+        real(kind=dp) :: siiTemp = 0.d0
+        real(kind=dp) :: niiTemp = 0.d0
+        real(kind=dp) :: ciTemp = 0.d0
+        real(kind=dp) :: oiTemp = 0.d0
+        real(kind=dp) :: cliiiDens = 0.d0
+        real(kind=dp) :: ciiiDens = 0.d0
+        real(kind=dp) :: arivDens = 0.d0
+        real(kind=dp) :: oiiiIRDens = 0.d0
+        real(kind=dp) :: ariiiIRDens = 0.d0
+        real(kind=dp) :: siiiIRDens = 0.d0
+        real(kind=dp) :: neiiiIRDens = 0.d0
+        real(kind=dp) :: oiiiTemp = 0.d0
+        real(kind=dp) :: siiiTemp = 0.d0
+        real(kind=dp) :: ariiiTemp = 0.d0
+        real(kind=dp) :: neiiiTemp = 0.d0
+        real(kind=dp) :: neiiiIRTemp = 0.d0
+        real(kind=dp) :: oiiiIRTemp = 0.d0
+        real(kind=dp) :: oiiiUVTemp = 0.d0
+        real(kind=dp) :: neivDens = 0.d0
+        real(kind=dp) :: arvTemp = 0.d0
+        real(kind=dp) :: nevTemp = 0.d0
 !balmer line weights for extinction calculation
-        real(kind=dp) :: ha
-        real(kind=dp) :: hg
-        real(kind=dp) :: hd
+        real(kind=dp) :: ha = 0.d0
+        real(kind=dp) :: hg = 0.d0
+        real(kind=dp) :: hd = 0.d0
 !helium abundance weights
-        real(kind=dp) :: he4471
-        real(kind=dp) :: he5876
-        real(kind=dp) :: he6678
+        real(kind=dp) :: he4471 = 0.d0
+        real(kind=dp) :: he5876 = 0.d0
+        real(kind=dp) :: he6678 = 0.d0
 !CEL abundance weights are not set in the weights variable but in the linelist itself
 
 end type weightingarray

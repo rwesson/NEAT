@@ -52,7 +52,7 @@ program neat
         type(line),dimension(:), allocatable :: linelist
         type(line),dimension(:), allocatable :: linelist_original
         type(line),dimension(:,:), allocatable :: all_linelists
-        character(len=512) :: filename
+        character(len=512) :: filename,configfile
         character(len=1) :: blank
         integer :: listlength, ncols, errstat
         real(kind=dp) :: normalise
@@ -112,6 +112,8 @@ program neat
 !output formats
 
         character(len=35) :: extinction_format, diagnostic_format, diagnostic_ratio_format, abundances_format, adf_format
+
+        configfile=trim(PREFIX)//"/share/neat/default.cfg"
 
         iion=22 ! number of ions for which we can calculate abundances
                 ! todo: calculate this automatically
@@ -244,6 +246,9 @@ program neat
                 if (trim(options(i))=="-rp") then
                    norp=.false.
                 endif
+                if ((trim(options(i))=="-cf" .or. trim(options(i))=="--configuration-file") .and. (i+1) .le. Narg) then
+                   configfile=trim(options(i+1))
+                endif
         !  to be fully implemented:
         !  -R                     : R (default 3.1) - only used with CCM at the moment
         !  -b                     : batch mode
@@ -262,6 +267,13 @@ program neat
 
          if (.not. file_exists) then
                 print *,gettime(),"error: input file ",trim(filename)," does not exist"
+                stop
+         endif
+
+         inquire(file=configfile, exist=file_exists) ! see if the configuration file is present
+
+         if (.not. file_exists) then
+                print *,gettime(),"error: input file ",trim(configfile)," does not exist"
                 stop
          endif
 
@@ -394,9 +406,10 @@ program neat
         call get_Heii(Heii_lines, linelist)
         call get_cels(ILs,linelist)
 
-! set the weights to be used in the analysis.  currently hard coded in mod_weights, will be read in from file in the future
+! read in the weights to be used in the analysis.
 
-        call setweights(weights,linelist,ILs)
+        print *,gettime(),"reading in abundance analysis weights from ",trim(configfile)
+        call setweights(configfile,weights,linelist,ILs)
 
 !CELs read, can now read in atomic data
 
