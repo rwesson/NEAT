@@ -136,8 +136,8 @@ enddo
 
 do i=10,25
   if (densities(i).gt.0.d0) then
-    density=density+linelist(H_Balmer(i))%int_dered*densities(i)
-    weight=weight+linelist(H_Balmer(i))%int_dered
+    density=density+linelist(H_Balmer(i))%weight*densities(i)
+    weight=weight+linelist(H_Balmer(i))%weight
   endif
 enddo
 
@@ -245,8 +245,8 @@ enddo
 
 do i=10,25
   if (densities(i).gt.0.d0) then
-    density=density+linelist(H_Paschen(i))%int_dered*densities(i)
-    weight=weight+linelist(H_Paschen(i))%int_dered
+    density=density+linelist(H_Paschen(i))%weight*densities(i)
+    weight=weight+linelist(H_Paschen(i))%weight
   endif
 enddo
 

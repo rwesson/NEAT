@@ -3,7 +3,7 @@ use mod_abundtypes
 use mod_abundIO
 contains
 
-subroutine setweights(configfile,weights,linelist,ILs)
+subroutine setweights(configfile,weights,linelist,ILs,H_Balmer,H_Paschen)
 !will read configuration file in containing all the weights. currently just sets them.
 
         implicit none
@@ -15,7 +15,19 @@ subroutine setweights(configfile,weights,linelist,ILs)
         type(weightingarray) :: weights
         type(line),dimension(:) :: linelist
         type(cel),dimension(82) :: ILs
-        integer :: io
+        integer, dimension(3:40) :: H_Balmer
+        integer, dimension(4:39) :: H_Paschen
+        integer :: io,lineno
+
+!balmer and paschen defaults
+
+        where (H_Balmer.gt.0)
+          linelist(H_Balmer)%weight = -1
+        endwhere
+
+        where (H_Paschen.gt.0)
+          linelist(H_Paschen)%weight = -1
+        endwhere
 
 !open config file
 
@@ -29,7 +41,24 @@ subroutine setweights(configfile,weights,linelist,ILs)
 
         do while (IO .ge. 0)
           read(631,*,end=111) quantity
-          if (quantity(1:1).ne."#") then
+
+          if (quantity(1:1).eq."H") then !balmer line weight
+            backspace(631)
+            read(631,"(A16,F5.2)") quantity,weight
+            read(quantity(2:3),"(I2)") lineno
+            if (H_Balmer(lineno).gt.0) then
+              linelist(H_Balmer(lineno))%weight = weight
+            endif
+
+          elseif(quantity(1:1).eq."P") then !paschen line weight
+            backspace(631)
+            read(631,"(A16,F5.2)") quantity,weight
+            read(quantity(2:3),"(I2)") lineno
+            if (H_Paschen(lineno).gt.0) then
+              linelist(H_Paschen(lineno))%weight = weight
+            endif
+
+          elseif (quantity(1:1).ne."#") then
             backspace(631)
             read(631,"(A16,F5.2)") quantity,weight
 

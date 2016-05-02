@@ -409,7 +409,7 @@ program neat
 ! read in the weights to be used in the analysis.
 
         print *,gettime(),"reading in abundance analysis weights from ",trim(configfile)
-        call setweights(configfile,weights,linelist,ILs)
+        call setweights(configfile,weights,linelist,ILs,H_Balmer,H_Paschen)
 
 !CELs read, can now read in atomic data
 
