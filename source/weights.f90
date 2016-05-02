@@ -162,6 +162,67 @@ subroutine setweights(configfile,weights,linelist,ILs,H_Balmer,H_Paschen)
             elseif (trim(quantity).eq."he6678") then
               weights%he6678 = weight
               cycle
+!move H line weights to here for marginal efficiency gain
+!nii recombination line multiplets
+            elseif(trim(quantity).eq."niiV3") then
+              weights%niiV3 = weight
+              cycle
+            elseif(trim(quantity).eq."niiV5") then
+              weights%niiV5 = weight
+              cycle
+            elseif(trim(quantity).eq."niiV8") then
+              weights%niiV8 = weight
+              cycle
+            elseif(trim(quantity).eq."niiV12") then
+              weights%niiV12 = weight
+              cycle
+            elseif(trim(quantity).eq."niiV20") then
+              weights%niiV20 = weight
+              cycle
+            elseif(trim(quantity).eq."niiV28") then
+              weights%niiV28 = weight
+              cycle
+            elseif(trim(quantity).eq."nii3d4f") then
+              weights%nii3d4f = weight
+              cycle
+!oii recombination line multiplets
+            elseif(trim(quantity).eq."oiiV1") then
+              weights%oiiV1 = weight
+              cycle
+            elseif(trim(quantity).eq."oiiV2") then
+              weights%oiiV2 = weight
+              cycle
+            elseif(trim(quantity).eq."oiiV5") then
+              weights%oiiV5 = weight
+              cycle
+            elseif(trim(quantity).eq."oiiV10") then
+              weights%oiiV10 = weight
+              cycle
+            elseif(trim(quantity).eq."oiiV11") then
+              weights%oiiV11 = weight
+              cycle
+            elseif(trim(quantity).eq."oiiV12") then
+              weights%oiiV12 = weight
+              cycle
+            elseif(trim(quantity).eq."oiiV19") then
+              weights%oiiV19 = weight
+              cycle
+            elseif(trim(quantity).eq."oiiV20") then
+              weights%oiiV20 = weight
+              cycle
+            elseif(trim(quantity).eq."oiiV25") then
+              weights%oiiV25 = weight
+              cycle
+            elseif(trim(quantity).eq."oiiV28") then
+              weights%oiiV28 = weight
+              cycle
+            elseif(trim(quantity).eq."oiiV33") then
+              weights%oiiV33 = weight
+              cycle
+            elseif(trim(quantity).eq."oii3d4f") then
+              weights%oii3d4f = weight
+              cycle
+
             elseif (ILs(get_ion(quantity(1:11),ILs))%location .gt. 0) then !it's a CEL, get its location in the linelist array to set the weight
               linelist(ILs(get_ion(quantity(1:11),ILs))%location)%weight = weight
             endif

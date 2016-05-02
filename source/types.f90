@@ -70,6 +70,26 @@ type weightingarray
         real(kind=dp) :: he5876 = 0.d0
         real(kind=dp) :: he6678 = 0.d0
 !CEL abundance weights are not set in the weights variable but in the linelist itself
+!recombination line multiplet weights
+        real(kind=dp) :: niiV3 = 0.d0
+        real(kind=dp) :: niiV5 = 0.d0
+        real(kind=dp) :: niiV8 = 0.d0
+        real(kind=dp) :: niiV12 = 0.d0
+        real(kind=dp) :: niiV20 = 0.d0
+        real(kind=dp) :: niiV28 = 0.d0
+        real(kind=dp) :: nii3d4f = 0.d0
+        real(kind=dp) :: oiiV1 = 0.d0
+        real(kind=dp) :: oiiV2 = 0.d0
+        real(kind=dp) :: oiiV5 = 0.d0
+        real(kind=dp) :: oiiV10 = 0.d0
+        real(kind=dp) :: oiiV11 = 0.d0
+        real(kind=dp) :: oiiV12 = 0.d0
+        real(kind=dp) :: oiiV19 = 0.d0
+        real(kind=dp) :: oiiV20 = 0.d0
+        real(kind=dp) :: oiiV25 = 0.d0
+        real(kind=dp) :: oiiV28 = 0.d0
+        real(kind=dp) :: oiiV33 = 0.d0
+        real(kind=dp) :: oii3d4f = 0.d0
 
 end type weightingarray
 

@@ -63,6 +63,7 @@ use mod_hydrogen
         type RLabund
            character(len=7) :: Multiplet
            real(kind=dp) :: Abundance
+           real(kind=dp) :: weight
         end type RLabund
 
         type (RLabund), dimension(12) :: oiimultiplets
@@ -847,6 +848,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 !      print "(ES9.2)",rlabundtemp / weight
 
       niimultiplets%Multiplet = (/"V3     ","V5     ","V8     " ,"V12    ","V20    ","V28    ","3d-4f  "/)
+      niimultiplets%weight = (/ weights%niiV3,weights%niiV5,weights%niiV8,weights%niiV12,weights%niiV20,weights%niiV28,weights%nii3d4f /)
 
 ! get multiplet abundances from coadded intensity
 
@@ -887,19 +889,14 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
       niimultiplets(7)%abundance = rlabundtemp/weight
       endif
 
-!      print "(F6.3,16X,ES9.3)",rlabundtemp, rlabundtemp/weight
+! average the multiplet abundances to get the final abundance
 
-      rlabundtemp = 0.d0
-      weight = 0
-      do i = 1,7
-        rlabundtemp = rlabundtemp + niimultiplets(i)%abundance
-        if (niimultiplets(i)%abundance .ge. 1e-20) then
-          weight = weight + 1
-        endif
-      enddo
+      where (niimultiplets%abundance .eq. 0.d0)
+        niimultiplets%weight = 0
+      endwhere
 
-      if (weight .gt. 0) then
-        niiRLabund = rlabundtemp/weight
+      if (sum(niimultiplets%weight).gt.0.d0) then
+        niiRLabund = sum(niimultiplets%abundance*niimultiplets%weight)/sum(niimultiplets%weight)
       else
         niiRLabund = 0.D0
       endif
@@ -915,10 +912,11 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 !     print "(ES9.2)",rlabundtemp/weight
 
       oiimultiplets%Multiplet = (/" V1    "," V2    "," V5    " ," V10   "," V11   "," V12   "," V19   "," V20   "," V25   "," V28   "," V33   "," 3d-4f "/)
+      oiimultiplets%weight = (/ weights%oiiV1, weights%oiiV2, weights%oiiV5, weights%oiiV10, weights%oiiV11, weights%oiiV12, weights%oiiV19, weights%oiiV20, weights%oiiV25, weights%oiiV28, weights%oiiV33, weights%oii3d4f /)
 
 ! get multiplet abundances from coadded intensity
 
-      do j = 1,11 !10 XXX
+      do j = 1,11
         rlabundtemp = 0.d0
         weight = 0.d0
         do i = 1,size(oiiRLs)
@@ -952,21 +950,12 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         oiimultiplets(12)%abundance = rlabundtemp/weight
       endif
 
-!      print *,"3d-4f :"
-!      print *,"Co-added intensity   O2+/H+"
-!      print "(F6.3,16X,ES9.3)",rlabundtemp, rlabundtemp/weight
+      where (oiimultiplets%abundance .eq. 0.d0)
+        oiimultiplets%weight = 0
+      endwhere
 
-      rlabundtemp = 0.d0
-      weight = 0
-      do i = 1,12
-        rlabundtemp = rlabundtemp + oiimultiplets(i)%abundance
-        if (oiimultiplets(i)%abundance .ge. 1e-20) then
-          weight = weight + 1
-        endif
-      enddo
-
-      if (weight .gt. 0) then
-        oiiRLabund = rlabundtemp/weight
+      if (sum(oiimultiplets%weight).gt.0.d0) then
+        oiiRLabund = sum(oiimultiplets%abundance*oiimultiplets%weight)/sum(oiimultiplets%weight)
       else
         oiiRLabund = 0.D0
       endif
