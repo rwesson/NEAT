@@ -616,14 +616,14 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         Te_5876_4471=0.d0
         Te_6678_4471=0.d0
 
-        if (linelist(HeI_lines(10))%int_dered .gt. 0.d0 .and. linelist(HeI_lines(15))%int_dered .gt.0.d0) then
+        if (HeI_lines(10) .gt. 0 .and. HeI_lines(15) .gt.0) then
           ratio_5876_4471=linelist(HeI_lines(15))%int_dered/linelist(HeI_lines(10))%int_dered
           if (ratio_5876_4471.lt. 4.2 .and. ratio_5876_4471.gt. 2.84) then
             Te_5876_4471 = 6858*ratio_5876_4471**4 - 99452.0*ratio_5876_4471**3 + 541944.8*ratio_5876_4471**2 - 1317918.7*ratio_5876_4471 + 1210016.1 + 23.21/(ratio_5876_4471-2.833)
           endif
         endif
 
-        if (linelist(HeI_lines(10))%int_dered .gt. 0.d0 .and. linelist(HeI_lines(16))%int_dered .gt.0.d0) then
+        if (HeI_lines(10) .gt. 0 .and. HeI_lines(16) .gt.0) then
           ratio_6678_4471=linelist(HeI_lines(16))%int_dered/linelist(HeI_lines(10))%int_dered
           if (ratio_6678_4471 .lt. 0.775 .and. ratio_6678_4471 .gt. 0.59) then
             Te_6678_4471 = -64152.4*ratio_6678_4471**2 + 33203.3*ratio_6678_4471 + 22553.1
