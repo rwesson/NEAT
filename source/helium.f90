@@ -45,7 +45,6 @@ subroutine get_hei_porter(linelist,Te, ne, he_lines, heidata, Heiabund, weight44
 
 !      data is for the following lines, in this order: 2945.10,3188.74,3613.64,3888.65,3964.73,4026.21,4120.82,4387.93,4437.55,4471.50,4713.17,4921.93,5015.68,5047.74,5875.66,6678.16,7065.25,7281.35,9463.58,10830.25,11013.07,11969.06,12527.49,12755.69,12784.92,12790.50,12845.98,12968.43,12984.88,13411.69,15083.65,17002.40,18555.57,18685.33,18697.21,19089.36,19543.19,20424.97,20581.28,20601.76,21120.12,21132.03,21607.80,21617.01 /)
 
-
       do i = 1,44
         call get_emissivity_porter(te,ne, i, emissivities(i), heidata)
         if (He_lines(i).gt.0) then
@@ -56,18 +55,21 @@ subroutine get_hei_porter(linelist,Te, ne, he_lines, heidata, Heiabund, weight44
       if (He_lines(10).gt.0) then
         AB4471 = linelist(He_lines(10))%abundance
       else
+        AB4471 = 0.d0
         weight4471 = 0.d0
       endif
 
       if (He_lines(15).gt.0) then
         AB5876 = linelist(He_lines(15))%abundance
       else
+        AB5876 = 0.d0
         weight5876 = 0.d0
       endif
 
       if (He_lines(16).gt.0) then
         AB6678 = linelist(He_lines(16))%abundance
       else
+        AB6678 = 0.d0
         weight6678 = 0.d0
       endif
 
