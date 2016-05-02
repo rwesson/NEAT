@@ -53,19 +53,29 @@ subroutine get_hei_porter(linelist,Te, ne, he_lines, heidata, Heiabund, weight44
         endif
       enddo
 
-      AB4471 = linelist(He_lines(10))%abundance
-      AB5876 = linelist(He_lines(15))%abundance
-      AB6678 = linelist(He_lines(16))%abundance
+      if (He_lines(10).gt.0) then
+        AB4471 = linelist(He_lines(10))%abundance
+      else
+        weight4471 = 0.d0
+      endif
 
-           if (AB4471 .eq. 0) weight4471 = 0.d0
-           if (AB5876 .eq. 0) weight5876 = 0.d0
-           if (AB6678 .eq. 0) weight6678 = 0.d0
+      if (He_lines(15).gt.0) then
+        AB5876 = linelist(He_lines(15))%abundance
+      else
+        weight5876 = 0.d0
+      endif
 
-           if (weight4471+weight5876+weight6678.gt.0.0) then
-               heiabund = ((weight4471*AB4471) + (weight5876*AB5876) + (weight6678*AB6678)) / (weight4471 + weight5876 + weight6678)
-           else
-               heiabund = 0.D0
-           endif
+      if (He_lines(16).gt.0) then
+        AB6678 = linelist(He_lines(16))%abundance
+      else
+        weight6678 = 0.d0
+      endif
+
+      if (weight4471+weight5876+weight6678.gt.0.0) then
+         heiabund = ((weight4471*AB4471) + (weight5876*AB5876) + (weight6678*AB6678)) / (weight4471 + weight5876 + weight6678)
+      else
+         heiabund = 0.D0
+      endif
 
 end subroutine get_hei_porter
 
