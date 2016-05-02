@@ -676,7 +676,13 @@ end subroutine get_diagnostic
              SUMC=SUMC+FINTIJ(IC1,IC2)
             endif
           enddo
-          FRAT=SUMA/SUMB
+
+          if (sumb .gt. 0) then
+            FRAT=SUMA/SUMB
+          else
+            FRAT=0.d0
+          endif
+
           SUMC = 1./SUMC
           TDRAT(1,JJD)=DENS
           TDRAT(2,JJD)=FRAT
