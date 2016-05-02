@@ -863,7 +863,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
              weight = weight + niiRLs(i)%Int
           endif
         enddo
-      if (isnan((rlabundtemp/weight))) then
+      if (weight.eq.0.d0) then
         niimultiplets(j)%Abundance = 0.d0
       else
         niimultiplets(j)%Abundance = rlabundtemp/weight
@@ -883,7 +883,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         endif
       enddo
 
-      if (isnan((rlabundtemp/weight))) then
+      if (weight.eq.0.d0) then
       niimultiplets(7)%abundance = 0
       else
       niimultiplets(7)%abundance = rlabundtemp/weight
