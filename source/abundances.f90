@@ -944,7 +944,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         endif
       enddo
 
-      if ( isnan( (rlabundtemp/weight) ) ) then
+      if (weight.eq.0.d0) then
         oiimultiplets(12)%abundance = 0
       else
         oiimultiplets(12)%abundance = rlabundtemp/weight
@@ -967,7 +967,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
       rlabundtemp = 0.d0
       weight = 0.d0
 
-      if (sum(neiiRLs%Int) .gt. 0) then
+      if (sum(neiiRLs%Int, mask=neiiRLs%obs.gt.0.d0) .gt. 0) then
         neiiRLabund = sum(neiiRLs%obs)/sum(neiiRLs%Int, mask=neiiRLs%obs.gt.0.d0)
       else
         neiiRLabund = 0.D0
