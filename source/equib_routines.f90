@@ -94,6 +94,7 @@
       itranc=0
       valtest=0
       test=0
+      d=0 !is this necessary?
 
       read(levu,*) ((ITRANA(LL,KK),LL=1,2),KK=1,ndim2)!150)
       read(levl,*) ((ITRANB(LL,KK),LL=1,2),KK=1,ndim2)!150)
@@ -325,7 +326,12 @@
              ICPR=ICPR+1
             endif
           enddo
-          FRAT=SUMA/SUMB
+
+          if (SUMB.eq.0.d0) then
+            FRAT= 0.d0
+          else
+            FRAT=SUMA/SUMB
+          endif
 
           if (diagtype .eq. "t" .or. diagtype .eq. "T") then
             RESULTS(1, JT) = TEMP
