@@ -2,6 +2,12 @@
 #from Wesson & Liu, 2004, MNRAS, 351, 1026
 #two column files have to contain the rest wavelength and the flux
 #comment lines should start with a # and are ignored
+#UV lines from IUE
+1549.00  39.01
+1640.54  9.251
+1718.20  6.873
+1909.00  11.40
+#Optical lines from WHT
 3634.25  0.594
 3645.50  0.600
 3646.50  0.120
@@ -207,6 +213,7 @@
 7530.83  0.122
 7751.43  5.141
 7816.16  0.086
+#IR lines from ISO, wavelength in microns
 9.0      26.05
 12.8     10.79
 15.5     285

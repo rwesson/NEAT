@@ -2,10 +2,16 @@
 #from Wesson & Liu, 2004, MNRAS, 351, 1026
 #four column files should contain observed wavelength, rest wavelength, flux and uncertainty
 #observed wavelength is propagated into the latex output table
+#UV lines from IUE, uncertainty estimated at 10 per cent
+1549.93  1549.00  39.01  3.901
+1640.54  1640.42  9.251  0.925
+1718.20  1718.20  6.873  0.687
+1909.00  1908.80  11.40  1.140
+#Optical lines from WHT
 3632.36  3634.25  0.594  0.0594
 #the following two lines are the continuum fluxes either side of the Balmer jump
-3645.50  3645.50 0.600   0.01
-3646.50  3646.50 0.120   0.04
+3645.50  3645.50  0.600  0.01
+3646.50  3646.50  0.120  0.04
 3667.84  3669.47  0.052  0.0156
 3669.81  3671.48  0.141  0.0423
 3672.11  3673.74  0.440  0.088

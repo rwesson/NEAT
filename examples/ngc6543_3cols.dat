@@ -2,6 +2,12 @@
 #from Wesson & Liu, 2004, MNRAS, 351, 1026
 #three column files should contain the rest wavelength, flux, and uncertainty
 #comment lines start with a # and are ignored
+#UV lines from IUE. uncertainties estimated at 10 per cent
+1549.00  39.01  3.90
+1640.54  9.251  0.93
+1718.20  6.873  0.69
+1909.00  11.40  1.14
+#Optical lines from WHT
 3634.25  0.594  0.0594
 3645.50  0.600   0.01
 3646.50  0.120   0.04
@@ -201,12 +207,14 @@
 7236.42  0.175  0.0525
 7281.35  0.802  0.0802
 7298.04  0.062  0.0186
-7319.45  1.550  0.155
+7318.92  1.550  0.155
+7319.99  *      *
 7330.20  1.553  0.1553
 7499.84  0.054  0.0162
 7530.83  0.122  0.0366
 7751.43  5.141  0.25705
 7816.16  0.086  0.0258
+#IR lines from ISO, wavelengths in microns
 9.0      26.05  0.521
 12.8     10.79  0.2158
 15.5     285    5.7
