@@ -245,8 +245,8 @@ use mod_hydrogen
         call get_diagnostic("oii       ","1,2/                ","1,3/                ",oiiNratio,"D",lowtemp, oiiDens,maxlevs,maxtemps,atomicdata,iion)
         call get_diagnostic("sii       ","1,2/                ","1,3/                ",siiNratio,"D",lowtemp, siiDens,maxlevs,maxtemps,atomicdata,iion)
 
-        if (oiidens .eq. 0.d0) weights%oiiDens = 0.d0
-        if (siidens .eq. 0.d0) weights%siiDens = 0.d0
+        if (oiidens .le. 0.d0) weights%oiiDens = 0.d0
+        if (siidens .le. 0.d0) weights%siiDens = 0.d0
 
         if ((weights%oiiDens + weights%siiDens) .eq. 0 .and. diagnostic_array(1) .eq. 0) then
           lowdens = 1000.d0
@@ -304,16 +304,20 @@ use mod_hydrogen
         call get_diagnostic("siii      ","1,2/                ","2,3/                ",siiiIRNratio,"D",medtemp, siiiIRDens,maxlevs,maxtemps,atomicdata,iion)
         call get_diagnostic("neiii     ","1,2/                ","2,3/                ",neiiiIRNratio,"D",medtemp, neiiiIRDens,maxlevs,maxtemps,atomicdata,iion)
 
-        if (cliiiDens .eq. 0.d0) weights%cliiiDens = 0.d0
-        if (ciiiDens .eq. 0.d0) weights%ciiiDens = 0.d0
-        if (arivDens .eq. 0.d0) weights%arivDens = 0.d0
+        if (cliiiDens .le. 0.d0) weights%cliiiDens = 0.d0
+        if (ciiiDens .le. 0.d0) weights%ciiiDens = 0.d0
+        if (arivDens .le. 0.d0) weights%arivDens = 0.d0
+        if (oiiiIRDens .le. 0.d0) weights%oiiiIRDens = 0.d0
+        if (ariiiIRDens .le. 0.d0) weights%ariiiIRDens = 0.d0
+        if (siiiIRDens .le. 0.d0) weights%siiiIRDens = 0.d0
+        if (neiiiIRDens .le. 0.d0) weights%neiiiIRDens = 0.d0
 
-        if ((weights%cliiiDens + weights%ciiiDens + weights%arivDens) .eq. 0 .and. diagnostic_array(2) .eq. 0) then
+        if ((weights%cliiiDens + weights%ciiiDens + weights%arivDens) .eq. 0.d0 .and. diagnostic_array(2) .eq. 0) then
           meddens = lowdens
         elseif (diagnostic_array(2) .gt. 0.0) then
           meddens = diagnostic_array(2)
         else
-          meddens = (weights%cliiiDens*ciiiDens + weights%cliiiDens*cliiiDens + weights%arivDens*arivDens) / (weights%cliiiDens + weights%ciiiDens + weights%arivDens)
+          meddens = (weights%cliiiDens*ciiiDens + weights%cliiiDens*cliiiDens + weights%arivDens*arivDens + weights%oiiiIRDens*oiiiIRDens + weights%ariiiIRDens*ariiiIRDens + weights%siiiIRDens*siiiIRDens + weights%neiiiIRDens*neiiiIRDens) / (weights%cliiiDens + weights%ciiiDens + weights%arivDens + oiiiIRDens + weights%ariiiIRDens + weights%siiiIRDens + weights%neiiiIRDens)
         endif
 
         if (meddens .le. 1.d0) meddens = 1.d0 !todo: output warning
