@@ -234,7 +234,7 @@ program neat
                     verbosity=3
                   endif
                 endif
-                if ((trim(options(i))=="-id" .or. trim(options(i))=="--identify") .and. (filename.ne."")) then
+                if (trim(options(i))=="-id" .or. trim(options(i))=="--identify") then
                   identifylines=.true.
                 endif
                 if ((trim(options(i))=="-R") .and. (i+1) .le. Narg) then
