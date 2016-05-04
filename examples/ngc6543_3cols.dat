@@ -1,3 +1,5 @@
+#Galactic planetary nebula
+#from Wesson & Liu, 2004, MNRAS, 351, 1026
 #three column files should contain the rest wavelength, flux, and uncertainty
 #comment lines start with a # and are ignored
 3634.25  0.594  0.0594

@@ -1,3 +1,5 @@
+#Galactic planetary nebula
+#from Wesson & Liu, 2004, MNRAS, 351, 1026
 #four column files should contain observed wavelength, rest wavelength, flux and uncertainty
 #observed wavelength is propagated into the latex output table
 3632.36  3634.25  0.594  0.0594

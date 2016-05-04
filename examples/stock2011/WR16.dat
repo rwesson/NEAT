@@ -1,0 +1,13 @@
+#Galactic WR nebula
+#from Stock et al., MNRAS, 418, 2532
+#Wavelengths are only to 1 decimal place so the -id option needs to be specified for NEAT analysis
+4101.7 22.63 2.12
+4340.5 28.86 2.12
+4861.3 100.00 2.52
+4958.9 7.17 2.18
+5006.8 7.67 2.12
+6548.1 288.38 14.40
+6562.8 1711.12 16.04
+6583.5 1140.75 12.77
+6678.2 55.69 12.10
+7135.8 43.66 10.92
