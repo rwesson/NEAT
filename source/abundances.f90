@@ -317,7 +317,7 @@ use mod_hydrogen
         elseif (diagnostic_array(2) .gt. 0.0) then
           meddens = diagnostic_array(2)
         else
-          meddens = (weights%cliiiDens*ciiiDens + weights%cliiiDens*cliiiDens + weights%arivDens*arivDens + weights%oiiiIRDens*oiiiIRDens + weights%ariiiIRDens*ariiiIRDens + weights%siiiIRDens*siiiIRDens + weights%neiiiIRDens*neiiiIRDens) / (weights%cliiiDens + weights%ciiiDens + weights%arivDens + oiiiIRDens + weights%ariiiIRDens + weights%siiiIRDens + weights%neiiiIRDens)
+          meddens = (weights%ciiiDens*ciiiDens + weights%cliiiDens*cliiiDens + weights%arivDens*arivDens + weights%oiiiIRDens*oiiiIRDens + weights%ariiiIRDens*ariiiIRDens + weights%siiiIRDens*siiiIRDens + weights%neiiiIRDens*neiiiIRDens) / (weights%cliiiDens + weights%ciiiDens + weights%arivDens + weights%oiiiIRDens + weights%ariiiIRDens + weights%siiiIRDens + weights%neiiiIRDens)
         endif
 
         if (meddens .le. 1.d0) meddens = 1.d0 !todo: output warning
