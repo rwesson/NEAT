@@ -164,6 +164,19 @@ subroutine read_linelist(filename,linelist,listlength,ncols,errstat)
         102 print *
         close(100)
 
+!fix some common blends.  If first member of blend is in the list but the second is not, or if second is present but with zero flux, then presume the feature is blended.
+
+        call fix_blend(3726.03d0,3728.82d0,3727.00d0,linelist)
+        call fix_blend(7318.92d0,7319.99d0,7319.45d0,linelist)
+        call fix_blend(7329.67d0,7330.73d0,7330.20d0,linelist)
+        call fix_blend(1906.68d0,1908.73d0,1909.00d0,linelist)
+        call fix_blend(2422.36d0,2425.01d0,2424.00d0,linelist)
+        call fix_blend(4714.17d0,4715.66d0,4715.21d0,linelist)
+        call fix_blend(4724.15d0,4725.62d0,4724.89d0,linelist)
+        call fix_blend(1483.32d0,1486.50d0,1485.00d0,linelist)
+
+!todo:remove elements from the array?
+
 end subroutine read_linelist
 
 subroutine read_celdata(ILs, ionlist)
@@ -319,6 +332,51 @@ integer function get_atomicdata(ionname, atomicdatatable)
 
         get_atomicdata = 0
         print*, "My hovercraft is full of eels.  Atomic data not found. ", ionname
+
+end function
+
+subroutine fix_blend(line1, line2, blendwavelength, linelist)
+
+        implicit none
+        type(line), dimension(:) :: linelist
+        real(kind=dp) :: line1, line2, blendwavelength
+        integer :: location1, location2
+
+#ifdef CO
+        print *,"subroutine: fix_blend"
+#endif
+
+        location1 = get_line(line1,linelist)
+        location2 = get_line(line2,linelist)
+
+        if ( (location1 .gt. 0 .and. location2 .eq. 0) .or. (location1 .gt. 0 .and. location2 .gt. 0 .and. linelist(location2)%intensity .eq. 0.d0) ) then
+          linelist(location1)%wavelength = blendwavelength
+          print "(12X,A,F7.2,A,F7.2)","unresolved blend: changed wavelength ",line1," to ",blendwavelength
+        endif
+
+end subroutine
+
+!as above but to look up wavelengths in the main line list. only used immediately after line reading to fix some common blends
+
+integer function get_line(wavelength,linelist)
+        implicit none
+        real(kind=dp) :: wavelength
+        type(line), dimension(:) :: linelist
+        integer :: i
+
+!debugging
+#ifdef CO
+        print *,"subroutine: get_line. wavelength=",wavelength
+#endif
+
+        get_line = 0
+
+        do i = 1, size(linelist)
+          if(abs(linelist(i)%wavelength - wavelength) .lt. 0.005) then
+            get_line = i
+            return
+          endif
+        enddo
 
 end function
 

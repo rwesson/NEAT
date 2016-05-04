@@ -519,7 +519,7 @@ program neat
         open (650,file=trim(filename)//"_linelist", status='replace', access='sequential', action='write')
         open (651,file=trim(filename)//"_linelist.tex", status='replace', access='sequential', action='write')
 
-        write (650,*) "Lambda  Ion          F(line)             I(line)               Abundance"
+        write (650,*) "Lambda  Ion        F(line) I(line)      Abundance"
         write (651,*) "\begin{longtable}{lrlrlllllll}"
         write (651,*) "\hline"
         write (651,*) "$ \lambda $ & Ion & $F \left( \lambda \right) $ && $I \left( \lambda \right) $ & Ion & Multiplet & Lower term & Upper term & g$_1$ & g$_2$ \\"
