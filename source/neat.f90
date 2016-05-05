@@ -30,6 +30,7 @@ program neat
         use mod_recombination_lines
         use mod_linefinder
         use mod_hydrogen
+        use mod_helium
         use mod_oii_diagnostics
         use mod_weights
 
@@ -78,7 +79,7 @@ program neat
         integer, dimension(3:40) :: H_Balmer
         integer, dimension(4:39) :: H_Paschen
         integer, dimension(44) :: HeI_lines
-        integer, dimension(55) :: HeII_lines
+        integer, dimension(20,2:6) :: HeII_lines
         type(cel), dimension(82) :: ILs !todo: work out why this becomes undefined on entry if its shape is assumed
 
 !extinction
@@ -425,12 +426,12 @@ program neat
 
 !read hydrogen emissivities
 
-        print *,gettime(),"reading hydrogen emissivities"
+        print *,gettime(),"reading H emissivities"
         call read_hydrogen
 
 !read helium emissivities
 
-        print *,gettime(),"reading helium emissivities"
+        print *,gettime(),"reading He I emissivities"
         if (switch_he .eq. "P") then
           allocate(heidata(21,14,44))
           heidata = 0.D0
@@ -440,6 +441,9 @@ program neat
           heidata = 0.D0
           call read_smits(heidata)
         endif
+
+        print *,gettime(),"reading He II emissivities"
+        call read_heii
 
 !read oii data for diagnostics
 
@@ -546,8 +550,8 @@ program neat
                  write (650,"(A)", advance='no') " * "
                  write (651,"(A)", advance='no') " *     &             &"
                else
-                 write (650,"(F7.3,A,F7.2,3X)", advance='no') all_linelists(j,1)%intensity," +-",all_linelists(j,1)%int_err
-                 write (651,"(F7.3,'& $\pm$',F7.2, '&')", advance='no') all_linelists(j,1)%intensity,all_linelists(j,1)%int_err
+                 write (650,"(F8.3,A,F7.2,3X)", advance='no') all_linelists(j,1)%intensity," +-",all_linelists(j,1)%int_err
+                 write (651,"(F8.3,'& $\pm$',F7.2, '&')", advance='no') all_linelists(j,1)%intensity,all_linelists(j,1)%int_err
                endif
 
 !dereddened flux
@@ -557,11 +561,11 @@ program neat
 
                 if (all_linelists(j,1)%intensity .ne. 0.d0 .or. all_linelists(j,1)%blend_intensity .ne. 0.d0) then
                   if (uncertainty_array(1) .ne. uncertainty_array(3)) then
-                    write (650,"(F7.3,SP,F7.2,SP,F7.2)", advance='no') uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
-                    write (651,"(F7.3,'& $^{',SP,F7.2,'}_{',SP,F7.2,'}$')", advance='no') uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
+                    write (650,"(F8.3,SP,F7.2,SP,F7.2)", advance='no') uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
+                    write (651,"(F8.3,'& $^{',SP,F7.2,'}_{',SP,F7.2,'}$')", advance='no') uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
                   else
-                    write (650,"(F7.3,A,F7.2,4X)", advance='no') uncertainty_array(2)," +-",uncertainty_array(1)
-                    write (651,"(F7.3,'& $\pm$',F7.2)", advance='no') uncertainty_array(2),uncertainty_array(1)
+                    write (650,"(F8.3,A,F7.2,4X)", advance='no') uncertainty_array(2)," +-",uncertainty_array(1)
+                    write (651,"(F8.3,'& $\pm$',F7.2)", advance='no') uncertainty_array(2),uncertainty_array(1)
                   endif
                 else
                   write (650,"(A)", advance='no') " * "
@@ -602,11 +606,11 @@ program neat
                   endif
                   if (linelist(i)%intensity .ne. 0.d0) then
                     if (linelist(i)%abundance .gt. 0.0) then
-                      write (650,"(X,F7.2,X,A11,F7.3,X,F7.3,X,ES14.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance
-                      write (651,"(X,F7.2,X,'&',X,F7.3,X,'&',X,F7.3,X,A,'\\')") linelist(i)%wavelength,linelist(i)%intensity,linelist(i)%int_dered,linelist(i)%linedata
+                      write (650,"(X,F7.2,X,A11,F8.3,X,F8.3,X,ES14.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance
+                      write (651,"(X,F7.2,X,'&',X,F8.3,X,'&',X,F8.3,X,A,'\\')") linelist(i)%wavelength,linelist(i)%intensity,linelist(i)%int_dered,linelist(i)%linedata
                     else
-                      write (650,"(X,F7.2,X,A11,F7.3,X,F7.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered
-                      write (651,"(X,F7.2,X,'&',X,F7.3,X,'&',X,F7.3,X,A,'\\')") linelist(i)%wavelength,linelist(i)%intensity,linelist(i)%int_dered,linelist(i)%linedata
+                      write (650,"(X,F7.2,X,A11,F8.3,X,F8.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered
+                      write (651,"(X,F7.2,X,'&',X,F8.3,X,'&',X,F8.3,X,A,'\\')") linelist(i)%wavelength,linelist(i)%intensity,linelist(i)%int_dered,linelist(i)%linedata
                     endif
                   else
                     write (650,"(X,F7.2,X,A11,A7,X,A7)") linelist(i)%wavelength,linelist(i)%name,"*      ","*      "

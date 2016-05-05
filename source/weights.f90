@@ -147,7 +147,7 @@ subroutine setweights(configfile,weights,linelist,ILs,H_Balmer,H_Paschen)
               weights%he6678 = weight
               cycle
             elseif (trim(quantity).eq."he4686") then
-              weights%he4686 = weight
+              weights%heii(3,4) = weight
               cycle
             elseif (quantity(1:1).eq."H") then !balmer line weight
               backspace(631)

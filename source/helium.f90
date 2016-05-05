@@ -1,8 +1,12 @@
-      module mod_helium
+module mod_helium
+use mod_abundtypes
 
       implicit none
       private :: dp
       integer, parameter :: dp = kind(1.d0)
+      real(kind=dp), dimension(:,:,:,:), allocatable :: heiidata
+      real(kind=dp), dimension(:), allocatable :: temperatures
+      integer :: ntemps, ndens, nlevs
 
       contains
 
@@ -90,7 +94,7 @@ subroutine get_emissivity_porter(te, ne, line, emissivity, heidata)
         real(kind=dp) :: testart, nestart, logne, te_copied
         real(kind=dp) :: interp_factor_te, interp_factor_ne, interp_t1, interp_t2, emissivity
         real(kind=dp), dimension(21,14,44), intent(in) :: heidata
-        integer :: i,j, line
+        integer :: i,j,line
 
 !debugging
 #ifdef CO
@@ -482,5 +486,115 @@ real(kind=dp) function GAMM6683(TE,NE)
       GAMM6683=AEFF + HCLL
 
 end function gamm6683
+
+subroutine read_heii
+!get Case B emissivities from file, values are from Storey and Hummer 1995.
+implicit none
+character(len=1) :: junk
+character(len=20), dimension(8) :: invar
+integer :: i,j,k,l !counters
+
+!debugging
+#ifdef CO
+        print *,"subroutine: read_heii"
+#endif
+
+open (unit=357, file=trim(PREFIX)//"/share/neat/RHeii.dat")
+read (357,*) junk !first line is a comment
+read (357,"(I3,I3)") ntemps, ndens !second line has number of temperatures and densities
+nlevs=25 ! maximum number of levels shown in intrat data file
+
+!allocate the emissivities array, dimensions are temperature, density, level 1, level 2
+
+allocate(heiidata(ntemps, ndens, nlevs, nlevs))
+allocate(temperatures(ntemps))
+
+heiidata(:,:,:,:)=0.d0
+
+!now, loop through the temperatures and densities and read in the emissivities
+
+do i=1,ntemps
+  do j=1,ndens
+    read (357,*) invar(1:6) !line at top of each block has density, charge, temperature, case, maximum level calculated and maximum level displayed
+    if (j.eq.1) then
+      read(invar(3),"(E9.2)") temperatures(i) ! get the temperatures for later use in interpolating
+    endif
+    do k=nlevs,1,-1
+      do l=1,k-1
+        read (357,"(E10.3)", advance="no") heiidata(i,j,k,l)
+      enddo
+    enddo
+  enddo
+enddo
+close (357)
+
+end subroutine read_heii
+
+subroutine get_heii_abund_new(linelist,HeII_lines,medtemp,density)!,weights)
+!get an array of He II emissivities interpolated to the correct temperature and density
+!then use that to calculate the abundance from all the detected HeII lines
+implicit none
+
+real(kind=dp), dimension(:,:), allocatable :: emissivityarray
+real(kind=dp) :: medtemp, density
+real(kind=dp) :: x1,x2,y1,y2,y,factor
+type(line), dimension(:) :: linelist
+integer, dimension(20,2:6) :: HeII_lines
+integer :: i,j,d
+
+!debugging
+#ifdef CO
+        print *,"subroutine: get_heii_emissivities"
+#endif
+
+!allocate the search array.  emissivities array has dimensions of temperature, density, level 1, level 2
+!search array just has dimensions of level 1, level 2
+
+allocate(emissivityarray(size(heiidata,3),size(heiidata,4)))
+
+!for each transition, first interpolate in temperature then interpolate in density to get the emissivity and put it in the result array.
+!get the box it's in in te vs. ne grid:
+
+do i=1,ntemps-1
+  if (medtemp .ge. temperatures(i) .and. medtemp .le. temperatures(i+1)) then
+    exit
+  endif
+enddo
+
+d=floor(log10(density))
+
+! bilinear interpolation of the logarithm of the emissivity.
+! degrades to linear or no interpolation if the temperature and density are outside the limits of the data
+! or it will do when I set up the conditions correctly. x2 should equal x1 if outside t limits, same for y1, y2, and density limits
+
+  x1=temperatures(i)
+  x2=temperatures(i+1)
+  y1=real(d)
+  y2=real(d+1)
+  y=log10(density)
+
+  factor = 1.d0/((x2-x1)*(y2-y1))
+  emissivityarray = (((x2-medtemp)*(y2-y)) * log10(heiidata(i,d,:,:)) + &
+                   & ((medtemp-x1)*(y2-y)) * log10(heiidata(i+1,d,:,:)) + &
+                   & ((x2-medtemp)*(y-y1)) * log10(heiidata(i,d+1,:,:)) + &
+                   & ((medtemp-x1)*(y-y1)) * log10(heiidata(i+1,d+1,:,:))) * factor
+
+!now to get the abundances, go through the helium line location array and for all lines present, get their abundance.
+!then get weighted overall abundance
+
+do i=2,6
+  do j=1,20
+    if (HeII_lines(j,i).gt.0) then !the line is detected, calculate its abundance
+      linelist(HeII_lines(j,i))%abundance = linelist(HeII_lines(j,i))%int_dered/100.0 * 10.**(gamm4861(medtemp,density)-emissivityarray(j,i))
+!!print *,linelist(HeII_lines(j,i))%wavelength,linelist(HeII_lines(j,i))%abundance
+!totabund = totabund + lineabund*lineweight
+!weight = weight + lineweight
+    endif
+  enddo
+enddo
+
+!abund = totabund / weight
+
+end subroutine get_heii_abund_new
 
 end module mod_helium

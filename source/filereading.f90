@@ -339,7 +339,7 @@ subroutine fix_blend(line1, line2, blendwavelength, linelist)
 
         implicit none
         type(line), dimension(:) :: linelist
-        real(kind=dp) :: line1, line2, blendwavelength
+        real(kind=dp) :: line1, line2, blendwavelength,line2flux
         integer :: location1, location2
 
 #ifdef CO
@@ -348,8 +348,13 @@ subroutine fix_blend(line1, line2, blendwavelength, linelist)
 
         location1 = get_line(line1,linelist)
         location2 = get_line(line2,linelist)
+        if (location2 .gt. 0) then
+          line2flux = linelist(location2)%intensity
+        else
+          line2flux = 0.d0
+        endif
 
-        if ( (location1 .gt. 0 .and. location2 .eq. 0) .or. (location1 .gt. 0 .and. location2 .gt. 0 .and. linelist(location2)%intensity .eq. 0.d0) ) then
+        if ( (location1 .gt. 0 .and. location2 .eq. 0) .or. (location1 .gt. 0 .and. location2 .gt. 0 .and. line2flux .eq. 0.d0) ) then
           linelist(location1)%wavelength = blendwavelength
           print "(12X,A,F7.2,A,F7.2)","unresolved blend: changed wavelength ",line1," to ",blendwavelength
         endif
@@ -481,26 +486,83 @@ subroutine get_HeII(HeII_lines, linelist)
 !index the location of He II lines (only 4686 at the moment) in the linelist array
         implicit none
         integer, parameter :: dp = kind(1.d0)
-        integer, dimension(55), intent(out) :: HeII_lines
+        integer, dimension(20,2:6), intent(out) :: HeII_lines ! array indices represent quantum numbers
         type(line), dimension(:), intent(in) :: linelist
-        real(kind=dp), dimension(55) :: wavelengths
-        integer :: i, j
+        real(kind=dp), dimension(20,2:6) :: wavelengths
+        integer :: i, j, k
 
 !debugging
 #ifdef CO
         print *,"subroutine: get_HeII"
 #endif
 
-        wavelengths = (/ 1025.27, 1084.94, 1215.13, 1640.42, 2097.12, 2102.35, 2108.50, 2115.82, 2124.63, 2135.35, 2148.60, 2165.25, 2186.60, 2214.67, 2252.69, 2306.19, 2385.40, 2511.20, 2733.30, 3203.10, 3796.33, 3813.49, 3833.80, 3858.07, 3887.44, 3923.48, 3968.43, 4025.60, 4100.04, 4199.83, 4338.67, 4541.59, 4685.68, 4859.32, 5411.53, 6074.19, 6118.26, 6170.69, 6233.82, 6310.85, 6406.38, 6527.10, 6560.10, 6683.20, 6890.90, 7177.52, 7592.75, 8236.79, 9011.22, 9108.54, 9225.23, 9344.94, 9367.03, 9542.06, 9762.15 /)
+        wavelengths = 0.d0
+        wavelengths(3,2) = 1640.42
+        wavelengths(4,2) = 1215.13
+        wavelengths(5,2) = 1084.94
+        wavelengths(6,2) = 1025.27
+        wavelengths(10,3) = 2252.69
+        wavelengths(11,3) = 2214.67
+        wavelengths(12,3) = 2186.60
+        wavelengths(13,3) = 2165.25
+        wavelengths(14,3) = 2148.60
+        wavelengths(15,3) = 2135.35
+        wavelengths(16,3) = 2124.63
+        wavelengths(17,3) = 2115.82
+        wavelengths(18,3) = 2108.50
+        wavelengths(19,3) = 2102.35
+        wavelengths(20,3) = 2097.12
+        wavelengths(4,3) = 4685.68
+        wavelengths(5,3) = 3203.10
+        wavelengths(6,3) = 2733.30
+        wavelengths(7,3) = 2511.20
+        wavelengths(8,3) = 2385.40
+        wavelengths(9,3) = 2306.19
+        wavelengths(10,4) = 4338.67
+        wavelengths(11,4) = 4199.83
+        wavelengths(12,4) = 4100.04
+        wavelengths(13,4) = 4025.60
+        wavelengths(14,4) = 3968.43
+        wavelengths(15,4) = 3923.48
+        wavelengths(16,4) = 3887.44
+        wavelengths(17,4) = 3858.07
+        wavelengths(18,4) = 3833.80
+        wavelengths(19,4) = 3813.49
+        wavelengths(20,4) = 3796.33
+        wavelengths(6,4) = 6560.10
+        wavelengths(7,4) = 5411.52
+        wavelengths(8,4) = 4859.32
+        wavelengths(9,4) = 4541.59
+        wavelengths(10,5) = 7592.75
+        wavelengths(11,5) = 7177.52
+        wavelengths(12,5) = 6890.90
+        wavelengths(13,5) = 6683.20
+        wavelengths(14,5) = 6527.10
+        wavelengths(15,5) = 6406.38
+        wavelengths(16,5) = 6310.85
+        wavelengths(17,5) = 6233.82
+        wavelengths(18,5) = 6170.69
+        wavelengths(19,5) = 6118.26
+        wavelengths(20,5) = 6074.19
+        wavelengths(8,5) = 9344.94
+        wavelengths(9,5) = 8236.79
+        wavelengths(15,6) = 9762.15
+        wavelengths(16,6) = 9542.06
+        wavelengths(17,6) = 9367.03
+        wavelengths(18,6) = 9225.23
+        wavelengths(19,6) = 9108.54
+        wavelengths(20,6) = 9011.22
 
         heii_lines = 0
 
-        do i = 1, size(wavelengths)
-          do j = 1, size(linelist)
-            if(abs(linelist(j)%wavelength-wavelengths(i)).lt.0.005) then
-              Heii_lines(i) = j
-              cycle
-            endif
+        do i = 2,6
+          do j= 1,20
+            do k = 1, size(linelist)
+              if(abs(linelist(k)%wavelength - wavelengths(j,i)) .lt.  0.005) then
+                Heii_lines(j,i) = k
+                cycle
+              endif
+            enddo
           enddo
         enddo
 

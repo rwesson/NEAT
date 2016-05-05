@@ -48,7 +48,7 @@ use mod_hydrogen
         integer, dimension(3:40) :: H_Balmer
         integer, dimension(4:39) :: H_Paschen
         integer, dimension(44) :: HeI_lines
-        integer, dimension(55) :: HeII_lines
+        integer, dimension(20,2:6) :: HeII_lines
         type(cel), dimension(82) :: ILs !todo: work out why this becomes undefined on entry if its shape is assumed
 
 !atomic data
@@ -536,9 +536,11 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 ! Helium abundances
 ! He II
 
-        if (Heii_lines(33) .gt. 0) then
-          call get_heii_abund(medtemp,meddens,linelist(Heii_lines(33))%int_dered,heiiabund)
-          linelist(Heii_lines(33))%abundance = heiiabund
+        call get_heii_abund_new(linelist,HeII_lines,medtemp,meddens)
+
+        if (Heii_lines(3,4) .gt. 0) then
+          call get_heii_abund(medtemp,meddens,linelist(Heii_lines(3,4))%int_dered,heiiabund)
+          linelist(Heii_lines(3,4))%abundance = heiiabund
         else
           heiiabund = 0.d0
         endif
@@ -1627,30 +1629,29 @@ endwhere
 
 !write ion names to array
 
-do i=3,40
-  if (H_Balmer(i) .gt. 0) then
-    linelist(H_Balmer(i))%name = "H I"
-    linelist(H_Balmer(i))%latextext = "H~{\sc i}"
-  endif
-enddo
-do i=4,39
-  if (H_Paschen(i) .gt. 0) then
-    linelist(H_Paschen(i))%name = "H I"
-    linelist(H_Paschen(i))%latextext = "H~{\sc i}"
-  endif
-enddo
+where (H_Balmer .gt. 0)
+    linelist(H_Balmer)%name = "H I"
+    linelist(H_Balmer)%latextext = "H~{\sc i}"
+endwhere
 
-do i=1,44
-  if (HeI_lines(i) .gt. 0) then
-    linelist(HeI_lines(i))%name = "He I"
-    linelist(HeI_lines(i))%latextext = "He~{\sc i}"
-  endif
-enddo
+where (H_Paschen .gt. 0)
+  linelist(H_Paschen)%name = "H I"
+  linelist(H_Paschen)%latextext = "H~{\sc i}"
+endwhere
 
-if (HeII_lines(1) .gt. 0) then
-    linelist(HeII_lines(1))%name = "He II"
-    linelist(HeII_lines(1))%latextext = "He~{\sc ii}"
-endif
+where (HeI_lines .gt. 0)
+  linelist(HeI_lines)%name = "He I"
+  linelist(HeI_lines)%latextext = "He~{\sc i}"
+endwhere
+
+do i=2,6
+  do j=3,20
+    if (HeII_lines(j,i) .gt. 0) then
+      linelist(HeII_lines(j,i))%name = "He II"
+      linelist(HeII_lines(j,i))%latextext = "He~{\sc ii}"
+    endif
+  enddo
+enddo
 
 contains
 
