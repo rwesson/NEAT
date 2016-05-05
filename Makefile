@@ -93,7 +93,7 @@ install:
 	gzip -f ${MANDIR}/neat.1
 
 uninstall:
-	rm -rf ${DESTDIR}${PREFIX}/share/neat
+	rm -rf ${DESTDIR}${PREFIX}/share/neat ${DESTDIR}${PREFIX}/share/doc/neat
 	rm -f ${DESTDIR}${PREFIX}/bin/neat
 	rm -f ${DESTDIR}${PREFIX}/share/bash-completion/completions/neat
 	rm -f ${MANDIR}/neat.1.gz
