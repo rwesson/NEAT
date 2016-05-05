@@ -536,14 +536,13 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 ! Helium abundances
 ! He II
 
-        call get_heii_abund_new(linelist,HeII_lines,medtemp,meddens)
-
-        if (Heii_lines(3,4) .gt. 0) then
-          call get_heii_abund(medtemp,meddens,linelist(Heii_lines(3,4))%int_dered,heiiabund)
-          linelist(Heii_lines(3,4))%abundance = heiiabund
-        else
-          heiiabund = 0.d0
-        endif
+        call get_heii_abund_new(linelist,HeII_lines,medtemp,meddens,heiiabund)
+!        if (Heii_lines(4,3) .gt. 0) then
+!          call get_heii_abund(medtemp,meddens,linelist(Heii_lines(4,3))%int_dered,heiiabund)
+!          linelist(Heii_lines(4,3))%abundance = heiiabund
+!        else
+!          heiiabund = 0.d0
+!        endif
 
 ! He I
 

@@ -530,14 +530,16 @@ close (357)
 
 end subroutine read_heii
 
-subroutine get_heii_abund_new(linelist,HeII_lines,medtemp,density)!,weights)
+subroutine get_heii_abund_new(linelist,HeII_lines,medtemp,density,heiiabund)!,weights)
 !get an array of He II emissivities interpolated to the correct temperature and density
 !then use that to calculate the abundance from all the detected HeII lines
+!then get the final abundance from a weighted average of individual line abundances (default is 4686 has weight of 1, all others are zero)
 implicit none
 
 real(kind=dp), dimension(:,:), allocatable :: emissivityarray
 real(kind=dp) :: medtemp, density
 real(kind=dp) :: x1,x2,y1,y2,y,factor
+real(kind=dp) :: abundsum, weightsum, heiiabund
 type(line), dimension(:) :: linelist
 integer, dimension(20,2:6) :: HeII_lines
 integer :: i,j,d
@@ -581,19 +583,25 @@ d=floor(log10(density))
 
 !now to get the abundances, go through the helium line location array and for all lines present, get their abundance.
 !then get weighted overall abundance
+abundsum = 0.d0
+weightsum = 0.d0
 
 do i=2,6
   do j=1,20
-    if (HeII_lines(j,i).gt.0) then !the line is detected, calculate its abundance
-      linelist(HeII_lines(j,i))%abundance = linelist(HeII_lines(j,i))%int_dered/100.0 * 10.**(gamm4861(medtemp,density)-emissivityarray(j,i))
+    if (HeII_lines(j,i).gt.0) then !the line is detected
+      if (linelist(HeII_lines(j,i))%int_dered .gt. 0.d0) then !and has non zero flux so calculate abundance
+        linelist(HeII_lines(j,i))%abundance = linelist(HeII_lines(j,i))%int_dered/100.0 * 10.**(gamm4861(medtemp,density)-emissivityarray(j,i))
+        abundsum = abundsum + linelist(HeII_lines(j,i))%weight*linelist(HeII_lines(j,i))%abundance
+        weightsum = weightsum + linelist(HeII_lines(j,i))%weight
 !!print *,linelist(HeII_lines(j,i))%wavelength,linelist(HeII_lines(j,i))%abundance
-!totabund = totabund + lineabund*lineweight
-!weight = weight + lineweight
+      endif
     endif
   enddo
 enddo
 
-!abund = totabund / weight
+if (weightsum .gt. 0.d0) then
+  heiiabund = abundsum / weightsum
+endif
 
 end subroutine get_heii_abund_new
 

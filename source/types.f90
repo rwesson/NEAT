@@ -70,7 +70,7 @@ type weightingarray
         real(kind=dp) :: he5876 = 0.d0
         real(kind=dp) :: he6678 = 0.d0
 !he ii abundance weights
-        real(kind=dp), dimension(6,20) :: heii = 0.d0
+        real(kind=dp), dimension(20,2:6) :: heii = 0.d0
 !CEL abundance weights are not set in the weights variable but in the linelist itself
 !recombination line multiplet weights
         real(kind=dp) :: niiV3 = 0.d0

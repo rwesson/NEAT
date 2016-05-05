@@ -3,7 +3,7 @@ use mod_abundtypes
 use mod_abundIO
 contains
 
-subroutine setweights(configfile,weights,linelist,ILs,H_Balmer,H_Paschen)
+subroutine setweights(configfile,weights,linelist,ILs,H_Balmer,H_Paschen,HeII_lines)
 !will read configuration file in containing all the weights. currently just sets them.
 
         implicit none
@@ -17,7 +17,8 @@ subroutine setweights(configfile,weights,linelist,ILs,H_Balmer,H_Paschen)
         type(cel),dimension(82) :: ILs
         integer, dimension(3:40) :: H_Balmer
         integer, dimension(4:39) :: H_Paschen
-        integer :: io,lineno
+        integer, dimension(20,2:6) :: HeII_lines
+        integer :: io, lineno, upper, lower
 
 !balmer and paschen defaults
 
@@ -146,8 +147,14 @@ subroutine setweights(configfile,weights,linelist,ILs,H_Balmer,H_Paschen)
             elseif (trim(quantity).eq."he6678") then
               weights%he6678 = weight
               cycle
-            elseif (trim(quantity).eq."he4686") then
-              weights%heii(3,4) = weight
+            elseif (quantity(1:2).eq."he") then
+              read(quantity(3:4),"(I2)") upper
+              read(quantity(5:6),"(I2)") lower
+              weights%heii(upper,lower) = weight
+              if (HeII_lines(upper,lower) .gt. 0 .and. weight .lt. 0) then
+                weight = linelist(HeII_lines(upper,lower))%intensity
+              endif
+              weights%heii(upper,lower) = weight
               cycle
             elseif (quantity(1:1).eq."H") then !balmer line weight
               backspace(631)
