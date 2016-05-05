@@ -48,7 +48,7 @@ use mod_hydrogen
         integer, dimension(3:40) :: H_Balmer
         integer, dimension(4:39) :: H_Paschen
         integer, dimension(44) :: HeI_lines
-        integer, dimension(1) :: HeII_lines
+        integer, dimension(55) :: HeII_lines
         type(cel), dimension(82) :: ILs !todo: work out why this becomes undefined on entry if its shape is assumed
 
 !atomic data
@@ -536,9 +536,9 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 ! Helium abundances
 ! He II
 
-        if (Heii_lines(1) .gt. 0) then
-          call get_heii_abund(medtemp,meddens,linelist(Heii_lines(1))%int_dered,heiiabund)
-          linelist(Heii_lines(1))%abundance = heiiabund
+        if (Heii_lines(33) .gt. 0) then
+          call get_heii_abund(medtemp,meddens,linelist(Heii_lines(33))%int_dered,heiiabund)
+          linelist(Heii_lines(33))%abundance = heiiabund
         else
           heiiabund = 0.d0
         endif

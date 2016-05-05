@@ -78,7 +78,7 @@ program neat
         integer, dimension(3:40) :: H_Balmer
         integer, dimension(4:39) :: H_Paschen
         integer, dimension(44) :: HeI_lines
-        integer, dimension(1) :: HeII_lines
+        integer, dimension(55) :: HeII_lines
         type(cel), dimension(82) :: ILs !todo: work out why this becomes undefined on entry if its shape is assumed
 
 !extinction

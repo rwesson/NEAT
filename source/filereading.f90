@@ -481,9 +481,9 @@ subroutine get_HeII(HeII_lines, linelist)
 !index the location of He II lines (only 4686 at the moment) in the linelist array
         implicit none
         integer, parameter :: dp = kind(1.d0)
-        integer, dimension(1), intent(out) :: HeII_lines
+        integer, dimension(55), intent(out) :: HeII_lines
         type(line), dimension(:), intent(in) :: linelist
-        real(kind=dp), dimension(1) :: wavelengths
+        real(kind=dp), dimension(55) :: wavelengths
         integer :: i, j
 
 !debugging
@@ -491,11 +491,11 @@ subroutine get_HeII(HeII_lines, linelist)
         print *,"subroutine: get_HeII"
 #endif
 
-        wavelengths = (/ 4685.68D0 /)
+        wavelengths = (/ 1025.27, 1084.94, 1215.13, 1640.42, 2097.12, 2102.35, 2108.50, 2115.82, 2124.63, 2135.35, 2148.60, 2165.25, 2186.60, 2214.67, 2252.69, 2306.19, 2385.40, 2511.20, 2733.30, 3203.10, 3796.33, 3813.49, 3833.80, 3858.07, 3887.44, 3923.48, 3968.43, 4025.60, 4100.04, 4199.83, 4338.67, 4541.59, 4685.68, 4859.32, 5411.53, 6074.19, 6118.26, 6170.69, 6233.82, 6310.85, 6406.38, 6527.10, 6560.10, 6683.20, 6890.90, 7177.52, 7592.75, 8236.79, 9011.22, 9108.54, 9225.23, 9344.94, 9367.03, 9542.06, 9762.15 /)
 
         heii_lines = 0
 
-        do i = 1, 1
+        do i = 1, size(wavelengths)
           do j = 1, size(linelist)
             if(abs(linelist(j)%wavelength-wavelengths(i)).lt.0.005) then
               Heii_lines(i) = j

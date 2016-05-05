@@ -42,23 +42,7 @@ subroutine setweights(configfile,weights,linelist,ILs,H_Balmer,H_Paschen)
         do while (IO .ge. 0)
           read(631,*,end=111) quantity
 
-          if (quantity(1:1).eq."H") then !balmer line weight
-            backspace(631)
-            read(631,"(A16,F5.2)") quantity,weight
-            read(quantity(2:3),"(I2)") lineno
-            if (H_Balmer(lineno).gt.0) then
-              linelist(H_Balmer(lineno))%weight = weight
-            endif
-
-          elseif(quantity(1:1).eq."P") then !paschen line weight
-            backspace(631)
-            read(631,"(A16,F5.2)") quantity,weight
-            read(quantity(2:3),"(I2)") lineno
-            if (H_Paschen(lineno).gt.0) then
-              linelist(H_Paschen(lineno))%weight = weight
-            endif
-
-          elseif (quantity(1:1).ne."#") then
+          if (quantity(1:1).ne."#") then
             backspace(631)
             read(631,"(A16,F5.2)") quantity,weight
 
@@ -162,7 +146,25 @@ subroutine setweights(configfile,weights,linelist,ILs,H_Balmer,H_Paschen)
             elseif (trim(quantity).eq."he6678") then
               weights%he6678 = weight
               cycle
-!move H line weights to here for marginal efficiency gain
+            elseif (trim(quantity).eq."he4686") then
+              weights%he4686 = weight
+              cycle
+            elseif (quantity(1:1).eq."H") then !balmer line weight
+              backspace(631)
+              read(631,"(A16,F5.2)") quantity,weight
+              read(quantity(2:3),"(I2)") lineno
+              if (H_Balmer(lineno).gt.0) then
+                linelist(H_Balmer(lineno))%weight = weight
+              endif
+
+            elseif(quantity(1:1).eq."P") then !paschen line weight
+              backspace(631)
+              read(631,"(A16,F5.2)") quantity,weight
+              read(quantity(2:3),"(I2)") lineno
+              if (H_Paschen(lineno).gt.0) then
+                linelist(H_Paschen(lineno))%weight = weight
+              endif
+
 !nii recombination line multiplets
             elseif(trim(quantity).eq."niiV3") then
               weights%niiV3 = weight
