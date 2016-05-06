@@ -528,6 +528,11 @@ do i=1,ntemps
 enddo
 close (357)
 
+!convert to logarithms, makes it easier for the abundance calculation
+where (heiidata .ne. 0.d0)
+  heiidata=log10(heiidata)
+endwhere
+
 end subroutine read_heii
 
 subroutine get_heii_abund_new(linelist,HeII_lines,medtemp,density,heiiabund)!,weights)
@@ -548,6 +553,10 @@ integer :: i,j,d
 #ifdef CO
         print *,"subroutine: get_heii_emissivities"
 #endif
+
+!initialise
+
+heiiabund = 0.d0
 
 !allocate the search array.  emissivities array has dimensions of temperature, density, level 1, level 2
 !search array just has dimensions of level 1, level 2
@@ -576,10 +585,11 @@ d=floor(log10(density))
   y=log10(density)
 
   factor = 1.d0/((x2-x1)*(y2-y1))
-  emissivityarray = (((x2-medtemp)*(y2-y)) * log10(heiidata(i,d,:,:)) + &
-                   & ((medtemp-x1)*(y2-y)) * log10(heiidata(i+1,d,:,:)) + &
-                   & ((x2-medtemp)*(y-y1)) * log10(heiidata(i,d+1,:,:)) + &
-                   & ((medtemp-x1)*(y-y1)) * log10(heiidata(i+1,d+1,:,:))) * factor
+
+  emissivityarray = (((x2-medtemp)*(y2-y)) * heiidata(i,d,:,:) + &
+                   & ((medtemp-x1)*(y2-y)) * heiidata(i+1,d,:,:) + &
+                   & ((x2-medtemp)*(y-y1)) * heiidata(i,d+1,:,:) + &
+                   & ((medtemp-x1)*(y-y1)) * heiidata(i+1,d+1,:,:)) * factor
 
 !now to get the abundances, go through the helium line location array and for all lines present, get their abundance.
 !then get weighted overall abundance
