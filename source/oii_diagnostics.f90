@@ -59,6 +59,8 @@ integer :: i,j
 
 oii_te=0.d0
 oii_ne=0.d0
+x0=0.d0
+y0=0.d0
 
 !find where our value is by first finding which box it's in
 !get equation for line joining points on each side of the box
@@ -77,10 +79,10 @@ do i=1,8
     !equation of left hand side, ax+by+c=0, a, b and c are
     !a=(i,j+1,4)-(i,j,4)/(i,j+1,3)-(i,j,3), b=-1, c=-a*(i,j,3)-b*(i,j,4)
 
-    a(1)=(oiidiagnostics(i,j+1,4)-oiidiagnostics(i,j,4))/(oiidiagnostics(i,j+1,3)-oiidiagnostics(i,j,3))
-    a(2)=(oiidiagnostics(i+1,j+1,4)-oiidiagnostics(i+1,j,4))/(oiidiagnostics(i+1,j+1,3)-oiidiagnostics(i+1,j,3))
-    a(3)=(oiidiagnostics(i+1,j,4)-oiidiagnostics(i,j,4))/(oiidiagnostics(i+1,j+1,3)-oiidiagnostics(i,j,3))
-    a(4)=(oiidiagnostics(i+1,j+1,4)-oiidiagnostics(i,j+1,4))/(oiidiagnostics(i+1,j+1,3)-oiidiagnostics(i,j+1,3))
+    if ((oiidiagnostics(i,j+1,3)-oiidiagnostics(i,j,3)).gt.0) a(1)=(oiidiagnostics(i,j+1,4)-oiidiagnostics(i,j,4))/(oiidiagnostics(i,j+1,3)-oiidiagnostics(i,j,3))
+    if ((oiidiagnostics(i+1,j+1,3)-oiidiagnostics(i+1,j,3)).gt.0) a(2)=(oiidiagnostics(i+1,j+1,4)-oiidiagnostics(i+1,j,4))/(oiidiagnostics(i+1,j+1,3)-oiidiagnostics(i+1,j,3))
+    if ((oiidiagnostics(i+1,j+1,3)-oiidiagnostics(i,j,3)).gt.0) a(3)=(oiidiagnostics(i+1,j,4)-oiidiagnostics(i,j,4))/(oiidiagnostics(i+1,j+1,3)-oiidiagnostics(i,j,3))
+    if ((oiidiagnostics(i+1,j+1,3)-oiidiagnostics(i,j+1,3)).gt.0) a(4)=(oiidiagnostics(i+1,j+1,4)-oiidiagnostics(i,j+1,4))/(oiidiagnostics(i+1,j+1,3)-oiidiagnostics(i,j+1,3))
 
     b=-1
 
@@ -89,14 +91,16 @@ do i=1,8
     c(3)=-a(3)*oiidiagnostics(i,j,3)-b(3)*oiidiagnostics(i,j,4)
     c(4)=-a(4)*oiidiagnostics(i,j+1,3)-b(4)*oiidiagnostics(i,j+1,4)
 
-    x0=(b*(b*obs4649_4089-a*obs4649_4662)-(a*c))/(a**2+b**2)
-    y0=(a*(-b*obs4649_4089+a*obs4649_4662)-(b*c))/(a**2+b**2)
+    where(a**2+b**2.gt.0)
+      x0=(b*(b*obs4649_4089-a*obs4649_4662)-(a*c))/(a**2+b**2)
+      y0=(a*(-b*obs4649_4089+a*obs4649_4662)-(b*c))/(a**2+b**2)
+    endwhere
 
-    if (isnan(x0(1))) then !horrible hacky condition to check for vertical
+    if (x0(1).eq.0.d0) then !condition to check for vertical
       x0(1)=oiidiagnostics(i,j,3)
       y0(1)=1.
     endif
-    if (isnan(x0(2))) then
+    if (x0(2).eq.0.d0) then
       x0(2)=oiidiagnostics(i+1,j,3)
       y0(2)=1.
     endif
