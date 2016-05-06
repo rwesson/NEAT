@@ -1285,6 +1285,7 @@ subroutine get_uncertainties(input_array, binned_quantity_result, uncertainty_ar
 
 implicit none
 real(kind=dp) :: input_array(:)
+real(kind=dp),dimension(:),allocatable :: logarray,exparray
 real(kind=dp), intent(out) :: uncertainty_array(3)
 real(kind=dp), dimension(:), allocatable :: bintemp
 real(kind=dp) :: binsize=0d0
@@ -1302,7 +1303,7 @@ logical :: unusual !if not true, then the distribution is normal, log normal or 
 
 !debugging
 #ifdef CO
-        print *,"subroutine: write_uncertainties"
+        print *,"subroutine: get_uncertainties. "
 #endif
 
 unusual = .false.
@@ -1364,37 +1365,45 @@ if (binsize .gt. 0d0) then
 
 !simple test for normality - calculate the mean and standard deviation of the array, determine the number of values within 1, 2 and 3 sigma of the mean.
 !if the fractions are close to 68.27, 95.45 and 99.73 then it's normal
-!also calculate for log and exp
+!also calculate for log and exp. Temperatures often have an exp-normal distribution but 10**(a typical temperature) exceeds HUGE(0.d0).  Scale to avoid this.
+
+  allocate(logarray(size(input_array)))
+  allocate(exparray(size(input_array)))
+
+  where (input_array.gt.0)
+    logarray=log10(input_array)
+  elsewhere
+    logarray=0.d0
+  endwhere
+
+  exparray=input_array/maxval(input_array)
 
   mean=sum(input_array)/arraysize
-  mean_log=sum(log(input_array))/arraysize
-  mean_exp=sum(exp(input_array))/arraysize
+  mean_log=sum(logarray)/arraysize
+  mean_exp=sum(exparray)/arraysize
 
-  do i=1,arraysize
-    sd=sd+(input_array(i)-mean)**2
-    sd_log=sd_log+(log(input_array(i))-mean_log)**2
-    sd_exp=sd_exp+(exp(input_array(i))-mean_exp)**2
-  enddo
+  sd=(sum((input_array-mean)**2)/arraysize)**0.5
+  sd_log=(sum((logarray-mean_log)**2,input_array.gt.0.d0)/arraysize)**0.5
+  sd_exp=(sum((exparray-mean_exp)**2)/arraysize)**0.5
 
-  sd=(sd/arraysize)**0.5
-  sd_log=(sd_log/arraysize)**0.5
-  sd_exp=(sd_exp/arraysize)**0.5
+  sds(1,1)=count(abs(input_array-mean).lt.sd)
+  sds(1,2)=count(abs(input_array-mean).lt.2*sd)
+  sds(1,3)=count(abs(input_array-mean).lt.3*sd)
 
-  do i=1,arraysize
-    if (abs(input_array(i)-mean) .lt. sd) sds(1,1)=sds(1,1)+1
-    if (abs(input_array(i)-mean) .lt. (2*sd)) sds(1,2)=sds(1,2)+1
-    if (abs(input_array(i)-mean) .lt. (3*sd)) sds(1,3)=sds(1,3)+1
+  sds(2,1)=count(abs(logarray-mean_log).lt.sd_log)
+  sds(2,2)=count(abs(logarray-mean_log).lt.2*sd_log)
+  sds(2,3)=count(abs(logarray-mean_log).lt.3*sd_log)
 
-    if (abs(log(input_array(i))-mean_log) .lt. sd_log) sds(2,1)=sds(2,1)+1
-    if (abs(log(input_array(i))-mean_log) .lt. (2*sd_log)) sds(2,2)=sds(2,2)+1
-    if (abs(log(input_array(i))-mean_log) .lt. (3*sd_log)) sds(2,3)=sds(2,3)+1
-
-    if (abs(exp(input_array(i))-mean_exp) .lt. sd_exp) sds(3,1)=sds(3,1)+1
-    if (abs(exp(input_array(i))-mean_exp) .lt. (2*sd_exp)) sds(3,2)=sds(3,2)+1
-    if (abs(exp(input_array(i))-mean_exp) .lt. (3*sd_exp)) sds(3,3)=sds(3,3)+1
-  enddo
+  sds(1,1)=count(abs(exparray-mean_exp).lt.sd_exp)
+  sds(1,2)=count(abs(exparray-mean_exp).lt.2*sd_exp)
+  sds(1,3)=count(abs(exparray-mean_exp).lt.3*sd_exp)
 
   sds=sds/arraysize
+
+!scale exp values back up
+
+  mean_exp=mean_exp*maxval(input_array)
+  sd_exp=sd_exp*maxval(input_array)
 
   if (abs(sds(1,1)-0.6827).lt.tolerance .and. abs(sds(1,2)-0.9545).lt.(tolerance*0.5) .and. abs(sds(1,3)-0.9973).lt. (tolerance*0.1)) then
     uncertainty_array(:)=(/sd,mean,sd/)
