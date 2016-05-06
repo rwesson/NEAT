@@ -686,7 +686,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         call get_average_abundance("nii5754    ","nii6584    ", niiCELabund)
         niiiIRCELabund = get_cel_abundance("niii57um   ",linelist,ILs)
         niiiUVCELabund = get_cel_abundance("niii1751   ",linelist,ILs)
-        call get_average_abundance("niii57um   ","niii1751   ",niiiCELabund)
+        call get_average_abundance("niii1751   ","niii57um   ",niiiCELabund)
         call get_average_abundance("niv1483    ","niv1485b   ",nivCELabund) !would screw up if blend and non blends were both in linelist
         nvCELabund = get_cel_abundance("nv1240     ",linelist,ILs)
 
