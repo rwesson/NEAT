@@ -33,16 +33,20 @@ FFLAGS+=-cpp -DPREFIX=\"${PREFIX}\"
 LDFLAGS+=
 MANDIR=${DESTDIR}${PREFIX}/share/man/man1
 
+ifeq ($(MESSAGES),yes)
+    FFLAGS += -DCO=\"${CO}\"
+endif
+
 ifeq ($(FC),gfortran)
     FFLAGS += -ffree-line-length-0 -Jsource/ -fopenmp
   ifeq ($(CO),debug)
-    FFLAGS += -fbounds-check -Wall -Wuninitialized -DCO=\"${CO}\" #-ffpe-trap=zero,overflow,invalid,underflow,denormal
+    FFLAGS += -fbounds-check -Wall -Wuninitialized
   else ifeq ($(CO),debug2)
-    FFLAGS += -g -pg -fbounds-check -Wall -Wuninitialized -DCO=\"${CO}\" #-ffpe-trap=zero,overflow,invalid,underflow,denormal
+    FFLAGS += -g -pg -fbounds-check -Wall -Wuninitialized
   else ifeq ($(CO),debug3)
-    FFLAGS += -g -pg -fbounds-check -Wall -Wuninitialized -ffpe-trap=zero,overflow,invalid,underflow,denormal -fbacktrace -fcheck=all -DCO=\"${CO}\" -DDEBUG=\"DEBUG\"
+    FFLAGS += -g -pg -fbounds-check -Wall -Wuninitialized -ffpe-trap=zero,overflow,invalid,underflow,denormal -fbacktrace -fcheck=all
   else ifeq ($(CO),pedantic)
-    FFLAGS += -g -pg -fbounds-check -Wall -Wuninitialized -Werror -pedantic -ffpe-trap=zero,overflow,invalid,underflow,denormal -DCO=\"${CO}\" -DDEBUG=\"DEBUG\"
+    FFLAGS += -g -pg -fbounds-check -Wall -Wuninitialized -Werror -pedantic -ffpe-trap=zero,overflow,invalid,underflow,denormal
   else
     FFLAGS += -O3 -fno-backtrace
   endif
@@ -52,9 +56,9 @@ ifeq ($(FC),ifort)
   FFLAGS += -module source/ -openmp
   LD=ifort
   ifeq ($(CO),debug)
-    FFLAGS += -pg -g -check bounds -check uninit -warn all -warn nodeclarations -WB -zero -traceback -DCO=\"${CO}\" # -std
+    FFLAGS += -pg -g -check bounds -check uninit -warn all -warn nodeclarations -WB -zero -traceback
   else ifeq ($(CO),pedantic)
-    FFLAGS += -pg -g -check bounds -check uninit -warn all -warn nodeclarations -WB -zero -traceback -std -DCO=\"${CO}\"
+    FFLAGS += -pg -g -check bounds -check uninit -warn all -warn nodeclarations -WB -zero -traceback -std
   else
     FFLAGS += -axavx -msse3 -O3 -ip -ipo # for today's CPUs
 #    FFLAGS += -fast -tune pn4 # for older pentium 4
