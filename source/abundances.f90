@@ -29,7 +29,7 @@ use mod_hydrogen
         real(kind=dp) :: CELicfO, CELicfC, CELicfN, CELicfNe, CELicfAr, CELicfS, CELicfCl
         real(kind=dp) :: RLicfO, RLicfC, RLicfN, RLicfNe, RLicfHe
         real(kind=dp) :: CabundRL, CabundCEL, NabundRL, NabundCEL, OabundRL, OabundCEL, NeabundRL, NeabundCEL, SabundCEL, ArabundCEL, NOabundCEL, NCabundCEL, ClabundCEL
-        real(kind=dp) :: adfC, adfN, adfO, adfNe, w1, w2
+        real(kind=dp) :: adfC, adfN, adfO, adfNe
         real(kind=dp) :: adfC2plus, adfN2plus, adfO2plus, adfNe2plus
         real(kind=dp) :: c1, c2, c3, meanextinction
         real(kind=dp) :: heiabund,heiiabund,Hetotabund, heICFfactor, OICFfactor, upsilon, upsilonprime
@@ -707,31 +707,10 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
         call get_average_abundance("sii4068    ","sii6731    ",siiCELabund)
 
-        ! SIII 9069 and 9531 doublet special due to absorption lines. See Liu, Barlow etc 1995 (Far Red IR Lines in a PN), one of 9069/9531 is ALWAYS absorbed but the other is then always fine.  We can tell which is is by looking at the ratio 9069/9531.
-        if (get_cel_abundance("siii9069   ",linelist,ILs) .eq. 0 .and. get_cel_abundance("siii9531   ",linelist,ILs) .eq. 0) then
-                siiiCELabund = get_cel_abundance("siii6312   ",linelist,ILs)
-        else !only calculate all the IR SIII telluric absorption if the lines are present.
-                siiiCELabund = get_cel_flux("siii9069   ",linelist,ILs) / get_cel_flux("siii9531   ",linelist,ILs)
-        !I am using siiiCELabund as a switch for the following if statement, replace this with another variable if you like but I don't think it matters.. (DJS)
+!SIII is a special case due to telluric absorption of one or the other of 9069/9531.  Which one is affected is deduced by the fix_siii subroutine, which sets the weight of the affected line to zero.
 
-                if(siiiCELabund .lt. (1.05 * 0.403) .and. siiiCELabund .gt. (0.90 * 0.403))then !this case should never occur
-
-                        if(linelist(get_ion("siii9069   ", ILs))%intensity .gt. 0) w1 = linelist(get_ion("siii9069   ", ILs))%intensity
-                        if(linelist(get_ion("siii9531   ", ILs))%intensity .gt. 0) w2 = linelist(get_ion("siii9531   ", ILs))%intensity
-
-                        siiiCELabund= ( w1*get_cel_abundance("siii9069   ",linelist,ILs) + w2*get_cel_abundance("siii9531   ",linelist,ILs) )/(w1+w2)
-
-                elseif(siiiCELabund .gt. (1.1 * 0.403) )then
-                        !9531 absorbed
-                        siiiCELabund = get_cel_abundance("siii9069   ",linelist,ILs)
-
-                elseif(siiiCELabund .lt. (0.9 * 0.403) )then
-                        !9069 absorbed
-                        siiiCELabund = get_cel_abundance("siii9531   ",linelist,ILs)
-                else
-                        siiiCELabund=0.d0
-                endif
-        endif
+        call fix_siii
+        call get_average_abundance("siii18p7um ","siii9531   ",siiiCELabund)
 
         siiiIRCELabund = get_cel_abundance("siii18p7um ",linelist,ILs)
         sivIRCELabund = get_cel_abundance("siv10p5um  ",linelist,ILs)
@@ -1786,5 +1765,29 @@ subroutine get_average_abundance(startion,endion,abundance)
         endif
 
 end subroutine get_average_abundance
+
+subroutine fix_siii
+!SIII 9069 and 9531 doublet is a special case due to absorption lines. See Liu, Barlow etc 1995 (Far Red IR Lines in a PN), one of 9069/9531 is ALWAYS absorbed but the other is then always fine.  We can tell which is is by looking at the ratio 9069/9531.
+
+        implicit none
+        real(kind=dp) :: ratio!,factor
+
+!debugging
+#ifdef CO
+        print *,"subroutine: fix_siii."
+#endif
+
+        if (get_cel_abundance("siii9069   ",linelist,ILs) .ne. 0 .and. get_cel_abundance("siii9531   ",linelist,ILs) .ne. 0) then
+!observed ratio
+          ratio = get_cel_flux("siii9069   ",linelist,ILs) / get_cel_flux("siii9531   ",linelist,ILs)
+!theoretical ratio is 0.403 using the default atomic data.  todo: calculate it as is done in the get_Tdiag routine
+          if (ratio .gt. (1.1 * 0.403)) then ! 9531 is affected, use 9069 only
+            linelist(ILs(get_ion("siii9531   ",ILs))%location)%weight = 0.d0
+          elseif(ratio .lt. (0.9 * 0.403)) then ! 9069 is affected, use 9531 only
+            linelist(ILs(get_ion("siii9069   ",ILs))%location)%weight = 0.d0
+          endif
+        endif
+
+end subroutine fix_siii
 
 end subroutine abundances
