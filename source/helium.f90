@@ -548,6 +548,7 @@ real(kind=dp) :: abundsum, weightsum, heiiabund
 type(line), dimension(:) :: linelist
 integer, dimension(20,2:6) :: HeII_lines
 integer :: i,j,d
+integer :: t1, t2, d1, d2 !locations on temperature and density axes of heiidata between which interpolation will take place
 
 !debugging
 #ifdef CO
@@ -576,20 +577,45 @@ d=floor(log10(density))
 
 ! bilinear interpolation of the logarithm of the emissivity.
 ! degrades to linear or no interpolation if the temperature and density are outside the limits of the data
-! or it will do when I set up the conditions correctly. x2 should equal x1 if outside t limits, same for y1, y2, and density limits
 
-  x1=temperatures(i)
-  x2=temperatures(i+1)
-  y1=real(d)
-  y2=real(d+1)
+  if (i .lt. 1) then
+    t1=1
+    t2=1
+  elseif (i .eq. size(temperatures)) then
+    t1=size(temperatures)
+    t2=size(temperatures)
+  else
+    t1=i
+    t2=i+1
+  endif
+! for density, array index is from 1 to 7, containing densities from 10**2 to 10**8. todo: change the array indexing to 2:8
+  if (d .lt. 2) then
+    d1=1
+    d2=1
+  elseif (d .ge. 8) then
+    d1=7
+    d2=7
+  else
+    d1=d-1
+    d2=d
+  endif
+
+  x1=temperatures(t1)
+  x2=temperatures(t2)
+  y1=real(d1+1)
+  y2=real(d2+1)
   y=log10(density)
 
-  factor = 1.d0/((x2-x1)*(y2-y1))
+  if (t1.ne.t2 .and. d1.ne.d2) then
+    factor = 1.d0/((x2-x1)*(y2-y1))
+  else
+    factor = 1.d0
+  endif
 
-  emissivityarray = (((x2-medtemp)*(y2-y)) * heiidata(i,d,:,:) + &
-                   & ((medtemp-x1)*(y2-y)) * heiidata(i+1,d,:,:) + &
-                   & ((x2-medtemp)*(y-y1)) * heiidata(i,d+1,:,:) + &
-                   & ((medtemp-x1)*(y-y1)) * heiidata(i+1,d+1,:,:)) * factor
+  emissivityarray = (((x2-medtemp)*(y2-y)) * heiidata(t1,d1,:,:) + &
+                   & ((medtemp-x1)*(y2-y)) * heiidata(t2,d1,:,:) + &
+                   & ((x2-medtemp)*(y-y1)) * heiidata(t1,d2,:,:) + &
+                   & ((medtemp-x1)*(y-y1)) * heiidata(t2,d2,:,:)) * factor
 
 !now to get the abundances, go through the helium line location array and for all lines present, get their abundance.
 !then get weighted overall abundance
