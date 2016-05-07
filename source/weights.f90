@@ -156,6 +156,7 @@ subroutine setweights(configfile,weights,linelist,ILs,H_Balmer,H_Paschen,HeII_li
                 else
                   weights%heii(upper,lower) = linelist(HeII_lines(upper,lower))%intensity
                 endif
+                linelist(HeII_lines(upper,lower))%weight = weights%heii(upper,lower)
               endif
               cycle
             elseif (quantity(1:1).eq."H") then !balmer line weight
