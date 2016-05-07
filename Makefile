@@ -90,7 +90,7 @@ install:
 	install -m 644 utilities/complete_line_list ${DESTDIR}${PREFIX}/share/neat
 	install -m 644 utilities/plot.sh ${DESTDIR}${PREFIX}/share/neat
 	install -m 644 config/default.cfg ${DESTDIR}${PREFIX}/share/neat
-	install -m 644 examples/* ${DESTDIR}${PREFIX}/share/doc/neat/examples
+	install -m 644 examples/*.dat ${DESTDIR}${PREFIX}/share/doc/neat/examples
 	install neat ${DESTDIR}${PREFIX}/bin
 	install -m 644 man/neat.1 ${MANDIR}
 	-test -e ${DESTDIR}${PREFIX}/share/bash-completion/completions && install -m 644 source/bashcompletion ${DESTDIR}${PREFIX}/share/bash-completion/completions/neat
