@@ -88,6 +88,11 @@ use mod_hydrogen
 
         oiiRLabund = 0.d0
         niiRLabund = 0.d0
+        ciiRLabund = 0.d0
+        cii4267rlabund = 0.d0
+        neiiRLabund = 0.d0
+        ciiiRLabund = 0.d0
+        niiiRLabund = 0.d0
         CELicfCl = 0.d0
         CELicfS = 0.d0
         CELicfAr = 0.d0
@@ -843,7 +848,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         endif
       enddo
 
-      ciirlabund = sum(ciiRLs%obs)/sum(ciiRLs%int, mask=ciiRLs%obs.gt.0.d0)
+      if (sum(ciiRLs%obs) .gt. 0.d0) ciirlabund = sum(ciiRLs%obs)/sum(ciiRLs%int)
 
 !nii recombination lines
 
@@ -1361,7 +1366,7 @@ endif
 
      if (switch_icf .eq. "D") then !equation 39
        RLicfC = 0.05 + 2.21*OICFfactor - 2.77*OICFfactor**2 + 1.74*OICFfactor**3
-       CabundRL = RLicfC * ciiRLabund / oiiRLabund
+       if (oiiRLabund .gt. 0.d0) CabundRL = RLicfC * ciiRLabund / oiiRLabund
      else
        RLicfC = 1.0
        CabundRL = ciiRLabund + ciiiRLabund
