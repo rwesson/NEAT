@@ -1267,12 +1267,14 @@ elseif (switch_icf .eq. "D") then
 
 !sulphur
 
-  if (siiiCELabund .eq. 0.D0 .and. siiCELabund .gt. 0.D0) then !equation 23:
-    CELicfS = 10.**(0.31-0.51*upsilon)
-    SabundCEL = CELicfS * OabundCEL * (siiCELabund/oiiCELabund)
-  elseif (siiiCELabund .gt. 0.D0 .and. siiCELabund .gt. 0.D0) then !equation 26:
-    CELicfS = 10.**((-0.02 - 0.03*OICFfactor - 2.31*OICFfactor**2 + 2.19*OICFfactor**3) / (90.69 + 2.09*OICFfactor - 2.69*OICFfactor**2))
-    SabundCEL = CELicfS * OabundCEL * (siiCELabund+siiiCELabund)/oiiCELabund
+  if (oiiCELabund .gt. 0.d0) then
+    if (siiiCELabund .eq. 0.D0 .and. siiCELabund .gt. 0.D0) then !equation 23:
+      CELicfS = 10.**(0.31-0.51*upsilon)
+      SabundCEL = CELicfS * OabundCEL * (siiCELabund/oiiCELabund)
+    elseif (siiiCELabund .gt. 0.D0 .and. siiCELabund .gt. 0.D0) then !equation 26:
+      CELicfS = 10.**((-0.02 - 0.03*OICFfactor - 2.31*OICFfactor**2 + 2.19*OICFfactor**3) / (90.69 + 2.09*OICFfactor - 2.69*OICFfactor**2))
+      SabundCEL = CELicfS * OabundCEL * (siiCELabund+siiiCELabund)/oiiCELabund
+    endif
   else
     CELicfS = 1.0
     SabundCEL = 0.D0
