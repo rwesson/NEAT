@@ -92,9 +92,9 @@
       itrana=0
       itranb=0
       itranc=0
-      valtest=0
+      valtest=0.d0
       test=0
-      d=0 !is this necessary?
+      d=0.d0
 
       read(levu,*) ((ITRANA(LL,KK),LL=1,2),KK=1,ndim2)!150)
       read(levl,*) ((ITRANB(LL,KK),LL=1,2),KK=1,ndim2)!150)
@@ -485,6 +485,7 @@ end subroutine get_diagnostic
       itrana=0
       itranb=0
       itranc=0
+      d=0.d0
 
       read(levels,*) ((ITRANC(LL,KK),LL=1,2),KK=1,ndim2)!150)
 
@@ -683,7 +684,7 @@ end subroutine get_diagnostic
             FRAT=0.d0
           endif
 
-          SUMC = 1./SUMC
+          if (SUMC.ne.0.d0) SUMC = 1./SUMC
           TDRAT(1,JJD)=DENS
           TDRAT(2,JJD)=FRAT
           abund = sumc*iobs/100
