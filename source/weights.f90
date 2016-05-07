@@ -150,11 +150,13 @@ subroutine setweights(configfile,weights,linelist,ILs,H_Balmer,H_Paschen,HeII_li
             elseif (quantity(1:2).eq."he") then
               read(quantity(3:4),"(I2)") upper
               read(quantity(5:6),"(I2)") lower
-              weights%heii(upper,lower) = weight
-              if (HeII_lines(upper,lower) .gt. 0 .and. weight .lt. 0) then
-                weight = linelist(HeII_lines(upper,lower))%intensity
+              if (HeII_lines(upper,lower) .gt. 0) then
+                if (weight .ge. 0.d0) then
+                  weights%heii(upper,lower) = weight
+                else
+                  weights%heii(upper,lower) = linelist(HeII_lines(upper,lower))%intensity
+                endif
               endif
-              weights%heii(upper,lower) = weight
               cycle
             elseif (quantity(1:1).eq."H") then !balmer line weight
               backspace(631)
