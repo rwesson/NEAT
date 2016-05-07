@@ -306,7 +306,7 @@ integer function get_ion(ionname, ILs)
 
         get_ion = 0
         print *,"           Nudge Nudge, wink, wink error. Ion not found, say no more. ", ionname
-        stop
+        call exit(1)
 
 end function
 

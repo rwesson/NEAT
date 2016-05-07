@@ -261,21 +261,21 @@ program neat
 
          if (filename=="") then
                 print *,gettime(),"error: No input file specified"
-                stop
+                call exit(1)
          endif
 
          inquire(file=filename, exist=file_exists) ! see if the input file is present
 
          if (.not. file_exists) then
                 print *,gettime(),"error: input file ",trim(filename)," does not exist"
-                stop
+                call exit(1)
          endif
 
          inquire(file=configfile, exist=file_exists) ! see if the configuration file is present
 
          if (.not. file_exists) then
                 print *,gettime(),"error: input file ",trim(configfile)," does not exist"
-                stop
+                call exit(1)
          endif
 
 !check number of runs
@@ -286,7 +286,7 @@ program neat
            print*,gettime(),': error: number of iterations does not divide exactly by number of bins'
            print*,'            Please set number of iterations to an exact multiple of ',nbins
            print*,'            or modify the number of bins using -nbins'
-           stop
+           call exit(1)
         endif
 
         deallocate(options)
@@ -301,10 +301,10 @@ program neat
         if (btest(errstat,0)) then
                 print *,gettime(),"error: line list reading failed"
                 print *,"            This can happen if it doesn't have three columns"
-                stop
+                call exit(1)
         elseif (btest(errstat,1)) then
                 print*, gettime(),"cheese shop error - no inputs"
-                stop
+                call exit(1)
         elseif (btest(errstat,2) .and. runs .gt. 1) then !only relevant if uncertainties were requested
                 print*, gettime(),"warning: no uncertainties given, arbitrarily assuming 10 per cent for everything"
         else
@@ -328,7 +328,7 @@ program neat
                 read (5,*) blank
                 if (blank .eq. "n" .or. blank .eq. "N") then
                   print *,gettime()," : analysis cancelled."
-                  stop
+                  call exit(1)
                 endif
         endif
 
@@ -337,9 +337,8 @@ program neat
         if (minval(abs(linelist(:)%wavelength - 4861.33)) .lt. 0.001) then
           normalise = 100.d0/linelist(minloc(abs(linelist(:)%wavelength - 4861.33),1))%intensity
         else
-          print *,gettime(),"error: no H beta detected"
-          print *,"            no further analysis possible"
-          stop
+          print *,gettime(),"error: no H beta detected. No further analysis possible"
+          call exit(1)
         endif
 
         linelist%intensity = linelist%intensity * normalise
@@ -509,7 +508,7 @@ program neat
 !$OMP END PARALLEL
         else
                 print*, gettime(),"error: I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."
-                stop
+                call exit(1)
         endif
 
 !now write all the lines to line list files, plain text and latex

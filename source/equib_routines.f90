@@ -176,7 +176,7 @@
           if (TEMP.LE.0.D0.OR.DENS.LE.0.D0) then
             write (6,6100)
                 print *,"Temp = ", TEMP, ", Dens = ", DENS, ", Ion = ",ion,diagtype
-            stop
+            call exit(1)
           endif
           DLOGD = log10(DENS)
           TLOGT = log10(TEMP)
@@ -399,7 +399,7 @@
                 !print*,"Valtest failed"
                 !print*,ion,levu,levl,loop,inratio,diagtype
                 !print*,results
-                !stop
+                !call exit(1)
             endif
         elseif(test .eq. 0 .and. loop .eq. 9) then !test fails if no change of sign
                              !this kicks in then, and checks if it should be upper or lower limit
@@ -414,7 +414,7 @@
                 !print*,"Valtest failed"
                 !print*,ion,levu,levl,loop,inratio,diagtype
                 !print*,results
-                !stop
+                !call exit(1)
             endif
         endif
 
@@ -527,7 +527,7 @@ end subroutine get_diagnostic
           if (TEMP.LE.0.D0.OR.DENS.LE.0.D0) then
             write (6,6100)
             print *,"Temp = ", TEMP, ", Dens = ", DENS, ", Ion = ",ion
-            stop
+            call exit(1)
           endif
           DLOGD = log10(DENS)
           TLOGT = log10(TEMP)
