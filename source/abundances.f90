@@ -113,8 +113,6 @@ use mod_hydrogen
         oiimultiplets(:)%abundance = 0.d0
         niimultiplets(:)%abundance = 0.d0
 
-        linelist%name="           "
-
         linelist_orig = linelist
 
         !store fluxes of blends for later retrieval
