@@ -93,6 +93,15 @@ use mod_hydrogen
         neiiRLabund = 0.d0
         ciiiRLabund = 0.d0
         niiiRLabund = 0.d0
+
+        CabundCEL = 0.d0
+        NabundCEL = 0.d0
+        OabundCEL = 0.d0
+        NeabundCEL = 0.d0
+        SabundCEL = 0.d0
+        ClabundCEL = 0.d0
+        ArabundCEL = 0.d0
+
         CELicfCl = 0.d0
         CELicfS = 0.d0
         CELicfAr = 0.d0
@@ -685,6 +694,10 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 !print *,ILs(i)%location,get_cel_flux(ILs(i)%name,linelist,ILs),linelist(ILs(i)%location)%wavelength,linelist(ILs(i)%location)%abundance
           endif
         enddo
+
+!we currently don't calculate clii or cliv so they are set to zero
+cliiCELabund = 0.d0
+clivCELabund = 0.d0
 
 ! calculate averages
 
@@ -1281,9 +1294,6 @@ elseif (switch_icf .eq. "D") then
   endif
 
 !chlorine
-!we currently don't calculate clii or cliv so they are set to zero
-cliiCELabund = 0.d0
-clivCELabund = 0.d0
 
   if (cliiCELabund .gt. 0.D0 .and. cliiiCELabund .gt. 0.D0 .and. clivCELabund .gt. 0.D0) then !equation 32:
     CELicfCl = 0.98+(0.56-0.57*upsilon)**7.64
@@ -1372,8 +1382,6 @@ if (neiiiCELabund + neivCELabund + nevCELabund .gt. 0.d0) CELicfNe = NeabundCEL/
 if (siiCELabund + siiiCELabund + siiiIRCELabund + sivIRCELabund .gt. 0.d0) CELicfS = SabundCEL/(siiCELabund + siiiCELabund + siiiIRCELabund + sivIRCELabund)
 if (cliiCELabund + cliiiCELabund + clivCELabund .gt. 0.d0) CELicfCl = ClabundCEL/(cliiCELabund + cliiiCELabund + clivCELabund)
 if (ariiiCELabund + arivCELabund + arvCELabund .gt. 0.d0) CELicfAr = ArabundCEL/(ariiiCELabund + arivCELabund + arvCELabund)
-
-!Printout edited to include weighted averages of Ionic species as these are neccessary for paper tables. DJS
 
 !carbon
 
