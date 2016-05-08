@@ -129,8 +129,15 @@ program neat
         abundances_format = "(X,A,ES14.3,SP,ES14.3,ES14.3,S)"
         adf_format = "(X,A,F8.2,SP,F8.2,F8.2,S)"
 
-        print *,"NEAT, the Nebular Empirical Analysis Tool: v1.9"
-        print *,"-----------------------------------------------"
+        print *,"NEAT, the Nebular Empirical Analysis Tool"
+#ifdef VERSION
+        print *,"version ",VERSION
+#else
+        print *,"version 1.9"
+#endif
+#ifdef BUILDDATE
+        print *,"compiled on ",BUILDDATE
+#endif
         print *
 
         Narg = IARGC() !count input arguments
