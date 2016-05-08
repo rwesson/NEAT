@@ -158,6 +158,7 @@ subroutine read_linelist(filename,linelist,listlength,ncols,errstat)
           do j=1,listlength
             if (abs(linelist(j)%wavelength - neatlines(i)%wavelength) .lt. 0.011) then
               linelist(j)%linedata = neatlines(i)%linedata
+              linelist(j)%name = latextoplain(linelist(j)%linedata(3:19))
             endif
           enddo
         enddo
@@ -575,6 +576,39 @@ subroutine get_HeII(HeII_lines, linelist)
         enddo
 
 end subroutine get_HeII
+
+character(len=11) function latextoplain(text)
+!converts latex-formatted ion name from linelist%linedata to plain text
+!eg [O~{\sc iii}] -> [O II]
+
+implicit none
+character(len=17) :: text,part1,part2
+integer :: i
+
+if (index(text,"~{\sc") .gt. 0) then
+
+  !123456789012
+  ![O~\sc iii}]
+
+  part1="                 "
+  part2="                 "
+
+  part1=text(1:index(text,"~{\sc")-1)
+  part2=text(index(text,"~{\sc")+5:index(text,"}")-1)
+
+  do i=1,len(part2)
+    if (iachar(part2(i:i)).ge.iachar("a") .and. iachar(part2(i:i)).le.iachar("z")) then !convert to lower case
+      part2(i:i) = achar(iachar(part2(i:i))-32)
+    endif
+  enddo
+
+  latextoplain=trim(part1)//trim(part2)
+
+else
+  latextoplain=text(1:11)
+endif
+
+end function
 
 end module 
 
