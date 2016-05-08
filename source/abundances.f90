@@ -704,10 +704,10 @@ clivCELabund = 0.d0
         call get_average_abundance("niv1483    ","niv1485b   ",nivCELabund) !would screw up if blend and non blends were both in linelist
         nvCELabund = get_cel_abundance("nv1240     ",linelist,ILs)
 
-        call get_average_abundance("oii3726    ","oii7330b   ",oiiCELabund) 
+        call get_average_abundance("oii3726    ","oii7330b   ",oiiCELabund)
         call get_average_abundance("oiii4363   ","oiii5007   ",oiiiCELabund)
-        call get_average_abundance("oiii52um   ","oiii88um   ",oiiiIRCELabund) 
-        oivCELabund = get_cel_abundance("oiv25p9um  ",linelist,ILs) 
+        call get_average_abundance("oiii52um   ","oiii88um   ",oiiiIRCELabund)
+        oivCELabund = get_cel_abundance("oiv25p9um  ",linelist,ILs)
 
         neiiIRCELabund = get_cel_abundance("neii12p8um ",linelist,ILs)
         neiiiIRCELabund = get_cel_abundance("neiii15p5um ",linelist,ILs)

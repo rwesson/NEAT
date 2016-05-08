@@ -610,7 +610,7 @@ endif
 
 end function
 
-end module 
+end module
 
 module mod_atomic_read
 use mod_atomicdata

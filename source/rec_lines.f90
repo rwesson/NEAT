@@ -406,7 +406,7 @@ subroutine oii_rec_lines(te,ne,abund,oiiRLs)
         oii_coefficients(:,8)= oii_coefficients(:,4)
       endif
 
-! calculate the aeffs.  coefficients 
+! calculate the aeffs.  coefficients
 
       tered=te/10000.
       oii_coefficients(1:24,9)=1.e-14 * (oii_coefficients(1:24,8) * tered**oii_coefficients(1:24,5) * (1. + oii_coefficients(1:24,6) * (1. - tered) + oii_coefficients(1:24,7) * (1. - tered) ** 2))
