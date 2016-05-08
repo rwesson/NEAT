@@ -72,6 +72,10 @@ When calculating Monte Carlo uncertainties, \fBneat\fR's default behaviour is to
 
 Until version 1.8, the default behaviour was the opposite; log normal probability distributions were assumed unless \fB-norp\fR was specified.  This was changed after our discovery that the effect described by Rola and Pelat only occurred under extremely specific conditions: see Wesson et al. 2016 for details.
 
+.TP
+.B \-cf, \-\-configuration-file [FILE]
+Since version 2.0, NEAT's analysis scheme is specified in a configuration file which is read in at run time, rather than being hard coded.  If this option is omitted the default configuration file is used, which is intended to be suitable for any line list and should only really need changing if particular lines need to be excluded from the analysis.  The configuration file contains a series of weights to be applied when calculating diagnostics and abundances, and the format of the default file should be clear enough that editing it is straightforward.  A negative value for a weight means that the line will be weighted by its observed intensity; a positive value means that the line will be weighted by the given value.
+
 .SH USING NEAT
 .SS Input file format
 
@@ -134,7 +138,7 @@ This iterative procedure is carried out successively for low-, medium- and high-
 
  1. The Balmer jump temperature is calculated using equation 3 of Liu et al. (2001)
  2. The Paschen jump temperature is calculated using equation 7 of Fang et al. (2011)
- 3. A density is derived from the Balmer and Paschen decrements if any lines from H10-H25 or P10-P25 are observed. Their ratios relative to Hβ are compared to theoretical ratios from Storey & Hummer (1995), and a density for each line calculated by linear interpolation. The final density is calculated as the flux-weighted average of all the densities.
+ 3. A density is derived from the Balmer and Paschen decrements if any lines from H10-H25 or P10-P25 are observed. Their ratios relative to Hβ are compared to theoretical ratios from Storey & Hummer (1995), and a density for each line calculated by linear interpolation. The final density is calculated as the weighted average of all the densities.
  4. Temperatures are estimated from helium line ratios, using equations derived from fits to tabulated values of 5876/4471 and 6678/4471. The tables are calculated at ne=5000cm-3 only. We plan to improve this calculation in future releases.
  5. OII recombination line ratios are used to derive a temperature and density, using the diagnostic diagram in Figure 1. of McNabb et al. (2013). Values are found by linearly interpolating the logarithmic values.
  6. Recomination line contributions to CELs of N+, O+ and O2+ are estimated using equations 1-3 of Liu et al. (2000).
@@ -143,7 +147,7 @@ These recombination line diagnostics are not used in abundance calculations. Nor
 
 .SS Ionic abundances
 
-Ionic abundances are calculated from collisionally excited lines (CELs) using the temperature and density appropriate to their ionization potential. Where several lines from a given ion are present, the ionic abundance adopted is found by averaging the abundances from each ion, weighting according to the observed intensity of the line.
+Ionic abundances are calculated from collisionally excited lines (CELs) using the temperature and density appropriate to their ionization potential. Where several lines from a given ion are present, the ionic abundance adopted is a weighted average of the abundances from each ion.
 
 Recombination lines (RLs) are also used to derive ionic abundances for helium and heavier elements. The method by which the helium abundance is determined depends on the atomic data set being used; \fBneat\fR includes atomic data from Smits (1996) and from Porter et al. (2012, 2013). The Smits data is given for seven temperatures between 312.5K and 20000K, and for densities of 1e2, 1e4 and 1e6 cm-3; we fitted fourth order polynomials to the coefficient for each line at each density. \fBneat\fR then calculates the emissivities for each density using these equations, and interpolates logarithmically to the correct density.
 
