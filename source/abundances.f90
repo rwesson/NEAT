@@ -1122,29 +1122,35 @@ if (switch_icf .eq. "K") then
      endif
 
 ! Argon - complete
-     ArabundCEL = 0.d0
+
      if (ariiiCELabund .ge. 1e-20 .and. arivCELabund .lt. 1e-20 .and. arvCELabund .lt. 1e-20) then !only Ar2+ seen
        CELicfAr = 1.87 !KB94 A32
        ArabundCEL = CELicfAr * ariiiCELabund !KB94 A33
-     elseif (ariiiCELabund .lt. 1e-20 .and. arivCELabund .ge. 1e-20 .and. arvCELabund .lt. 1e-20) then !Only Ar3+ seen
+     elseif (ariiiCELabund .lt. 1e-20 .and. arivCELabund .ge. 1e-20 .and. arvCELabund .lt. 1e-20 .and. neiiiCELabund.gt.0.d0) then !Only Ar3+ seen
        CELicfAr = NeabundCEL / neiiiCELabund !KB94 A34
        ArabundCEL = CELicfAr * arivCELabund !KB94 A35
-     elseif (ariiiCELabund .ge. 1e-20 .and. arivCELabund .ge. 1e-20) then !Ar 2+ and 3+ seen
+     elseif (ariiiCELabund .ge. 1e-20 .and. arivCELabund .ge. 1e-20 .and. NabundCEL.gt.0.d0) then !Ar 2+ and 3+ seen
        CELicfAr = 1./(1.-(niiCELabund/NabundCEL))
        ArabundCEL = ariiiCELabund + arivCELabund + arvCELabund !KB94 A31
+     else
+       CELicfAR = 1.0
+       ArabundCEL = 0.d0
      endif
 
 ! Sulphur
-     SabundCEL = 0.d0
+
      if (siiCELabund .ge. 1e-20 .and. siiiCELabund .ge. 1e-20 .and. sivIRCELabund .lt. 1e-20) then !both S+ and S2+
        CELicfS = (1 - (  (1-(oiiCELabund/OabundCEL))**3.0  ) )**(-1.0/3.0) !KB94 A36
        SabundCEL = CELicfS * (siiCELabund + siiiCELabund) !KB94 A37
      elseif (siiCELabund .ge. 1e-20 .and. siiiCELabund .ge. 1e-20 .and. sivIRCELabund .ge. 1e-20) then !all states observed
        CELicfS = 1.
        SabundCEL = siiCELabund + siiiCELabund + sivIRCELabund
-     elseif (siiCELabund .ge. 1e-20 .and. siiiCELabund .lt. 1e-20 .and. sivIRCELabund .lt. 1e-20) then !Only S+ observed
+     elseif (siiCELabund .ge. 1e-20 .and. siiiCELabund .lt. 1e-20 .and. sivIRCELabund .lt. 1e-20 .and. OabundCEL .gt. 0.d0) then !Only S+ observed
        CELicfS = (((oiiiCELabund/oiiCELabund)**0.433) * 4.677) * (1-(1-((oiiCELabund/OabundCEL)**3)))**(-1./3.) ! KB94 A37 with S2+/S+ from A38
        SabundCEL = CELicfS * siiCELabund
+     else
+       SabundCEL = 0.d0
+       CELicfS=1.d0
      endif
 
 !very high excitation cases, all He is doubly ionised
