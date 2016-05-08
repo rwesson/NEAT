@@ -195,7 +195,7 @@ subroutine read_celdata(ILs, ionlist)
 
         Iint = 1
 
-        301 format(A11, 1X, A6, 1X, F7.2, 1X, A20,1X,A4,1X,A15)
+        301 format(A11, 1X, A8, 1X, F7.2, 1X, A20,1X,A4,1X,A15)
         open(201, file=trim(PREFIX)//"/share/neat/Ilines_levs", status='old')
                 read (201,*) numberoflines !number of lines to read in is given at the top of the file
 !                allocate (ILs(numberoflines)) todo: restore
@@ -605,7 +605,24 @@ use mod_atomicdata
     ionname = ion%ion
 !    print*,'Reading atomic data ion',ionname
     ionl = index(ionname,' ') - 1
-    filename = trim(PREFIX)//'/share/neat/'//ionname(1:IONL)//'.dat'
+!get file name by removing [, " " and ] and converting to lower case
+
+    filename=""
+    i=1
+    j=1
+
+    do while (i .le. len(ionname))
+      if (iachar(ionname(i:i)).ge.iachar("A") .and. iachar(ionname(i:i)).le.iachar("Z")) then !convert to lower case
+        filename(j:j) = achar(iachar(ionname(i:i))+32)
+        j=j+1
+      elseif (ionname(i:i).ne."[".and.ionname(i:i).ne." ".and.ionname(i:i).ne."]") then !remove
+        filename(j:j)=ionname(i:i)
+        j=j+1
+      endif
+        i=i+1
+    enddo
+
+    filename = trim(PREFIX)//'/share/neat/'//trim(filename)//'.dat'
     open(unit=1, status = 'old', file=filename,action='read')
 
 !read # of comment lines and skip them

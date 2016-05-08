@@ -178,18 +178,18 @@ use mod_hydrogen
         !subroutine will properly calculate the ratio if one of the two lines is
         !missing, from the theoretical expected line strengths.
 
-        call get_Tdiag("nii6548    ","nii6584    ","nii5754    ", "nii                 ", niiTratio)        ! N II
-        call get_Tdiag("oiii5007   ","oiii4959   ","oiii4363   ", "oiii                ", oiiiTratio)        ! O III
-        call get_Tdiag("neiii3868  ","neiii3967  ","neiii3342  ", "neiii               ", neiiiTratio)        ! Ne III
-        call get_Tdiag("neiii3868  ","neiii3967  ","neiii15p5um", "neiii               ", neiiiIRTratio)! Ne III ir
-        call get_Tdiag("nev3426    ","nev3345    ","nev2975    ", "nev                 ", nevTratio)        !!ne v
-        call get_Tdiag("siii9069   ","siii9531   ","siii6312   ", "siii                ", siiiTratio)        !s iii
-        call get_Tdiag("ariii7135  ","ariii7751  ","ariii5192  ", "ariii               ", ariiiTratio)        !ar iii
-        call get_Tdiag("arv6435    ","arv7005    ","arv4625    ", "arv                 ", arvTratio)        !ar v
-        call get_Tdiag("ci9850     ","ci9824     ","ci8727     ", "ci                  ", ciTratio)      !C I
-        call get_Tdiag("oi6364     ","oi6300     ","oi5577     ", "oi                  ", oiTratio)      !O I
-        call get_Tdiag("oiii5007   ","oiii4959   ","oiii52um   ", "oiii                ", oiiiIRTratio) ! OIII ir
-        call get_Tdiag("oiii5007   ","oiii4959   ","oiii1666   ", "oiii                ", oiiiUVTratio) ! OIII UV
+        call get_Tdiag("nii6548    ","nii6584    ","nii5754    ", "[N II]              ", niiTratio)        ! N II
+        call get_Tdiag("oiii5007   ","oiii4959   ","oiii4363   ", "[O III]             ", oiiiTratio)        ! O III
+        call get_Tdiag("neiii3868  ","neiii3967  ","neiii3342  ", "[Ne III]            ", neiiiTratio)        ! Ne III
+        call get_Tdiag("neiii3868  ","neiii3967  ","neiii15p5um", "[Ne III]            ", neiiiIRTratio)! Ne III ir
+        call get_Tdiag("nev3426    ","nev3345    ","nev2975    ", "[Ne V]              ", nevTratio)        !!ne v
+        call get_Tdiag("siii9069   ","siii9531   ","siii6312   ", "[S III]             ", siiiTratio)        !s iii
+        call get_Tdiag("ariii7135  ","ariii7751  ","ariii5192  ", "[Ar III]            ", ariiiTratio)        !ar iii
+        call get_Tdiag("arv6435    ","arv7005    ","arv4625    ", "[Ar V]              ", arvTratio)        !ar v
+        call get_Tdiag("ci9850     ","ci9824     ","ci8727     ", "[C I]               ", ciTratio)      !C I
+        call get_Tdiag("oi6364     ","oi6300     ","oi5577     ", "[O I]               ", oiTratio)      !O I
+        call get_Tdiag("oiii5007   ","oiii4959   ","oiii52um   ", "[O III]             ", oiiiIRTratio) ! OIII ir
+        call get_Tdiag("oiii5007   ","oiii4959   ","oiii1666   ", "[O III]             ", oiiiUVTratio) ! OIII UV
 
         !Fixed, DJS
 
@@ -256,8 +256,8 @@ use mod_hydrogen
         oiiDens=0.d0
         siiDens=0.d0
 
-        call get_diagnostic("oii       ","1,2/                ","1,3/                ",oiiNratio,"D",lowtemp, oiiDens,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("sii       ","1,2/                ","1,3/                ",siiNratio,"D",lowtemp, siiDens,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[O II]    ","1,2/                ","1,3/                ",oiiNratio,"D",lowtemp, oiiDens,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[S II]    ","1,2/                ","1,3/                ",siiNratio,"D",lowtemp, siiDens,maxlevs,maxtemps,atomicdata,iion)
 
         if (oiidens .le. 0.d0) weights%oiiDens = 0.d0
         if (siidens .le. 0.d0) weights%siiDens = 0.d0
@@ -272,11 +272,11 @@ use mod_hydrogen
 
         counter=0
 
-        call get_diagnostic("oii       ","2,4,2,5,3,4,3,5/    ","1,2,1,3/            ",oiiTratio,"T",lowdens,oiiTemp,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("sii       ","1,2,1,3/            ","1,4,1,5/            ",siiTratio,"T",lowdens,siiTemp,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("nii       ","2,4,3,4/            ","4,5/                ",niiTratio,"T",lowdens,niitemp,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("ci        ","2,4,3,4/            ","4,5/                ",ciTratio,"T",lowdens,citemp,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("oi        ","1,4,2,4/            ","4,5/                ",oiTratio,"T",lowdens,oitemp,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[O II]    ","2,4,2,5,3,4,3,5/    ","1,2,1,3/            ",oiiTratio,"T",lowdens,oiiTemp,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[S II]    ","1,2,1,3/            ","1,4,1,5/            ",siiTratio,"T",lowdens,siiTemp,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[N II]    ","2,4,3,4/            ","4,5/                ",niiTratio,"T",lowdens,niitemp,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[C I]     ","2,4,3,4/            ","4,5/                ",ciTratio,"T",lowdens,citemp,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[O I]     ","1,4,2,4/            ","4,5/                ",oiTratio,"T",lowdens,oitemp,maxlevs,maxtemps,atomicdata,iion)
 
         if (oiiTemp .eq. 0.d0 .or. oiiTemp .gt. 34999.) weights%oiiTemp = 0.d0
         if (siiTemp .eq. 0.d0 .or. siiTemp .gt. 34999.) weights%siiTemp = 0.d0
@@ -308,15 +308,15 @@ use mod_hydrogen
       do i = 1,2
 
         counter = 0
-        call get_diagnostic("cliii     ","1,2/                ","1,3/                ",cliiiNratio,"D",medtemp, cliiiDens,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("ciii      ","1,3/                ","1,4/                ",ciiiNratio,"D",medtemp, ciiiDens,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("ariv      ","1,2/                ","1,3/                ",arivNratio,"D",medtemp, arivDens,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[Cl III]  ","1,2/                ","1,3/                ",cliiiNratio,"D",medtemp, cliiiDens,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[C III]   ","1,3/                ","1,4/                ",ciiiNratio,"D",medtemp, ciiiDens,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[Ar IV]   ","1,2/                ","1,3/                ",arivNratio,"D",medtemp, arivDens,maxlevs,maxtemps,atomicdata,iion)
 ! IR densities, not included in average
 !Ar, S, Ne, O
-        call get_diagnostic("oiii      ","1,2/                ","2,3/                ",oiiiIRNratio,"D",medtemp, oiiiIRDens,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("ariii     ","1,2/                ","2,3/                ",ariiiIRNratio,"D",medtemp, ariiiIRDens,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("siii      ","1,2/                ","2,3/                ",siiiIRNratio,"D",medtemp, siiiIRDens,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("neiii     ","1,2/                ","2,3/                ",neiiiIRNratio,"D",medtemp, neiiiIRDens,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[O III]   ","1,2/                ","2,3/                ",oiiiIRNratio,"D",medtemp, oiiiIRDens,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[Ar III]  ","1,2/                ","2,3/                ",ariiiIRNratio,"D",medtemp, ariiiIRDens,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[S III]   ","1,2/                ","2,3/                ",siiiIRNratio,"D",medtemp, siiiIRDens,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[Ne III]  ","1,2/                ","2,3/                ",neiiiIRNratio,"D",medtemp, neiiiIRDens,maxlevs,maxtemps,atomicdata,iion)
 
         if (cliiiDens .le. 0.d0) weights%cliiiDens = 0.d0
         if (ciiiDens .le. 0.d0) weights%ciiiDens = 0.d0
@@ -338,13 +338,13 @@ use mod_hydrogen
 
         counter = 0
 
-        call get_diagnostic("oiii      ","2,4,3,4/            ","4,5/                ",oiiiTratio,"T",meddens,oiiiTemp,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("siii      ","2,4,3,4/            ","4,5/                ",siiiTratio,"T",meddens,siiiTemp,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("ariii     ","1,4,2,4/            ","4,5/                ",ariiiTratio,"T",meddens,ariiitemp,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("neiii     ","1,4,2,4/            ","4,5/                ",neiiiTratio,"T",meddens,neiiitemp,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("neiii     ","1,4,2,4/            ","1,2/                ",neiiiIRTratio,"T",meddens,neiiiIRtemp,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("oiii      ","2,4,3,4/            ","2,3/                ",oiiiIRTratio,"T",oiiiIRdens,oiiiIRtemp,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("oiii      ","2,4,3,4/            ","3,6/                ",oiiiUVTratio,"T",oiidens,oiiiUVtemp,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[O III]   ","2,4,3,4/            ","4,5/                ",oiiiTratio,"T",meddens,oiiiTemp,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[S III]   ","2,4,3,4/            ","4,5/                ",siiiTratio,"T",meddens,siiiTemp,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[Ar III]  ","1,4,2,4/            ","4,5/                ",ariiiTratio,"T",meddens,ariiitemp,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[Ne III]  ","1,4,2,4/            ","4,5/                ",neiiiTratio,"T",meddens,neiiitemp,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[Ne III]  ","1,4,2,4/            ","1,2/                ",neiiiIRTratio,"T",meddens,neiiiIRtemp,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[O III]   ","2,4,3,4/            ","2,3/                ",oiiiIRTratio,"T",oiiiIRdens,oiiiIRtemp,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[O III]   ","2,4,3,4/            ","3,6/                ",oiiiUVTratio,"T",oiidens,oiiiUVtemp,maxlevs,maxtemps,atomicdata,iion)
 
 !averaging
 
@@ -392,7 +392,7 @@ use mod_hydrogen
 
       do i = 1,2
 
-        call get_diagnostic("neiv      ","1,2/                ","1,3/                ",neivNratio,"D",hightemp, neivDens,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[Ne IV]   ","1,2/                ","1,3/                ",neivNratio,"D",hightemp, neivDens,maxlevs,maxtemps,atomicdata,iion)
 
         if (diagnostic_array(3) .gt. 0.0) then
           highdens = diagnostic_array(3)
@@ -407,8 +407,8 @@ use mod_hydrogen
 
         counter = 0
 
-        call get_diagnostic("arv       ","2,4,3,4/            ","4,5/                ",arvTratio,"T",highdens,arvTemp,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("nev       ","2,4,3,4/            ","4,5/                ",nevTratio,"T",highdens,nevtemp,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[Ar V]    ","2,4,3,4/            ","4,5/                ",arvTratio,"T",highdens,arvTemp,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[Ne V]    ","2,4,3,4/            ","4,5/                ",nevTratio,"T",highdens,nevtemp,maxlevs,maxtemps,atomicdata,iion)
 
         if (arvTemp .eq. 0.d0 .or. arvTemp .gt. 34999.) weights%arvTemp = 0.d0
         if (nevTemp .eq. 0.d0 .or. nevTemp .gt. 34999.) weights%nevTemp = 0.d0
