@@ -437,6 +437,8 @@ subroutine get_H(H_Balmer, H_paschen, linelist)
     do j=3,40
       if (abs(linelist(i)%wavelength - balmerwavelengths(j)) .lt. 0.005) then
         H_balmer(j)=i
+        linelist(i)%name="H I"
+        linelist(i)%latextext = "H~{\sc i}"
         cycle
       endif
     enddo
@@ -446,6 +448,8 @@ subroutine get_H(H_Balmer, H_paschen, linelist)
     do j=4,39
       if (abs(linelist(i)%wavelength - paschenwavelengths(j)) .lt. 0.005) then
         H_paschen(j)=i
+        linelist(i)%name="H I"
+        linelist(i)%latextext = "H~{\sc i}"
         cycle
       endif
     enddo
@@ -458,7 +462,7 @@ subroutine get_HeI(HeI_lines, linelist)
         implicit none
         integer, parameter :: dp = kind(1.d0)
         integer, dimension(44), intent(out) :: HeI_lines
-        type(line), dimension(:), intent(in) :: linelist
+        type(line), dimension(:) :: linelist
         real(kind=dp), dimension(44) :: wavelengths
         integer :: i, j
 
@@ -475,6 +479,8 @@ subroutine get_HeI(HeI_lines, linelist)
           do j = 1, size(linelist)
             if(abs(linelist(j)%wavelength - wavelengths(i)) .lt.  0.005) then
               Hei_lines(i) = j
+              linelist(j)%name="He I"
+              linelist(j)%latextext = "He~{\sc i}"
               cycle
             endif
           enddo
@@ -487,7 +493,7 @@ subroutine get_HeII(HeII_lines, linelist)
         implicit none
         integer, parameter :: dp = kind(1.d0)
         integer, dimension(20,2:6), intent(out) :: HeII_lines ! array indices represent quantum numbers
-        type(line), dimension(:), intent(in) :: linelist
+        type(line), dimension(:) :: linelist
         real(kind=dp), dimension(20,2:6) :: wavelengths
         integer :: i, j, k
 
@@ -560,6 +566,8 @@ subroutine get_HeII(HeII_lines, linelist)
             do k = 1, size(linelist)
               if(abs(linelist(k)%wavelength - wavelengths(j,i)) .lt.  0.005) then
                 Heii_lines(j,i) = k
+                linelist(k)%name="He II"
+                linelist(k)%latextext = "He~{\sc ii}"
                 cycle
               endif
             enddo

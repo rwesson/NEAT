@@ -687,11 +687,9 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
              elseif (ILs(i)%zone .eq. "high") then
                call get_abundance(ILs(i)%ion, ILs(i)%transition, hightemp, highdens,linelist(ILs(i)%location)%int_dered, linelist(ILs(i)%location)%abundance,maxlevs,maxtemps,atomicdata,iion)
              endif
-             if ((ILs(i)%location .gt. 0) .and. (linelist(ILs(i)%location)%abundance .lt. 10 ) ) then
-             elseif ((linelist(ILs(i)%location)%abundance .ge. 10 ) .or. (linelist(ILs(i)%location)%abundance .lt. 1E-10 ) )then
+             if ((linelist(ILs(i)%location)%abundance .ge. 10 ) .or. (linelist(ILs(i)%location)%abundance .lt. 1E-10)) then !filter out bad results
                linelist(ILs(i)%location)%abundance = 0
              endif
-!print *,ILs(i)%location,get_cel_flux(ILs(i)%name,linelist,ILs),linelist(ILs(i)%location)%wavelength,linelist(ILs(i)%location)%abundance
           endif
         enddo
 
@@ -1609,15 +1607,6 @@ iteration_result(1)%adf_c = adfc
 iteration_result(1)%adf_ne2plus = adfne2plus
 iteration_result(1)%adf_ne = adfne
 
-!copy CEL abundances back into main linelist array
-
-do i=1,size(ILs) !todo: remove this if necessary
-  if (ILs(i)%location .gt. 0) then
-    linelist(ILs(i)%location)%abundance = linelist(ILs(i)%location)%abundance
-    linelist(ILs(i)%location)%latextext = ILs(i)%latextext
-  endif
-enddo
-
 !copy blend fluxes back into their original location
 
 where (linelist%blend_intensity .gt. 0.d0)
@@ -1625,32 +1614,6 @@ where (linelist%blend_intensity .gt. 0.d0)
   linelist%int_dered=linelist%blend_int_dered
   linelist%int_err=linelist%blend_int_err
 endwhere
-
-!write ion names to array
-
-where (H_Balmer .gt. 0)
-    linelist(H_Balmer)%name = "H I"
-    linelist(H_Balmer)%latextext = "H~{\sc i}"
-endwhere
-
-where (H_Paschen .gt. 0)
-  linelist(H_Paschen)%name = "H I"
-  linelist(H_Paschen)%latextext = "H~{\sc i}"
-endwhere
-
-where (HeI_lines .gt. 0)
-  linelist(HeI_lines)%name = "He I"
-  linelist(HeI_lines)%latextext = "He~{\sc i}"
-endwhere
-
-do i=2,6
-  do j=3,20
-    if (HeII_lines(j,i) .gt. 0) then
-      linelist(HeII_lines(j,i))%name = "He II"
-      linelist(HeII_lines(j,i))%latextext = "He~{\sc ii}"
-    endif
-  enddo
-enddo
 
 contains
 
