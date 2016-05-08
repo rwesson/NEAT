@@ -1019,7 +1019,7 @@ clivCELabund = 0.d0
         endif
       endif
 
-      if (get_cel_flux("oiii4363   ",linelist,ILs) .gt. 0 .and. hetotabund .gt. 0) then
+      if (get_cel_flux("oiii4363   ",linelist,ILs) .gt. 0 .and. heiabund .gt. 0) then
         oiii4363recCEL=10000.*12.4*(hightemp/1.e4)**0.59*(((hetotabund/heiabund)**0.66666)-1)*(oiicelabund+oiiicelabund)/get_cel_flux("oiii4363   ",linelist,ILs)
         oiii4363recRL=10000.*12.4*(hightemp/1.e4)**0.59*(((hetotabund/heiabund)**0.66666)-1)*(oiiRLabund)/get_cel_flux("oiii4363   ",linelist,ILs)
       endif
