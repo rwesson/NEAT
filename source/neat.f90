@@ -133,7 +133,7 @@ program neat
 #ifdef VERSION
         print *,"version ",VERSION
 #else
-        print *,"version 1.9"
+        print *,"version 2.0"
 #endif
 #ifdef BUILDDATE
         print *,"compiled on ",BUILDDATE
