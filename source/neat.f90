@@ -130,11 +130,12 @@ program neat
         adf_format = "(X,A,F8.2,SP,F8.2,F8.2,S)"
 
         print *,"NEAT, the Nebular Empirical Analysis Tool"
-#ifdef VERSION
-        print *,"version ",VERSION
-#else
-        print *,"version 2.0"
-#endif
+        if (len(VERSION).gt.0) then
+          print *,"version ",VERSION
+        else
+          print *,"version 2.0"
+        endif
+
 #ifdef BUILDDATE
         print *,"compiled on ",BUILDDATE
 #endif
