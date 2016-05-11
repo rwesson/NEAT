@@ -68,7 +68,7 @@ Default: 3
 This option triggers an algorithm which attempts to convert observed wavelengths into rest wavelengths. If the option is not present, \fBneat\fR assumes that the input line list already has rest wavelengths in the first column
 .TP
 .B \-rp
-When calculating Monte Carlo uncertainties, \fBneat\fR's default behaviour is to assume that all uncertainties are Gaussian.  If -rp is specified, it will compensate for the upward bias affecting weak lines described by Rola and Pelat (1994), assuming log normal probability distributions for weaker lines.
+When calculating Monte Carlo uncertainties, \fBneat\fR's default behaviour is to assume that all uncertainties are Gaussian.  If \-rp is specified, it will compensate for the upward bias affecting weak lines described by Rola and Pelat (1994), assuming log normal probability distributions for weaker lines.
 
 Until version 1.8, the default behaviour was the opposite; log normal probability distributions were assumed unless \fB-norp\fR was specified.  This was changed after our discovery that the effect described by Rola and Pelat only occurred under extremely specific conditions: see Wesson et al. 2016 for details.
 
@@ -105,17 +105,17 @@ In some cases you may not need or wish to propagate uncertainties. In this case 
 Assuming you have a line list prepared as above, you can now run the code. In line with our philosophy that \fBneat\fR should be as simple and objective as possible, this should be extremely straightforward. To use the code in its simplest form on one of the example linelists, you would type
 
  % cp /usr/share/neat/example/ngc6543_3cols.dat .
- % neat -i ngc6543_3cols.dat
+ % neat \-i ngc6543_3cols.dat
 
 This would run a single iteration of the code, not propagating uncertainties. You'll see some logging output to the terminal, and the calculated results will have been written to the file ngc6543_3cols.dat_results. If this is all you need, then the job's done and you can write a paper now.
 
 Your results will be enhanced greatly, though, if you can estimate the uncertainty associated with them. To do this, invoke the code as follows:
 
- % neat -i ngc6543_3cols.dat -u
+ % neat \-i ngc6543_3cols.dat \-u
 
-The -u switch causes the code to run 10,000 times. In each iteration, the line flux is drawn from a normal distribution with a mean of the quoted flux and a standard deviation of the quoted uncertainty.  By repeating this randomisation process lots of times, you build up a realistic picture of the uncertainties associated with the derived quantities. The more iterations you run, the more accurate the results; 10,000 is a sensible number to achieve well sampled probability distributions. If you want to run a different number of iterations for any reason, you can use the -n command line option to specify your preferred value
+The \-u switch causes the code to run 10,000 times. In each iteration, the line flux is drawn from a normal distribution with a mean of the quoted flux and a standard deviation of the quoted uncertainty.  By repeating this randomisation process lots of times, you build up a realistic picture of the uncertainties associated with the derived quantities. The more iterations you run, the more accurate the results; 10,000 is a sensible number to achieve well sampled probability distributions. If you want to run a different number of iterations for any reason, you can use the \-n command line option to specify your preferred value
 
-If the \fB-rp\fR option is specified, then for lines with a signal to noise ratio of less than 6, the line flux is drawn from a log-normal distribution which becomes more skewed the lower the signal to noise ratio is. This corrects the low SNR lines for the upward bias in their measurement described by Rola & Pelat (1994). The full procedure is described in Wesson et al. (2012).  However, use of this option is no longer recommended as the bias is highly dependent on the fitting procedure - see Wesson et al. (2016).
+If the \fB-rp\fR option is specified, then for lines with a signal to noise ratio of less than 6, the line flux is drawn from a log-normal distribution which becomes more skewed the lower the signal to noise ratio is. This corrects the low SNR lines for the upward bias in their measurement described by Rola & Pelat (1994). The full procedure is described in Wesson et al. (2012).  However, use of this option is no longer recommended as the bias is highly dependent on the fitting procedure \- see Wesson et al. (2016).
 
 .SH METHODOLOGY
 
@@ -132,7 +132,7 @@ The code corrects for interstellar reddening using the ratios of the Hα, Hβ, H
  3. The density is recalculated using the appropriately weighted average of the temperature diagnostics.
  4. The temperature is recalculated using this density.
 
-This iterative procedure is carried out successively for low-, medium- and high-ionization zones, and in each case if no diagnostics are available, the temperature and/or density will be taken to be that derived for the previous zone. Temperatures and densities for each zone can also be specified on the command line with the \fB-telow, -temed, -tehigh\fR and \fB-nelow, -nemed, -nehigh\fR options.
+This iterative procedure is carried out successively for low-, medium- and high-ionization zones, and in each case if no diagnostics are available, the temperature and/or density will be taken to be that derived for the previous zone. Temperatures and densities for each zone can also be specified on the command line with the \fB-telow, \-temed, \-tehigh\fR and \fB-nelow, \-nemed, \-nehigh\fR options.
 
 \fBneat\fR also calculates a number of diagnostics from recombination line diagnostics. These are:
 
@@ -165,7 +165,7 @@ Where ionic or total abundances are available from both collisionally excited li
 
 The code prints some logging messages to the terminal, so that you can see which iteration it is on, and if anything has gone wrong. The results are written to a summary file, and a linelist file, the paths to which are indicated in the terminal output. In the case of a single iteration, these files are the only output.
 
-If you have run multiple iterations, you can also use the \fB-v\fR option to tell the code to create additional results files for each quantity calculated: \fB -v 1\fR tells the code to write out for each quantity all the individual results, and a binned probability distribution file; with \fB-v 2\fR, only the binned distributions are written out, and with \fB-v 3\fR - the default - no additional results files are created.
+If you have run multiple iterations, you can also use the \fB-v\fR option to tell the code to create additional results files for each quantity calculated: \fB \-v 1\fR tells the code to write out for each quantity all the individual results, and a binned probability distribution file; with \fB-v 2\fR, only the binned distributions are written out, and with \fB-v 3\fR \- the default \- no additional results files are created.
 
 .SS Normality test
 
