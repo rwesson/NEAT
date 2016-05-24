@@ -542,8 +542,13 @@ program neat
 !observed wavelength if known
 
                 if (ncols .eq. 4) then
-                  write (650,"(X,F7.2,X)", advance='no') all_linelists(j,1)%wavelength_observed
-                  write (651,"(X,F7.2,' & ')", advance='no') all_linelists(j,1)%wavelength_observed
+                  if (linelist(i)%wavelength_observed .gt. 0.) then
+                    write (650,"(X,F7.2,X)", advance='no') all_linelists(j,1)%wavelength_observed
+                    write (651,"(X,F7.2,' & ')", advance='no') all_linelists(j,1)%wavelength_observed
+                  else
+                    write (650,"(X,A,X)", advance='no') "      *"
+                    write (651,"(X,A,' & ')", advance='no') "      *"
+                  endif
                 endif
 
 !rest wavelength, ion name for plain text file
@@ -608,8 +613,13 @@ program neat
 
                 do i=1,listlength
                   if (ncols .eq. 4) then
-                    write (650,"(X,F7.2,X)", advance='no') linelist(i)%wavelength_observed
-                    write (651,"(X,F7.2,' & ')", advance='no') linelist(i)%wavelength_observed
+                    if (linelist(i)%wavelength_observed .gt. 0.) then
+                      write (650,"(X,F7.2,X)", advance='no') linelist(i)%wavelength_observed
+                      write (651,"(X,F7.2,' & ')", advance='no') linelist(i)%wavelength_observed
+                    else
+                      write (650,"(X,A,X)", advance='no') "      *"
+                      write (651,"(X,A,' & ')", advance='no') "      *"
+                    endif
                   endif
                   if (linelist(i)%intensity .ne. 0.d0) then
                     if (linelist(i)%abundance .gt. 0.0) then
