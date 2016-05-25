@@ -35,7 +35,7 @@ subroutine setweights(configfile,weights,linelist,ILs,H_Balmer,H_Paschen,HeII_li
         open(631, file=trim(configfile),iostat=io,status="old")
         read(631,"(24A)") filecheck
 
-        if (filecheck .ne. "#NEAT configuration file") then
+        if (index(filecheck,"NEAT configuration").eq.0) then
           print *,"           ",trim(configfile)," doesn't appear to be a NEAT configuration file"
           call exit(1)
         endif
