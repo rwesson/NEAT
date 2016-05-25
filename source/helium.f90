@@ -606,16 +606,19 @@ d=floor(log10(density))
   y2=real(d2+1)
   y=log10(density)
 
-  if (t1.ne.t2 .and. d1.ne.d2) then
+  if (t1.ne.t2 .and. d1.ne.d2) then ! interpolate bilinearly in temperature and density
     factor = 1.d0/((x2-x1)*(y2-y1))
-  else
-    factor = 1.d0
-  endif
-
-  emissivityarray = (((x2-medtemp)*(y2-y)) * heiidata(t1,d1,:,:) + &
+    emissivityarray = (((x2-medtemp)*(y2-y)) * heiidata(t1,d1,:,:) + &
                    & ((medtemp-x1)*(y2-y)) * heiidata(t2,d1,:,:) + &
                    & ((x2-medtemp)*(y-y1)) * heiidata(t1,d2,:,:) + &
                    & ((medtemp-x1)*(y-y1)) * heiidata(t2,d2,:,:)) * factor
+  elseif (t1.eq.t2 .and. d1.ne.d2) then ! interpolate in density only
+    emissivityarray = heiidata(t1,d1,:,:) + (heiidata(t1,d2,:,:) - heiidata(t1,d1,:,:))*(y-y1)/(y2-y1)
+  elseif (t1.ne.t2 .and. d1.eq.d2) then ! interpolate in temperature only
+    emissivityarray = heiidata(t1,d1,:,:) + (heiidata(t2,d1,:,:) - heiidata(t1,d1,:,:))*(medtemp-x1)/(x2-x1)
+  else !no interpolation. todo: warn about being outside the limits.
+    emissivityarray = heiidata(t1,d1,:,:)
+  endif
 
 !now to get the abundances, go through the helium line location array and for all lines present, get their abundance.
 !then get weighted overall abundance
