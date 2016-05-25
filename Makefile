@@ -30,8 +30,7 @@ FC=gfortran
 LD=gfortran
 PREFIX=/usr
 VERSION := $(shell git describe --always --tags --dirty)
-BUILDDATE := "$(shell date)"
-FFLAGS+=-cpp -DPREFIX=\"${PREFIX}\" -DVERSION=\"${VERSION}\" -DBUILDDATE=\"${BUILDDATE}\"
+FFLAGS+=-cpp -DPREFIX=\"${PREFIX}\" -DVERSION=\"${VERSION}\"
 LDFLAGS+=
 MANDIR=${DESTDIR}${PREFIX}/share/man/man1
 

@@ -136,9 +136,6 @@ program neat
           print *,"version 2.0"
         endif
 
-#ifdef BUILDDATE
-        print *,"compiled on ",BUILDDATE
-#endif
         print *
 
         Narg = IARGC() !count input arguments
