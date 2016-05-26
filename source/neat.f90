@@ -654,373 +654,379 @@ program neat
 !extinction, diagnostics, cel abundances, orl abundances, strong line
 !abundances, adfs
 
-        allocate(resultprocessingarray(157,runs))
+        allocate(resultprocessingarray(160,runs))
         resultprocessingarray=0d0
-        allocate(resultprocessingtext(157,4))
+        allocate(resultprocessingtext(160,4))
 
 !extinction
 
-        resultprocessingarray(1,:) = all_results%mean_cHb
-        resultprocessingtext(1,:) = (/"c(Hb)                              ","c(H$\beta)$:                       ", extinction_format, "mean_chb                           "/)
+        resultprocessingarray(1,:) = all_results%cHb_ha
+        resultprocessingtext(1,:) = (/"c(Hb) (Ha/Hb)                      ","c(H$\beta)$ (H$\alpha/H$\beta)     ", extinction_format, "chb_ha_hb                          "/)
+        resultprocessingarray(2,:) = all_results%cHb_hg
+        resultprocessingtext(2,:) = (/"c(Hb) (Hg/Hb)                      ","c(H$\beta)$ (H$\gamma/H$\beta)     ", extinction_format, "chb_hg_hb                          "/)
+        resultprocessingarray(3,:) = all_results%cHb_hd
+        resultprocessingtext(3,:) = (/"c(Hb) (Hd/Hb)                      ","c(H$\beta)$ (H$\delta/H$\beta)     ", extinction_format, "chb_hd_hb                          "/)
+        resultprocessingarray(4,:) = all_results%mean_cHb
+        resultprocessingtext(4,:) = (/"mean c(Hb)                         ","c(H$\beta)$:                       ", extinction_format, "mean_chb                           "/)
 
 !diagnostics
 !low density
 
-        resultprocessingarray(2,:) = all_results%oii_density
-        resultprocessingtext(2,:) = (/"[OII] density                      ","{}[O~{\sc ii}] density:            ", diagnostic_format, "density_oii                        "/)
-        resultprocessingarray(3,:) = all_results%oii_density_ratio
-        resultprocessingtext(3,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "density_oii_ratio                  "/)
-        resultprocessingarray(4,:) = all_results%SII_density
-        resultprocessingtext(4,:) = (/"[SII] density                      ","{}[S~{\sc ii}] density:            ", diagnostic_format, "density_sii                        "/)
-        resultprocessingarray(5,:) = all_results%sii_density_ratio
-        resultprocessingtext(5,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "density_sii_ratio                  "/)
-        resultprocessingarray(6,:) = all_results%low_density
-        resultprocessingtext(6,:) = (/"Low ionisation density             ","Low ionisation density:            ", diagnostic_format, "density_low                        "/)
+        resultprocessingarray(5,:) = all_results%oii_density
+        resultprocessingtext(5,:) = (/"[OII] density                      ","{}[O~{\sc ii}] density:            ", diagnostic_format, "density_oii                        "/)
+        resultprocessingarray(6,:) = all_results%oii_density_ratio
+        resultprocessingtext(6,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "density_oii_ratio                  "/)
+        resultprocessingarray(7,:) = all_results%SII_density
+        resultprocessingtext(7,:) = (/"[SII] density                      ","{}[S~{\sc ii}] density:            ", diagnostic_format, "density_sii                        "/)
+        resultprocessingarray(8,:) = all_results%sii_density_ratio
+        resultprocessingtext(8,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "density_sii_ratio                  "/)
+        resultprocessingarray(9,:) = all_results%low_density
+        resultprocessingtext(9,:) = (/"Low ionisation density             ","Low ionisation density:            ", diagnostic_format, "density_low                        "/)
 
 !low temperature
 
-        resultprocessingarray(7,:) = all_results%oii_temp
-        resultprocessingtext(7,:) = (/"[OII] temperature                  ","{}[O~{\sc ii}] temperature         ", diagnostic_format, "temp_oii                           "/)
-        resultprocessingarray(8,:) = all_results%oii_temp_ratio
-        resultprocessingtext(8,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_oii_ratio                     "/)
-        resultprocessingarray(9,:) = all_results%SII_temp
-        resultprocessingtext(9,:) = (/"[SII] temperature                  ","{}[S~{\sc ii}] temperature         ", diagnostic_format, "temp_sii                           "/)
-        resultprocessingarray(10,:) = all_results%sii_temp_ratio
-        resultprocessingtext(10,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_sii_ratio                     "/)
-        resultprocessingarray(11,:) = all_results%NII_temp
-        resultprocessingtext(11,:) = (/"[NII] temperature                  ","{}[N~{\sc ii}] temperature         ", diagnostic_format, "temp_nii                           "/)
-        resultprocessingarray(12,:) = all_results%nii_temp_ratio
-        resultprocessingtext(12,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_nii_ratio                     "/)
-        resultprocessingarray(13,:) = all_results%OI_temp
-        resultprocessingtext(13,:) = (/"[OI] temperature                   ","{}[O~{\sc i}] temperature          ", diagnostic_format, "temp_oi                            "/)
-        resultprocessingarray(14,:) = all_results%oi_temp_ratio
-        resultprocessingtext(14,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_oi_ratio                      "/)
-        resultprocessingarray(15,:) = all_results%CI_temp
-        resultprocessingtext(15,:) = (/"[CI] temperature                   ","{}[C~{\sc i}] temperature          ", diagnostic_format, "temp_ci                            "/)
-        resultprocessingarray(16,:) = all_results%ci_temp_ratio
-        resultprocessingtext(16,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_ci_ratio                      "/)
-        resultprocessingarray(17,:) = all_results%low_temp
-        resultprocessingtext(17,:) = (/"Low ionisation temperature         ","Low ionisation temperature         ", diagnostic_format, "temp_low                           "/)
+        resultprocessingarray(10,:) = all_results%oii_temp
+        resultprocessingtext(10,:) = (/"[OII] temperature                  ","{}[O~{\sc ii}] temperature         ", diagnostic_format, "temp_oii                           "/)
+        resultprocessingarray(11,:) = all_results%oii_temp_ratio
+        resultprocessingtext(11,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_oii_ratio                     "/)
+        resultprocessingarray(12,:) = all_results%SII_temp
+        resultprocessingtext(12,:) = (/"[SII] temperature                  ","{}[S~{\sc ii}] temperature         ", diagnostic_format, "temp_sii                           "/)
+        resultprocessingarray(13,:) = all_results%sii_temp_ratio
+        resultprocessingtext(13,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_sii_ratio                     "/)
+        resultprocessingarray(14,:) = all_results%NII_temp
+        resultprocessingtext(14,:) = (/"[NII] temperature                  ","{}[N~{\sc ii}] temperature         ", diagnostic_format, "temp_nii                           "/)
+        resultprocessingarray(15,:) = all_results%nii_temp_ratio
+        resultprocessingtext(15,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_nii_ratio                     "/)
+        resultprocessingarray(16,:) = all_results%OI_temp
+        resultprocessingtext(16,:) = (/"[OI] temperature                   ","{}[O~{\sc i}] temperature          ", diagnostic_format, "temp_oi                            "/)
+        resultprocessingarray(17,:) = all_results%oi_temp_ratio
+        resultprocessingtext(17,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_oi_ratio                      "/)
+        resultprocessingarray(18,:) = all_results%CI_temp
+        resultprocessingtext(18,:) = (/"[CI] temperature                   ","{}[C~{\sc i}] temperature          ", diagnostic_format, "temp_ci                            "/)
+        resultprocessingarray(19,:) = all_results%ci_temp_ratio
+        resultprocessingtext(19,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_ci_ratio                      "/)
+        resultprocessingarray(20,:) = all_results%low_temp
+        resultprocessingtext(20,:) = (/"Low ionisation temperature         ","Low ionisation temperature         ", diagnostic_format, "temp_low                           "/)
 
 
 !medium density
 
-        resultprocessingarray(18,:) = all_results%cliii_density
-        resultprocessingtext(18,:) = (/"[ClIII] density                    ","{}[Cl~{\sc iii}] density:          ", diagnostic_format, "density_cliii                      "/)
-        resultprocessingarray(19,:) = all_results%cliii_density_ratio
-        resultprocessingtext(19,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "density_cliii_ratio                "/)
-        resultprocessingarray(20,:) = all_results%ArIV_density
-        resultprocessingtext(20,:) = (/"[ArIV] density                     ","{}[Ar~{\sc iv}] density:           ", diagnostic_format, "density_ariv                       "/)
-        resultprocessingarray(21,:) = all_results%ariv_density_ratio
-        resultprocessingtext(21,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "density_sii_ratio                  "/)
-        resultprocessingarray(22,:) = all_results%CIII_density
-        resultprocessingtext(22,:) = (/"[CIII] density                     ","{}[C~{\sc iii}] density            ", diagnostic_format, "density_ciii                       "/)
-        resultprocessingarray(23,:) = all_results%ciii_density_ratio
-        resultprocessingtext(23,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "density_ciii_ratio                 "/)
-        resultprocessingarray(24,:) = all_results%OIII_IR_density
-        resultprocessingtext(24,:) = (/"[OIII] IR density                  ","{}[O~{\sc iii}] IR density         ", diagnostic_format, "density_oiii_ir                    "/)
-        resultprocessingarray(25,:) = all_results%oiii_ir_density_ratio
-        resultprocessingtext(25,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "density_oiii_ir_ratio              "/)
-        resultprocessingarray(26,:) = all_results%SIII_IR_density
-        resultprocessingtext(26,:) = (/"[SIII] IR density                  ","{}[S~{\sc iii}] IR density         ", diagnostic_format, "density_siii_ir                    "/)
-        resultprocessingarray(27,:) = all_results%siii_ir_density_ratio
-        resultprocessingtext(27,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "density_siii_ir_ratio              "/)
-        resultprocessingarray(28,:) = all_results%ArIII_IR_density
-        resultprocessingtext(28,:) = (/"[ArIII] IR density                 ","{}[Ar~{\sc iii}] IR density        ", diagnostic_format, "density_ariii_ir                   "/)
-        resultprocessingarray(29,:) = all_results%ariii_ir_density_ratio
-        resultprocessingtext(29,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "density_ariii_ir_ratio             "/)
-        resultprocessingarray(30,:) = all_results%NeIII_IR_density
-        resultprocessingtext(30,:) = (/"[NeIII] IR density                 ","{}[Ne~{\sc iii}] IR density        ", diagnostic_format, "density_neiii_ir                   "/)
-        resultprocessingarray(31,:) = all_results%neiii_ir_density_ratio
-        resultprocessingtext(31,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "density_neiii_ir_ratio             "/)
-        resultprocessingarray(32,:) = all_results%med_density
-        resultprocessingtext(32,:) = (/"Medium ionisation density          ","Medium ionisation density          ", diagnostic_format, "density_med                        "/)
+        resultprocessingarray(21,:) = all_results%cliii_density
+        resultprocessingtext(21,:) = (/"[ClIII] density                    ","{}[Cl~{\sc iii}] density:          ", diagnostic_format, "density_cliii                      "/)
+        resultprocessingarray(22,:) = all_results%cliii_density_ratio
+        resultprocessingtext(22,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "density_cliii_ratio                "/)
+        resultprocessingarray(23,:) = all_results%ArIV_density
+        resultprocessingtext(23,:) = (/"[ArIV] density                     ","{}[Ar~{\sc iv}] density:           ", diagnostic_format, "density_ariv                       "/)
+        resultprocessingarray(24,:) = all_results%ariv_density_ratio
+        resultprocessingtext(24,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "density_sii_ratio                  "/)
+        resultprocessingarray(25,:) = all_results%CIII_density
+        resultprocessingtext(25,:) = (/"[CIII] density                     ","{}[C~{\sc iii}] density            ", diagnostic_format, "density_ciii                       "/)
+        resultprocessingarray(26,:) = all_results%ciii_density_ratio
+        resultprocessingtext(26,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "density_ciii_ratio                 "/)
+        resultprocessingarray(27,:) = all_results%OIII_IR_density
+        resultprocessingtext(27,:) = (/"[OIII] IR density                  ","{}[O~{\sc iii}] IR density         ", diagnostic_format, "density_oiii_ir                    "/)
+        resultprocessingarray(28,:) = all_results%oiii_ir_density_ratio
+        resultprocessingtext(28,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "density_oiii_ir_ratio              "/)
+        resultprocessingarray(29,:) = all_results%SIII_IR_density
+        resultprocessingtext(29,:) = (/"[SIII] IR density                  ","{}[S~{\sc iii}] IR density         ", diagnostic_format, "density_siii_ir                    "/)
+        resultprocessingarray(30,:) = all_results%siii_ir_density_ratio
+        resultprocessingtext(30,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "density_siii_ir_ratio              "/)
+        resultprocessingarray(31,:) = all_results%ArIII_IR_density
+        resultprocessingtext(31,:) = (/"[ArIII] IR density                 ","{}[Ar~{\sc iii}] IR density        ", diagnostic_format, "density_ariii_ir                   "/)
+        resultprocessingarray(32,:) = all_results%ariii_ir_density_ratio
+        resultprocessingtext(32,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "density_ariii_ir_ratio             "/)
+        resultprocessingarray(33,:) = all_results%NeIII_IR_density
+        resultprocessingtext(33,:) = (/"[NeIII] IR density                 ","{}[Ne~{\sc iii}] IR density        ", diagnostic_format, "density_neiii_ir                   "/)
+        resultprocessingarray(34,:) = all_results%neiii_ir_density_ratio
+        resultprocessingtext(34,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "density_neiii_ir_ratio             "/)
+        resultprocessingarray(35,:) = all_results%med_density
+        resultprocessingtext(35,:) = (/"Medium ionisation density          ","Medium ionisation density          ", diagnostic_format, "density_med                        "/)
 
 ! medium temperature
 
-        resultprocessingarray(33,:) = all_results%OIII_temp
-        resultprocessingtext(33,:) = (/"[OIII] temperature                 ","{}[O~{\sc iii}] temperature        ", diagnostic_format, "temp_oiii                          "/)
-        resultprocessingarray(34,:) = all_results%oiii_temp_ratio
-        resultprocessingtext(34,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_oiii_ratio                    "/)
-        resultprocessingarray(35,:) = all_results%OIII_IR_temp
-        resultprocessingtext(35,:) = (/"[OIII] IR temperature              ","{}[O~{\sc iii}] IR temperature     ", diagnostic_format, "temp_oiii_ir                       "/)
-        resultprocessingarray(36,:) = all_results%oiii_ir_temp_ratio
-        resultprocessingtext(36,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_oiii_ir_ratio                 "/)
-        resultprocessingarray(37,:) = all_results%OIII_UV_temp
-        resultprocessingtext(37,:) = (/"[OIII] UV temperature              ","{}[O~{\sc iii}] UV temperature     ", diagnostic_format, "temp_oiii_uv                       "/)
-        resultprocessingarray(38,:) = all_results%oiii_uv_temp_ratio
-        resultprocessingtext(38,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_oiii_uv_ratio                 "/)
-        resultprocessingarray(39,:) = all_results%NeIII_temp
-        resultprocessingtext(39,:) = (/"[NeIII] temperature                ","{}[Ne~{\sc iii}] temperature       ", diagnostic_format, "temp_neiii                         "/)
-        resultprocessingarray(40,:) = all_results%neiii_temp_ratio
-        resultprocessingtext(40,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_neiii_ratio                   "/)
-        resultprocessingarray(41,:) = all_results%NeIII_IR_temp
-        resultprocessingtext(41,:) = (/"[NeIII] IR temperature             ","{}[Ne~{\sc iii}] IR temperature    ", diagnostic_format, "temp_neiii_ir                      "/)
-        resultprocessingarray(42,:) = all_results%neiii_ir_temp_ratio
-        resultprocessingtext(42,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_neiii_ir_ratio                "/)
-        resultprocessingarray(43,:) = all_results%ArIII_temp
-        resultprocessingtext(43,:) = (/"[ArIII] temperature                ","{}[Ar~{\sc iii}] temperature       ", diagnostic_format, "temp_ariii                         "/)
-        resultprocessingarray(44,:) = all_results%ariii_temp_ratio
-        resultprocessingtext(44,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_ariii_ratio                   "/)
-        resultprocessingarray(45,:) = all_results%SIII_temp
-        resultprocessingtext(45,:) = (/"[SIII] temperature                 ","{}[S~{\sc iii}] temperature        ", diagnostic_format, "temp_siii                          "/)
-        resultprocessingarray(46,:) = all_results%siii_temp_ratio
-        resultprocessingtext(46,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_siii_ratio                    "/)
-        resultprocessingarray(47,:) = all_results%med_temp
-        resultprocessingtext(47,:) = (/"Medium ionisation temperature      ","Medium ionisation temperature      ", diagnostic_format, "temp_med                           "/)
+        resultprocessingarray(36,:) = all_results%OIII_temp
+        resultprocessingtext(36,:) = (/"[OIII] temperature                 ","{}[O~{\sc iii}] temperature        ", diagnostic_format, "temp_oiii                          "/)
+        resultprocessingarray(37,:) = all_results%oiii_temp_ratio
+        resultprocessingtext(37,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_oiii_ratio                    "/)
+        resultprocessingarray(38,:) = all_results%OIII_IR_temp
+        resultprocessingtext(38,:) = (/"[OIII] IR temperature              ","{}[O~{\sc iii}] IR temperature     ", diagnostic_format, "temp_oiii_ir                       "/)
+        resultprocessingarray(39,:) = all_results%oiii_ir_temp_ratio
+        resultprocessingtext(39,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_oiii_ir_ratio                 "/)
+        resultprocessingarray(40,:) = all_results%OIII_UV_temp
+        resultprocessingtext(40,:) = (/"[OIII] UV temperature              ","{}[O~{\sc iii}] UV temperature     ", diagnostic_format, "temp_oiii_uv                       "/)
+        resultprocessingarray(41,:) = all_results%oiii_uv_temp_ratio
+        resultprocessingtext(41,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_oiii_uv_ratio                 "/)
+        resultprocessingarray(42,:) = all_results%NeIII_temp
+        resultprocessingtext(42,:) = (/"[NeIII] temperature                ","{}[Ne~{\sc iii}] temperature       ", diagnostic_format, "temp_neiii                         "/)
+        resultprocessingarray(43,:) = all_results%neiii_temp_ratio
+        resultprocessingtext(43,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_neiii_ratio                   "/)
+        resultprocessingarray(44,:) = all_results%NeIII_IR_temp
+        resultprocessingtext(44,:) = (/"[NeIII] IR temperature             ","{}[Ne~{\sc iii}] IR temperature    ", diagnostic_format, "temp_neiii_ir                      "/)
+        resultprocessingarray(45,:) = all_results%neiii_ir_temp_ratio
+        resultprocessingtext(45,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_neiii_ir_ratio                "/)
+        resultprocessingarray(46,:) = all_results%ArIII_temp
+        resultprocessingtext(46,:) = (/"[ArIII] temperature                ","{}[Ar~{\sc iii}] temperature       ", diagnostic_format, "temp_ariii                         "/)
+        resultprocessingarray(47,:) = all_results%ariii_temp_ratio
+        resultprocessingtext(47,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_ariii_ratio                   "/)
+        resultprocessingarray(48,:) = all_results%SIII_temp
+        resultprocessingtext(48,:) = (/"[SIII] temperature                 ","{}[S~{\sc iii}] temperature        ", diagnostic_format, "temp_siii                          "/)
+        resultprocessingarray(49,:) = all_results%siii_temp_ratio
+        resultprocessingtext(49,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_siii_ratio                    "/)
+        resultprocessingarray(50,:) = all_results%med_temp
+        resultprocessingtext(50,:) = (/"Medium ionisation temperature      ","Medium ionisation temperature      ", diagnostic_format, "temp_med                           "/)
 
 !high density
 
-        resultprocessingarray(48,:) = all_results%neiv_density
-        resultprocessingtext(48,:) = (/"[NeIV] density                     ","{}[Ne~{\sc iv}] density            ", diagnostic_format, "density_neiv                       "/)
-        resultprocessingarray(49,:) = all_results%neiv_density_ratio
-        resultprocessingtext(49,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "density_neiv_ratio                 "/)
-        resultprocessingarray(50,:) = all_results%high_density
-        resultprocessingtext(50,:) = (/"High ionisation density            ","High ionisation density            ", diagnostic_format, "density_high                       "/)
+        resultprocessingarray(51,:) = all_results%neiv_density
+        resultprocessingtext(51,:) = (/"[NeIV] density                     ","{}[Ne~{\sc iv}] density            ", diagnostic_format, "density_neiv                       "/)
+        resultprocessingarray(52,:) = all_results%neiv_density_ratio
+        resultprocessingtext(52,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "density_neiv_ratio                 "/)
+        resultprocessingarray(53,:) = all_results%high_density
+        resultprocessingtext(53,:) = (/"High ionisation density            ","High ionisation density            ", diagnostic_format, "density_high                       "/)
 
 !high temperature
 
-        resultprocessingarray(51,:) = all_results%ArV_temp
-        resultprocessingtext(51,:) = (/"[ArV] temperature                  ","{}[Ar~{\sc v}] temperature         ", diagnostic_format, "temp_arv                           "/)
-        resultprocessingarray(52,:) = all_results%arv_temp_ratio
-        resultprocessingtext(52,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_arv_ratio                     "/)
-        resultprocessingarray(53,:) = all_results%NeV_temp
-        resultprocessingtext(53,:) = (/"[NeV] temperature                  ","{}[Ne~{\sc v}] temperature         ", diagnostic_format, "temp_nev                           "/)
-        resultprocessingarray(54,:) = all_results%nev_temp_ratio
-        resultprocessingtext(54,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_nev_ratio                     "/)
-        resultprocessingarray(55,:) = all_results%high_temp
-        resultprocessingtext(55,:) = (/"High temperature                   ","High temperature                   ", diagnostic_format, "temp_high                          "/)
+        resultprocessingarray(54,:) = all_results%ArV_temp
+        resultprocessingtext(54,:) = (/"[ArV] temperature                  ","{}[Ar~{\sc v}] temperature         ", diagnostic_format, "temp_arv                           "/)
+        resultprocessingarray(55,:) = all_results%arv_temp_ratio
+        resultprocessingtext(55,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_arv_ratio                     "/)
+        resultprocessingarray(56,:) = all_results%NeV_temp
+        resultprocessingtext(56,:) = (/"[NeV] temperature                  ","{}[Ne~{\sc v}] temperature         ", diagnostic_format, "temp_nev                           "/)
+        resultprocessingarray(57,:) = all_results%nev_temp_ratio
+        resultprocessingtext(57,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_nev_ratio                     "/)
+        resultprocessingarray(58,:) = all_results%high_temp
+        resultprocessingtext(58,:) = (/"High temperature                   ","High temperature                   ", diagnostic_format, "temp_high                          "/)
 
 !Recombination line diagnostics
 
-        resultprocessingarray(56,:) = all_results%Balmer_jump_temp
-        resultprocessingtext(56,:) = (/"Balmer jump temperature            ","Balmer jump temperature            ", diagnostic_format, "temp_balmerjump                    "/)
+        resultprocessingarray(59,:) = all_results%Balmer_jump_temp
+        resultprocessingtext(59,:) = (/"Balmer jump temperature            ","Balmer jump temperature            ", diagnostic_format, "temp_balmerjump                    "/)
 
-        resultprocessingarray(57,:) = all_results%Paschen_jump_temp
-        resultprocessingtext(57,:) = (/"Paschen jump temperature           ","Paschen jump temperature           ", diagnostic_format, "temp_paschenjump                   "/)
+        resultprocessingarray(60,:) = all_results%Paschen_jump_temp
+        resultprocessingtext(60,:) = (/"Paschen jump temperature           ","Paschen jump temperature           ", diagnostic_format, "temp_paschenjump                   "/)
 
-        resultprocessingarray(58,:) = all_results%Balmerdec_density
-        resultprocessingtext(58,:) = (/"Balmer decrement density           ","Balmer decrement density           ", diagnostic_format, "density_balmerdec                  "/)
+        resultprocessingarray(61,:) = all_results%Balmerdec_density
+        resultprocessingtext(61,:) = (/"Balmer decrement density           ","Balmer decrement density           ", diagnostic_format, "density_balmerdec                  "/)
 
-        resultprocessingarray(59,:) = all_results%Paschendec_density
-        resultprocessingtext(59,:) = (/"Paschen decrement density          ","Paschen decrement density          ", diagnostic_format, "density_paschendec                 "/)
+        resultprocessingarray(62,:) = all_results%Paschendec_density
+        resultprocessingtext(62,:) = (/"Paschen decrement density          ","Paschen decrement density          ", diagnostic_format, "density_paschendec                 "/)
 
-        resultprocessingarray(60,:) = all_results%te_5876_4471
-        resultprocessingtext(60,:) = (/"He I temperature (5876/4471)       ","He temperature (5876/4471)         ", diagnostic_format, "temp_he_5876_4471                  "/)
+        resultprocessingarray(63,:) = all_results%te_5876_4471
+        resultprocessingtext(63,:) = (/"He I temperature (5876/4471)       ","He temperature (5876/4471)         ", diagnostic_format, "temp_he_5876_4471                  "/)
 
-        resultprocessingarray(61,:) = all_results%ratio_5876_4471
-        resultprocessingtext(61,:) = (/"5876/4471 ratio                    ","5876/4471 ratio                    ", diagnostic_ratio_format, "temp_he_5876_4471_ratio            "/)
+        resultprocessingarray(64,:) = all_results%ratio_5876_4471
+        resultprocessingtext(64,:) = (/"5876/4471 ratio                    ","5876/4471 ratio                    ", diagnostic_ratio_format, "temp_he_5876_4471_ratio            "/)
 
-        resultprocessingarray(62,:) = all_results%te_6678_4471
-        resultprocessingtext(62,:) = (/"He temperature (6678/4471)         ","He temperature (6678/4471)         ", diagnostic_format, "temp_he_6678_4471                  "/)
+        resultprocessingarray(65,:) = all_results%te_6678_4471
+        resultprocessingtext(65,:) = (/"He temperature (6678/4471)         ","He temperature (6678/4471)         ", diagnostic_format, "temp_he_6678_4471                  "/)
 
-        resultprocessingarray(63,:) = all_results%ratio_6678_4471
-        resultprocessingtext(63,:) = (/"6678/4471 ratio                    ","6678/4471 ratio                    ", diagnostic_ratio_format, "temp_he_6678_4471_ratio            "/)
+        resultprocessingarray(66,:) = all_results%ratio_6678_4471
+        resultprocessingtext(66,:) = (/"6678/4471 ratio                    ","6678/4471 ratio                    ", diagnostic_ratio_format, "temp_he_6678_4471_ratio            "/)
 
-        resultprocessingarray(64,:) = all_results%oii_te
-        resultprocessingtext(64,:) = (/"OII temperature                    ","OII temperature                    ", diagnostic_format, "temp_oiirls                        "/)
+        resultprocessingarray(67,:) = all_results%oii_te
+        resultprocessingtext(67,:) = (/"OII temperature                    ","OII temperature                    ", diagnostic_format, "temp_oiirls                        "/)
 
-        resultprocessingarray(65,:) = all_results%oii_ne
-        resultprocessingtext(65,:) = (/"OII density                        ","OII density                        ", diagnostic_format, "density_oiirls                     "/)
+        resultprocessingarray(68,:) = all_results%oii_ne
+        resultprocessingtext(68,:) = (/"OII density                        ","OII density                        ", diagnostic_format, "density_oiirls                     "/)
 
 ! recombination contribution to CELs
 
-        resultprocessingarray(66,:) = all_results%nii5754recCEL
-        resultprocessingtext(66,:) = (/"NII 5754 assuming N2+ from CELs    ","N~{\sc ii}5754$_R$ (N$^{2+}$ CELs) ", adf_format, "recombination_5754_CELabund        "/)
-        resultprocessingarray(67,:) = all_results%nii5754recRL
-        resultprocessingtext(67,:) = (/"NII 5754 assuming N2+ from RLs     ","N~{\sc ii}5754$_R$ (N$^{2+}$ CELs) ", adf_format, "recombination_5754_RLabund         "/)
-        resultprocessingarray(68,:) = all_results%oii7325recCEL
-        resultprocessingtext(68,:) = (/"OII 7320,30 assuming O2+ from CELs ","O~{\sc ii}7325$_R$ (O$^{2+}$ CELs) ", adf_format, "recombination_7325_CELabund        "/)
-        resultprocessingarray(69,:) = all_results%oii7325recRL
-        resultprocessingtext(69,:) = (/"OII 7320,30 assuming O2+ from RLs  ","O~{\sc ii}7325$_R$ (O$^{2+}$ CELs) ", adf_format, "recombination_7325_RLabund         "/)
-        resultprocessingarray(70,:) = all_results%oiii4363recCEL
-        resultprocessingtext(70,:) = (/"OIII 4363 assuming O3+ from CELs   ","O~{\sc ii}4363$_R$ (O$^{3+}$ CELs) ", adf_format, "recombination_4363_CELabund        "/)
-        resultprocessingarray(71,:) = all_results%oiii4363recRL
-        resultprocessingtext(71,:) = (/"OIII 4363 assuming O3+ from RLs    ","O~{\sc ii}4363$_R$ (O$^{3+}$ CELs) ", adf_format, "recombination_4363_RLabund         "/)
+        resultprocessingarray(69,:) = all_results%nii5754recCEL
+        resultprocessingtext(69,:) = (/"NII 5754 assuming N2+ from CELs    ","N~{\sc ii}5754$_R$ (N$^{2+}$ CELs) ", adf_format, "recombination_5754_CELabund        "/)
+        resultprocessingarray(70,:) = all_results%nii5754recRL
+        resultprocessingtext(70,:) = (/"NII 5754 assuming N2+ from RLs     ","N~{\sc ii}5754$_R$ (N$^{2+}$ CELs) ", adf_format, "recombination_5754_RLabund         "/)
+        resultprocessingarray(71,:) = all_results%oii7325recCEL
+        resultprocessingtext(71,:) = (/"OII 7320,30 assuming O2+ from CELs ","O~{\sc ii}7325$_R$ (O$^{2+}$ CELs) ", adf_format, "recombination_7325_CELabund        "/)
+        resultprocessingarray(72,:) = all_results%oii7325recRL
+        resultprocessingtext(72,:) = (/"OII 7320,30 assuming O2+ from RLs  ","O~{\sc ii}7325$_R$ (O$^{2+}$ CELs) ", adf_format, "recombination_7325_RLabund         "/)
+        resultprocessingarray(73,:) = all_results%oiii4363recCEL
+        resultprocessingtext(73,:) = (/"OIII 4363 assuming O3+ from CELs   ","O~{\sc ii}4363$_R$ (O$^{3+}$ CELs) ", adf_format, "recombination_4363_CELabund        "/)
+        resultprocessingarray(74,:) = all_results%oiii4363recRL
+        resultprocessingtext(74,:) = (/"OIII 4363 assuming O3+ from RLs    ","O~{\sc ii}4363$_R$ (O$^{3+}$ CELs) ", adf_format, "recombination_4363_RLabund         "/)
 
 !CEL abundances
 
-        resultprocessingarray(72,:) = all_results%NC_abund_CEL
-        resultprocessingtext(72,:) = (/"C0/H                               ","C$^{0}$/H                          ", abundances_format, "abund_cel_nc                       "/)
-        resultprocessingarray(73,:) = all_results%cii_abund_CEL
-        resultprocessingtext(73,:) = (/"C+/H                               ","C$^{+}$/H                          ", abundances_format, "abund_cel_cii                      "/)
-        resultprocessingarray(74,:) = all_results%ciii_abund_CEL
-        resultprocessingtext(74,:) = (/"C2+/H                              ","C$^{2+}$/H                         ", abundances_format, "abund_cel_ciii                     "/)
-        resultprocessingarray(75,:) = all_results%civ_abund_CEL
-        resultprocessingtext(75,:) = (/"C3+/H                              ","C$^{3+}$/H                         ", abundances_format, "abund_cel_civ                      "/)
-        resultprocessingarray(76,:) = all_results%c_icf_CEL
-        resultprocessingtext(76,:) = (/"icf(C)                             ","icf(C)                             ", abundances_format, "icf_cel_c                          "/)
-        resultprocessingarray(77,:) = all_results%C_abund_CEL
-        resultprocessingtext(77,:) = (/"C/H                                ","C$^{}$/H                           ", abundances_format, "abund_cel_c                        "/)
-        resultprocessingarray(78,:) = all_results%nii_abund_CEL
-        resultprocessingtext(78,:) = (/"N+/H                               ","N$^{+}$/H                          ", abundances_format, "abund_cel_nii                      "/)
-        resultprocessingarray(79,:) = all_results%niii_abund_CEL
-        resultprocessingtext(79,:) = (/"N2+/H                              ","N$^{2+}$/H                         ", abundances_format, "abund_cel_niii                     "/)
-        resultprocessingarray(80,:) = all_results%niv_abund_CEL
-        resultprocessingtext(80,:) = (/"N3+/H                              ","N$^{3+}$/H                         ", abundances_format, "abund_cel_niv                      "/)
-        resultprocessingarray(81,:) = all_results%nv_abund_CEL
-        resultprocessingtext(81,:) = (/"N4+/H                              ","N$^{4+}$/H                         ", abundances_format, "abund_cel_nv                       "/)
-        resultprocessingarray(82,:) = all_results%n_icf_CEL
-        resultprocessingtext(82,:) = (/"icf(N)                             ","icf(N)                             ", abundances_format, "icf_cel_n                          "/)
-        resultprocessingarray(83,:) = all_results%N_abund_CEL
-        resultprocessingtext(83,:) = (/"N/H                                ","N$^{}$/H                           ", abundances_format, "abund_cel_n                        "/)
-        resultprocessingarray(84,:) = all_results%NO_abund_CEL
-        resultprocessingtext(84,:) = (/"O0/H                               ","O$^{0}$/H                          ", abundances_format, "abund_cel_no                       "/)
-        resultprocessingarray(85,:) = all_results%Oii_abund_CEL
-        resultprocessingtext(85,:) = (/"O+/H                               ","O$^{+}$/H                          ", abundances_format, "abund_cel_oii                      "/)
-        resultprocessingarray(86,:) = all_results%Oiii_abund_CEL
-        resultprocessingtext(86,:) = (/"O2+/H                              ","O$^{2+}$/H                         ", abundances_format, "abund_cel_oiii                     "/)
-        resultprocessingarray(87,:) = all_results%Oiv_abund_CEL
-        resultprocessingtext(87,:) = (/"O3+/H                              ","O$^{3+}$/H                         ", abundances_format, "abund_cel_oiv                      "/)
-        resultprocessingarray(88,:) = all_results%o_icf_CEL
-        resultprocessingtext(88,:) = (/"icf(O)                             ","icf(O)                             ", abundances_format, "icf_cel_o                          "/)
-        resultprocessingarray(89,:) = all_results%O_abund_CEL
-        resultprocessingtext(89,:) = (/"O/H                                ","O$^{}$/H                           ", abundances_format, "abund_cel_o                        "/)
-        resultprocessingarray(90,:) = all_results%NeII_abund_CEL
-        resultprocessingtext(90,:) = (/"Ne+/H                              ","Ne$^{+}$/H                         ", abundances_format, "abund_cel_neii                     "/)
-        resultprocessingarray(91,:) = all_results%NeIII_abund_CEL
-        resultprocessingtext(91,:) = (/"Ne2+/H                             ","Ne$^{2+}$/H                        ", abundances_format, "abund_cel_neiii                    "/)
-        resultprocessingarray(92,:) = all_results%NeIV_abund_CEL
-        resultprocessingtext(92,:) = (/"Ne3+/H                             ","Ne$^{3+}$/H                        ", abundances_format, "abund_cel_neiv                     "/)
-        resultprocessingarray(93,:) = all_results%NeV_abund_CEL
-        resultprocessingtext(93,:) = (/"Ne4+/H                             ","Ne$^{4+}$/H                        ", abundances_format, "abund_cel_nev                      "/)
-        resultprocessingarray(94,:) = all_results%ne_icf_CEL
-        resultprocessingtext(94,:) = (/"icf(Ne)                            ","icf(Ne)                            ", abundances_format, "icf_cel_ne                         "/)
-        resultprocessingarray(95,:) = all_results%Ne_abund_CEL
-        resultprocessingtext(95,:) = (/"Ne/H                               ","Ne$^{}$/H                          ", abundances_format, "abund_cel_ne                       "/)
-        resultprocessingarray(96,:) = all_results%ArIII_abund_CEL
-        resultprocessingtext(96,:) = (/"Ar2+/H                             ","Ar$^{2+}$/H                        ", abundances_format, "abund_cel_ariii                    "/)
-        resultprocessingarray(97,:) = all_results%ArIV_abund_CEL
-        resultprocessingtext(97,:) = (/"Ar3+/H                             ","Ar$^{3+}$/H                        ", abundances_format, "abund_cel_ariv                     "/)
-        resultprocessingarray(98,:) = all_results%ArV_abund_CEL
-        resultprocessingtext(98,:) = (/"Ar4+/H                             ","Ar$^{4+}$/H                        ", abundances_format, "abund_cel_arv                      "/)
-        resultprocessingarray(99,:) = all_results%ar_icf_CEL
-        resultprocessingtext(99,:) = (/"icf(Ar)                            ","icf(Ar)                            ", abundances_format, "icf_cel_ar                         "/)
-        resultprocessingarray(100,:) = all_results%Ar_abund_CEL
-        resultprocessingtext(100,:) = (/"Ar/H                               ","Ar$^{}$/H                          ", abundances_format, "abund_cel_ar                       "/)
-        resultprocessingarray(101,:) = all_results%SII_abund_CEL
-        resultprocessingtext(101,:) = (/"S+/H                               ","S$^{+}$/H                          ", abundances_format, "abund_cel_sii                      "/)
-        resultprocessingarray(102,:) = all_results%SIII_abund_CEL
-        resultprocessingtext(102,:) = (/"S2+/H                              ","S$^{2+}$/H                         ", abundances_format, "abund_cel_siii                     "/)
-        resultprocessingarray(103,:) = all_results%s_icf_CEL
-        resultprocessingtext(103,:) = (/"icf(S)                             ","icf(S)                             ", abundances_format, "icf_cel_s                          "/)
-        resultprocessingarray(104,:) = all_results%S_abund_CEL
-        resultprocessingtext(104,:) = (/"S/H                                ","S$^{}$/H                           ", abundances_format, "abund_cel_s                        "/)
-        resultprocessingarray(105,:) = all_results%ClIII_abund_CEL
-        resultprocessingtext(105,:) = (/"Cl2+/H                             ","Cl$^{2+}$/H                        ", abundances_format, "abund_cel_cliii                    "/)
-        resultprocessingarray(106,:) = all_results%cl_icf_CEL
-        resultprocessingtext(106,:) = (/"icf(Cl)                            ","icf(Cl)                            ", abundances_format, "icf_cel_cl                         "/)
-        resultprocessingarray(107,:) = all_results%Cl_abund_CEL
-        resultprocessingtext(107,:) = (/"Cl/H                               ","Cl$^{}$/H                          ", abundances_format, "abund_cel_cl                       "/)
+        resultprocessingarray(75,:) = all_results%NC_abund_CEL
+        resultprocessingtext(75,:) = (/"C0/H                               ","C$^{0}$/H                          ", abundances_format, "abund_cel_nc                       "/)
+        resultprocessingarray(76,:) = all_results%cii_abund_CEL
+        resultprocessingtext(76,:) = (/"C+/H                               ","C$^{+}$/H                          ", abundances_format, "abund_cel_cii                      "/)
+        resultprocessingarray(77,:) = all_results%ciii_abund_CEL
+        resultprocessingtext(77,:) = (/"C2+/H                              ","C$^{2+}$/H                         ", abundances_format, "abund_cel_ciii                     "/)
+        resultprocessingarray(78,:) = all_results%civ_abund_CEL
+        resultprocessingtext(78,:) = (/"C3+/H                              ","C$^{3+}$/H                         ", abundances_format, "abund_cel_civ                      "/)
+        resultprocessingarray(79,:) = all_results%c_icf_CEL
+        resultprocessingtext(79,:) = (/"icf(C)                             ","icf(C)                             ", abundances_format, "icf_cel_c                          "/)
+        resultprocessingarray(80,:) = all_results%C_abund_CEL
+        resultprocessingtext(80,:) = (/"C/H                                ","C$^{}$/H                           ", abundances_format, "abund_cel_c                        "/)
+        resultprocessingarray(81,:) = all_results%nii_abund_CEL
+        resultprocessingtext(81,:) = (/"N+/H                               ","N$^{+}$/H                          ", abundances_format, "abund_cel_nii                      "/)
+        resultprocessingarray(82,:) = all_results%niii_abund_CEL
+        resultprocessingtext(82,:) = (/"N2+/H                              ","N$^{2+}$/H                         ", abundances_format, "abund_cel_niii                     "/)
+        resultprocessingarray(83,:) = all_results%niv_abund_CEL
+        resultprocessingtext(83,:) = (/"N3+/H                              ","N$^{3+}$/H                         ", abundances_format, "abund_cel_niv                      "/)
+        resultprocessingarray(84,:) = all_results%nv_abund_CEL
+        resultprocessingtext(84,:) = (/"N4+/H                              ","N$^{4+}$/H                         ", abundances_format, "abund_cel_nv                       "/)
+        resultprocessingarray(85,:) = all_results%n_icf_CEL
+        resultprocessingtext(85,:) = (/"icf(N)                             ","icf(N)                             ", abundances_format, "icf_cel_n                          "/)
+        resultprocessingarray(86,:) = all_results%N_abund_CEL
+        resultprocessingtext(86,:) = (/"N/H                                ","N$^{}$/H                           ", abundances_format, "abund_cel_n                        "/)
+        resultprocessingarray(87,:) = all_results%NO_abund_CEL
+        resultprocessingtext(87,:) = (/"O0/H                               ","O$^{0}$/H                          ", abundances_format, "abund_cel_no                       "/)
+        resultprocessingarray(88,:) = all_results%Oii_abund_CEL
+        resultprocessingtext(88,:) = (/"O+/H                               ","O$^{+}$/H                          ", abundances_format, "abund_cel_oii                      "/)
+        resultprocessingarray(89,:) = all_results%Oiii_abund_CEL
+        resultprocessingtext(89,:) = (/"O2+/H                              ","O$^{2+}$/H                         ", abundances_format, "abund_cel_oiii                     "/)
+        resultprocessingarray(90,:) = all_results%Oiv_abund_CEL
+        resultprocessingtext(90,:) = (/"O3+/H                              ","O$^{3+}$/H                         ", abundances_format, "abund_cel_oiv                      "/)
+        resultprocessingarray(91,:) = all_results%o_icf_CEL
+        resultprocessingtext(91,:) = (/"icf(O)                             ","icf(O)                             ", abundances_format, "icf_cel_o                          "/)
+        resultprocessingarray(92,:) = all_results%O_abund_CEL
+        resultprocessingtext(92,:) = (/"O/H                                ","O$^{}$/H                           ", abundances_format, "abund_cel_o                        "/)
+        resultprocessingarray(93,:) = all_results%NeII_abund_CEL
+        resultprocessingtext(93,:) = (/"Ne+/H                              ","Ne$^{+}$/H                         ", abundances_format, "abund_cel_neii                     "/)
+        resultprocessingarray(94,:) = all_results%NeIII_abund_CEL
+        resultprocessingtext(94,:) = (/"Ne2+/H                             ","Ne$^{2+}$/H                        ", abundances_format, "abund_cel_neiii                    "/)
+        resultprocessingarray(95,:) = all_results%NeIV_abund_CEL
+        resultprocessingtext(95,:) = (/"Ne3+/H                             ","Ne$^{3+}$/H                        ", abundances_format, "abund_cel_neiv                     "/)
+        resultprocessingarray(96,:) = all_results%NeV_abund_CEL
+        resultprocessingtext(96,:) = (/"Ne4+/H                             ","Ne$^{4+}$/H                        ", abundances_format, "abund_cel_nev                      "/)
+        resultprocessingarray(97,:) = all_results%ne_icf_CEL
+        resultprocessingtext(97,:) = (/"icf(Ne)                            ","icf(Ne)                            ", abundances_format, "icf_cel_ne                         "/)
+        resultprocessingarray(98,:) = all_results%Ne_abund_CEL
+        resultprocessingtext(98,:) = (/"Ne/H                               ","Ne$^{}$/H                          ", abundances_format, "abund_cel_ne                       "/)
+        resultprocessingarray(99,:) = all_results%ArIII_abund_CEL
+        resultprocessingtext(99,:) = (/"Ar2+/H                             ","Ar$^{2+}$/H                        ", abundances_format, "abund_cel_ariii                    "/)
+        resultprocessingarray(100,:) = all_results%ArIV_abund_CEL
+        resultprocessingtext(100,:) = (/"Ar3+/H                             ","Ar$^{3+}$/H                        ", abundances_format, "abund_cel_ariv                     "/)
+        resultprocessingarray(101,:) = all_results%ArV_abund_CEL
+        resultprocessingtext(101,:) = (/"Ar4+/H                             ","Ar$^{4+}$/H                        ", abundances_format, "abund_cel_arv                      "/)
+        resultprocessingarray(102,:) = all_results%ar_icf_CEL
+        resultprocessingtext(102,:) = (/"icf(Ar)                            ","icf(Ar)                            ", abundances_format, "icf_cel_ar                         "/)
+        resultprocessingarray(103,:) = all_results%Ar_abund_CEL
+        resultprocessingtext(103,:) = (/"Ar/H                               ","Ar$^{}$/H                          ", abundances_format, "abund_cel_ar                       "/)
+        resultprocessingarray(104,:) = all_results%SII_abund_CEL
+        resultprocessingtext(104,:) = (/"S+/H                               ","S$^{+}$/H                          ", abundances_format, "abund_cel_sii                      "/)
+        resultprocessingarray(105,:) = all_results%SIII_abund_CEL
+        resultprocessingtext(105,:) = (/"S2+/H                              ","S$^{2+}$/H                         ", abundances_format, "abund_cel_siii                     "/)
+        resultprocessingarray(106,:) = all_results%s_icf_CEL
+        resultprocessingtext(106,:) = (/"icf(S)                             ","icf(S)                             ", abundances_format, "icf_cel_s                          "/)
+        resultprocessingarray(107,:) = all_results%S_abund_CEL
+        resultprocessingtext(107,:) = (/"S/H                                ","S$^{}$/H                           ", abundances_format, "abund_cel_s                        "/)
+        resultprocessingarray(108,:) = all_results%ClIII_abund_CEL
+        resultprocessingtext(108,:) = (/"Cl2+/H                             ","Cl$^{2+}$/H                        ", abundances_format, "abund_cel_cliii                    "/)
+        resultprocessingarray(109,:) = all_results%cl_icf_CEL
+        resultprocessingtext(109,:) = (/"icf(Cl)                            ","icf(Cl)                            ", abundances_format, "icf_cel_cl                         "/)
+        resultprocessingarray(110,:) = all_results%Cl_abund_CEL
+        resultprocessingtext(110,:) = (/"Cl/H                               ","Cl$^{}$/H                          ", abundances_format, "abund_cel_cl                       "/)
 
 !ORL abundances
 
-        resultprocessingarray(108,:) = all_results%Hei_abund_ORL
-        resultprocessingtext(108,:) = (/"He+/H                              ","He$^{+}$/H                         ", abundances_format, "abund_orl_hei                      "/)
-        resultprocessingarray(109,:) = all_results%Heii_abund_ORL
-        resultprocessingtext(109,:) = (/"He2+/H                             ","He$^{2+}$/H                        ", abundances_format, "abund_orl_heii                     "/)
-        resultprocessingarray(110,:) = all_results%He_abund_ORL
-        resultprocessingtext(110,:) = (/"He/H                               ","He/H                               ", abundances_format, "abund_orl_he                       "/)
-        resultprocessingarray(111,:) = all_results%Cii_abund_ORL
-        resultprocessingtext(111,:) = (/"C2+/H                              ","C$^{2+}$/H                         ", abundances_format, "abund_orl_cii                      "/)
-        resultprocessingarray(112,:) = all_results%Ciii_abund_ORL
-        resultprocessingtext(112,:) = (/"C3+/H                              ","C$^{3+}$/H                         ", abundances_format, "abund_orl_ciii                     "/)
-        resultprocessingarray(113,:) = all_results%c_icf_ORL
-        resultprocessingtext(113,:) = (/"icf(C)                             ","icf(C)                             ", abundances_format, "icf_orl_c                          "/)
-        resultprocessingarray(114,:) = all_results%C_abund_ORL
-        resultprocessingtext(114,:) = (/"C/H                                ","C/H                                ", abundances_format, "abund_orl_c                        "/)
-        resultprocessingarray(115,:) = all_results%Nii_v3_abund_ORL
-        resultprocessingtext(115,:) = (/"N2+/H (V3)                         ","N$^{2+}$/H (V3)                    ", abundances_format, "abund_orl_nii_v3                   "/)
-        resultprocessingarray(116,:) = all_results%Nii_v5_abund_ORL
-        resultprocessingtext(116,:) = (/"N2+/H (V5)                         ","N$^{2+}$/H (V5)                    ", abundances_format, "abund_orl_nii_v5                   "/)
-        resultprocessingarray(117,:) = all_results%Nii_v8_abund_ORL
-        resultprocessingtext(117,:) = (/"N2+/H (V8)                         ","N$^{2+}$/H (V8)                    ", abundances_format, "abund_orl_nii_v8                   "/)
-        resultprocessingarray(118,:) = all_results%Nii_v12_abund_ORL
-        resultprocessingtext(118,:) = (/"N2+/H (V12)                        ","N$^{2+}$/H (V12)                   ", abundances_format, "abund_orl_nii_v12                  "/)
-        resultprocessingarray(119,:) = all_results%Nii_v20_abund_ORL
-        resultprocessingtext(119,:) = (/"N2+/H (V20)                        ","N$^{2+}$/H (V20)                   ", abundances_format, "abund_orl_nii_v20                  "/)
-        resultprocessingarray(120,:) = all_results%Nii_v28_abund_ORL
-        resultprocessingtext(120,:) = (/"N2+/H (V28)                        ","N$^{2+}$/H (V28)                   ", abundances_format, "abund_orl_nii_v28                  "/)
-        resultprocessingarray(121,:) = all_results%Nii_3d4f_abund_ORL
-        resultprocessingtext(121,:) = (/"N2+/H (3d-4f)                      ","N$^{2+}$/H (3d-4f)                 ", abundances_format, "abund_orl_nii_3d4f                 "/)
-        resultprocessingarray(122,:) = all_results%Nii_abund_ORL
-        resultprocessingtext(122,:) = (/"N2+/H                              ","N$^{2+}$/H                         ", abundances_format, "abund_orl_nii                      "/)
-        resultprocessingarray(123,:) = all_results%Niii_abund_ORL
-        resultprocessingtext(123,:) = (/"N3+/H                              ","N$^{3+}$/H                         ", abundances_format, "abund_orl_niii                     "/)
-        resultprocessingarray(124,:) = all_results%n_icf_ORL
-        resultprocessingtext(124,:) = (/"icf(N)                             ","icf(N)                             ", abundances_format, "icf_orl_n                          "/)
-        resultprocessingarray(125,:) = all_results%N_abund_ORL
-        resultprocessingtext(125,:) = (/"N/H                                ","N/H                                ", abundances_format, "abund_orl_n                        "/)
-        resultprocessingarray(126,:) = all_results%Oii_v1_abund_ORL
-        resultprocessingtext(126,:) = (/"O2+/H (V1)                         ","O$^{2+}$/H (V1)                    ", abundances_format, "abund_orl_oii_v1                   "/)
-        resultprocessingarray(127,:) = all_results%Oii_v2_abund_ORL
-        resultprocessingtext(127,:) = (/"O2+/H (V2)                         ","O$^{2+}$/H (V2)                    ", abundances_format, "abund_orl_oii_v2                   "/)
-        resultprocessingarray(128,:) = all_results%Oii_v5_abund_ORL
-        resultprocessingtext(128,:) = (/"O2+/H (V5)                         ","O$^{2+}$/H (V5)                    ", abundances_format, "abund_orl_oii_v5                   "/)
-        resultprocessingarray(129,:) = all_results%Oii_v10_abund_ORL
-        resultprocessingtext(129,:) = (/"O2+/H (V10)                        ","O$^{2+}$/H (V10)                   ", abundances_format, "abund_orl_oii_v10                  "/)
-        resultprocessingarray(130,:) = all_results%Oii_v11_abund_ORL
-        resultprocessingtext(130,:) = (/"O2+/H (V11)                        ","O$^{2+}$/H (V11)                   ", abundances_format, "abund_orl_oii_v11                  "/)
-        resultprocessingarray(131,:) = all_results%Oii_v12_abund_ORL
-        resultprocessingtext(131,:) = (/"O2+/H (V12)                        ","O$^{2+}$/H (V12)                   ", abundances_format, "abund_orl_oii_v12                  "/)
-        resultprocessingarray(132,:) = all_results%Oii_v19_abund_ORL
-        resultprocessingtext(132,:) = (/"O2+/H (V19)                        ","O$^{2+}$/H (V19)                   ", abundances_format, "abund_orl_oii_v19                  "/)
-        resultprocessingarray(133,:) = all_results%Oii_v20_abund_ORL
-        resultprocessingtext(133,:) = (/"O2+/H (V20)                        ","O$^{2+}$/H (V20)                   ", abundances_format, "abund_orl_oii_v20                  "/)
-        resultprocessingarray(134,:) = all_results%Oii_v25_abund_ORL
-        resultprocessingtext(134,:) = (/"O2+/H (V25)                        ","O$^{2+}$/H (V25)                   ", abundances_format, "abund_orl_oii_v25                  "/)
-        resultprocessingarray(135,:) = all_results%Oii_v28_abund_ORL
-        resultprocessingtext(135,:) = (/"O2+/H (V28)                        ","O$^{2+}$/H (V28)                   ", abundances_format, "abund_orl_oii_v28                  "/)
-        resultprocessingarray(136,:) = all_results%Oii_v33_abund_ORL
-        resultprocessingtext(136,:) = (/"O2+/H (V33)                        ","O$^{2+}$/H (V33)                   ", abundances_format, "abund_orl_oii_v33                  "/)
-        resultprocessingarray(137,:) = all_results%Oii_3d4f_abund_ORL
-        resultprocessingtext(137,:) = (/"O2+/H (3d-4f)                      ","O$^{2+}$/H (3d-4f)                 ", abundances_format, "abund_orl_oii_3d4f                 "/)
-        resultprocessingarray(138,:) = all_results%Oii_abund_ORL
-        resultprocessingtext(138,:) = (/"O2+/H                              ","O$^{2+}$/H                         ", abundances_format, "abund_orl_oii                      "/)
-        resultprocessingarray(139,:) = all_results%O_icf_ORL
-        resultprocessingtext(139,:) = (/"icf(O)                             ","icf(O)                             ", abundances_format, "icf_orl_o                          "/)
-        resultprocessingarray(140,:) = all_results%O_abund_ORL
-        resultprocessingtext(140,:) = (/"O/H                                ","O/H                                ", abundances_format, "abund_orl_o                        "/)
-        resultprocessingarray(141,:) = all_results%Neii_abund_ORL
-        resultprocessingtext(141,:) = (/"Ne2+/H                             ","Ne$^{2+}$/H                        ", abundances_format, "abund_orl_neii                     "/)
-        resultprocessingarray(142,:) = all_results%ne_icf_ORL
-        resultprocessingtext(142,:) = (/"icf(Ne)                            ","icf(Ne)                            ", abundances_format, "icf_orl_ne                         "/)
-        resultprocessingarray(143,:) = all_results%Ne_abund_ORL
-        resultprocessingtext(143,:) = (/"Ne/H                               ","Ne/H                               ", abundances_format, "abund_orl_ne                       "/)
+        resultprocessingarray(111,:) = all_results%Hei_abund_ORL
+        resultprocessingtext(111,:) = (/"He+/H                              ","He$^{+}$/H                         ", abundances_format, "abund_orl_hei                      "/)
+        resultprocessingarray(112,:) = all_results%Heii_abund_ORL
+        resultprocessingtext(112,:) = (/"He2+/H                             ","He$^{2+}$/H                        ", abundances_format, "abund_orl_heii                     "/)
+        resultprocessingarray(113,:) = all_results%He_abund_ORL
+        resultprocessingtext(113,:) = (/"He/H                               ","He/H                               ", abundances_format, "abund_orl_he                       "/)
+        resultprocessingarray(114,:) = all_results%Cii_abund_ORL
+        resultprocessingtext(114,:) = (/"C2+/H                              ","C$^{2+}$/H                         ", abundances_format, "abund_orl_cii                      "/)
+        resultprocessingarray(115,:) = all_results%Ciii_abund_ORL
+        resultprocessingtext(115,:) = (/"C3+/H                              ","C$^{3+}$/H                         ", abundances_format, "abund_orl_ciii                     "/)
+        resultprocessingarray(116,:) = all_results%c_icf_ORL
+        resultprocessingtext(116,:) = (/"icf(C)                             ","icf(C)                             ", abundances_format, "icf_orl_c                          "/)
+        resultprocessingarray(117,:) = all_results%C_abund_ORL
+        resultprocessingtext(117,:) = (/"C/H                                ","C/H                                ", abundances_format, "abund_orl_c                        "/)
+        resultprocessingarray(118,:) = all_results%Nii_v3_abund_ORL
+        resultprocessingtext(118,:) = (/"N2+/H (V3)                         ","N$^{2+}$/H (V3)                    ", abundances_format, "abund_orl_nii_v3                   "/)
+        resultprocessingarray(119,:) = all_results%Nii_v5_abund_ORL
+        resultprocessingtext(119,:) = (/"N2+/H (V5)                         ","N$^{2+}$/H (V5)                    ", abundances_format, "abund_orl_nii_v5                   "/)
+        resultprocessingarray(120,:) = all_results%Nii_v8_abund_ORL
+        resultprocessingtext(120,:) = (/"N2+/H (V8)                         ","N$^{2+}$/H (V8)                    ", abundances_format, "abund_orl_nii_v8                   "/)
+        resultprocessingarray(121,:) = all_results%Nii_v12_abund_ORL
+        resultprocessingtext(121,:) = (/"N2+/H (V12)                        ","N$^{2+}$/H (V12)                   ", abundances_format, "abund_orl_nii_v12                  "/)
+        resultprocessingarray(122,:) = all_results%Nii_v20_abund_ORL
+        resultprocessingtext(122,:) = (/"N2+/H (V20)                        ","N$^{2+}$/H (V20)                   ", abundances_format, "abund_orl_nii_v20                  "/)
+        resultprocessingarray(123,:) = all_results%Nii_v28_abund_ORL
+        resultprocessingtext(123,:) = (/"N2+/H (V28)                        ","N$^{2+}$/H (V28)                   ", abundances_format, "abund_orl_nii_v28                  "/)
+        resultprocessingarray(124,:) = all_results%Nii_3d4f_abund_ORL
+        resultprocessingtext(124,:) = (/"N2+/H (3d-4f)                      ","N$^{2+}$/H (3d-4f)                 ", abundances_format, "abund_orl_nii_3d4f                 "/)
+        resultprocessingarray(125,:) = all_results%Nii_abund_ORL
+        resultprocessingtext(125,:) = (/"N2+/H                              ","N$^{2+}$/H                         ", abundances_format, "abund_orl_nii                      "/)
+        resultprocessingarray(126,:) = all_results%Niii_abund_ORL
+        resultprocessingtext(126,:) = (/"N3+/H                              ","N$^{3+}$/H                         ", abundances_format, "abund_orl_niii                     "/)
+        resultprocessingarray(127,:) = all_results%n_icf_ORL
+        resultprocessingtext(127,:) = (/"icf(N)                             ","icf(N)                             ", abundances_format, "icf_orl_n                          "/)
+        resultprocessingarray(128,:) = all_results%N_abund_ORL
+        resultprocessingtext(128,:) = (/"N/H                                ","N/H                                ", abundances_format, "abund_orl_n                        "/)
+        resultprocessingarray(129,:) = all_results%Oii_v1_abund_ORL
+        resultprocessingtext(129,:) = (/"O2+/H (V1)                         ","O$^{2+}$/H (V1)                    ", abundances_format, "abund_orl_oii_v1                   "/)
+        resultprocessingarray(130,:) = all_results%Oii_v2_abund_ORL
+        resultprocessingtext(130,:) = (/"O2+/H (V2)                         ","O$^{2+}$/H (V2)                    ", abundances_format, "abund_orl_oii_v2                   "/)
+        resultprocessingarray(131,:) = all_results%Oii_v5_abund_ORL
+        resultprocessingtext(131,:) = (/"O2+/H (V5)                         ","O$^{2+}$/H (V5)                    ", abundances_format, "abund_orl_oii_v5                   "/)
+        resultprocessingarray(132,:) = all_results%Oii_v10_abund_ORL
+        resultprocessingtext(132,:) = (/"O2+/H (V10)                        ","O$^{2+}$/H (V10)                   ", abundances_format, "abund_orl_oii_v10                  "/)
+        resultprocessingarray(133,:) = all_results%Oii_v11_abund_ORL
+        resultprocessingtext(133,:) = (/"O2+/H (V11)                        ","O$^{2+}$/H (V11)                   ", abundances_format, "abund_orl_oii_v11                  "/)
+        resultprocessingarray(134,:) = all_results%Oii_v12_abund_ORL
+        resultprocessingtext(134,:) = (/"O2+/H (V12)                        ","O$^{2+}$/H (V12)                   ", abundances_format, "abund_orl_oii_v12                  "/)
+        resultprocessingarray(135,:) = all_results%Oii_v19_abund_ORL
+        resultprocessingtext(135,:) = (/"O2+/H (V19)                        ","O$^{2+}$/H (V19)                   ", abundances_format, "abund_orl_oii_v19                  "/)
+        resultprocessingarray(136,:) = all_results%Oii_v20_abund_ORL
+        resultprocessingtext(136,:) = (/"O2+/H (V20)                        ","O$^{2+}$/H (V20)                   ", abundances_format, "abund_orl_oii_v20                  "/)
+        resultprocessingarray(137,:) = all_results%Oii_v25_abund_ORL
+        resultprocessingtext(137,:) = (/"O2+/H (V25)                        ","O$^{2+}$/H (V25)                   ", abundances_format, "abund_orl_oii_v25                  "/)
+        resultprocessingarray(138,:) = all_results%Oii_v28_abund_ORL
+        resultprocessingtext(138,:) = (/"O2+/H (V28)                        ","O$^{2+}$/H (V28)                   ", abundances_format, "abund_orl_oii_v28                  "/)
+        resultprocessingarray(139,:) = all_results%Oii_v33_abund_ORL
+        resultprocessingtext(139,:) = (/"O2+/H (V33)                        ","O$^{2+}$/H (V33)                   ", abundances_format, "abund_orl_oii_v33                  "/)
+        resultprocessingarray(140,:) = all_results%Oii_3d4f_abund_ORL
+        resultprocessingtext(140,:) = (/"O2+/H (3d-4f)                      ","O$^{2+}$/H (3d-4f)                 ", abundances_format, "abund_orl_oii_3d4f                 "/)
+        resultprocessingarray(141,:) = all_results%Oii_abund_ORL
+        resultprocessingtext(141,:) = (/"O2+/H                              ","O$^{2+}$/H                         ", abundances_format, "abund_orl_oii                      "/)
+        resultprocessingarray(142,:) = all_results%O_icf_ORL
+        resultprocessingtext(142,:) = (/"icf(O)                             ","icf(O)                             ", abundances_format, "icf_orl_o                          "/)
+        resultprocessingarray(143,:) = all_results%O_abund_ORL
+        resultprocessingtext(143,:) = (/"O/H                                ","O/H                                ", abundances_format, "abund_orl_o                        "/)
+        resultprocessingarray(144,:) = all_results%Neii_abund_ORL
+        resultprocessingtext(144,:) = (/"Ne2+/H                             ","Ne$^{2+}$/H                        ", abundances_format, "abund_orl_neii                     "/)
+        resultprocessingarray(145,:) = all_results%ne_icf_ORL
+        resultprocessingtext(145,:) = (/"icf(Ne)                            ","icf(Ne)                            ", abundances_format, "icf_orl_ne                         "/)
+        resultprocessingarray(146,:) = all_results%Ne_abund_ORL
+        resultprocessingtext(146,:) = (/"Ne/H                               ","Ne/H                               ", abundances_format, "abund_orl_ne                       "/)
 
 !strong line abundances
 
-        resultprocessingarray(144,:) = all_results%O_R23_upper
-        resultprocessingtext(144,:) = (/"O/H (R23 upper)                    ","O/H (R23 upper)                    ", abundances_format, "abund_o_r23_upper                  "/)
-        resultprocessingarray(145,:) = all_results%O_R23_lower
-        resultprocessingtext(145,:) = (/"O/H (R23 lower)                    ","O/H (R23 lower)                    ", abundances_format, "abund_o_r23_lower                  "/)
-        resultprocessingarray(146,:) = all_results%O_N2
-        resultprocessingtext(146,:) = (/"O/H (N2)                           ","O/H (N2)                           ", abundances_format, "abund_o_n2                         "/)
-        resultprocessingarray(147,:) = all_results%O_O3N2
-        resultprocessingtext(147,:) = (/"O/H (O3N2)                         ","O/H (O3N2)                         ", abundances_format, "abund_o_o3n2                       "/)
-        resultprocessingarray(148,:) = all_results%O_Ar3O3
-        resultprocessingtext(148,:) = (/"O/H (Ar3O3)                        ","O/H (Ar3O3)                        ", abundances_format, "abund_o_ar3o3                      "/)
-        resultprocessingarray(149,:) = all_results%O_S3O3
-        resultprocessingtext(149,:) = (/"O/H (S3O3)                         ","O/H (S3O3)                         ", abundances_format, "abund_o_s3o3                       "/)
+        resultprocessingarray(147,:) = all_results%O_R23_upper
+        resultprocessingtext(147,:) = (/"O/H (R23 upper)                    ","O/H (R23 upper)                    ", abundances_format, "abund_o_r23_upper                  "/)
+        resultprocessingarray(148,:) = all_results%O_R23_lower
+        resultprocessingtext(148,:) = (/"O/H (R23 lower)                    ","O/H (R23 lower)                    ", abundances_format, "abund_o_r23_lower                  "/)
+        resultprocessingarray(149,:) = all_results%O_N2
+        resultprocessingtext(149,:) = (/"O/H (N2)                           ","O/H (N2)                           ", abundances_format, "abund_o_n2                         "/)
+        resultprocessingarray(150,:) = all_results%O_O3N2
+        resultprocessingtext(150,:) = (/"O/H (O3N2)                         ","O/H (O3N2)                         ", abundances_format, "abund_o_o3n2                       "/)
+        resultprocessingarray(151,:) = all_results%O_Ar3O3
+        resultprocessingtext(151,:) = (/"O/H (Ar3O3)                        ","O/H (Ar3O3)                        ", abundances_format, "abund_o_ar3o3                      "/)
+        resultprocessingarray(152,:) = all_results%O_S3O3
+        resultprocessingtext(152,:) = (/"O/H (S3O3)                         ","O/H (S3O3)                         ", abundances_format, "abund_o_s3o3                       "/)
 
 !adfs
 
-        resultprocessingarray(150,:) = all_results%adf_o2plus
-        resultprocessingtext(150,:) = (/"adf (O2+/H)                        ","adf (O$^{2+}$/H)                   ", adf_format, "adf_o2plus                         "/)
-        resultprocessingarray(151,:) = all_results%adf_o
-        resultprocessingtext(151,:) = (/"adf (O/H)                          ","adf (O/H)                          ", adf_format, "adf_o                              "/)
-        resultprocessingarray(152,:) = all_results%adf_n2plus
-        resultprocessingtext(152,:) = (/"adf (N2+/H)                        ","adf (N$^{2+}$/H)                   ", adf_format, "adf_n2plus                         "/)
-        resultprocessingarray(153,:) = all_results%adf_n
-        resultprocessingtext(153,:) = (/"adf (N/H)                          ","adf (N/H)                          ", adf_format, "adf_n                              "/)
-        resultprocessingarray(154,:) = all_results%adf_c2plus
-        resultprocessingtext(154,:) = (/"adf (C2+/H)                        ","adf (C$^{2+}$/H)                   ", adf_format, "adf_c2plus                         "/)
-        resultprocessingarray(155,:) = all_results%adf_c
-        resultprocessingtext(155,:) = (/"adf (C/H)                          ","adf (C/H)                          ", adf_format, "adf_c                              "/)
-        resultprocessingarray(156,:) = all_results%adf_ne2plus
-        resultprocessingtext(156,:) = (/"adf (Ne2+/H)                       ","adf (Ne$^{2+}$/H)                  ", adf_format, "adf_ne2plus                        "/)
-        resultprocessingarray(157,:) = all_results%adf_ne
-        resultprocessingtext(157,:) = (/"adf (Ne/H)                         ","adf (Ne/H)                         ", adf_format, "adf_ne                             "/)
+        resultprocessingarray(153,:) = all_results%adf_o2plus
+        resultprocessingtext(153,:) = (/"adf (O2+/H)                        ","adf (O$^{2+}$/H)                   ", adf_format, "adf_o2plus                         "/)
+        resultprocessingarray(154,:) = all_results%adf_o
+        resultprocessingtext(154,:) = (/"adf (O/H)                          ","adf (O/H)                          ", adf_format, "adf_o                              "/)
+        resultprocessingarray(155,:) = all_results%adf_n2plus
+        resultprocessingtext(155,:) = (/"adf (N2+/H)                        ","adf (N$^{2+}$/H)                   ", adf_format, "adf_n2plus                         "/)
+        resultprocessingarray(156,:) = all_results%adf_n
+        resultprocessingtext(156,:) = (/"adf (N/H)                          ","adf (N/H)                          ", adf_format, "adf_n                              "/)
+        resultprocessingarray(157,:) = all_results%adf_c2plus
+        resultprocessingtext(157,:) = (/"adf (C2+/H)                        ","adf (C$^{2+}$/H)                   ", adf_format, "adf_c2plus                         "/)
+        resultprocessingarray(158,:) = all_results%adf_c
+        resultprocessingtext(158,:) = (/"adf (C/H)                          ","adf (C/H)                          ", adf_format, "adf_c                              "/)
+        resultprocessingarray(159,:) = all_results%adf_ne2plus
+        resultprocessingtext(159,:) = (/"adf (Ne2+/H)                       ","adf (Ne$^{2+}$/H)                  ", adf_format, "adf_ne2plus                        "/)
+        resultprocessingarray(160,:) = all_results%adf_ne
+        resultprocessingtext(160,:) = (/"adf (Ne/H)                         ","adf (Ne/H)                         ", adf_format, "adf_ne                             "/)
 
 !open the files and write the headers
 
@@ -1043,52 +1049,52 @@ program neat
 
 !next, loop through the results, processing and printing
 
-        do j=1,157
+        do j=1,160
 
 ! here we put some if statements to put things into conveniently separate bits
 
           if (j .eq. 1) then
             write (650,"(/A,/A/)") "Extinction","=========="
             write (651,*) "\multicolumn{2}{l}{Extinction}\\ \hline"
-          elseif (j .eq. 2) then
+          elseif (j .eq. 5) then
             write (650,"(/A,/A)") "Diagnostics","==========="
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{Diagnostics}\\ \hline"
             write (650,"(/A,/A/)") "Low ionisation densities","-----------"
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{Low ionisation densities}\\ \hline"
-          elseif (j .eq. 7) then
+          elseif (j .eq. 10) then
             write (650,"(/A,/A/)") "Low ionisation temperatures","-----------"
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{Low ionisation temperatures}\\ \hline"
-          elseif (j .eq. 18) then
+          elseif (j .eq. 21) then
             write (650,"(/A,/A/)") "Medium ionisation densities","-----------"
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{Medium ionisation densities}\\ \hline"
-          elseif (j .eq. 33) then
+          elseif (j .eq. 36) then
             write (650,"(/A,/A/)") "Medium ionisation temperatures","-----------"
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{Medium ionisation temperatures}\\ \hline"
-          elseif (j .eq. 48) then
+          elseif (j .eq. 51) then
             write (650,"(/A,/A/)") "High ionisation densities","-----------"
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{High ionisation densities}\\ \hline"
-          elseif (j .eq. 51) then
+          elseif (j .eq. 54) then
             write (650,"(/A,/A/)") "High ionisation temperatures","-----------"
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{High ionisation temperatures}\\ \hline"
-          elseif (j .eq. 56) then
+          elseif (j .eq. 59) then
             write (650,"(/A,/A/)") "Recombination line diagnostics","-----------"
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{Recombination line diagnostics}\\ \hline"
-          elseif (j .eq. 66) then
+          elseif (j .eq. 69) then
             write (650,"(/A,/A/)") "Recombination contribution to CELs (%)","-----------"
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{Recombination contribution to CELs (\%)}\\ \hline"
-          elseif (j .eq. 72) then
+          elseif (j .eq. 75) then
             write (650,"(/A,/A/)") "CEL abundances","=============="
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{CEL abundances}\\ \hline"
-          elseif (j .eq. 108) then
+          elseif (j .eq. 111) then
             write (650,"(/A,/A/)") "ORL abundances","=============="
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{ORL abundances}\\ \hline"
-          elseif (j .eq. 111 .or. j .eq. 115 .or. j .eq. 126 .or. j .eq. 141) then
+          elseif (j .eq. 114 .or. j .eq. 118 .or. j .eq. 129 .or. j .eq. 144) then
             write (650,"(/A,/A/)")
             write (651,*) "\\"
-          elseif (j .eq. 144) then
+          elseif (j .eq. 147) then
             write (650,"(/A,/A/)") "Strong line abundances","======================"
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{Strong line abundances}\\ \hline"
-          elseif (j .eq. 150) then
+          elseif (j .eq. 153) then
             write (650,"(/A,/A/)") "Abundance discrepancy factors","============================="
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{Abundance discrepancy factors}\\ \hline"
           endif

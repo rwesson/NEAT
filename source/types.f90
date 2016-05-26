@@ -187,6 +187,9 @@ TYPE resultarray
         real(kind=dp) :: ArV_temp=0d0
         real(kind=dp) :: NeV_temp=0d0
         real(kind=dp) :: high_temp=0d0
+        real(kind=dp) :: chb_ha=0d0
+        real(kind=dp) :: chb_hg=0d0
+        real(kind=dp) :: chb_hd=0d0
         real(kind=dp) :: mean_cHb=0d0
         real(kind=dp) :: O_R23_upper=0d0
         real(kind=dp) :: O_R23_lower=0d0

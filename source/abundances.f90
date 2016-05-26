@@ -383,6 +383,9 @@ use mod_hydrogen
 
       if (lowtemp .eq. 10000.d0 .and. medtemp .ne. 10000.d0) lowtemp = medtemp
 
+      iteration_result(1)%cHb_ha = c1
+      iteration_result(1)%cHb_hg = c2
+      iteration_result(1)%cHb_hd = c3
       iteration_result(1)%mean_cHb = meanextinction
 
 ! high ionisation
