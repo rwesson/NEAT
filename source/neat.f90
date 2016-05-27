@@ -539,7 +539,7 @@ program neat
 !observed wavelength if known
 
                 if (ncols .eq. 4) then
-                  if (linelist(i)%wavelength_observed .gt. 0.) then
+                  if (linelist(j)%wavelength_observed .gt. 0.) then
                     write (650,"(X,F7.2,X)", advance='no') all_linelists(j,1)%wavelength_observed
                     write (651,"(X,F7.2,' & ')", advance='no') all_linelists(j,1)%wavelength_observed
                   else
