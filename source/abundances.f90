@@ -102,6 +102,12 @@ use mod_hydrogen
         ClabundCEL = 0.d0
         ArabundCEL = 0.d0
 
+        hetotabund = 0.d0
+        CabundRL = 0.d0
+        NabundRL = 0.d0
+        OabundRL = 0.d0
+        NeabundRL = 0.d0
+
         CELicfCl = 0.d0
         CELicfS = 0.d0
         CELicfAr = 0.d0
