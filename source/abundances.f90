@@ -1134,9 +1134,9 @@ if (switch_icf .eq. "K") then
      elseif (ariiiCELabund .lt. 1e-20 .and. arivCELabund .ge. 1e-20 .and. arvCELabund .lt. 1e-20 .and. neiiiCELabund.gt.0.d0) then !Only Ar3+ seen
        CELicfAr = NeabundCEL / neiiiCELabund !KB94 A34
        ArabundCEL = CELicfAr * arivCELabund !KB94 A35
-     elseif (ariiiCELabund .ge. 1e-20 .and. arivCELabund .ge. 1e-20 .and. NabundCEL.gt.0.d0) then !Ar 2+ and 3+ seen
+     elseif (ariiiCELabund .ge. 1e-20 .and. arivCELabund .ge. 1e-20 .and. arvCELabund .ge. 1e-20 .and. NabundCEL.gt.0.d0) then !Ar 2+, 3+ and 4+ seen
        CELicfAr = 1./(1.-(niiCELabund/NabundCEL))
-       ArabundCEL = ariiiCELabund + arivCELabund + arvCELabund !KB94 A31
+       ArabundCEL = CELicfAr * (ariiiCELabund + arivCELabund + arvCELabund) !KB94 A31
      else
        CELicfAR = 1.0
        ArabundCEL = 0.d0
@@ -1283,7 +1283,7 @@ elseif (switch_icf .eq. "D") then
 !equation 20:
   elseif (neiiiCELabund .gt. 0.D0 .and. nevCELabund .gt. 0.D0) then
     CELicfNe = (1.31+12.68*upsilon**2.57)**0.27
-    NeabundCEL = CELicfNe * OabundCEL * (neiiiCELabund + nevCELabund)
+    NeabundCEL = CELicfNe * (neiiiCELabund + nevCELabund)
   else
     NeabundCEL = 0.D0
     CELicfNe = 1.0
@@ -1299,7 +1299,7 @@ elseif (switch_icf .eq. "D") then
       CELicfS = 10.**(0.31-0.51*upsilon)
       SabundCEL = CELicfS * OabundCEL * (siiCELabund/oiiCELabund)
     elseif (siiiCELabund .gt. 0.D0 .and. siiCELabund .gt. 0.D0) then !equation 26:
-      CELicfS = 10.**((-0.02 - 0.03*OICFfactor - 2.31*OICFfactor**2 + 2.19*OICFfactor**3) / (90.69 + 2.09*OICFfactor - 2.69*OICFfactor**2))
+      CELicfS = 10.**((-0.02 - 0.03*OICFfactor - 2.31*OICFfactor**2 + 2.19*OICFfactor**3) / (0.69 + 2.09*OICFfactor - 2.69*OICFfactor**2))
       SabundCEL = CELicfS * OabundCEL * (siiCELabund+siiiCELabund)/oiiCELabund
     endif
   endif
@@ -1326,7 +1326,7 @@ elseif (switch_icf .eq. "D") then
     CELicfAr = 10.**(0.05/(0.06+OICFfactor) - 0.07)
     ArabundCEL = CELicfAr * OabundCEL * ariiiCELabund/(oiiCELabund+oiiiCELabund)
   elseif ((oiiCELabund+oiiiCELabund) .gt. 0.D0 .and. ariiiCELabund .gt. 0.D0 .and. OICFfactor .gt. 0.5) then !equation 36
-    CELicfAr = 10.**(0.03/(0.4-0.3*OICFfactor) - 0.05)
+    CELicfAr = 10.**((0.03*OICFfactor)/(0.4-0.3*OICFfactor) - 0.05)
     ArabundCEL = CELicfAr * OabundCEL * ariiiCELabund/(oiiCELabund+oiiiCELabund)
   else
     CELicfAr = 1.0
