@@ -1366,9 +1366,9 @@ endif
 
 !Carbon
 
-     if (switch_icf .eq. "D") then !equation 39
+     if (switch_icf .eq. "D" .and. oiiRLabund .gt. 0.d0 .and. ciiRLabund .gt. 0.d0) then !equation 39
        RLicfC = 0.05 + 2.21*OICFfactor - 2.77*OICFfactor**2 + 1.74*OICFfactor**3
-       if (oiiRLabund .gt. 0.d0) CabundRL = RLicfC * ciiRLabund / oiiRLabund
+       CabundRL = RLicfC * ciiRLabund * OabundRL / oiiRLabund
      else
        RLicfC = 1.0
        CabundRL = ciiRLabund + ciiiRLabund
