@@ -1260,7 +1260,7 @@ elseif (switch_icf .eq. "D") then
     CELicfN = 10.**(-0.16*oICFfactor*(1+log10(upsilon)))
     nabundCEL = CELicfN * niiCELabund * OabundCEL / oiiCELabund
   elseif (niiCELabund .gt. 0.D0 .and. oiiCELabund .gt. 0.D0 .and. upsilon .eq. 0.D0) then
-    CELicfN = 0.64*Oicffactor
+    CELicfN = 10**(0.64*Oicffactor)
     nabundCEL = CELicfN * niiCELabund * OabundCEL / oiiCELabund
   else
     CELicfN = 1.0
