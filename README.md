@@ -26,3 +26,8 @@ Manual
 Full documentation is available on the NEAT website:
 
 http://www.nebulousresearch.org/codes/neat
+
+License
+=======
+
+NEAT is released under the GNU General Public License, v3.  The full text is in the file LICENSE.
