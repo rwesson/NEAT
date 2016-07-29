@@ -10,7 +10,7 @@ http://github.com/rwesson/Atomic-data
 Installation
 ============
 
-To compile the code, type 
+To compile the code, type
 
   make
 
