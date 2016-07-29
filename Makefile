@@ -81,9 +81,6 @@ neat: source/types.o source/oii_diagnostics.o source/hydrogen.o source/extinctio
 clean:
 	rm -f neat source/*.o source/*.mod
 
-test: neat
-	./neat -i examples/ngc6543_3cols.dat -u -cf ${DESTDIR}${PREFIX}/share/neat/default.cfg -n 1000
-
 install:
 	test -e ${DESTDIR}${PREFIX}/share/neat || mkdir -p ${DESTDIR}${PREFIX}/share/neat
 	test -e ${DESTDIR}${PREFIX}/share/doc/neat/examples || mkdir -p ${DESTDIR}${PREFIX}/share/doc/neat/examples
