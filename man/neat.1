@@ -7,15 +7,19 @@
 .SH DESCRIPTION
 \fBneat\fR carries out a comprehensive empirical analysis on a list of nebular emission line fluxes. If uncertainties are required, it evaluates them using a Monte Carlo approach.  \fBneat\fR's philosophy is that abundance determinations should be as objective as possible, and so user input should be minimised. A number of choices can be made by the user, but the default options should yield meaningful results.
 .SH OPTIONS
+
 .TP
-.B \-i, \-\-input [FILENAME]
-The line list to be analysed.  Plain text files containing two, three or four columns of numbers can be understood by \fBneat\fR.  Full details of the input format are given in the "methodology" section below.
+.B \-c [VALUE]
+The logarithmic extinction at H beta.  By default, this is calculated from the Balmer line ratios.
+
 .TP
-.B \-u, \-\-uncertainties
-Calculate uncertainties, using 10,000 iterations.  If this option is specified, the \-n option will be ignored
+.B \-cf, \-\-configuration-file [FILE]
+Since version 2.0, NEAT's analysis scheme is specified in a configuration file which is read in at run time, rather than being hard coded.  If this option is omitted the default configuration file is used, which is intended to be suitable for any line list and should only really need changing if particular lines need to be excluded from the analysis.  The configuration file contains a series of weights to be applied when calculating diagnostics and abundances, and the format of the default file should be clear enough that editing it is straightforward.  A negative value for a weight means that the line will be weighted by its observed intensity; a positive value means that the line will be weighted by the given value.
+
 .TP
-.B \-n, \-\-n\-iterations [VALUE]
-Number of iterations. Default: 1
+.B \-\-citation
+Prints out the bibliographic details of the paper to cite if you use \fBneat\fR in your research
+
 .TP
 .B \-e, \-\-extinction\-law [VALUE]
 Extinction law to use for dereddening.
@@ -28,12 +32,7 @@ Valid values are:
  \fBSMC\fR: SMC law of Prevot et al. (984, A&A, 132, 389)
 
 Default: How
-.TP
-.B \-c [VALUE]
-The logarithmic extinction at H beta.  By default, this is calculated from the Balmer line ratios.
-.TP
-.B \-nelow, \-nemed, \-nehigh, \-telow, \-temed, \-tehigh [VALUE]
-By default, electron densities and temperatures are calculated from the available diagnostics, but their values can be overridden with these commands.  The required units are cm\-3 for densities and K for temperatures.
+
 .TP
 .B \-he, \-\-helium\-data [VALUE]
 The atomic data to use for He I abundances
@@ -43,6 +42,11 @@ Valid values are:
  \fBP12\fR: Porter et al., 2012, MNRAS, 425, 28
 
 Default: P12
+
+.TP
+.B \-i, \-\-input [FILENAME]
+The line list to be analysed.  Plain text files containing two, three or four columns of numbers can be understood by \fBneat\fR.  Full details of the input format are given in the "methodology" section below.
+
 .TP
 .B \-icf, \-\-ionisation\-correction\-scheme [VALUE]
 The ICF scheme to be used to correct for unseen ions
@@ -53,6 +57,28 @@ Valid values are:
  \fBDI14\fR: Delgado\-Inglada, Morisset & Stasinska (2014, MNRAS, 440, 536)
 
 Default: DI14.  The KB94 ICF implemented in \fBneat\fR additionally contains a correction for chlorine, from Liu et al., 2000, MNRAS, 312, 585.
+
+.TP
+.B \-id, \-\-identify
+This option triggers an algorithm which attempts to convert observed wavelengths into rest wavelengths. If the option is not present, \fBneat\fR assumes that the input line list already has rest wavelengths in the first column
+
+.TP
+.B \-n, \-\-n\-iterations [VALUE]
+Number of iterations. Default: 1
+
+.TP
+.B \-nelow, \-nemed, \-nehigh, \-telow, \-temed, \-tehigh [VALUE]
+By default, electron densities and temperatures are calculated from the available diagnostics, but their values can be overridden with these commands.  The required units are cm\-3 for densities and K for temperatures.
+
+.TP
+.B \-rp
+When calculating Monte Carlo uncertainties, \fBneat\fR's default behaviour is to assume that all uncertainties are Gaussian.  If \-rp is specified, it will compensate for the upward bias affecting weak lines described by Rola and Pelat (1994), assuming log normal probability distributions for weaker lines.
+Until version 1.8, the default behaviour was the opposite; log normal probability distributions were assumed unless \fB-norp\fR was specified.  This was changed after our discovery that the effect described by Rola and Pelat only occurred under extremely specific conditions: see Wesson et al. 2016 for details.
+
+.TP
+.B \-u, \-\-uncertainties
+Calculate uncertainties, using 10,000 iterations.  If this option is specified, the \-n option will be ignored
+
 .TP
 .B \-v, \-\-verbosity [VALUE]
 Amount of output to write for each derived quantity. This option has no effect unless \-n or \-u is specified.
@@ -63,18 +89,6 @@ Valid values are:
  3: write out summary files only
 
 Default: 3
-.TP
-.B \-id, \-\-identify
-This option triggers an algorithm which attempts to convert observed wavelengths into rest wavelengths. If the option is not present, \fBneat\fR assumes that the input line list already has rest wavelengths in the first column
-.TP
-.B \-rp
-When calculating Monte Carlo uncertainties, \fBneat\fR's default behaviour is to assume that all uncertainties are Gaussian.  If \-rp is specified, it will compensate for the upward bias affecting weak lines described by Rola and Pelat (1994), assuming log normal probability distributions for weaker lines.
-
-Until version 1.8, the default behaviour was the opposite; log normal probability distributions were assumed unless \fB-norp\fR was specified.  This was changed after our discovery that the effect described by Rola and Pelat only occurred under extremely specific conditions: see Wesson et al. 2016 for details.
-
-.TP
-.B \-cf, \-\-configuration-file [FILE]
-Since version 2.0, NEAT's analysis scheme is specified in a configuration file which is read in at run time, rather than being hard coded.  If this option is omitted the default configuration file is used, which is intended to be suitable for any line list and should only really need changing if particular lines need to be excluded from the analysis.  The configuration file contains a series of weights to be applied when calculating diagnostics and abundances, and the format of the default file should be clear enough that editing it is straightforward.  A negative value for a weight means that the line will be weighted by its observed intensity; a positive value means that the line will be weighted by the given value.
 
 .SH USING NEAT
 .SS Input file format
