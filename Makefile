@@ -79,7 +79,7 @@ neat: source/types.o source/oii_diagnostics.o source/hydrogen.o source/extinctio
 	$(LD) $(LDFLAGS) $(FFLAGS) -o $@ $^
 
 clean:
-	rm -f neat source/*.o source/*.mod
+	rm -f neat source/*.o source/*.mod man/neat.html
 
 install:
 	test -e ${DESTDIR}${PREFIX}/share/neat || mkdir -p ${DESTDIR}${PREFIX}/share/neat
@@ -103,3 +103,6 @@ uninstall:
 	rm -f ${DESTDIR}${PREFIX}/bin/neat
 	rm -f ${DESTDIR}${PREFIX}/share/bash-completion/completions/neat
 	rm -f ${MANDIR}/neat.1.gz
+
+htmlmanual:
+	groff -m mandoc -Thtml man/neat.1 > man/neat.html
