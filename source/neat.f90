@@ -257,7 +257,7 @@ program neat
                 endif
                 if (trim(options(i))=="--citation") then
                    print *
-                   print *,"NEAT was described in Wesson, Stock and Scicluna, MNRAS, 2012.  The bibtex data for this paper is:"
+                   print *,"NEAT was described in Wesson, Stock and Scicluna, MNRAS, 2012, 422, 3516.  The bibtex data for this paper is:"
                    print *
                    print *,"@ARTICLE{2012MNRAS.422.3516W,"
                    print *,"   author = {{Wesson}, R. and {Stock}, D.~J. and {Scicluna}, P.},"
