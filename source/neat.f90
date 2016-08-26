@@ -1057,12 +1057,14 @@ program neat
 
         write (650,*) "NEAT (nebular empirical analysis tool)"
         write (650,*) "======================================"
+        write (650,*) "Version ",VERSION
         write (650,*)
         write (650,*) "Analysis of file ",trim(filename)
         write (650,*) "Command line: ",trim(commandline)
         write (650,*)
 
         write (651,*) "\noindent{\Large {\sc neat} (nebular empirical analysis tool)}"
+        write (651,*) "\noindent Version ",VERSION
         write (651,*) "\hrule"
         write (651,*) "\vspace{0.3cm}"
         write (651,*) "\noindent Analysis of file {\tt ",trim(filename),"}\newline"
