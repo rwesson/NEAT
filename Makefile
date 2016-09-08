@@ -80,7 +80,7 @@ neat: source/types.o source/oii_diagnostics.o source/hydrogen.o source/extinctio
 clean:
 	rm -f neat source/*.o source/*.mod man/neat.html
 
-install:
+install: neat
 	test -e ${DESTDIR}${PREFIX}/share/neat || mkdir -p ${DESTDIR}${PREFIX}/share/neat
 	test -e ${DESTDIR}${PREFIX}/share/doc/neat/examples || mkdir -p ${DESTDIR}${PREFIX}/share/doc/neat/examples
 	test -e ${DESTDIR}${PREFIX}/bin || mkdir -p ${DESTDIR}${PREFIX}/bin
