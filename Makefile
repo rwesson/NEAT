@@ -30,12 +30,12 @@ FC=gfortran
 LD=gfortran
 PREFIX=/usr
 VERSION := $(shell git describe --always --tags --dirty)
-FFLAGS+=-cpp -DPREFIX=\"${PREFIX}\" -DVERSION=\"${VERSION}\"
+FFLAGS+=-cpp -DPREFIX=\"$(PREFIX)\" -DVERSION=\"$(VERSION)\"
 LDFLAGS+=
-MANDIR=${DESTDIR}${PREFIX}/share/man/man1
+MANDIR=$(DESTDIR)$(PREFIX)/share/man/man1
 
 ifeq ($(MESSAGES),yes)
-    FFLAGS += -DCO=\"${CO}\"
+    FFLAGS += -DCO=\"$(CO)\"
 endif
 
 ifeq ($(FC),gfortran)
@@ -81,27 +81,27 @@ clean:
 	rm -f neat source/*.o source/*.mod man/neat.html
 
 install: neat
-	test -e ${DESTDIR}${PREFIX}/share/neat || mkdir -p ${DESTDIR}${PREFIX}/share/neat
-	test -e ${DESTDIR}${PREFIX}/share/doc/neat/examples || mkdir -p ${DESTDIR}${PREFIX}/share/doc/neat/examples
-	test -e ${DESTDIR}${PREFIX}/bin || mkdir -p ${DESTDIR}${PREFIX}/bin
-	test -e ${MANDIR} || mkdir -p ${MANDIR}
-	install -m 644 Atomic-data/*.* ${DESTDIR}${PREFIX}/share/neat
-	install -m 644 source/Ilines_levs ${DESTDIR}${PREFIX}/share/neat
-	install -m 644 utilities/complete_line_list ${DESTDIR}${PREFIX}/share/neat
-	install -m 644 utilities/plot.sh ${DESTDIR}${PREFIX}/share/neat
-	install -m 644 config/default.cfg ${DESTDIR}${PREFIX}/share/neat
-	install -m 644 examples/*.dat ${DESTDIR}${PREFIX}/share/doc/neat/examples
-	install neat ${DESTDIR}${PREFIX}/bin
-	install -m 644 man/neat.1 ${MANDIR}
-	test -e ${DESTDIR}${PREFIX}/share/bash-completion/completions || mkdir -p ${DESTDIR}${PREFIX}/share/bash-completion/completions
-	install -m 644 source/bashcompletion ${DESTDIR}${PREFIX}/share/bash-completion/completions/neat
-	gzip -f ${MANDIR}/neat.1
+	test -e $(DESTDIR)$(PREFIX)/share/neat || mkdir -p $(DESTDIR)$(PREFIX)/share/neat
+	test -e $(DESTDIR)$(PREFIX)/share/doc/neat/examples || mkdir -p $(DESTDIR)$(PREFIX)/share/doc/neat/examples
+	test -e $(DESTDIR)$(PREFIX)/bin || mkdir -p $(DESTDIR)$(PREFIX)/bin
+	test -e $(MANDIR) || mkdir -p $(MANDIR)
+	install -m 644 Atomic-data/*.* $(DESTDIR)$(PREFIX)/share/neat
+	install -m 644 source/Ilines_levs $(DESTDIR)$(PREFIX)/share/neat
+	install -m 644 utilities/complete_line_list $(DESTDIR)$(PREFIX)/share/neat
+	install -m 644 utilities/plot.sh $(DESTDIR)$(PREFIX)/share/neat
+	install -m 644 config/default.cfg $(DESTDIR)$(PREFIX)/share/neat
+	install -m 644 examples/*.dat $(DESTDIR)$(PREFIX)/share/doc/neat/examples
+	install neat $(DESTDIR)$(PREFIX)/bin
+	install -m 644 man/neat.1 $(MANDIR)
+	test -e $(DESTDIR)$(PREFIX)/share/bash-completion/completions || mkdir -p $(DESTDIR)$(PREFIX)/share/bash-completion/completions
+	install -m 644 source/bashcompletion $(DESTDIR)$(PREFIX)/share/bash-completion/completions/neat
+	gzip -f $(MANDIR)/neat.1
 
 uninstall:
-	rm -rf ${DESTDIR}${PREFIX}/share/neat ${DESTDIR}${PREFIX}/share/doc/neat
-	rm -f ${DESTDIR}${PREFIX}/bin/neat
-	rm -f ${DESTDIR}${PREFIX}/share/bash-completion/completions/neat
-	rm -f ${MANDIR}/neat.1.gz
+	rm -rf $(DESTDIR)$(PREFIX)/share/neat $(DESTDIR)$(PREFIX)/share/doc/neat
+	rm -f $(DESTDIR)$(PREFIX)/bin/neat
+	rm -f $(DESTDIR)$(PREFIX)/share/bash-completion/completions/neat
+	rm -f $(MANDIR)/neat.1.gz
 
 htmlmanual:
 	groff -m mandoc -Thtml man/neat.1 > man/neat.html
