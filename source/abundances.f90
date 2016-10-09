@@ -1394,6 +1394,37 @@ if (siiCELabund + siiiCELabund + siiiIRCELabund + sivIRCELabund .gt. 0.d0) CELic
 if (cliiCELabund + cliiiCELabund + clivCELabund .gt. 0.d0) CELicfCl = ClabundCEL/(cliiCELabund + cliiiCELabund + clivCELabund)
 if (ariiiCELabund + arivCELabund + arvCELabund .gt. 0.d0) CELicfAr = ArabundCEL/(ariiiCELabund + arivCELabund + arvCELabund)
 
+!if any were less than one, sum up the ionic species.  todo: warn the user that this happened
+
+if (CELicfC .lt. 1.) then
+  CELicfC = 1.0
+  CabundCEL = (ciiCELabund + ciiiCELabund + civCELabund)
+endif
+if (CELicfN .lt. 1.) then
+  CELicfN = 1.0
+  NabundCEL = (niiCELabund + niiiCELabund + nivCELabund + nvCELabund)
+endif
+if (CELicfO .lt. 1.) then
+  CELicfO = 1.0
+  OabundCEL = (oiiCELabund + oiiiCELabund + oiiiIRCELabund + oivCELabund)
+endif
+if (CELicfNe .lt. 1.) then
+  CELicfNe = 1.0
+  NeabundCEL = (neiiiCELabund + neivCELabund + nevCELabund)
+endif
+if (CELicfS .lt. 1.) then
+  CELicfS = 1.0
+  SabundCEL = (siiCELabund + siiiCELabund + siiiIRCELabund + sivIRCELabund)
+endif
+if (CELicfCl .lt. 1.) then
+  CELicfCl = 1.0
+  ClabundCEL = (cliiCELabund + cliiiCELabund + clivCELabund)
+endif
+if (CELicfAr .lt. 1.) then
+  CELicfAr = 1.0
+  ArabundCEL = (ariiiCELabund + arivCELabund + arvCELabund)
+endif
+
 !carbon
 
         iteration_result(1)%NC_abund_CEL = NCabundCEL
