@@ -317,6 +317,91 @@ real(kind=dp) function GAMM4861(TE,NE)
 
 end function gamm4861
 
+real(kind=dp) function GAMM6563(TE,NE)
+!     This function determines the value of Log10 (gamm(H Alpha))
+!     = Log10( 4*Pai*j(HBeta)/NpNe) at temperature Te and density Ne
+!     Storey P. J., Hummer D. G., 1995, MNRAS, 272, 41
+
+      implicit none
+      integer, parameter :: dp = kind(1.d0)
+
+      real(kind=dp) TE,NE,AE2,AE3,AE4,AE5,AE6,AE7,AE8,AEFF,HCLL
+      real(kind=dp) LNE, LTE
+
+!debugging
+#ifdef CO
+        !print *,"function: GAMM6563"
+#endif
+
+      HCLL=-11.38871 ! = Log10 ( h * c / lambda(H-beta) ) - [ cgs units
+      LNE = log10(NE)
+      LTE = log10(TE)
+
+      AE2 =(-9.78342E+00)+                                              &
+     &     (-9.79048E-01)* LTE +                                        &
+     &     ( 1.28883E-01)* LTE ** 2 +                                   &
+     &     (-2.68907E-02)* LTE ** 3 +                                   &
+     &     ( 1.15588E-03)* LTE ** 4
+
+      AE3 =(-8.96834E+00)+                                              &
+     &     (-1.81758E+00)* LTE +                                        &
+     &     ( 4.52249E-01)* LTE ** 2 +                                   &
+     &     (-8.22940E-02)* LTE ** 3 +                                   &
+     &     ( 4.71377E-03)* LTE ** 4
+
+      AE4 =(-7.54040E+00)+                                              &
+     &     (-3.26881E+00)* LTE +                                        &
+     &     ( 1.00538E+00)* LTE ** 2 +                                   &
+     &     (-1.75962E-01)* LTE ** 3 +                                   &
+     &     ( 1.06554E-02)* LTE ** 4
+
+      AE5 =(-5.54310E+00)+                                              &
+     &     (-5.24291E+00)* LTE +                                        &
+     &     ( 1.73956E+00)* LTE ** 2 +                                   &
+     &     (-2.97779E-01)* LTE ** 3 +                                   &
+     &     ( 1.82635E-02)* LTE ** 4
+
+      AE6 =(-1.66024E+00)+                                              &
+     &     (-9.07781E+00)* LTE +                                        &
+     &     ( 3.16498E+00)* LTE ** 2 +                                   &
+     &     (-5.33982E-01)* LTE ** 3 +                                   &
+     &     ( 3.29781E-02)* LTE ** 4
+
+      AE7 =( 2.44816E+00)+                                              &
+     &     (-1.27787E+01)* LTE +                                        &
+     &     ( 4.41371E+00)* LTE ** 2 +                                   &
+     &     (-7.20967E-01)* LTE ** 3 +                                   &
+     &     ( 4.34582E-02)* LTE ** 4
+
+      AE8 =( 8.09651E+00)+                                              &
+     &     (-1.76766E+01)* LTE +                                        &
+     &     ( 6.00896E+00)* LTE ** 2 +                                   &
+     &     (-9.52069E-01)* LTE ** 3 +                                   &
+     &     ( 5.60108E-02)* LTE ** 4
+
+
+      if (LNE.lt.2) then
+        AEFF=AE2
+      elseif (LNE.ge.2..AND.LNE.lt.3) then
+        AEFF=AE2 + (AE3 - AE2) * (LNE - 2)
+      elseif (LNE.ge.3..AND.LNE.lt.4) then
+        AEFF=AE3 + (AE4 - AE3) * (LNE - 3)
+      elseif (LNE.ge.4..AND.LNE.lt.5) then
+        AEFF=AE4 + (AE5 - AE4) * (LNE - 4)
+      elseif (LNE.ge.5..AND.LNE.lt.6) then
+        AEFF=AE5 + (AE6 - AE5) * (LNE - 5)
+      elseif (LNE.ge.6..AND.LNE.lt.7) then
+        AEFF=AE6 + (AE7 - AE6) * (LNE - 6)
+      elseif (LNE.ge.7..AND.LNE.lt.8) then
+        AEFF=AE7 + (AE8 - AE7) * (LNE - 7)
+      else
+        AEFF=AE8
+      endif
+
+      GAMM6563=AEFF + HCLL
+
+end function gamm6563
+
 real(kind=dp) function GAMM4686(TE,NE)
 !     This function determines the value of Log10 (gamm(HeII4686))
 !     = Log10( 4*Pai*j(HeII 4686)/N(He++)Ne) at temperature Te and densi
