@@ -73,7 +73,7 @@ use mod_hydrogen
 
 ! abundances relative to Halpha? todo, implement as command line option
 
-        logical :: relativetoha=.true.
+        logical :: relativetoha=.false.
 
 ! strong line variables
         real(kind=dp) :: X23,O_R23upper, O_R23lower, N2,O_N2, O3N2, O_O3N2, Ar3O3, O_Ar3O3, S3O3, O_S3O3, x23temp1, x23temp2, x23temp3, x23temp4
