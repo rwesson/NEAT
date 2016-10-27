@@ -353,7 +353,7 @@ program neat
                 print *,"---------------------------------"
                 print *,"Are these line IDs ok? (y/n)"
                 read (5,*) blank
-                if (blank .eq. "n" .or. blank .eq. "N") then
+                if (blank .ne. "y" .and. blank .ne. "Y") then
                   print *,gettime()," : analysis cancelled."
                   call exit(1)
                 endif
