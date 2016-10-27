@@ -71,6 +71,10 @@ use mod_hydrogen
 
         real(kind=dp) :: balmerdec_density, paschendec_density
 
+! abundances relative to Halpha? todo, implement as command line option
+
+        logical :: relativetoha=.true.
+
 ! strong line variables
         real(kind=dp) :: X23,O_R23upper, O_R23lower, N2,O_N2, O3N2, O_O3N2, Ar3O3, O_Ar3O3, S3O3, O_S3O3, x23temp1, x23temp2, x23temp3, x23temp4
 
@@ -1652,6 +1656,12 @@ where (linelist%blend_intensity .gt. 0.d0)
   linelist%int_dered=linelist%blend_int_dered
   linelist%int_err=linelist%blend_int_err
 endwhere
+
+! determine abundances using Ha instead of Hb if requested
+
+if (relativetoha) then
+  print "(A,F6.3)","              done. for abundances relative to H using H alpha, multiply by ",10**(gamm6563(medtemp,meddens)-gamm4861(medtemp,meddens)) * (linelist(H_Balmer(4))%int_dered/linelist(H_Balmer(3))%int_dered)
+endif
 
 contains
 
