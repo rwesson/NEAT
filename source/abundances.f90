@@ -74,6 +74,7 @@ use mod_hydrogen
 ! abundances relative to Halpha? todo, implement as command line option
 
         logical :: relativetoha=.false.
+        real :: hafactor
 
 ! strong line variables
         real(kind=dp) :: X23,O_R23upper, O_R23lower, N2,O_N2, O3N2, O_O3N2, Ar3O3, O_Ar3O3, S3O3, O_S3O3, x23temp1, x23temp2, x23temp3, x23temp4
@@ -1660,7 +1661,72 @@ endwhere
 ! determine abundances using Ha instead of Hb if requested
 
 if (relativetoha) then
-  print "(A,F6.3)","              done. for abundances relative to H using H alpha, multiply by ",10**(gamm6563(medtemp,meddens)-gamm4861(medtemp,meddens)) * (linelist(H_Balmer(4))%int_dered/linelist(H_Balmer(3))%int_dered)
+  hafactor = 10**(gamm6563(medtemp,meddens)-gamm4861(medtemp,meddens)) * (linelist(H_Balmer(4))%int_dered/linelist(H_Balmer(3))%int_dered) * (6562.77/4861.33)
+  print "(15X,A)","abundances are calculated using ratios to Halpha instead of Hbeta"
+  print "(15X,A,F5.3)","difference is a factor of ",hafactor
+
+  iteration_result(1)%NC_abund_CEL = iteration_result(1)%NC_abund_CEL * hafactor
+  iteration_result(1)%cii_abund_CEL = iteration_result(1)%cii_abund_CEL * hafactor
+  iteration_result(1)%ciii_abund_CEL = iteration_result(1)%ciii_abund_CEL * hafactor
+  iteration_result(1)%civ_abund_CEL = iteration_result(1)%civ_abund_CEL * hafactor
+  iteration_result(1)%C_abund_CEL = iteration_result(1)%C_abund_CEL * hafactor
+  iteration_result(1)%Nii_abund_CEL = iteration_result(1)%Nii_abund_CEL * hafactor
+  iteration_result(1)%Niii_abund_CEL = iteration_result(1)%Niii_abund_CEL * hafactor
+  iteration_result(1)%Niv_abund_CEL = iteration_result(1)%Niv_abund_CEL * hafactor
+  iteration_result(1)%Nv_abund_CEL = iteration_result(1)%Nv_abund_CEL * hafactor
+  iteration_result(1)%N_abund_CEL = iteration_result(1)%N_abund_CEL * hafactor
+  iteration_result(1)%NO_abund_CEL = iteration_result(1)%NO_abund_CEL * hafactor
+  iteration_result(1)%Oii_abund_CEL = iteration_result(1)%Oii_abund_CEL * hafactor
+  iteration_result(1)%Oiii_abund_CEL = iteration_result(1)%Oiii_abund_CEL * hafactor
+  iteration_result(1)%Oiv_abund_CEL = iteration_result(1)%Oiv_abund_CEL * hafactor
+  iteration_result(1)%O_abund_CEL = iteration_result(1)%O_abund_CEL * hafactor
+  iteration_result(1)%Neii_abund_CEL = iteration_result(1)%Neii_abund_CEL * hafactor
+  iteration_result(1)%Neiii_abund_CEL = iteration_result(1)%Neiii_abund_CEL * hafactor
+  iteration_result(1)%Neiv_abund_CEL = iteration_result(1)%Neiv_abund_CEL * hafactor
+  iteration_result(1)%Nev_abund_CEL = iteration_result(1)%Nev_abund_CEL * hafactor
+  iteration_result(1)%Ne_abund_CEL = iteration_result(1)%Ne_abund_CEL * hafactor
+  iteration_result(1)%Ariii_abund_CEL = iteration_result(1)%Ariii_abund_CEL * hafactor
+  iteration_result(1)%Ariv_abund_CEL = iteration_result(1)%Ariv_abund_CEL * hafactor
+  iteration_result(1)%Arv_abund_CEL = iteration_result(1)%Arv_abund_CEL * hafactor
+  iteration_result(1)%Ar_abund_CEL = iteration_result(1)%Ar_abund_CEL * hafactor
+  iteration_result(1)%Sii_abund_CEL = iteration_result(1)%Sii_abund_CEL * hafactor
+  iteration_result(1)%Siii_abund_CEL = iteration_result(1)%Siii_abund_CEL * hafactor
+  iteration_result(1)%Cliii_abund_CEL = iteration_result(1)%Cliii_abund_CEL * hafactor
+  iteration_result(1)%Cl_abund_CEL = iteration_result(1)%Cl_abund_CEL * hafactor
+  iteration_result(1)%S_abund_CEL = iteration_result(1)%S_abund_CEL * hafactor
+  iteration_result(1)%Hei_abund_ORL = iteration_result(1)%Hei_abund_ORL * hafactor
+  iteration_result(1)%Heii_abund_ORL = iteration_result(1)%Heii_abund_ORL * hafactor
+  iteration_result(1)%He_abund_ORL = iteration_result(1)%He_abund_ORL * hafactor
+  iteration_result(1)%Cii_abund_ORL = iteration_result(1)%Cii_abund_ORL * hafactor
+  iteration_result(1)%Ciii_abund_ORL = iteration_result(1)%Ciii_abund_ORL * hafactor
+  iteration_result(1)%C_abund_ORL = iteration_result(1)%C_abund_ORL * hafactor
+  iteration_result(1)%Nii_abund_ORL = iteration_result(1)%Nii_abund_ORL * hafactor
+  iteration_result(1)%Niii_abund_ORL = iteration_result(1)%Niii_abund_ORL * hafactor
+  iteration_result(1)%N_abund_ORL = iteration_result(1)%N_abund_ORL * hafactor
+  iteration_result(1)%Oii_abund_ORL = iteration_result(1)%Oii_abund_ORL * hafactor
+  iteration_result(1)%O_abund_ORL = iteration_result(1)%O_abund_ORL * hafactor
+  iteration_result(1)%Neii_abund_ORL = iteration_result(1)%Neii_abund_ORL * hafactor
+  iteration_result(1)%Ne_abund_ORL = iteration_result(1)%Ne_abund_ORL * hafactor
+  iteration_result(1)%oii_v1_abund_orl = iteration_result(1)%oii_v1_abund_orl * hafactor
+  iteration_result(1)%oii_v2_abund_orl = iteration_result(1)%oii_v2_abund_orl * hafactor
+  iteration_result(1)%oii_v5_abund_orl = iteration_result(1)%oii_v5_abund_orl * hafactor
+  iteration_result(1)%oii_v10_abund_orl = iteration_result(1)%oii_v10_abund_orl * hafactor
+  iteration_result(1)%oii_v11_abund_orl = iteration_result(1)%oii_v11_abund_orl * hafactor
+  iteration_result(1)%oii_v12_abund_orl = iteration_result(1)%oii_v12_abund_orl * hafactor
+  iteration_result(1)%oii_v19_abund_orl = iteration_result(1)%oii_v19_abund_orl * hafactor
+  iteration_result(1)%oii_v20_abund_orl = iteration_result(1)%oii_v20_abund_orl * hafactor
+  iteration_result(1)%oii_v25_abund_orl = iteration_result(1)%oii_v25_abund_orl * hafactor
+  iteration_result(1)%oii_v28_abund_orl = iteration_result(1)%oii_v28_abund_orl * hafactor
+  iteration_result(1)%oii_v33_abund_orl = iteration_result(1)%oii_v33_abund_orl * hafactor
+  iteration_result(1)%oii_3d4f_abund_orl = iteration_result(1)%oii_3d4f_abund_orl * hafactor
+  iteration_result(1)%nii_v3_abund_orl = iteration_result(1)%nii_v3_abund_orl * hafactor
+  iteration_result(1)%nii_v5_abund_orl = iteration_result(1)%nii_v5_abund_orl * hafactor
+  iteration_result(1)%nii_v8_abund_orl = iteration_result(1)%nii_v8_abund_orl * hafactor
+  iteration_result(1)%nii_v12_abund_orl  = iteration_result(1)%nii_v12_abund_orl  * hafactor
+  iteration_result(1)%nii_v20_abund_orl  = iteration_result(1)%nii_v20_abund_orl  * hafactor
+  iteration_result(1)%nii_v28_abund_orl = iteration_result(1)%nii_v28_abund_orl * hafactor
+  iteration_result(1)%nii_3d4f_abund_orl = iteration_result(1)%nii_3d4f_abund_orl * hafactor
+
 endif
 
 contains
