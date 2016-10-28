@@ -333,7 +333,7 @@ real(kind=dp) function GAMM6563(TE,NE)
         !print *,"function: GAMM6563"
 #endif
 
-      HCLL=-11.38871 ! = Log10 ( h * c / lambda(H-beta) ) - [ cgs units
+      HCLL=-11.51901 ! = Log10 ( h * c / lambda(H-alpha) ) - [ cgs units
       LNE = log10(NE)
       LTE = log10(TE)
 
