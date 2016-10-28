@@ -36,6 +36,7 @@
 
       subroutine get_diagnostic(ion,levu,levl,inratio,diagtype,fixedq,result,ndim2,ndim1,atomicdata,iion)
       use mod_atomicdata
+      use mod_helium
       implicit none
       integer, parameter :: dp = kind(1.d0)
 
@@ -284,7 +285,8 @@
           TTT=TEMP*1.0D-4
           TTP=TTT**(-0.87D0)
                                        !Eff. recombination coef. of Hb
-          AHB=3.036D-14*TTP
+!          AHB=3.036D-14*TTP
+          ahb=10**(gamm4861(temp,dens)+11.38871) ! as used in RL routines.  differs by <<1% from previous simpler approximation unless ne>>1e4
           do I = 1, NLEV1
             IP1 = I + 1
             do J = IP1, NLEV
