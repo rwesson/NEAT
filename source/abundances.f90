@@ -850,7 +850,7 @@ clivCELabund = 0.d0
         endif
       enddo
 
-      if (sum(ciiRLs%obs) .gt. 0.d0) ciirlabund = sum(ciiRLs%obs)/sum(ciiRLs%int)
+      if (sum(ciiRLs%obs) .gt. 0.d0) ciirlabund = sum(ciiRLs%obs)/sum(ciiRLs%int, mask=ciiRLs%obs .gt. 0.d0)
 
 !nii recombination lines
 
