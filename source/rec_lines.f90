@@ -1,4 +1,6 @@
-! conversion of MIDAS script Roii.prg, written by XWL, to F90
+!rec_lines.f90, routines to calculate ionic abundances from recombination lines
+!(C) Roger Wesson, Dave Stock, Peter Scicluna
+! based originally on a conversion of MIDAS script Roii.prg, written by XWL, to F90
 ! RW May 2009
 
 module mod_recombination_lines

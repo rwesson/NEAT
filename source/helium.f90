@@ -1,3 +1,5 @@
+!helium.f90, routines to calculate He+ and He2+ abundances
+!(C) Roger Wesson, Dave Stock, Peter Scicluna
 module mod_helium
 use mod_abundtypes
 

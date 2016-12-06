@@ -1,10 +1,11 @@
+!weights.f90, read in a configuration file defining the weighting scheme to be used
+!(C) Roger Wesson
 module mod_weights
 use mod_abundtypes
 use mod_abundIO
 contains
 
 subroutine setweights(configfile,weights,linelist,ILs,H_Balmer,H_Paschen,HeII_lines)
-!will read configuration file in containing all the weights. currently just sets them.
 
         implicit none
         integer, parameter :: dp=kind(1.d0)

@@ -1,3 +1,5 @@
+!abundtypes.f90, definitions of various data structures.
+!(C) Roger Wesson, Dave Stock, Peter Scicluna
 module mod_abundtypes
 
 implicit none

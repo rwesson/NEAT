@@ -1,3 +1,5 @@
+!linefinder.f90, a rough and definitely non-rigorous way to suggest line identifications
+!(C) Roger Wesson, Dave Stock, Peter Scicluna
 module mod_linefinder
 contains
 

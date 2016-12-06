@@ -1,3 +1,5 @@
+!abundances.f90, the core of NEAT which does all of the physical analysis
+!(C) Roger Wesson, Dave Stock, Peter Scicluna
 subroutine abundances(linelist, listlength, iteration_result, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf, H_Balmer, H_Paschen, HeI_lines, HeII_lines, weights)
 use mod_abundtypes
 use mod_equib
