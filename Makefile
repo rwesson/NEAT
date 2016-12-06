@@ -29,7 +29,10 @@
 FC=gfortran
 LD=gfortran
 PREFIX=/usr
-VERSION := $(shell git describe --always --tags --dirty)
+
+# get the version from the debian changelog if this is a package, and from the git log otherwise
+VERSION := $(shell if [ -e debian/ ]; then dpkg-parsechangelog; else git describe --always --tags --dirty; fi)
+
 FFLAGS+=-cpp -DPREFIX=\"$(PREFIX)\" -DVERSION=\"$(VERSION)\"
 LDFLAGS+=
 MANDIR=$(DESTDIR)$(PREFIX)/share/man/man1
