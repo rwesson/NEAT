@@ -130,12 +130,7 @@ program neat
         adf_format = "(X,A,F8.2,SP,F8.2,F8.2,S)"
 
         print *,"NEAT, the Nebular Empirical Analysis Tool"
-        if (len(VERSION).gt.0) then
-          print *,"version ",VERSION
-        else
-          print *,"version 2.0"
-        endif
-
+        print *,"version ",VERSION
         print *
 
         Narg = IARGC() !count input arguments
