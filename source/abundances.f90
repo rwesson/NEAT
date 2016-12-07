@@ -289,11 +289,11 @@ use mod_hydrogen
         call get_diagnostic("[C I]     ","2,4,3,4/            ","4,5/                ",ciTratio,"T",lowdens,citemp,maxlevs,maxtemps,atomicdata,iion)
         call get_diagnostic("[O I]     ","1,4,2,4/            ","4,5/                ",oiTratio,"T",lowdens,oitemp,maxlevs,maxtemps,atomicdata,iion)
 
-        if (oiiTemp .eq. 0.d0 .or. oiiTemp .gt. 34999.) weights%oiiTemp = 0.d0
-        if (siiTemp .eq. 0.d0 .or. siiTemp .gt. 34999.) weights%siiTemp = 0.d0
-        if (niiTemp .eq. 0.d0 .or. niiTemp .gt. 34999.) weights%niiTemp = 0.d0
-        if (ciTemp .eq. 0.d0 .or. ciTemp .gt. 34999.) weights%ciTemp = 0.d0
-        if (oiTemp .eq. 0.d0 .or. oiTemp .gt. 34999.) weights%oiTemp = 0.d0
+        if (oiiTemp .le. 5000. .or. oiiTemp .gt. 34999.) weights%oiiTemp = 0.d0
+        if (siiTemp .le. 5000. .or. siiTemp .gt. 34999.) weights%siiTemp = 0.d0
+        if (niiTemp .le. 5000. .or. niiTemp .gt. 34999.) weights%niiTemp = 0.d0
+        if (ciTemp .le. 5000. .or. ciTemp .gt. 34999.) weights%ciTemp = 0.d0
+        if (oiTemp .le. 5000. .or. oiTemp .gt. 34999.) weights%oiTemp = 0.d0
 
         if ((weights%oiiTemp + weights%siiTemp + weights%niiTemp + weights%ciTemp + weights%oiTemp) .gt. 0 .and. diagnostic_array(4) .eq. 0) then
           lowtemp = (weights%oiiTemp*oiiTemp + weights%siiTemp*siiTemp + weights%niiTemp*niiTemp + weights%ciTemp*ciTemp + weights%oiTemp*oiTemp) / (weights%oiiTemp + weights%siiTemp + weights%niiTemp + weights%ciTemp + weights%oiTemp)
@@ -359,10 +359,10 @@ use mod_hydrogen
 
 !averaging
 
-        if (oiiiTemp .eq. 0.d0 .or. oiiiTemp .gt. 34999.) weights%oiiiTemp = 0.d0
-        if (siiiTemp .eq. 0.d0 .or. siiiTemp .gt. 34999.) weights%siiiTemp = 0.d0
-        if (ariiiTemp .eq. 0.d0 .or. ariiiTemp .gt. 34999.) weights%ariiiTemp = 0.d0
-        if (neiiiTemp .eq. 0.d0 .or. neiiiTemp .gt. 34999.) weights%neiiiTemp = 0.d0
+        if (oiiiTemp .le. 5000. .or. oiiiTemp .gt. 34999.) weights%oiiiTemp = 0.d0
+        if (siiiTemp .le. 5000. .or. siiiTemp .gt. 34999.) weights%siiiTemp = 0.d0
+        if (ariiiTemp .le. 5000. .or. ariiiTemp .gt. 34999.) weights%ariiiTemp = 0.d0
+        if (neiiiTemp .le. 5000. .or. neiiiTemp .gt. 34999.) weights%neiiiTemp = 0.d0
 
         if ((weights%oiiitemp + weights%siiitemp + weights%ariiitemp + weights%neiiitemp) .gt. 0 .and. diagnostic_array(5) .eq. 0.0) then
           medtemp = (weights%oiiitemp*oiiitemp + weights%siiitemp*siiitemp + weights%ariiitemp*ariiitemp + weights%neiiitemp*neiiitemp) / (weights%oiiitemp + weights%siiitemp + weights%ariiitemp + weights%neiiitemp)
@@ -424,8 +424,8 @@ use mod_hydrogen
         call get_diagnostic("[Ar V]    ","2,4,3,4/            ","4,5/                ",arvTratio,"T",highdens,arvTemp,maxlevs,maxtemps,atomicdata,iion)
         call get_diagnostic("[Ne V]    ","2,4,3,4/            ","4,5/                ",nevTratio,"T",highdens,nevtemp,maxlevs,maxtemps,atomicdata,iion)
 
-        if (arvTemp .eq. 0.d0 .or. arvTemp .gt. 34999.) weights%arvTemp = 0.d0
-        if (nevTemp .eq. 0.d0 .or. nevTemp .gt. 34999.) weights%nevTemp = 0.d0
+        if (arvTemp .le. 5000. .or. arvTemp .gt. 34999.) weights%arvTemp = 0.d0
+        if (nevTemp .le. 5000. .or. nevTemp .gt. 34999.) weights%nevTemp = 0.d0
 
         if ((weights%arvTemp+weights%nevTemp) .gt. 0 .and. diagnostic_array(6) .eq. 0) then
           hightemp = (arvtemp*weights%arvTemp + nevtemp*weights%nevTemp) / (weights%arvTemp+weights%nevTemp)
@@ -852,7 +852,7 @@ clivCELabund = 0.d0
         endif
       enddo
 
-      if (sum(ciiRLs%obs) .gt. 0.d0) ciirlabund = sum(ciiRLs%obs)/sum(ciiRLs%int)
+      if (sum(ciiRLs%obs) .gt. 0.d0) ciirlabund = sum(ciiRLs%obs)/sum(ciiRLs%int, mask=ciiRLs%obs .gt. 0.d0)
 
 !nii recombination lines
 
@@ -1668,7 +1668,7 @@ if (relativetoha) then
   hafactor(3) = 10**(gamm6563(hightemp,highdens)-gamm4861(hightemp,highdens)) * (linelist(H_Balmer(4))%int_dered/linelist(H_Balmer(3))%int_dered) * (6562.77/4861.33)
 
   print "(15X,A)","abundances are calculated using ratios to Halpha instead of Hbeta"
-  print "(15X,A,3(F5.3))","difference in low, medium, high ionisation zones is a factor of ",hafactor
+  print "(15X,A,3(F5.3,X))","difference in low, medium, high ionisation zones is a factor of ",hafactor
 
   iteration_result(1)%NC_abund_CEL = iteration_result(1)%NC_abund_CEL * hafactor(1)
   iteration_result(1)%cii_abund_CEL = iteration_result(1)%cii_abund_CEL * hafactor(1)
