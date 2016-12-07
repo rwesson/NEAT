@@ -39,7 +39,7 @@ _neat()
             _filedir
             return 0
             ;;
-        -c|-nehigh|-nelow|-nemed|-n|--n-iterations|-tehigh|-telow|-temed)
+        -c|-nehigh|-nelow|-nemed|-n|--n-iterations|-tehigh|-telow|-temed|--citation)
             COMPREPLY=()
             return 0
             ;;
