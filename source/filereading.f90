@@ -15,8 +15,8 @@ subroutine read_linelist(filename,linelist,listlength,ncols,errstat)
         character(len=1) :: blank
         type(line), dimension(:), allocatable :: linelist
         character(len=512) :: filename, rowdata
-        character(len=15),dimension(4) :: invar !line fluxes and uncertainties are read as strings into these variables
-        real(kind=dp),dimension(5) :: rowdata2 !to check number of columns, first row of file is read as character, then read as real into this array
+        character(len=15),dimension(6) :: invar !line fluxes and uncertainties are read as strings into these variables
+        real(kind=dp),dimension(7) :: rowdata2 !to check number of columns, first row of file is read as character, then read as real into this array
 
         type neat_line
           real(kind=dp) :: wavelength
@@ -94,7 +94,7 @@ subroutine read_linelist(filename,linelist,listlength,ncols,errstat)
             cycle
           endif
 
-          if (ncols .eq. 4) then
+          if (ncols .ge. 4) then
             read (invar(2),*) linelist(i)%wavelength
           else
             read (invar(1),*) linelist(i)%wavelength
@@ -111,7 +111,7 @@ subroutine read_linelist(filename,linelist,listlength,ncols,errstat)
             elseif (ncols .eq. 3) then
               read (invar(2),*) linelist(i)%intensity
               read (invar(3),*) linelist(i)%int_err
-            elseif (ncols .eq. 4) then
+            elseif (ncols .ge. 4) then
               read (invar(1),*) linelist(i)%wavelength_observed
               read (invar(3),*) linelist(i)%intensity
               read (invar(4),*) linelist(i)%int_err

@@ -555,7 +555,7 @@ program neat
 
 !observed wavelength if known
 
-                if (ncols .eq. 4) then
+                if (ncols .ge. 4) then
                   if (linelist(j)%wavelength_observed .gt. 0.) then
                     write (650,"(X,F7.2,X)", advance='no') all_linelists(j,1)%wavelength_observed
                     write (651,"(X,F7.2,' & ')", advance='no') all_linelists(j,1)%wavelength_observed
@@ -626,7 +626,7 @@ program neat
         else ! runs == 1, no uncertainties to write out
 
                 do i=1,listlength
-                  if (ncols .eq. 4) then
+                  if (ncols .ge. 4) then
                     if (linelist(i)%wavelength_observed .gt. 0.) then
                       write (650,"(X,F7.2,X)", advance='no') linelist(i)%wavelength_observed
                       write (651,"(X,F7.2,' & ')", advance='no') linelist(i)%wavelength_observed
@@ -1416,6 +1416,7 @@ if (binsize .gt. 0d0) then
   endwhere
 
   exparray=input_array/maxval(input_array)
+  exparray=10**exparray
 
   mean=sum(input_array)/arraysize
   mean_log=sum(logarray)/arraysize
@@ -1447,9 +1448,9 @@ if (binsize .gt. 0d0) then
   if (abs(sds(1,1)-0.6827).lt.tolerance .and. abs(sds(1,2)-0.9545).lt.(tolerance*0.5) .and. abs(sds(1,3)-0.9973).lt. (tolerance*0.1)) then
     uncertainty_array(:)=(/sd,mean,sd/)
   elseif (abs(sds(2,1)-0.6827).lt.tolerance .and. abs(sds(2,2)-0.9545).lt.(tolerance*0.5) .and. abs(sds(2,3)-0.9973).lt. (tolerance*0.1)) then
-    uncertainty_array(:)=(/exp(mean_log)-exp(mean_log-sd_log),exp(mean_log),exp(mean_log+sd_log)-exp(mean_log)/)
+    uncertainty_array(:)=(/10**(mean_log)-10**(mean_log-sd_log),10**(mean_log),10**(mean_log+sd_log)-10**(mean_log)/)
   elseif (abs(sds(3,1)-0.6827).lt.tolerance .and. abs(sds(3,2)-0.9545).lt.(tolerance*0.5) .and. abs(sds(3,3)-0.9973).lt. (tolerance*0.1)) then
-    uncertainty_array(:)=(/log(mean_exp+sd_exp)-log(mean_exp),log(mean_exp),log(mean_exp-sd_exp)-log(mean_exp)/)
+    uncertainty_array(:)=(/log10(mean_exp+sd_exp)-log10(mean_exp),log10(mean_exp),log10(mean_exp-sd_exp)-log10(mean_exp)/)
   else
     unusual = .true.
   endif
