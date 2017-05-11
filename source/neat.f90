@@ -365,6 +365,8 @@ program neat
 
         linelist%intensity = linelist%intensity * normalise
         linelist%int_err = linelist%int_err * normalise
+        linelist%blend_intensity = linelist%blend_intensity * normalise
+        linelist%blend_int_err = linelist%blend_int_err * normalise
 
 ! check for and remove negative line fluxes and uncertainties
 
