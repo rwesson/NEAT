@@ -665,7 +665,13 @@ program neat
 
 !now write out the summary files and all the binned data
 
-        print *,gettime(),"Writing summary files"
+        if (verbosity .eq. 1) then
+          print *,gettime(),"Writing summary files, binned results and complete results"
+        elseif (verbosity .eq. 2) then
+         print *,gettime(),"Writing summary files and binned results"
+        else
+          print *,gettime(),"Writing summary files"
+        endif
 
 !first, define arrays with links to all the data that needs processing.
 !extinction, diagnostics, cel abundances, orl abundances, strong line
