@@ -594,11 +594,11 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
             if(linelist(i)%wavelength .eq. 3646.50) Balmer_jump(2) = linelist(i)
         enddo
 
-        if(Balmer_jump(1)%int_dered .gt. 0 .and. Balmer_jump(2)%int_dered .gt. 0 .and. H_Balmer(11) .gt. 0) then
-        Te_balmer = (Balmer_jump(1)%int_dered - Balmer_jump(2)%int_dered)/linelist(H_Balmer(11))%int_dered
-        Te_balmer = Te_balmer**(-1.5)
-        Te_balmer = Te_balmer*368
-        Te_balmer = Te_balmer*(1+0.256*heiabund+3.409*heiiabund)
+        if(Balmer_jump(2)%int_dered .gt. 0 .and. Balmer_jump(1)%int_dered .gt. Balmer_jump(2)%int_dered .and. H_Balmer(11) .gt. 0) then
+          Te_balmer = (Balmer_jump(1)%int_dered - Balmer_jump(2)%int_dered)/linelist(H_Balmer(11))%int_dered
+          Te_balmer = Te_balmer**(-1.5)
+          Te_balmer = Te_balmer*368
+          Te_balmer = Te_balmer*(1+0.256*heiabund+3.409*heiiabund)
         endif
 
         iteration_result%Balmer_jump_temp = Te_balmer
@@ -614,11 +614,11 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
             if(linelist(i)%wavelength .eq. 8400.d0) Paschen_jump(2) = linelist(i)
         enddo
 
-        if(Paschen_jump(1)%int_dered .gt. 0 .and. Paschen_jump(2)%int_dered .gt. 0 .and. H_Paschen(11) .gt. 0) then
-        Te_paschen = (Paschen_jump(1)%int_dered - Paschen_jump(2)%int_dered)/linelist(H_Paschen(11))%int_dered
-        Te_paschen = Te_paschen**(-1.77)
-        Te_paschen = Te_paschen*8.72
-        Te_paschen = Te_paschen*(1+0.52*heiabund+4.40*heiiabund)
+        if(Paschen_jump(2)%int_dered .gt. 0 .and. Paschen_jump(1)%int_dered .gt. Paschen_jump(2)%int_dered .and. H_Paschen(11) .gt. 0) then
+          Te_paschen = (Paschen_jump(1)%int_dered - Paschen_jump(2)%int_dered)/linelist(H_Paschen(11))%int_dered
+          Te_paschen = Te_paschen**(-1.77)
+          Te_paschen = Te_paschen*8.72
+          Te_paschen = Te_paschen*(1+0.52*heiabund+4.40*heiiabund)
         endif
 
         iteration_result%Paschen_jump_temp = Te_paschen
