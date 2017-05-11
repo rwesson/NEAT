@@ -584,7 +584,7 @@ character(len=11) function latextoplain(text)
 !eg [O~{\sc iii}] -> [O II]
 
 implicit none
-character(len=17) :: text,part1,part2
+character(len=17) :: text,part1,part2,part3
 integer :: i
 
 if (index(text,"~{\sc") .gt. 0) then
@@ -594,9 +594,11 @@ if (index(text,"~{\sc") .gt. 0) then
 
   part1="                 "
   part2="                 "
+  part3="                 "
 
   part1=text(1:index(text,"~{\sc")-1)
   part2=text(index(text,"~{\sc")+5:index(text,"}")-1)
+  part3=text(index(text,"}")+1:)
 
   do i=1,len(part2)
     if (iachar(part2(i:i)).ge.iachar("a") .and. iachar(part2(i:i)).le.iachar("z")) then !convert to lower case
@@ -604,7 +606,7 @@ if (index(text,"~{\sc") .gt. 0) then
     endif
   enddo
 
-  latextoplain=trim(part1)//trim(part2)
+  latextoplain=trim(part1)//trim(part2)//trim(part3)
 
 else
   latextoplain=text(1:11)
