@@ -37,7 +37,7 @@ subroutine calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction,
 !interpolating over 6 Te points, 5,7.5,10,12.5,15,20kK and 3 Ne points 10^2, 10^3 10^4 cm^(-3)
 
         if (H_Balmer(3) .gt. 0 .and. H_Balmer(4) .gt. 0) then
-          c1 = log10( ( linelist(H_Balmer(3))%intensity / linelist(H_Balmer(4))%intensity )/ calc_balmer_ratios(temp, dens, 1)    )/(-linelist(H_Balmer(3))%flambda)
+          c1 = log10( ( linelist(H_Balmer(3))%intensity / linelist(H_Balmer(4))%intensity )/ calc_balmer_ratios(temp, dens, 1) )/(-linelist(H_Balmer(3))%flambda)
         else
           c1 = 0.d0
           weightha = 0.d0
