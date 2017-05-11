@@ -559,18 +559,18 @@ program neat
 
                 if (ncols .ge. 4) then
                   if (linelist(j)%wavelength_observed .gt. 0.) then
-                    write (650,"(X,F7.2,X)", advance='no') all_linelists(j,1)%wavelength_observed
-                    write (651,"(X,F7.2,' & ')", advance='no') all_linelists(j,1)%wavelength_observed
+                    write (650,"(X,F8.2,X)", advance='no') all_linelists(j,1)%wavelength_observed
+                    write (651,"(X,F8.2,' & ')", advance='no') all_linelists(j,1)%wavelength_observed
                   else
-                    write (650,"(X,A,X)", advance='no') "      *"
-                    write (651,"(X,A,' & ')", advance='no') "      *"
+                    write (650,"(X,A,X)", advance='no') "       *"
+                    write (651,"(X,A,' & ')", advance='no') "       *"
                   endif
                 endif
 
 !rest wavelength, ion name for plain text file
 
-                write (650,"(X,F7.2,X,A11)", advance='no') all_linelists(j,1)%wavelength,all_linelists(j,1)%name
-                write (651,"(X,F7.2,' & ',A15,' & ')", advance='no') all_linelists(j,1)%wavelength
+                write (650,"(X,F8.2,X,A11)", advance='no') all_linelists(j,1)%wavelength,all_linelists(j,1)%name
+                write (651,"(X,F8.2,' & ',A15,' & ')", advance='no') all_linelists(j,1)%wavelength
 
 !line flux
 
@@ -630,24 +630,24 @@ program neat
                 do i=1,listlength
                   if (ncols .ge. 4) then
                     if (linelist(i)%wavelength_observed .gt. 0.) then
-                      write (650,"(X,F7.2,X)", advance='no') linelist(i)%wavelength_observed
-                      write (651,"(X,F7.2,' & ')", advance='no') linelist(i)%wavelength_observed
+                      write (650,"(X,F8.2,X)", advance='no') linelist(i)%wavelength_observed
+                      write (651,"(X,F8.2,' & ')", advance='no') linelist(i)%wavelength_observed
                     else
-                      write (650,"(X,A,X)", advance='no') "      *"
-                      write (651,"(X,A,' & ')", advance='no') "      *"
+                      write (650,"(X,A,X)", advance='no') "       *"
+                      write (651,"(X,A,' & ')", advance='no') "       *"
                     endif
                   endif
                   if (linelist(i)%intensity .ne. 0.d0) then
                     if (linelist(i)%abundance .gt. 0.0) then
-                      write (650,"(X,F7.2,X,A11,F8.3,X,F8.3,X,ES14.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance
-                      write (651,"(X,F7.2,X,'&',X,F8.3,X,'&',X,F8.3,X,A,'\\')") linelist(i)%wavelength,linelist(i)%intensity,linelist(i)%int_dered,linelist(i)%linedata
+                      write (650,"(X,F8.2,X,A11,F8.3,X,F8.3,X,ES14.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered, linelist(i)%abundance
+                      write (651,"(X,F8.2,X,'&',X,F8.3,X,'&',X,F8.3,X,A,'\\')") linelist(i)%wavelength,linelist(i)%intensity,linelist(i)%int_dered,linelist(i)%linedata
                     else
-                      write (650,"(X,F7.2,X,A11,F8.3,X,F8.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered
-                      write (651,"(X,F7.2,X,'&',X,F8.3,X,'&',X,F8.3,X,A,'\\')") linelist(i)%wavelength,linelist(i)%intensity,linelist(i)%int_dered,linelist(i)%linedata
+                      write (650,"(X,F8.2,X,A11,F8.3,X,F8.3)") linelist(i)%wavelength,linelist(i)%name,linelist(i)%intensity,linelist(i)%int_dered
+                      write (651,"(X,F8.2,X,'&',X,F8.3,X,'&',X,F8.3,X,A,'\\')") linelist(i)%wavelength,linelist(i)%intensity,linelist(i)%int_dered,linelist(i)%linedata
                     endif
                   else
-                    write (650,"(X,F7.2,X,A11,A7,X,A7)") linelist(i)%wavelength,linelist(i)%name,"*      ","*      "
-                    write (651,"(X,F7.2,X,'&',X,A7,X,'&',X,A7,X,A,'\\')") linelist(i)%wavelength,"*      ","*      ",linelist(i)%linedata
+                    write (650,"(X,F8.2,X,A11,A7,X,A7)") linelist(i)%wavelength,linelist(i)%name,"*      ","*      "
+                    write (651,"(X,F8.2,X,'&',X,A7,X,'&',X,A7,X,A,'\\')") linelist(i)%wavelength,"*      ","*      ",linelist(i)%linedata
                   endif
                 enddo
 
