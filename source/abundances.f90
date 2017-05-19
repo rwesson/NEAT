@@ -1321,7 +1321,7 @@ elseif (switch_icf .eq. "D") then
     ClabundCEL = cliiCELabund + cliiiCELabund
   elseif (OICFfactor .gt. 0.02 .and. OICFfactor .lt. 0.95 .and. cliiiCELabund .gt. 0.D0 .and. oiiCELabund .gt. 0.D0) then !equation 29:
     CELicfCL = (4.1620 - (4.1622*OICFfactor**0.21))**0.75
-    ClabundCEL = CELicfCL * (cliiiCELabund / oiiCELabund)
+    ClabundCEL = CELicfCL * (cliiiCELabund / oiiCELabund) * OabundCEL
   else
     CELicfCl = 1.0
     CLabundCEL = 0.D0
