@@ -137,7 +137,7 @@ enddo
 !now we have an array with all the densities implied by the ratios.  Derive a flux weighted value
 
 do i=10,25
-  if (densities(i).gt.0.d0) then
+  if (densities(i).gt.2.d0) then
     density=density+linelist(H_Balmer(i))%weight*densities(i)
     weight=weight+linelist(H_Balmer(i))%weight
   endif
@@ -246,7 +246,7 @@ enddo
 !now we have an array with all the densities implied by the ratios.  Derive a flux weighted value
 
 do i=10,25
-  if (densities(i).gt.0.d0) then
+  if (densities(i).gt.2.d0) then
     density=density+linelist(H_Paschen(i))%weight*densities(i)
     weight=weight+linelist(H_Paschen(i))%weight
   endif
