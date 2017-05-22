@@ -578,8 +578,8 @@ program neat
                  write (650,"(A)", advance='no') " * "
                  write (651,"(A)", advance='no') " *     &             &"
                else
-                 write (650,"(F8.3,A,F7.2,3X)", advance='no') all_linelists(j,1)%intensity," +-",all_linelists(j,1)%int_err
-                 write (651,"(F8.3,'& $\pm$',F7.2, '&')", advance='no') all_linelists(j,1)%intensity,all_linelists(j,1)%int_err
+                 write (650,"(F8.3,A,F8.3,3X)", advance='no') all_linelists(j,1)%intensity," +-",all_linelists(j,1)%int_err
+                 write (651,"(F8.3,'& $\pm$',F8.3, '&')", advance='no') all_linelists(j,1)%intensity,all_linelists(j,1)%int_err
                endif
 
 !dereddened flux
@@ -589,11 +589,11 @@ program neat
 
                 if (all_linelists(j,1)%intensity .ne. 0.d0 .or. all_linelists(j,1)%blend_intensity .ne. 0.d0) then
                   if (uncertainty_array(1) .ne. uncertainty_array(3)) then
-                    write (650,"(F8.3,SP,F7.2,SP,F7.2)", advance='no') uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
-                    write (651,"(F8.3,'& $^{',SP,F7.2,'}_{',SP,F7.2,'}$')", advance='no') uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
+                    write (650,"(F8.3,SP,F8.3,SP,F8.3)", advance='no') uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
+                    write (651,"(F8.3,'& $^{',SP,F8.3,'}_{',SP,F8.3,'}$')", advance='no') uncertainty_array(2),uncertainty_array(1),-uncertainty_array(3)
                   else
-                    write (650,"(F8.3,A,F7.2,4X)", advance='no') uncertainty_array(2)," +-",uncertainty_array(1)
-                    write (651,"(F8.3,'& $\pm$',F7.2)", advance='no') uncertainty_array(2),uncertainty_array(1)
+                    write (650,"(F8.3,A,F8.3,4X)", advance='no') uncertainty_array(2)," +-",uncertainty_array(1)
+                    write (651,"(F8.3,'& $\pm$',F8.3)", advance='no') uncertainty_array(2),uncertainty_array(1)
                   endif
                 else
                   write (650,"(A)", advance='no') " * "
@@ -1346,6 +1346,7 @@ real(kind=dp) :: mean_log=0d0, sd_log=0d0
 real(kind=dp) :: mean_exp=0d0, sd_exp=0d0
 real(kind=dp), dimension(3,3) :: sds=0d0
 real(kind=dp) :: tolerance=0d0
+real(kind=dp) :: rounding ! value to round to nearest to
 logical :: unusual !if not true, then the distribution is normal, log normal or exp normal
 
 !debugging
@@ -1476,6 +1477,22 @@ else !all results are identical
   uncertainty_array(3) = 0.D0
 endif
 
+!round values to 3 significant figures
+!if uncertainties get rounded to zero, increment them
+
+if (uncertainty_array(2) .ne. 0.d0 .and. uncertainty_array(2) .ne. 1.d0) then
+  if (uncertainty_array(1).ge.0.001 .and.uncertainty_array(1).lt.1.0) then
+    rounding=0.001d0
+  else
+    rounding=10**dble(floor(log10(uncertainty_array(2))))/100.d0
+  endif
+
+  uncertainty_array = rounding * nint(uncertainty_array/rounding)
+  uncertainty_array(1) = max(rounding,uncertainty_array(1))
+  uncertainty_array(3) = max(rounding,uncertainty_array(3))
+
+endif
+
 end subroutine get_uncertainties
 
 character(len=11) function gettime()
@@ -1517,7 +1534,7 @@ read (latex_number(pos+1:14), '(I3)') exponent
 if (exponent .ge. -2 .and. exponent .le. 1) then
   write (latex_number,"(F6.2)") inputnumber !just print out normal number if it's between 0.01 & 10
 elseif (exponent .ge. 2 .and. exponent .le. 4) then
-  write (latex_number,"(I5)") 10*nint(inputnumber/10) ! write out integer rounded to nearest 10 if it's between 10 and 10,000
+  write (latex_number,"(I6)") 10*nint(inputnumber/10) ! write out integer rounded to nearest 10 if it's between 10 and 10,000
 else !otherwise, write out a formatted exponent
   write (latex_number,"(F6.2,'\times 10^{',I3,'}')") mantissa,exponent
 endif
