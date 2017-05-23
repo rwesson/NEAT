@@ -939,11 +939,11 @@ program neat
         resultprocessingtext(107,:) = (/"S/H                                ","S$^{}$/H                           ", abundances_format, "abund_cel_s                        "/)
 
         resultprocessingarray(108,:) = all_results%ClII_abund_CEL
-        resultprocessingtext(108,:) = (/"Cl+/H                              ","Cl$^{2+}$/H                        ", abundances_format, "abund_cel_clii                     "/)
+        resultprocessingtext(108,:) = (/"Cl+/H                              ","Cl$^{+}$/H                         ", abundances_format, "abund_cel_clii                     "/)
         resultprocessingarray(109,:) = all_results%ClIII_abund_CEL
         resultprocessingtext(109,:) = (/"Cl2+/H                             ","Cl$^{2+}$/H                        ", abundances_format, "abund_cel_cliii                    "/)
         resultprocessingarray(110,:) = all_results%ClIV_abund_CEL
-        resultprocessingtext(110,:) = (/"Cl3+/H                             ","Cl$^{2+}$/H                        ", abundances_format, "abund_cel_cliv                     "/)
+        resultprocessingtext(110,:) = (/"Cl3+/H                             ","Cl$^{3+}$/H                        ", abundances_format, "abund_cel_cliv                     "/)
 
         resultprocessingarray(111,:) = all_results%cl_icf_CEL
         resultprocessingtext(111,:) = (/"icf(Cl)                            ","icf(Cl)                            ", abundances_format, "icf_cel_cl                         "/)
