@@ -137,7 +137,9 @@ TYPE resultarray
         real(kind=dp) :: Ar_abund_CEL=0d0
         real(kind=dp) :: Sii_abund_CEL=0d0
         real(kind=dp) :: Siii_abund_CEL=0d0
+        real(kind=dp) :: Clii_abund_CEL=0d0
         real(kind=dp) :: Cliii_abund_CEL=0d0
+        real(kind=dp) :: Cliv_abund_CEL=0d0
         real(kind=dp) :: Cl_icf_CEL=0d0
         real(kind=dp) :: Cl_abund_CEL=0d0
         real(kind=dp) :: S_icf_CEL=0d0

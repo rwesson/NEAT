@@ -15,7 +15,7 @@ subroutine setweights(configfile,weights,linelist,ILs,H_Balmer,H_Paschen,HeII_li
         real(kind=dp) :: weight
         type(weightingarray) :: weights
         type(line),dimension(:) :: linelist
-        type(cel),dimension(82) :: ILs
+        type(cel),dimension(88) :: ILs
         integer, dimension(3:40) :: H_Balmer
         integer, dimension(4:39) :: H_Paschen
         integer, dimension(20,2:6) :: HeII_lines

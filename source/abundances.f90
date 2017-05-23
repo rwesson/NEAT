@@ -51,13 +51,13 @@ use mod_hydrogen
         integer, dimension(4:39) :: H_Paschen
         integer, dimension(44) :: HeI_lines
         integer, dimension(20,2:6) :: HeII_lines
-        type(cel), dimension(82) :: ILs !todo: work out why this becomes undefined on entry if its shape is assumed
+        type(cel), dimension(88) :: ILs !todo: work out why this becomes undefined on entry if its shape is assumed
 
 !atomic data
 
         integer :: iion !# of ions in Ilines
         integer :: maxlevs,maxtemps
-        type(atomic_data),dimension(22) :: atomicdata
+        type(atomic_data),dimension(24) :: atomicdata
         real(kind=dp), dimension(21,14,44) :: heidata
 
 ! recombination line variables
@@ -707,10 +707,6 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
           endif
         enddo
 
-!we currently don't calculate clii or cliv so they are set to zero
-cliiCELabund = 0.d0
-clivCELabund = 0.d0
-
 ! calculate averages
 
         call get_average_abundance("nii5754    ","nii6584    ", niiCELabund)
@@ -740,7 +736,10 @@ clivCELabund = 0.d0
         siiiIRCELabund = get_cel_abundance("siii18p7um ",linelist,ILs)
         sivIRCELabund = get_cel_abundance("siv10p5um  ",linelist,ILs)
 
+        call get_average_abundance("clii3678   ","clii9124   ",cliiCELabund)
+        call get_average_abundance("cliv3118   ","cliv8046   ",clivCELabund)
         call get_average_abundance("cliii5517  ","cliii5537  ",cliiiCELabund)
+
         call get_average_abundance("ariii7135  ","ariii7751  ",ariiiCELabund)
         call get_average_abundance("ariv4711   ","ariv4740   ",arivCELabund)
         ariiiIRCELabund = get_cel_abundance("ariii9um   ",linelist,ILs)
@@ -1473,7 +1472,9 @@ endif
         iteration_result(1)%S_icf_CEL = CELicfS
         iteration_result(1)%S_abund_CEL = SabundCEL
 !chlorine
+        iteration_result(1)%Clii_abund_CEL = cliiCELabund
         iteration_result(1)%Cliii_abund_CEL = cliiiCELabund
+        iteration_result(1)%Cliv_abund_CEL = clivCELabund
         iteration_result(1)%Cl_icf_CEL = CELicfCl
         iteration_result(1)%Cl_abund_CEL = ClabundCEL
 
@@ -1697,7 +1698,9 @@ if (relativetoha) then
   iteration_result(1)%Sii_abund_CEL = iteration_result(1)%Sii_abund_CEL * hafactor(1)
   iteration_result(1)%Siii_abund_CEL = iteration_result(1)%Siii_abund_CEL * hafactor(2)
 
+  iteration_result(1)%Clii_abund_CEL = iteration_result(1)%Clii_abund_CEL * hafactor(1)
   iteration_result(1)%Cliii_abund_CEL = iteration_result(1)%Cliii_abund_CEL * hafactor(2)
+  iteration_result(1)%Cliv_abund_CEL = iteration_result(1)%Cliv_abund_CEL * hafactor(3)
 
   iteration_result(1)%Hei_abund_ORL = iteration_result(1)%Hei_abund_ORL * hafactor(2)
   iteration_result(1)%Heii_abund_ORL = iteration_result(1)%Heii_abund_ORL * hafactor(2)
