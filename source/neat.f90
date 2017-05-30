@@ -692,44 +692,44 @@ program neat
         resultprocessingarray(3,:) = all_results%cHb_hd
         resultprocessingtext(3,:) = (/"c(Hb) (Hd/Hb)                      ","c(H$\beta)$ (H$\delta/H$\beta)     ", extinction_format, "chb_hd_hb                          "/)
         resultprocessingarray(4,:) = all_results%mean_cHb
-        resultprocessingtext(4,:) = (/"mean c(Hb)                         ","c(H$\beta)$:                       ", extinction_format, "mean_chb                           "/)
+        resultprocessingtext(4,:) = (/"mean c(Hb)                         ","c(H$\beta)$                        ", extinction_format, "mean_chb                           "/)
 
 !diagnostics
 !low density
 
         resultprocessingarray(5,:) = all_results%oii_density
-        resultprocessingtext(5,:) = (/"[OII] density                      ","{}[O~{\sc ii}] density:            ", diagnostic_format, "density_oii                        "/)
+        resultprocessingtext(5,:) = (/"[OII] density                      ","{}[O~{\sc ii}] density             ", diagnostic_format, "density_oii                        "/)
         resultprocessingarray(6,:) = all_results%oii_density_ratio
-        resultprocessingtext(6,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "density_oii_ratio                  "/)
+        resultprocessingtext(6,:) = (/"[OII] diagnostic ratio             ","{}[O~{\sc ii}] diagnostic ratio    ", diagnostic_ratio_format, "density_oii_ratio                  "/)
         resultprocessingarray(7,:) = all_results%SII_density
-        resultprocessingtext(7,:) = (/"[SII] density                      ","{}[S~{\sc ii}] density:            ", diagnostic_format, "density_sii                        "/)
+        resultprocessingtext(7,:) = (/"[SII] density                      ","{}[S~{\sc ii}] density             ", diagnostic_format, "density_sii                        "/)
         resultprocessingarray(8,:) = all_results%sii_density_ratio
-        resultprocessingtext(8,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "density_sii_ratio                  "/)
+        resultprocessingtext(8,:) = (/"[SII] diagnostic ratio             ","{}[S~{\sc ii}] diagnostic ratio    ", diagnostic_ratio_format, "density_sii_ratio                  "/)
         resultprocessingarray(9,:) = all_results%low_density
-        resultprocessingtext(9,:) = (/"Low ionisation density             ","Low ionisation density:            ", diagnostic_format, "density_low                        "/)
+        resultprocessingtext(9,:) = (/"Low ionisation density             ","Low ionisation density             ", diagnostic_format, "density_low                        "/)
 
 !low temperature
 
         resultprocessingarray(10,:) = all_results%oii_temp
         resultprocessingtext(10,:) = (/"[OII] temperature                  ","{}[O~{\sc ii}] temperature         ", diagnostic_format, "temp_oii                           "/)
         resultprocessingarray(11,:) = all_results%oii_temp_ratio
-        resultprocessingtext(11,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_oii_ratio                     "/)
+        resultprocessingtext(11,:) = (/"[OII] diagnostic ratio             ","{}[O~{\sc ii}] diagnostic ratio    ", diagnostic_ratio_format, "temp_oii_ratio                     "/)
         resultprocessingarray(12,:) = all_results%SII_temp
         resultprocessingtext(12,:) = (/"[SII] temperature                  ","{}[S~{\sc ii}] temperature         ", diagnostic_format, "temp_sii                           "/)
         resultprocessingarray(13,:) = all_results%sii_temp_ratio
-        resultprocessingtext(13,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_sii_ratio                     "/)
+        resultprocessingtext(13,:) = (/"[SII] diagnostic ratio             ","{}[S~{\sc ii}] diagnostic ratio    ", diagnostic_ratio_format, "temp_sii_ratio                     "/)
         resultprocessingarray(14,:) = all_results%NII_temp
         resultprocessingtext(14,:) = (/"[NII] temperature                  ","{}[N~{\sc ii}] temperature         ", diagnostic_format, "temp_nii                           "/)
         resultprocessingarray(15,:) = all_results%nii_temp_ratio
-        resultprocessingtext(15,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_nii_ratio                     "/)
+        resultprocessingtext(15,:) = (/"[NII] diagnostic ratio             ","{}[N~{\sc ii}] diagnostic ratio    ", diagnostic_ratio_format, "temp_nii_ratio                     "/)
         resultprocessingarray(16,:) = all_results%OI_temp
         resultprocessingtext(16,:) = (/"[OI] temperature                   ","{}[O~{\sc i}] temperature          ", diagnostic_format, "temp_oi                            "/)
         resultprocessingarray(17,:) = all_results%oi_temp_ratio
-        resultprocessingtext(17,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_oi_ratio                      "/)
+        resultprocessingtext(17,:) = (/"[OI] diagnostic ratio              ","{}[O~{\sc i}] diagnostic ratio     ", diagnostic_ratio_format, "temp_oi_ratio                      "/)
         resultprocessingarray(18,:) = all_results%CI_temp
         resultprocessingtext(18,:) = (/"[CI] temperature                   ","{}[C~{\sc i}] temperature          ", diagnostic_format, "temp_ci                            "/)
         resultprocessingarray(19,:) = all_results%ci_temp_ratio
-        resultprocessingtext(19,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_ci_ratio                      "/)
+        resultprocessingtext(19,:) = (/"[CI] diagnostic ratio              ","{}[C~{\sc i}] diagnostic ratio     ", diagnostic_ratio_format, "temp_ci_ratio                      "/)
         resultprocessingarray(20,:) = all_results%low_temp
         resultprocessingtext(20,:) = (/"Low ionisation temperature         ","Low ionisation temperature         ", diagnostic_format, "temp_low                           "/)
 
@@ -737,25 +737,25 @@ program neat
 !medium density
 
         resultprocessingarray(21,:) = all_results%cliii_density
-        resultprocessingtext(21,:) = (/"[ClIII] density                    ","{}[Cl~{\sc iii}] density:          ", diagnostic_format, "density_cliii                      "/)
+        resultprocessingtext(21,:) = (/"[ClIII] density                    ","{}[Cl~{\sc iii}] density           ", diagnostic_format, "density_cliii                      "/)
         resultprocessingarray(22,:) = all_results%cliii_density_ratio
-        resultprocessingtext(22,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "density_cliii_ratio                "/)
+        resultprocessingtext(22,:) = (/"[ClIII] diagnostic ratio           ","{}[Cl~{\sc iii}] diagnostic ratio  ", diagnostic_ratio_format, "density_cliii_ratio                "/)
         resultprocessingarray(23,:) = all_results%ArIV_density
-        resultprocessingtext(23,:) = (/"[ArIV] density                     ","{}[Ar~{\sc iv}] density:           ", diagnostic_format, "density_ariv                       "/)
+        resultprocessingtext(23,:) = (/"[ArIV] density                     ","{}[Ar~{\sc iv}] density            ", diagnostic_format, "density_ariv                       "/)
         resultprocessingarray(24,:) = all_results%ariv_density_ratio
-        resultprocessingtext(24,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "density_sii_ratio                  "/)
+        resultprocessingtext(24,:) = (/"[ArIV] diagnostic ratio            ","{}[Ar~{\sc iv}] diagnostic ratio   ", diagnostic_ratio_format, "density_sii_ratio                  "/)
         resultprocessingarray(25,:) = all_results%CIII_density
         resultprocessingtext(25,:) = (/"[CIII] density                     ","{}[C~{\sc iii}] density            ", diagnostic_format, "density_ciii                       "/)
         resultprocessingarray(26,:) = all_results%ciii_density_ratio
-        resultprocessingtext(26,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "density_ciii_ratio                 "/)
+        resultprocessingtext(26,:) = (/"[CIII] diagnostic ratio            ","{}[C~{\sc iii}] diagnostic ratio   ", diagnostic_ratio_format, "density_ciii_ratio                 "/)
         resultprocessingarray(27,:) = all_results%OIII_IR_density
         resultprocessingtext(27,:) = (/"[OIII] IR density                  ","{}[O~{\sc iii}] IR density         ", diagnostic_format, "density_oiii_ir                    "/)
         resultprocessingarray(28,:) = all_results%oiii_ir_density_ratio
-        resultprocessingtext(28,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "density_oiii_ir_ratio              "/)
+        resultprocessingtext(28,:) = (/"[OIII] IR diagnostic ratio         ","{}[O~{\sc iii}] IR diagnostic ratio", diagnostic_ratio_format, "density_oiii_ir_ratio              "/)
         resultprocessingarray(29,:) = all_results%SIII_IR_density
         resultprocessingtext(29,:) = (/"[SIII] IR density                  ","{}[S~{\sc iii}] IR density         ", diagnostic_format, "density_siii_ir                    "/)
         resultprocessingarray(30,:) = all_results%siii_ir_density_ratio
-        resultprocessingtext(30,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "density_siii_ir_ratio              "/)
+        resultprocessingtext(30,:) = (/"[SIII] IR diagnostic ratio         ","{}[S~{\sc iii}] IR diagnostic ratio", diagnostic_ratio_format, "density_siii_ir_ratio              "/)
         resultprocessingarray(31,:) = all_results%ArIII_IR_density
         resultprocessingtext(31,:) = (/"[ArIII] IR density                 ","{}[Ar~{\sc iii}] IR density        ", diagnostic_format, "density_ariii_ir                   "/)
         resultprocessingarray(32,:) = all_results%ariii_ir_density_ratio
@@ -805,7 +805,7 @@ program neat
         resultprocessingarray(51,:) = all_results%neiv_density
         resultprocessingtext(51,:) = (/"[NeIV] density                     ","{}[Ne~{\sc iv}] density            ", diagnostic_format, "density_neiv                       "/)
         resultprocessingarray(52,:) = all_results%neiv_density_ratio
-        resultprocessingtext(52,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "density_neiv_ratio                 "/)
+        resultprocessingtext(52,:) = (/"[NeIV] diagnostic ratio            ","{}[Ne~{\sc iv}] diagnostic ratio   ", diagnostic_ratio_format, "density_neiv_ratio                 "/)
         resultprocessingarray(53,:) = all_results%high_density
         resultprocessingtext(53,:) = (/"High ionisation density            ","High ionisation density            ", diagnostic_format, "density_high                       "/)
 
@@ -814,11 +814,11 @@ program neat
         resultprocessingarray(54,:) = all_results%ArV_temp
         resultprocessingtext(54,:) = (/"[ArV] temperature                  ","{}[Ar~{\sc v}] temperature         ", diagnostic_format, "temp_arv                           "/)
         resultprocessingarray(55,:) = all_results%arv_temp_ratio
-        resultprocessingtext(55,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_arv_ratio                     "/)
+        resultprocessingtext(55,:) = (/"[ArV] diagnostic ratio             ","{}[Ar~{\sc v}] diagnostic ratio    ", diagnostic_ratio_format, "temp_arv_ratio                     "/)
         resultprocessingarray(56,:) = all_results%NeV_temp
         resultprocessingtext(56,:) = (/"[NeV] temperature                  ","{}[Ne~{\sc v}] temperature         ", diagnostic_format, "temp_nev                           "/)
         resultprocessingarray(57,:) = all_results%nev_temp_ratio
-        resultprocessingtext(57,:) = (/"Ratio                              ","Ratio                              ", diagnostic_ratio_format, "temp_nev_ratio                     "/)
+        resultprocessingtext(57,:) = (/"[NeV] diagnostic ratio             ","{}[Ne~{\sc v}] diagnostic ratio    ", diagnostic_ratio_format, "temp_nev_ratio                     "/)
         resultprocessingarray(58,:) = all_results%high_temp
         resultprocessingtext(58,:) = (/"High temperature                   ","High temperature                   ", diagnostic_format, "temp_high                          "/)
 
