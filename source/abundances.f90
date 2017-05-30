@@ -1399,6 +1399,11 @@ if (neiiiCELabund + neivCELabund + nevCELabund .gt. 0.d0) CELicfNe = NeabundCEL/
 if (siiCELabund + siiiCELabund + siiiIRCELabund + sivIRCELabund .gt. 0.d0) CELicfS = SabundCEL/(siiCELabund + siiiCELabund + siiiIRCELabund + sivIRCELabund)
 if (cliiCELabund + cliiiCELabund + clivCELabund .gt. 0.d0) CELicfCl = ClabundCEL/(cliiCELabund + cliiiCELabund + clivCELabund)
 if (ariiiCELabund + arivCELabund + arvCELabund .gt. 0.d0) CELicfAr = ArabundCEL/(ariiiCELabund + arivCELabund + arvCELabund)
+!recombination lines
+if (ciiRLabund + ciiiRLabund .gt. 0.d0) RLicfC = CabundRL / (ciiRLabund + ciiiRLabund)
+if (niiRLabund + niiiRLabund .gt. 0.d0) RLicfN = NabundRL / (niiRLabund + niiiRLabund)
+if (oiiRLabund .gt. 0.d0) RLicfO = OabundRL / oiiRLabund
+if (neiiRLabund .gt. 0.d0) RLicfNe = NeabundRL / neiiRLabund
 
 !if any were less than one, sum up the ionic species.  todo: warn the user that this happened
 
@@ -1429,6 +1434,23 @@ endif
 if (CELicfAr .lt. 1.) then
   CELicfAr = 1.0
   ArabundCEL = (ariiiCELabund + arivCELabund + arvCELabund)
+endif
+!recombination lines
+if (RLicfC .lt. 1.) then
+  RLicfC = 1.0
+  CabundRL = (ciiRLabund + ciiiRLabund)
+endif
+if (RLicfN .lt. 1.) then
+  RLicfN = 1.0
+  NabundRL = (niiRLabund + niiiRLabund)
+endif
+if (RLicfO .lt. 1.) then
+  RLicfO = 1.0
+  OabundRL = oiiRLabund
+endif
+if (RLicfNe .lt. 1.) then
+  RLicfNe = 1.0
+  NeabundRL = neiiRLabund
 endif
 
 !carbon
