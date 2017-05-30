@@ -53,7 +53,7 @@ program neat
         type(line),dimension(:), allocatable :: linelist
         type(line),dimension(:), allocatable :: linelist_original
         type(line),dimension(:,:), allocatable :: all_linelists
-        character(len=512) :: filename,configfile
+        character(len=512) :: filename,configfile,defaultconfigfile
         character(len=1) :: blank
         integer :: listlength, ncols, errstat
         real(kind=dp) :: normalise
@@ -114,7 +114,8 @@ program neat
 
         character(len=35) :: extinction_format, diagnostic_format, diagnostic_ratio_format, abundances_format, adf_format
 
-        configfile=trim(PREFIX)//"/share/neat/default.cfg"
+        configfile=""
+        defaultconfigfile=trim(PREFIX)//"/share/neat/default.cfg"
 
         iion=24 ! number of ions for which we can calculate abundances
                 ! todo: calculate this automatically
@@ -293,10 +294,12 @@ program neat
                 call exit(1)
          endif
 
-         inquire(file=configfile, exist=file_exists) ! see if the configuration file is present
+         if (configfile .ne. "") then
+           inquire(file=configfile, exist=file_exists) ! see if the configuration file is present
+         endif
 
          if (.not. file_exists) then
-                print *,gettime(),"error: input file ",trim(configfile)," does not exist"
+                print *,gettime(),"error: configuration file ",trim(configfile)," does not exist"
                 call exit(1)
          endif
 
@@ -432,8 +435,13 @@ program neat
 
 ! read in the weights to be used in the analysis.
 
-        print *,gettime(),"reading in abundance analysis weights from ",trim(configfile)
-        call setweights(configfile,weights,linelist,ILs,H_Balmer,H_Paschen,HeII_lines)
+        print *,gettime(),"reading in abundance analysis weights from ",trim(defaultconfigfile)
+        call setweights(defaultconfigfile,weights,linelist,ILs,H_Balmer,H_Paschen,HeII_lines)
+        if (configfile .ne. "") then
+          print *,gettime(),"reading in abundance analysis weights from ",trim(configfile)
+          print *,gettime(),"(defaults still apply for any weights not specified in this file)"
+          call setweights(configfile,weights,linelist,ILs,H_Balmer,H_Paschen,HeII_lines)
+        endif
 
 !CELs read, can now read in atomic data
 
