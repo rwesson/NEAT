@@ -1,5 +1,5 @@
 .\" Manpage for neat.
-.TH man 1 "9 May 2016" "2.0" "neat man page"
+.TH man 1 "5 June 2016" "2.1" "neat man page"
 .SH NAME
 \fBneat\fR \- nebular empirical analysis tool
 .SH SYNOPSIS
@@ -14,7 +14,7 @@ The logarithmic extinction at H beta.  By default, this is calculated from the B
 
 .TP
 .B \-cf, \-\-configuration-file [FILE]
-Since version 2.0, NEAT's analysis scheme is specified in a configuration file which is read in at run time, rather than being hard coded.  If this option is omitted the default configuration file is used, which is intended to be suitable for any line list and should only really need changing if particular lines need to be excluded from the analysis.  The configuration file contains a series of weights to be applied when calculating diagnostics and abundances, and the format of the default file should be clear enough that editing it is straightforward.  A negative value for a weight means that the line will be weighted by its observed intensity; a positive value means that the line will be weighted by the given value.
+Since version 2.0, NEAT's analysis scheme is specified in a configuration file which is read in at run time, rather than being hard coded.  If this option is omitted the default configuration file is used, which is intended to be suitable for any line list and should only really need changing if particular lines need to be excluded from the analysis.  The configuration file contains a series of weights to be applied when calculating diagnostics and abundances, and the format of the default file should be clear enough that editing it is straightforward.  A negative value for a weight means that the line will be weighted by its observed intensity; a positive value means that the line will be weighted by the given value.  Any weights not specified in FILE take their values from the default configuration file.
 
 .TP
 .B \-\-citation
@@ -139,7 +139,7 @@ The code corrects for interstellar reddening using the ratios of the Hα, Hβ, H
 
 .SS Temperatures and densities
 
-\fBneat\fR determines temperatures, densities and abundances by dividing emission lines into low, medium and high excitation lines. In each zone, the diagnostics are calculated as follows:
+\fBneat\fR determines temperatures, densities and abundances by dividing emission lines into low (ionisation potential <20eV), medium (20eV<IP<45eV) and high excitation (IP>45eV) lines. In each zone, the diagnostics are calculated as follows:
 
  1. A temperature of 10000K is initially assumed, and the density is then calculated from the line ratios relevant to the zone.
  2. The temperature is then calculated from the temperature diagnostic line ratios, using the derived density.
