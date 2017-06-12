@@ -171,8 +171,8 @@
 3615.86 & N~{\sc ii}       & V26        & 3p  3S     &  4s  3P    &          3 &        1
 3634.25 & He~{\sc i}       & V28        & 2p 3P*     & 8d 3D      &          9 &       15
 3643.93 & Ne~{\sc ii}      & V5         & 3s  2P     & 3p  2D*    &          4 &        4
-3630.0 & Balmer continuum
-3700.0 & Paschen continuum
+3630.00 & Balmer cont.
+3700.00 & Paschen cont.
 3655.12 & H~{\sc i}        & H40        & 2p+ 3P*    & 40d+ 2D    &          8 &        *
 3655.59 & H~{\sc i}        & H39        & 2p+ 3P*    & 39d+ 2D    &          8 &        *
 3656.11 & H~{\sc i}        & H38        & 2p+ 3P*    & 38d+ 2D    &          8 &        *
@@ -833,7 +833,7 @@
 8076.62 & [V~{\sc ii}]     &            &  a3G       & a1F        &          7 &        7
 8083.88 & Fe~{\sc ii}      &            & z4D*       & d4P        &          4 &        6
 8096.26 & Ti~{\sc iii}     &            & 3G*        &3/2$<$9/2$>$&         11 &        9
-8100.00 & Paschen continuum
+8100.00 & Paschen cont.
 8101.31 & Fe~{\sc iii}     &            & b2D 4s3D   & 4P 4p5P*   &          5 &        7
 8101.56 & Ti~{\sc iii}     &            & 3d5f 1F*   & 6g 2$<$4$>$&          7 &        7
 8111.00 & N~{\sc ii}       &            &    ?       & ?          &            &
@@ -875,7 +875,7 @@
 8359.00 & H~{\sc i}        & P22        & 3d+ 2D     & 22f+ 2F*   &         18 &
 8374.48 & H~{\sc i}        & P21        & 3d+ 2D     & 21f+ 2F*   &         18 &
 8392.40 & H~{\sc i}        & P20        & 3d+ 2D     & 20f+ 2F*   &         18 &
-8400.00 & Brackett continuum
+8400.00 & Brackett cont.
 8413.32 & H~{\sc i}        & P19        & 3d+ 2D     & 19f+ 2F*   &         18 &
 8421.99 & He~{\sc i}       & 3.18       & 3d 3D      & 18p 3P*    &         15 &
 8437.95 & H~{\sc i}        & P18        & 3d+ 2D     & 18f+ 2F*   &         18 &
