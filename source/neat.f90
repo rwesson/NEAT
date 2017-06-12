@@ -1301,9 +1301,10 @@ if (verbosity .lt. 3) then
   ! this hacky condition is because for reasons I can't work out right now, the
   ! number of bins allocated to the array is always too large and the last few end
   ! up being full of zeros.  to be fixed soon hopefully.  RW 16/11/2012
-      if (binned_quantity_result(i)%value .gt. 0. .and. binned_quantity_result(i)%counts .gt. 0) then
+!fixed 12/06/2017 - I guess 4.5 years wasn't quite within the hoped for "soon"
+!      if (binned_quantity_result(i)%value .gt. 0. .and. binned_quantity_result(i)%counts .gt. 0) then
         write(unit = 850,fmt=*) binned_quantity_result(i)%value,binned_quantity_result(i)%counts
-      endif
+!      endif
     enddo
     close(850)
   endif
@@ -1399,12 +1400,22 @@ if (binsize .gt. 0d0) then
 
   allocate(bintemp(arraysize))
   bintemp = binsize*nint(input_array/binsize)
-  nbins=nint(maxval(bintemp)/binsize)-nint(minval(bintemp)/binsize)
+
+  ! count the unique values
+  comp=bintemp(1)
+  ii=0
+  do i=1,arraysize
+    if (comp.ne.bintemp(i)) then
+      comp=bintemp(i)
+      ii=ii+1
+    endif
+  enddo
+
+  nbins=ii
 
 endif
 
 if (nbins.gt.0) then
-
   allocate(binned_quantity_result(nbins))
   binned_quantity_result%value=0.D0
   binned_quantity_result%counts=0
@@ -1416,13 +1427,10 @@ if (nbins.gt.0) then
   ii=1
 
   do i=1,arraysize
-    if (bintemp(i).eq.comp) then
-      bincount=bincount+1
-    else
+    if (bintemp(i).ne.comp) then
       binned_quantity_result(ii)%value=comp
-      binned_quantity_result(ii)%counts=bincount
+      binned_quantity_result(ii)%counts=count(bintemp.eq.comp)
       comp=bintemp(i)
-      bincount=0
       ii=ii+1
     endif
   enddo
