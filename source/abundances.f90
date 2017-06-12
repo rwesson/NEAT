@@ -590,8 +590,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         Balmer_jump(2)%int_dered = 0.d0
 
         do i=1,listlength
-            if(linelist(i)%wavelength .eq. 3645.50) Balmer_jump(1) = linelist(i)
-            if(linelist(i)%wavelength .eq. 3646.50) Balmer_jump(2) = linelist(i)
+            if(linelist(i)%wavelength .eq. 3630.0) Balmer_jump(1) = linelist(i)
+            if(linelist(i)%wavelength .eq. 3700.0) Balmer_jump(2) = linelist(i)
         enddo
 
         if(Balmer_jump(2)%int_dered .gt. 0 .and. Balmer_jump(1)%int_dered .gt. Balmer_jump(2)%int_dered .and. H_Balmer(11) .gt. 0) then
