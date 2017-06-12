@@ -1391,6 +1391,7 @@ call qsort(input_array)
 
 arraysize = size(input_array)
 binsize=input_array(nint(0.841*arraysize))/25d0
+nbins=0
 
 if (binsize .gt. 0d0) then
 
@@ -1399,6 +1400,11 @@ if (binsize .gt. 0d0) then
   allocate(bintemp(arraysize))
   bintemp = binsize*nint(input_array/binsize)
   nbins=nint(maxval(bintemp)/binsize)-nint(minval(bintemp)/binsize)
+
+endif
+
+if (nbins.gt.0) then
+
   allocate(binned_quantity_result(nbins))
   binned_quantity_result%value=0.D0
   binned_quantity_result%counts=0
