@@ -65,6 +65,8 @@ use mod_hydrogen
         type RLabund
            character(len=7) :: Multiplet
            real(kind=dp) :: Abundance
+           real(kind=dp) :: coadded_observed
+           real(kind=dp) :: coadded_predicted
            real(kind=dp) :: weight
         end type RLabund
 
@@ -123,8 +125,14 @@ use mod_hydrogen
         CELicfO = 0.d0
         Ar3O3 = 0.D0
         O_Ar3O3 = 0.D0
-        oiimultiplets(:)%abundance = 0.d0
-        niimultiplets(:)%abundance = 0.d0
+
+        oiimultiplets%abundance = 0.d0
+        oiimultiplets%coadded_observed = 0.d0
+        oiimultiplets%coadded_predicted = 0.d0
+
+        niimultiplets%abundance = 0.d0
+        niimultiplets%coadded_observed = 0.d0
+        niimultiplets%coadded_predicted = 0.d0
 
         linelist_orig = linelist
 
@@ -856,54 +864,39 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 !nii recombination lines
 
   if (sum(niiRLs%int) .gt. 0) then
-!      print "(ES9.2)",rlabundtemp / weight
 
       niimultiplets%Multiplet = (/"V3     ","V5     ","V8     " ,"V12    ","V20    ","V28    ","3d-4f  "/)
       niimultiplets%weight = (/ weights%niiV3,weights%niiV5,weights%niiV8,weights%niiV12,weights%niiV20,weights%niiV28,weights%nii3d4f /)
 
-! get multiplet abundances from coadded intensity
+! get observed and predicted coadded intensity for each multiplet
 
       do j = 1,6
-        rlabundtemp = 0.d0
-        weight = 0.d0
-        do i = 1,size(niiRLs)
-          if (niiRLs(i)%Mult .eq. niimultiplets(j)%Multiplet .and. niiRLs(i)%obs .gt. 0) then
-!            rlabundtemp = rlabundtemp + (niiRLs(i)%obs * niiRLs(i)%abundance)
-!            weight = weight + niiRLs(i)%obs
-             rlabundtemp = rlabundtemp + niiRLs(i)%obs
-             weight = weight + niiRLs(i)%Int
-          endif
-        enddo
-      if (weight.eq.0.d0) then
-        niimultiplets(j)%Abundance = 0.d0
-      else
-        niimultiplets(j)%Abundance = rlabundtemp/weight
-      endif
+        niimultiplets(j)%coadded_observed=sum(niiRLs%obs,mask=niiRLs%Mult .eq. niimultiplets(j)%Multiplet .and. niiRLs%obs .gt. 0)
+        niimultiplets(j)%coadded_predicted=sum(niiRLs%Int,mask=niiRLs%Mult .eq. niimultiplets(j)%Multiplet .and. niiRLs%obs .gt. 0)
       enddo
 
 !3d-4f transitions
 
-      rlabundtemp = 0.d0
-      weight = 0.d0
-      do i = 1,size(niiRLs)
-        if (niiRLs(i)%obs .gt. 0 .and. (niiRLs(i)%Mult(4:4) .eq. "a" .or. niiRLs(i)%Mult(4:4).eq."b")) then
-!          rlabundtemp = rlabundtemp + (niiRLs(i)%obs * niiRLs(i)%abundance)
-!          weight = weight + niiRLs(i)%obs
-           rlabundtemp = rlabundtemp + niiRLs(i)%obs
-           weight = weight + niiRLs(i)%Int
-        endif
-      enddo
+      niimultiplets(7)%coadded_observed=sum(niiRLs%obs,mask=niiRLs%obs .gt. 0 .and. (niiRLs%Mult(4:4) .eq. "a" .or. niiRLs%Mult(4:4).eq."b"))
+      niimultiplets(7)%coadded_predicted=sum(niiRLs%Int,mask=niiRLs%obs .gt. 0 .and. (niiRLs%Mult(4:4) .eq. "a" .or. niiRLs%Mult(4:4).eq."b"))
 
-      if (weight.eq.0.d0) then
-      niimultiplets(7)%abundance = 0
-      else
-      niimultiplets(7)%abundance = rlabundtemp/weight
-      endif
+!get multiplet abundances from coadded intensity
 
-! average the multiplet abundances to get the final abundance
+      where (niimultiplets%coadded_observed.gt.0)
+        niimultiplets%abundance = niimultiplets%coadded_observed / niimultiplets%coadded_predicted
+      elsewhere
+        niimultiplets%abundance = 0
+      endwhere
+
+! set the weights. >0 = weight, <0 = coadded intensity. if multiplet not observed, weight = 0
+! final abundance = weighted average of multiplet abundances
 
       where (niimultiplets%abundance .eq. 0.d0)
         niimultiplets%weight = 0
+      endwhere
+
+      where (niimultiplets%weight .lt. 0.d0)
+        niimultiplets%weight = -niimultiplets%weight * niimultiplets%coadded_observed
       endwhere
 
       if (sum(niimultiplets%weight).gt.0.d0) then
@@ -911,58 +904,45 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
       else
         niiRLabund = 0.D0
       endif
+
   endif
 
 !oii recombination lines
 
-      rlabundtemp = 0.00
-      weight = 0.00
-
   if (sum(oiiRLs%Int).gt. 0) then
-
-!     print "(ES9.2)",rlabundtemp/weight
 
       oiimultiplets%Multiplet = (/" V1    "," V2    "," V5    " ," V10   "," V11   "," V12   "," V19   "," V20   "," V25   "," V28   "," V33   "," 3d-4f "/)
       oiimultiplets%weight = (/ weights%oiiV1, weights%oiiV2, weights%oiiV5, weights%oiiV10, weights%oiiV11, weights%oiiV12, weights%oiiV19, weights%oiiV20, weights%oiiV25, weights%oiiV28, weights%oiiV33, weights%oii3d4f /)
 
-! get multiplet abundances from coadded intensity
+! get observed and predicted coadded intensity for each multiplet
 
       do j = 1,11
-        rlabundtemp = 0.d0
-        weight = 0.d0
-        do i = 1,size(oiiRLs)
-          if (oiiRLs(i)%Mult .eq. oiimultiplets(j)%Multiplet .and. oiiRLs(i)%obs .gt. 0) then
-!            rlabundtemp = rlabundtemp + (oiiRLs(i)%obs * oiiRLs(i)%abundance)
-!            weight = weight + oiiRLs(i)%obs
-             rlabundtemp = rlabundtemp + oiiRLs(i)%obs
-             weight = weight + oiiRLs(i)%Int
-          endif
-        enddo
-        if (weight .gt. 0) then
-          oiimultiplets(j)%Abundance = rlabundtemp/weight
-        else
-          oiimultiplets(j)%Abundance = 0.d0
-        endif
+        oiimultiplets(j)%coadded_observed=sum(oiiRLs%obs,mask=oiiRLs%Mult .eq. oiimultiplets(j)%Multiplet .and. oiiRLs%obs .gt. 0)
+        oiimultiplets(j)%coadded_predicted=sum(oiiRLs%Int,mask=oiiRLs%Mult .eq. oiimultiplets(j)%Multiplet .and. oiiRLs%obs .gt. 0)
       enddo
 
-      rlabundtemp = 0.d0
-      weight = 0.d0
+! 3d-4f transitions
 
-      do i=1,size(oiiRLs)
-        if (oiiRLs(i)%Term1(4:5) .eq. "3d" .and. oiiRLs(i)%Term2(3:4) .eq. "4f" .and. oiiRLs(i)%Mult .ne. "       " .and. oiiRLs(i)%obs .gt. 0) then
-          rlabundtemp = rlabundtemp + oiiRLs(i)%obs
-          weight = weight + oiiRLs(i)%Int
-        endif
-      enddo
+      oiimultiplets(12)%coadded_observed=sum(oiiRLs%obs,mask=oiiRLs%Term1(4:5) .eq. "3d" .and. oiiRLs%Term2(3:4) .eq. "4f" .and. oiiRLs%Mult .ne. "       " .and. oiiRLs%obs .gt. 0)
+      oiimultiplets(12)%coadded_predicted=sum(oiiRLs%Int,mask=oiiRLs%Term1(4:5) .eq. "3d" .and. oiiRLs%Term2(3:4) .eq. "4f" .and. oiiRLs%Mult .ne. "       " .and. oiiRLs%obs .gt. 0)
 
-      if (weight.eq.0.d0) then
-        oiimultiplets(12)%abundance = 0
-      else
-        oiimultiplets(12)%abundance = rlabundtemp/weight
-      endif
+!get multiplet abundances from coadded intensity
+
+      where (oiimultiplets%coadded_observed.gt.0)
+        oiimultiplets%abundance = oiimultiplets%coadded_observed / oiimultiplets%coadded_predicted
+      elsewhere
+        oiimultiplets%abundance = 0
+      endwhere
+
+! set the weights. >0 = weight, <0 = coadded intensity. if multiplet not observed, weight = 0
+! final abundance = weighted average of multiplet abundances
 
       where (oiimultiplets%abundance .eq. 0.d0)
         oiimultiplets%weight = 0
+      endwhere
+
+      where (oiimultiplets%weight .lt. 0.d0)
+        oiimultiplets%weight = -oiimultiplets%weight * oiimultiplets%coadded_observed
       endwhere
 
       if (sum(oiimultiplets%weight).gt.0.d0) then
