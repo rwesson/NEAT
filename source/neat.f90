@@ -215,8 +215,8 @@ program neat
                    read (options(i+1),*) diagnostic_array(6)
                 endif
                 if ((trim(options(i))=="-he" .or. trim(options(i))=="--helium-data") .and. (i+1) .le. Narg) then
-                  if (trim(options(i+1))=="P12") then
-                    switch_he="P"
+                  if (trim(options(i+1))=="S96") then
+                    switch_he="S"
                   endif
                 endif
                 if (trim(options(i))=="-u" .or. trim(options(i))=="--uncertainties") then
