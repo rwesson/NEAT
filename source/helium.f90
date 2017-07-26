@@ -197,10 +197,12 @@ subroutine get_hei_smits_new(linelist,Te, ne, he_lines, heidata, Heiabund, weigh
           interpolatedemissivity=emissivities(i,3)
         endif
 
-        if (interpolatedemissivity.ne. 0.D0 .and. He_lines(i) .gt. 0) then
-          linelist(He_lines(i))%abundance = linelist(He_lines(i))%int_dered/100. * 10.**(GAMM4861(TE,NE)-interpolatedemissivity)
-        else
-          linelist(He_lines(i))%abundance = 0.D0
+        if (He_lines(i) .gt. 0) then
+          if (interpolatedemissivity.ne. 0.D0) then
+            linelist(He_lines(i))%abundance = linelist(He_lines(i))%int_dered/100. * 10.**(GAMM4861(TE,NE)-interpolatedemissivity)
+          else
+            linelist(He_lines(i))%abundance = 0.D0
+          endif
         endif
 
       enddo
@@ -210,27 +212,45 @@ subroutine get_hei_smits_new(linelist,Te, ne, he_lines, heidata, Heiabund, weigh
 !correct 4471, 5876 and 6678 for collisional contributions
 
       D=1.+3130.*tereduced**(-0.50)/ne
-      C4471=(  6.95*tereduced**(0.15)*exp(-4.545/tereduced)  + 0.22*tereduced**(-0.55)*exp(-4.884/tereduced)  )/D
-      C5876=(  6.78*tereduced**(0.07)*exp(-3.776/tereduced)  + 1.67*tereduced**(-0.15)*exp(-4.545/tereduced) + 0.60*tereduced**(-0.34)*exp(-4.901/tereduced)  )/D
-      C6678=(  3.15*tereduced**(-0.54)*exp(-3.776/tereduced) + 0.51*tereduced**(-0.51)*exp(-4.545/tereduced) + 0.20*tereduced**(-0.66)*exp(-4.901/tereduced)  )/D
 
-      linelist(He_lines(10))%abundance=linelist(He_lines(10))%abundance/(1.+C4471)
-      linelist(He_lines(15))%abundance=linelist(He_lines(15))%abundance/(1.+C5876)
-      linelist(He_lines(16))%abundance=linelist(He_lines(16))%abundance/(1.+C6678)
+      if (He_lines(10).gt.0) then
+        C4471=(  6.95*tereduced**(0.15)*exp(-4.545/tereduced)  + 0.22*tereduced**(-0.55)*exp(-4.884/tereduced)  )/D
+        linelist(He_lines(10))%abundance = linelist(He_lines(10))%abundance/(1.+C4471)
+        AB4471 = linelist(He_lines(10))%abundance
+      else
+        AB4471 = 0.d0
+        weight4471 = 0.d0
+      endif
 
-      AB4471 = linelist(He_lines(10))%abundance
-      AB5876 = linelist(He_lines(15))%abundance
-      AB6678 = linelist(He_lines(16))%abundance
+      if (He_lines(15).gt.0) then
+        C5876=(  6.78*tereduced**(0.07)*exp(-3.776/tereduced)  + 1.67*tereduced**(-0.15)*exp(-4.545/tereduced) + 0.60*tereduced**(-0.34)*exp(-4.901/tereduced)  )/D
+        linelist(He_lines(15))%abundance=linelist(He_lines(15))%abundance/(1.+C5876)
+        AB5876 = linelist(He_lines(15))%abundance
+      else
+        AB5876 = 0.d0
+        weight5876 = 0.d0
+      endif
 
-           if (AB4471 .eq. 0) weight4471 = 0.d0
-           if (AB5876 .eq. 0) weight5876 = 0.d0
-           if (AB6678 .eq. 0) weight6678 = 0.d0
+      if (He_lines(16).gt.0) then
+        C6678=(  3.15*tereduced**(-0.54)*exp(-3.776/tereduced) + 0.51*tereduced**(-0.51)*exp(-4.545/tereduced) + 0.20*tereduced**(-0.66)*exp(-4.901/tereduced)  )/D
+        linelist(He_lines(16))%abundance=linelist(He_lines(16))%abundance/(1.+C6678)
+        AB6678 = linelist(He_lines(16))%abundance
+      else
+        AB6678 = 0.d0
+        weight6678 = 0.d0
+      endif
 
-           if (weight4471+weight5876+weight6678.gt.0.0) then
-               heiabund = ((weight4471*AB4471) + (weight5876*AB5876) + (weight6678*AB6678)) / (weight4471 + weight5876 + weight6678)
-           else
-               heiabund = 0.D0
-           endif
+      if (weight4471+weight5876+weight6678.gt.0.0) then
+         heiabund = ((weight4471*AB4471) + (weight5876*AB5876) + (weight6678*AB6678)) / (weight4471 + weight5876 + weight6678)
+      else
+         heiabund = 0.D0
+      endif
+
+      if (weight4471+weight5876+weight6678.gt.0.0) then
+         heiabund = ((weight4471*AB4471) + (weight5876*AB5876) + (weight6678*AB6678)) / (weight4471 + weight5876 + weight6678)
+      else
+         heiabund = 0.D0
+      endif
 
 end subroutine get_hei_smits_new
 
