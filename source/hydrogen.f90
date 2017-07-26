@@ -102,6 +102,8 @@ do i=1,ntemps
   endif
 enddo
 
+if (i>ntemps) i=ntemps ! because in do i=1,10, final value of i is 11
+
 !interpolate linearly between temperatures to get line ratios with density at specified temperature
 !if temperature is outside data limits, it is just set to the limit
 !lower limit is 500K, upper is 30000K
@@ -210,6 +212,8 @@ do i=1,ntemps
     exit
   endif
 enddo
+
+if (i>ntemps) i=ntemps ! because in do i=1,10, final value of i is 11
 
 !interpolate linearly between temperatures to get line ratios with density at specified temperature
 !if temperature is outside data limits, it is just set to the limit
