@@ -1370,7 +1370,7 @@ endif
        NeabundRL = 0.d0
      endif
 
-!rewrite all the ICFs so that they are simply the factor by which the summed ionic abundances are multipled to get the total elemental abundance
+!rewrite all the ICFs so that they are simply the factor by which the summed ionic abundances are multiplied to get the total elemental abundance
 
 if (ciiCELabund + ciiiCELabund + civCELabund .gt. 0.d0) CELicfC = CabundCEL/(ciiCELabund + ciiiCELabund + civCELabund)
 if (niiCELabund + niiiCELabund + nivCELabund + nvCELabund .gt. 0.d0) CELicfN = NabundCEL/(niiCELabund + niiiCELabund + nivCELabund + nvCELabund)
