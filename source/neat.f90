@@ -1335,8 +1335,8 @@ endif
       write (651,"(A,' & ${',A,'}^{+',A,'}_{',A,'}$ \\')") latextext,trim(latex_number(uncertainty_array(2))),trim(latex_number(uncertainty_array(3))),trim(latex_number(-uncertainty_array(1)))
     endif
   else
-    write (650,*) plaintext,"--"
-    write (651,*) latextext,"& -- \\"
+    write (650,*) plaintext,"--  --  --"
+    write (651,*) latextext,"& -- & -- & -- \\"
   endif
 
 endif !end of condition checking whether one or more iterations were done
