@@ -39,7 +39,7 @@ use mod_hydrogen
         real(kind=dp) :: oii4649, oii4089,oii4662,oii_te,oii_ne
         real(kind=dp) :: ratio_5876_4471, ratio_6678_4471, te_5876_4471, te_6678_4471
 
-        type(weightingarray) :: weights
+        type(weightingarray) :: weights, weights_orig
 
         logical :: calculate_extinction
 
@@ -135,6 +135,7 @@ use mod_hydrogen
         niimultiplets%coadded_predicted = 0.d0
 
         linelist_orig = linelist
+        weights_orig = weights
 
         !store fluxes of blends for later retrieval
 
@@ -1738,6 +1739,10 @@ if (relativetoha) then
   iteration_result(1)%nii_3d4f_abund_orl = iteration_result(1)%nii_3d4f_abund_orl * hafactor(2)
 
 endif
+
+! restore weights to original values
+
+weights=weights_orig
 
 contains
 
