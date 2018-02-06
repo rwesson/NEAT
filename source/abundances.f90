@@ -87,6 +87,10 @@ use mod_hydrogen
 
         real(kind=dp) :: nii5754recCEL=0.d0, oii7325recCEL=0.d0, oiii4363recCEL=0.d0, nii5754recRL=0.d0, oii7325recRL=0.d0, oiii4363recRL=0.d0
 
+! upper and lower limits for CEL calculations. todo: implement as command line option
+
+        real(kind=dp) :: tlower,tupper
+
 ! debugging
 
 #ifdef CO
@@ -136,6 +140,9 @@ use mod_hydrogen
 
         linelist_orig = linelist
         weights_orig = weights
+
+        tlower=5000.
+        tupper=35000.
 
         !store fluxes of blends for later retrieval
 
@@ -276,8 +283,8 @@ use mod_hydrogen
         oiiDens=0.d0
         siiDens=0.d0
 
-        call get_diagnostic("[O II]    ","1,2/                ","1,3/                ",oiiNratio,"D",lowtemp, oiiDens,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("[S II]    ","1,2/                ","1,3/                ",siiNratio,"D",lowtemp, siiDens,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[O II]    ","1,2/                ","1,3/                ",oiiNratio,"D",lowtemp, oiiDens,maxlevs,maxtemps,atomicdata,iion,tlower,tupper)
+        call get_diagnostic("[S II]    ","1,2/                ","1,3/                ",siiNratio,"D",lowtemp, siiDens,maxlevs,maxtemps,atomicdata,iion,tlower,tupper)
 
         if (oiidens .le. 0.d0) weights%oiiDens = 0.d0
         if (siidens .le. 0.d0) weights%siiDens = 0.d0
@@ -292,17 +299,17 @@ use mod_hydrogen
 
         counter=0
 
-        call get_diagnostic("[O II]    ","2,4,2,5,3,4,3,5/    ","1,2,1,3/            ",oiiTratio,"T",lowdens,oiiTemp,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("[S II]    ","1,2,1,3/            ","1,4,1,5/            ",siiTratio,"T",lowdens,siiTemp,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("[N II]    ","2,4,3,4/            ","4,5/                ",niiTratio,"T",lowdens,niitemp,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("[C I]     ","2,4,3,4/            ","4,5/                ",ciTratio,"T",lowdens,citemp,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("[O I]     ","1,4,2,4/            ","4,5/                ",oiTratio,"T",lowdens,oitemp,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[O II]    ","2,4,2,5,3,4,3,5/    ","1,2,1,3/            ",oiiTratio,"T",lowdens,oiiTemp,maxlevs,maxtemps,atomicdata,iion,tlower,tupper)
+        call get_diagnostic("[S II]    ","1,2,1,3/            ","1,4,1,5/            ",siiTratio,"T",lowdens,siiTemp,maxlevs,maxtemps,atomicdata,iion,tlower,tupper)
+        call get_diagnostic("[N II]    ","2,4,3,4/            ","4,5/                ",niiTratio,"T",lowdens,niitemp,maxlevs,maxtemps,atomicdata,iion,tlower,tupper)
+        call get_diagnostic("[C I]     ","2,4,3,4/            ","4,5/                ",ciTratio,"T",lowdens,citemp,maxlevs,maxtemps,atomicdata,iion,tlower,tupper)
+        call get_diagnostic("[O I]     ","1,4,2,4/            ","4,5/                ",oiTratio,"T",lowdens,oitemp,maxlevs,maxtemps,atomicdata,iion,tlower,tupper)
 
-        if (oiiTemp .le. 5000. .or. oiiTemp .gt. 34999.) weights%oiiTemp = 0.d0
-        if (siiTemp .le. 5000. .or. siiTemp .gt. 34999.) weights%siiTemp = 0.d0
-        if (niiTemp .le. 5000. .or. niiTemp .gt. 34999.) weights%niiTemp = 0.d0
-        if (ciTemp .le. 5000. .or. ciTemp .gt. 34999.) weights%ciTemp = 0.d0
-        if (oiTemp .le. 5000. .or. oiTemp .gt. 34999.) weights%oiTemp = 0.d0
+        if (oiiTemp .le. tlower .or. oiiTemp .gt. tupper) weights%oiiTemp = 0.d0
+        if (siiTemp .le. tlower .or. siiTemp .gt. tupper) weights%siiTemp = 0.d0
+        if (niiTemp .le. tlower .or. niiTemp .gt. tupper) weights%niiTemp = 0.d0
+        if (ciTemp .le. tlower .or. ciTemp .gt. tupper) weights%ciTemp = 0.d0
+        if (oiTemp .le. tlower .or. oiTemp .gt. tupper) weights%oiTemp = 0.d0
 
         if ((weights%oiiTemp + weights%siiTemp + weights%niiTemp + weights%ciTemp + weights%oiTemp) .gt. 0 .and. diagnostic_array(4) .eq. 0) then
           lowtemp = (weights%oiiTemp*oiiTemp + weights%siiTemp*siiTemp + weights%niiTemp*niiTemp + weights%ciTemp*ciTemp + weights%oiTemp*oiTemp) / (weights%oiiTemp + weights%siiTemp + weights%niiTemp + weights%ciTemp + weights%oiTemp)
@@ -328,15 +335,15 @@ use mod_hydrogen
       do i = 1,2
 
         counter = 0
-        call get_diagnostic("[Cl III]  ","1,2/                ","1,3/                ",cliiiNratio,"D",medtemp, cliiiDens,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("[C III]   ","1,3/                ","1,4/                ",ciiiNratio,"D",medtemp, ciiiDens,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("[Ar IV]   ","1,2/                ","1,3/                ",arivNratio,"D",medtemp, arivDens,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[Cl III]  ","1,2/                ","1,3/                ",cliiiNratio,"D",medtemp, cliiiDens,maxlevs,maxtemps,atomicdata,iion,tlower,tupper)
+        call get_diagnostic("[C III]   ","1,3/                ","1,4/                ",ciiiNratio,"D",medtemp, ciiiDens,maxlevs,maxtemps,atomicdata,iion,tlower,tupper)
+        call get_diagnostic("[Ar IV]   ","1,2/                ","1,3/                ",arivNratio,"D",medtemp, arivDens,maxlevs,maxtemps,atomicdata,iion,tlower,tupper)
 ! IR densities, not included in average
 !Ar, S, Ne, O
-        call get_diagnostic("[O III]   ","1,2/                ","2,3/                ",oiiiIRNratio,"D",medtemp, oiiiIRDens,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("[Ar III]  ","1,2/                ","2,3/                ",ariiiIRNratio,"D",medtemp, ariiiIRDens,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("[S III]   ","1,2/                ","2,3/                ",siiiIRNratio,"D",medtemp, siiiIRDens,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("[Ne III]  ","1,2/                ","2,3/                ",neiiiIRNratio,"D",medtemp, neiiiIRDens,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[O III]   ","1,2/                ","2,3/                ",oiiiIRNratio,"D",medtemp, oiiiIRDens,maxlevs,maxtemps,atomicdata,iion,tlower,tupper)
+        call get_diagnostic("[Ar III]  ","1,2/                ","2,3/                ",ariiiIRNratio,"D",medtemp, ariiiIRDens,maxlevs,maxtemps,atomicdata,iion,tlower,tupper)
+        call get_diagnostic("[S III]   ","1,2/                ","2,3/                ",siiiIRNratio,"D",medtemp, siiiIRDens,maxlevs,maxtemps,atomicdata,iion,tlower,tupper)
+        call get_diagnostic("[Ne III]  ","1,2/                ","2,3/                ",neiiiIRNratio,"D",medtemp, neiiiIRDens,maxlevs,maxtemps,atomicdata,iion,tlower,tupper)
 
         if (cliiiDens .le. 0.d0) weights%cliiiDens = 0.d0
         if (ciiiDens .le. 0.d0) weights%ciiiDens = 0.d0
@@ -358,20 +365,20 @@ use mod_hydrogen
 
         counter = 0
 
-        call get_diagnostic("[O III]   ","2,4,3,4/            ","4,5/                ",oiiiTratio,"T",meddens,oiiiTemp,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("[S III]   ","2,4,3,4/            ","4,5/                ",siiiTratio,"T",meddens,siiiTemp,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("[Ar III]  ","1,4,2,4/            ","4,5/                ",ariiiTratio,"T",meddens,ariiitemp,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("[Ne III]  ","1,4,2,4/            ","4,5/                ",neiiiTratio,"T",meddens,neiiitemp,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("[Ne III]  ","1,4,2,4/            ","1,2/                ",neiiiIRTratio,"T",meddens,neiiiIRtemp,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("[O III]   ","2,4,3,4/            ","2,3/                ",oiiiIRTratio,"T",oiiiIRdens,oiiiIRtemp,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("[O III]   ","2,4,3,4/            ","3,6/                ",oiiiUVTratio,"T",oiidens,oiiiUVtemp,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[O III]   ","2,4,3,4/            ","4,5/                ",oiiiTratio,"T",meddens,oiiiTemp,maxlevs,maxtemps,atomicdata,iion,tlower,tupper)
+        call get_diagnostic("[S III]   ","2,4,3,4/            ","4,5/                ",siiiTratio,"T",meddens,siiiTemp,maxlevs,maxtemps,atomicdata,iion,tlower,tupper)
+        call get_diagnostic("[Ar III]  ","1,4,2,4/            ","4,5/                ",ariiiTratio,"T",meddens,ariiitemp,maxlevs,maxtemps,atomicdata,iion,tlower,tupper)
+        call get_diagnostic("[Ne III]  ","1,4,2,4/            ","4,5/                ",neiiiTratio,"T",meddens,neiiitemp,maxlevs,maxtemps,atomicdata,iion,tlower,tupper)
+        call get_diagnostic("[Ne III]  ","1,4,2,4/            ","1,2/                ",neiiiIRTratio,"T",meddens,neiiiIRtemp,maxlevs,maxtemps,atomicdata,iion,tlower,tupper)
+        call get_diagnostic("[O III]   ","2,4,3,4/            ","2,3/                ",oiiiIRTratio,"T",oiiiIRdens,oiiiIRtemp,maxlevs,maxtemps,atomicdata,iion,tlower,tupper)
+        call get_diagnostic("[O III]   ","2,4,3,4/            ","3,6/                ",oiiiUVTratio,"T",oiidens,oiiiUVtemp,maxlevs,maxtemps,atomicdata,iion,tlower,tupper)
 
 !averaging
 
-        if (oiiiTemp .le. 5000. .or. oiiiTemp .gt. 34999.) weights%oiiiTemp = 0.d0
-        if (siiiTemp .le. 5000. .or. siiiTemp .gt. 34999.) weights%siiiTemp = 0.d0
-        if (ariiiTemp .le. 5000. .or. ariiiTemp .gt. 34999.) weights%ariiiTemp = 0.d0
-        if (neiiiTemp .le. 5000. .or. neiiiTemp .gt. 34999.) weights%neiiiTemp = 0.d0
+        if (oiiiTemp .le. tlower .or. oiiiTemp .gt. tupper) weights%oiiiTemp = 0.d0
+        if (siiiTemp .le. tlower .or. siiiTemp .gt. tupper) weights%siiiTemp = 0.d0
+        if (ariiiTemp .le. tlower .or. ariiiTemp .gt. tupper) weights%ariiiTemp = 0.d0
+        if (neiiiTemp .le. tlower .or. neiiiTemp .gt. tupper) weights%neiiiTemp = 0.d0
 
         if ((weights%oiiitemp + weights%siiitemp + weights%ariiitemp + weights%neiiitemp) .gt. 0 .and. diagnostic_array(5) .eq. 0.0) then
           medtemp = (weights%oiiitemp*oiiitemp + weights%siiitemp*siiitemp + weights%ariiitemp*ariiitemp + weights%neiiitemp*neiiitemp) / (weights%oiiitemp + weights%siiitemp + weights%ariiitemp + weights%neiiitemp)
@@ -415,7 +422,7 @@ use mod_hydrogen
 
       do i = 1,2
 
-        call get_diagnostic("[Ne IV]   ","1,2/                ","1,3/                ",neivNratio,"D",hightemp, neivDens,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[Ne IV]   ","1,2/                ","1,3/                ",neivNratio,"D",hightemp, neivDens,maxlevs,maxtemps,atomicdata,iion,tlower,tupper)
 
         if (diagnostic_array(3) .gt. 0.0) then
           highdens = diagnostic_array(3)
@@ -430,11 +437,11 @@ use mod_hydrogen
 
         counter = 0
 
-        call get_diagnostic("[Ar V]    ","2,4,3,4/            ","4,5/                ",arvTratio,"T",highdens,arvTemp,maxlevs,maxtemps,atomicdata,iion)
-        call get_diagnostic("[Ne V]    ","2,4,3,4/            ","4,5/                ",nevTratio,"T",highdens,nevtemp,maxlevs,maxtemps,atomicdata,iion)
+        call get_diagnostic("[Ar V]    ","2,4,3,4/            ","4,5/                ",arvTratio,"T",highdens,arvTemp,maxlevs,maxtemps,atomicdata,iion,tlower,tupper)
+        call get_diagnostic("[Ne V]    ","2,4,3,4/            ","4,5/                ",nevTratio,"T",highdens,nevtemp,maxlevs,maxtemps,atomicdata,iion,tlower,tupper)
 
-        if (arvTemp .le. 5000. .or. arvTemp .gt. 34999.) weights%arvTemp = 0.d0
-        if (nevTemp .le. 5000. .or. nevTemp .gt. 34999.) weights%nevTemp = 0.d0
+        if (arvTemp .le. tlower .or. arvTemp .gt. tupper) weights%arvTemp = 0.d0
+        if (nevTemp .le. tlower .or. nevTemp .gt. tupper) weights%nevTemp = 0.d0
 
         if ((weights%arvTemp+weights%nevTemp) .gt. 0 .and. diagnostic_array(6) .eq. 0) then
           hightemp = (arvtemp*weights%arvTemp + nevtemp*weights%nevTemp) / (weights%arvTemp+weights%nevTemp)
@@ -458,7 +465,7 @@ iteration_result(1)%low_density = lowdens
 if(niitemp .gt. 0.2)then
         iteration_result(1)%NII_temp = niitemp
 else if(INT(niitemp) .eq. -1)then
-        iteration_result(1)%NII_temp = 35000.
+        iteration_result(1)%NII_temp = tupper
 endif
 iteration_result(1)%NII_temp_ratio = niiTratio
 
@@ -472,21 +479,21 @@ iteration_result(1)%OII_temp_ratio = oiiTratio
 if(siitemp .gt. 0.2 )then
         iteration_result(1)%SII_temp = siitemp
 else if(INT(siitemp) .eq. -1)then
-        iteration_result(1)%SII_temp = 35000.
+        iteration_result(1)%SII_temp = tupper
 endif
 iteration_result(1)%SII_temp_ratio = siiTratio
 
 if(oitemp .gt. 0.2 )then
         iteration_result(1)%OI_temp = oitemp
 else if(INT(oitemp) .eq. -1)then
-        iteration_result(1)%OI_temp = 35000.
+        iteration_result(1)%OI_temp = tupper
 endif
 iteration_result(1)%OI_temp_ratio = oiTratio
 
 if(citemp .gt. 0.2 )then
         iteration_result(1)%CI_temp = citemp
 else if(INT(citemp) .eq. -1)then
-        iteration_result(1)%CI_temp = 35000.
+        iteration_result(1)%CI_temp = tupper
 endif
 iteration_result(1)%CI_temp_ratio = ciTratio
 
@@ -513,21 +520,21 @@ iteration_result(1)%med_density = meddens
 if(oiiitemp .gt. 0.2)then
         iteration_result(1)%OIII_temp = oiiitemp
 else if(INT(oiiitemp) .eq. -1)then
-        iteration_result(1)%OIII_temp = 35000.
+        iteration_result(1)%OIII_temp = tupper
 endif
 iteration_result(1)%OIII_temp_ratio = oiiiTratio
 
 if(neiiitemp .gt. 0.2)then
         iteration_result(1)%NeIII_temp = neiiitemp
 else if(INT(neiiitemp) .eq. -1)then
-        iteration_result(1)%NeIII_temp = 35000.
+        iteration_result(1)%NeIII_temp = tupper
 endif
 iteration_result(1)%NeIII_temp_ratio = neiiiTratio
 
 if(ariiitemp .gt. 0.2)then
         iteration_result(1)%ArIII_temp = ariiitemp
 else if(INT(ariiitemp) .eq. -1)then
-        iteration_result(1)%ArIII_temp = 35000.
+        iteration_result(1)%ArIII_temp = tupper
 endif
 iteration_result(1)%ArIII_temp_ratio = AriiiTratio
 
@@ -541,21 +548,21 @@ iteration_result(1)%SIII_temp_ratio = siiiTratio
 if(oiiiIRtemp .gt. 0.2)then
         iteration_result(1)%OIII_IR_temp = oiiiIRtemp
 else if(int(oiiiIRtemp) .eq. -1)then
-        iteration_result(1)%OIII_IR_temp = 35000.
+        iteration_result(1)%OIII_IR_temp = tupper
 endif
 iteration_result(1)%OIII_IR_temp_ratio = oiiiIRTratio
 
 if(oiiiUVtemp .gt. 0.2)then
         iteration_result(1)%OIII_UV_temp = oiiiUVtemp
 else if(int(oiiiUVtemp) .eq. -1)then
-        iteration_result(1)%OIII_UV_temp = 35000.
+        iteration_result(1)%OIII_UV_temp = tupper
 endif
 iteration_result(1)%OIII_UV_temp_ratio = oiiiUVTratio
 
 if(neiiiIRtemp .gt. 0.2)then
         iteration_result(1)%NeIII_IR_temp = neiiiIRtemp
 else if(int(neiiiIRtemp) .eq. -1)then
-        iteration_result(1)%NeIII_IR_temp = 35000.
+        iteration_result(1)%NeIII_IR_temp = tupper
 endif
 iteration_result(1)%NeIII_IR_temp_ratio = NeiiiTratio
 

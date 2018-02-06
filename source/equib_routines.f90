@@ -34,7 +34,7 @@
       module mod_equib
       contains
 
-      subroutine get_diagnostic(ion,levu,levl,inratio,diagtype,fixedq,result,ndim2,ndim1,atomicdata,iion)
+      subroutine get_diagnostic(ion,levu,levl,inratio,diagtype,fixedq,result,ndim2,ndim1,atomicdata,iion,tlower,tupper)
       use mod_atomicdata
       use mod_helium
       implicit none
@@ -75,6 +75,7 @@
       real(kind=dp), DIMENSION(:,:), ALLOCATABLE :: RESULTS
       real(kind=dp) :: valtest(3)
       integer :: test
+      real(kind=dp) :: tlower,tupper ! lower and upper limits for temperature calculations
 
 !debugging
 #ifdef CO
@@ -132,13 +133,13 @@
       if (diagtype .eq. "t" .or. diagtype .eq. "T") then
 
         if (LOOP .eq. 1) then
-                TEMPI=5000.
+                TEMPI=tlower
         else
                 TEMPI= valtest(1)
         endif
 
         INT=4
-        TINC=(30000.)/((INT-1)**(LOOP))
+        TINC=(tupper-tlower)/((INT-1)**(LOOP))
 
         densi=fixedq
         dinc=0
@@ -165,7 +166,7 @@
       endif
 
       if (densi .le. 0) densi=1
-          if (tempi .lt. 5000) tempi=5000
+          if (tempi .lt. tlower) tempi=tlower
 
                                                                !Start of Te loop
       do JT = 1, INT
