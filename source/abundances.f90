@@ -541,7 +541,7 @@ iteration_result(1)%ArIII_temp_ratio = AriiiTratio
 if(siiitemp .gt. 0.2)then
         iteration_result(1)%SIII_temp = siiitemp
 else if(int(siiitemp) .eq. -1)then
-        iteration_result(1)%SIII_temp = 20000
+        iteration_result(1)%SIII_temp = tupper
 endif
 iteration_result(1)%SIII_temp_ratio = siiiTratio
 
