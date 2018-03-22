@@ -1,3 +1,7 @@
+#data from Storey et al. 2017 (MNRAS, 470, 389)
+#Each block contains the values of 4649/4089 and 4649/4662
+#at the temperature indicated and for densities of
+#log(ne)=2.0, 2.4, 2.8, 3.2, 3.6, 4.0, 4.4 and 5.0
 #te=2.6
 2.253  1.702
 2.324  1.879
