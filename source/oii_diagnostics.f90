@@ -1,4 +1,4 @@
-!oii_diagnostics, routines to interpolate data from McNabb et al 2013 to estimate the temperature and density from OII recombination line ratios
+!oii_diagnostics, routines to interpolate data from Storey et al 2017 to estimate the temperature and density from OII recombination line ratios
 !(C) Roger Wesson
 module mod_oii_diagnostics
 
