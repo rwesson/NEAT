@@ -256,6 +256,8 @@ TYPE resultarray
         real(kind=dp) :: nii_3d4f_abund_orl=0d0
         real(kind=dp) :: oii_te=0.d0
         real(kind=dp) :: oii_ne=0.d0
+        real(kind=dp) :: oii_rl_R1=0.d0
+        real(kind=dp) :: oii_rl_R2=0.d0
         real(kind=dp) :: ratio_5876_4471=0.d0
         real(kind=dp) :: ratio_6678_4471=0.d0
         real(kind=dp) :: Te_5876_4471=0.d0
