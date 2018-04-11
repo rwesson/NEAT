@@ -1135,7 +1135,7 @@ program neat
           elseif (j .eq. 115) then
             write (650,"(/A,/A/)") "ORL abundances","=============="
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{ORL abundances}\\ \hline"
-          elseif (j .eq. 117 .or. j .eq. 122 .or. j .eq. 133 .or. j .eq. 148) then
+          elseif (j .eq. 118 .or. j .eq. 122 .or. j .eq. 133 .or. j .eq. 148) then
             write (650,"(/A,/A/)")
             write (651,*) "\\"
           elseif (j .eq. 151) then
