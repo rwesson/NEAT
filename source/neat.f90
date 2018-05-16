@@ -1210,7 +1210,7 @@ subroutine randomizer(linelist, listlength, norp)
 
 !                if (j==1) R=3.1+(0.15*fn_val)
 
-          if (linelist(j)%int_err .eq. 0.d0) then ! can't calculate signal to noise
+          if (linelist(j)%int_err .eq. 0.d0 .and. .not. norp) then ! can't calculate signal to noise for RP calculations
             linelist(j)%intensity = 0.d0
           elseif (linelist(j)%intensity/linelist(j)%int_err .gt. 6.0 .or. norp) then !normal distribution
             temp4=linelist(j)%intensity+(fn_val*linelist(j)%int_err)
