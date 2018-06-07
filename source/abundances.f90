@@ -42,6 +42,7 @@ use mod_hydrogen
         type(weightingarray) :: weights, weights_orig
 
         logical :: calculate_extinction
+        logical :: subtract_recombination
 
         type(line), dimension(2) :: Balmer_jump, Paschen_jump
 
@@ -144,6 +145,9 @@ use mod_hydrogen
         tlower=5000.
         tupper=35000.
 
+!        subtract_recombination=.true.
+        subtract_recombination=.false.
+
         !store fluxes of blends for later retrieval
 
         where (linelist%blend_intensity .gt. 0.d0)
@@ -167,10 +171,11 @@ use mod_hydrogen
           endif
         endif
 
+! return to here to recalculate everything when subtracting the recombination contribution
 ! note that extinction is recalculated later on after diagnostics are known, so
 ! changes here may also need to be made in the subsequent section too
 
-        if (calculate_extinction) then
+118     if (calculate_extinction) then
                 call calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction, dble(10000.),dble(1000.),weights%ha,weights%hg,weights%hd)
 
                 if (meanextinction .lt. 0.0 .or. isnan(meanextinction)) then
@@ -271,6 +276,13 @@ use mod_hydrogen
       else
            siiTratio = 0.d0
       endif
+
+! correct for recombination contributions assuming RL abundances
+! on the first pass, rec. contrib. will still have its initial value of zero
+
+      if (nii5754recRL .gt. 0.d0) niiTratio = niiTratio / (1. - (0.01*nii5754recRL/get_cel_flux("nii5754    ",linelist,ILs)))
+      if (oii7325recRL .gt. 0.d0) oiiTratio = oiiTratio / (1. - (0.01*oii7325recRL/(get_cel_flux("oii7319b   ",linelist,ILs)+get_cel_flux("oii7330b   ",linelist,ILs))))
+      if (oiii4363recRL .gt. 0.d0) oiiiTratio = oiiiTratio / (1. - (0.01*oiii4363recRL/get_cel_flux("oiii4363   ",linelist,ILs)))
 
 ! now get diagnostics zone by zone.
 
@@ -1023,6 +1035,13 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
       if (get_cel_flux("oiii4363   ",linelist,ILs) .gt. 0 .and. heiabund .gt. 0) then
         oiii4363recCEL=10000.*12.4*(hightemp/1.e4)**0.59*(((hetotabund/heiabund)**0.66666)-1)*(oiicelabund+oiiicelabund)/get_cel_flux("oiii4363   ",linelist,ILs)
         oiii4363recRL=10000.*12.4*(hightemp/1.e4)**0.59*(((hetotabund/heiabund)**0.66666)-1)*(oiiRLabund)/get_cel_flux("oiii4363   ",linelist,ILs)
+      endif
+
+! rerun all calculations if we need to subtract the recombination contribution
+
+      if (subtract_recombination .eqv. .true.) then
+        subtract_recombination=.false.
+        goto 118
       endif
 
 ! ICFs
