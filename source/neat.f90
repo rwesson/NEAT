@@ -91,6 +91,10 @@ program neat
 
         logical :: norp=.true.
 
+!subtract recombination contribution to auroral lines switch
+
+        logical :: subtract_recombination=.false.
+
 !diagnostics
 
         type(weightingarray) :: weights
@@ -250,6 +254,9 @@ program neat
                 endif
                 if ((trim(options(i))=="-cf" .or. trim(options(i))=="--configuration-file") .and. (i+1) .le. Narg) then
                    configfile=trim(options(i+1))
+                endif
+                if ((trim(options(i))=="-sr" .or. trim(options(i))=="--subtract-recombination")) then
+                   subtract_recombination = .true.
                 endif
                 if (trim(options(i))=="--citation") then
                    print *
@@ -493,7 +500,7 @@ program neat
         if(runs == 1)then !calculates abundances without uncertainties
                 print *
                 print *,gettime(),"doing abundance calculations"
-                call abundances(linelist, listlength, iteration_result, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf, H_Balmer, H_Paschen, HeI_lines, HeII_lines, weights)
+                call abundances(linelist, listlength, iteration_result, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf, H_Balmer, H_Paschen, HeI_lines, HeII_lines, weights,subtract_recombination)
                 all_results(1)=iteration_result(1) ! copy the iteration result to all_results to simplify the writing out of results later
                 print *,gettime(),"finished abundance calculations"
         else if(runs .gt. 1)then
@@ -1127,8 +1134,13 @@ program neat
             write (650,"(/A,/A/)") "Recombination line diagnostics","-----------"
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{Recombination line diagnostics}\\ \hline"
           elseif (j .eq. 71) then
-            write (650,"(/A,/A/)") "Recombination contribution to CELs (%)","-----------"
-            write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{Recombination contribution to CELs (\%)}\\ \hline"
+            if (subtract_recombination .eqv. .true.) then
+              write (650,"(/A,/A/)") "Recombination contribution to CELs (%) (RL value has been subtracted from line fluxes)","-----------"
+              write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{Recombination contribution to CELs (\%)}\\ \hline"
+            else
+              write (650,"(/A,/A/)") "Recombination contribution to CELs (%) (for information only, not subtracted from line fluxes)","-----------"
+              write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{Recombination contribution to CELs (\%)}\\ \hline"
+            endif
           elseif (j .eq. 77) then
             write (650,"(/A,/A/)") "CEL abundances","=============="
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{CEL abundances}\\ \hline"

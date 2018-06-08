@@ -1,6 +1,6 @@
 !abundances.f90, the core of NEAT which does all of the physical analysis
 !(C) Roger Wesson, Dave Stock, Peter Scicluna
-subroutine abundances(linelist, listlength, iteration_result, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf, H_Balmer, H_Paschen, HeI_lines, HeII_lines, weights)
+subroutine abundances(linelist,listlength,iteration_result,meanextinction,calculate_extinction,ILs,diagnostic_array,iion,atomicdata,maxlevs,maxtemps,heidata,switch_he,switch_icf,H_Balmer,H_Paschen,HeI_lines,HeII_lines,weights,subtract_recombination)
 use mod_abundtypes
 use mod_equib
 use mod_abundIO
@@ -42,7 +42,7 @@ use mod_hydrogen
         type(weightingarray) :: weights, weights_orig
 
         logical :: calculate_extinction
-        logical :: subtract_recombination
+        logical :: subtract_recombination,srloop
 
         type(line), dimension(2) :: Balmer_jump, Paschen_jump
 
@@ -145,8 +145,7 @@ use mod_hydrogen
         tlower=5000.
         tupper=35000.
 
-!        subtract_recombination=.true.
-        subtract_recombination=.false.
+        srloop=subtract_recombination
 
         !store fluxes of blends for later retrieval
 
@@ -1039,8 +1038,8 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
 ! rerun all calculations if we need to subtract the recombination contribution
 
-      if (subtract_recombination .eqv. .true.) then
-        subtract_recombination=.false.
+      if (srloop .eqv. .true.) then
+        srloop=.false.
         goto 118
       endif
 

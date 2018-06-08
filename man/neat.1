@@ -76,6 +76,10 @@ When calculating Monte Carlo uncertainties, \fBneat\fR's default behaviour is to
 Until version 1.8, the default behaviour was the opposite; log normal probability distributions were assumed unless \fB-norp\fR was specified.  This was changed after our discovery that the effect described by Rola and Pelat only occurred under extremely specific conditions: see Wesson et al. 2016 for details.
 
 .TP
+.B \-sr, \-\-subtract\-recombination
+The recombination contribution to some important diagnostic collisionally excited lines is always calculated but, by default, is not subtracted. This option causes the subtraction to be carried out. Note that the code takes roughly twice as long to run if this is enabled, as the temperature and abundance calculations need to be repeated following the subtraction.
+
+.TP
 .B \-u, \-\-uncertainties
 Calculate uncertainties, using 10,000 iterations.  If this option is specified, the \-n option will be ignored
 
@@ -157,7 +161,7 @@ This iterative procedure is carried out successively for low-, medium- and high-
  5. OII recombination line ratios are used to derive a temperature and density, using atomic data calculations from Storey et al. (2017). Values are found by linearly interpolating the logarithmic values.
  6. Recomination line contributions to CELs of N+, O+ and O2+ are estimated using equations 1-3 of Liu et al. (2000).
 
-These recombination line diagnostics are not used in abundance calculations. Nor are the temperature diagnostics corrected for the recombination line contributions. Whether or not to do so is an unfortunately subjective choice which we leave to the user.
+These recombination line diagnostics are not used in abundance calculations. By default, the recombination contribution to CELs is reported but not subtracted. The command line option \fB\-\-subtract\-recombination\fB can be used if the subtraction is required - this requires an additional loop within the code which makes it run roughly half as fast as when the subtraction is not carried out.
 
 .SS Ionic abundances
 
