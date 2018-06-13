@@ -985,7 +985,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         neiiRLabund = 0.D0
       endif
 
-!N3+ and C3+
+!C3+ and N3+
 
       rlabundtemp=0.d0
       weight=0.d0
@@ -999,6 +999,9 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
       else
         ciiiRLabund = 0.d0
       endif
+
+      rlabundtemp=0.d0
+      weight=0.d0
 
       do i=5,6
         rlabundtemp = rlabundtemp + xiiiRLs(i)%obs
@@ -1365,7 +1368,7 @@ endif
      endif
 !Oxygen
 
-     if (oiiRLabund .ge. 1e-20) then
+     if (oiiRLabund .ge. 1e-20 .and. oiiiCELabund .gt. 0.d0) then
        RLicfO = heICFfactor**(2./3.) * (1+(oiiCELabund/oiiiCELabund))
        OabundRL = RLicfO * oiiRLabund
      else
