@@ -91,9 +91,9 @@ program neat
 
         logical :: norp=.true.
 
-!subtract recombination contribution to auroral lines switch
+!subtract recombination contribution to auroral lines switch - 1=no subtraction, 2=subtraction
 
-        logical :: subtract_recombination=.false.
+        integer :: subtract_recombination=1
 
 !diagnostics
 
@@ -256,7 +256,7 @@ program neat
                    configfile=trim(options(i+1))
                 endif
                 if ((trim(options(i))=="-sr" .or. trim(options(i))=="--subtract-recombination")) then
-                   subtract_recombination = .true.
+                   subtract_recombination = 2
                 endif
                 if (trim(options(i))=="--citation") then
                    print *
@@ -516,8 +516,7 @@ program neat
                 allocate(all_linelists(size(linelist),runs))
 
                 !main loop
-
-!$OMP PARALLEL default(firstprivate) shared(all_linelists,listlength,norp,calculate_extinction,ILs,diagnostic_array,iion,atomicdata,maxlevs,maxtemps,switch_he,switch_icf,all_results)
+!$OMP PARALLEL default(firstprivate) shared(all_linelists,listlength,norp,calculate_extinction,ILs,diagnostic_array,iion,atomicdata,maxlevs,maxtemps,switch_he,switch_icf,all_results,subtract_recombination)
 !$OMP MASTER
 
                 print *
@@ -535,7 +534,7 @@ program neat
 !                        print*, "iteration ", i, "of", runs
 
                         call randomizer(linelist, listlength, norp)
-                        call abundances(linelist, listlength, iteration_result, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf, H_Balmer, H_Paschen, HeI_lines, HeII_lines, weights)
+                        call abundances(linelist, listlength, iteration_result, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf, H_Balmer, H_Paschen, HeI_lines, HeII_lines, weights, subtract_recombination)
 
                         !store all line and derived quantity in arrays
                         all_linelists(:,i)=linelist
@@ -1134,7 +1133,7 @@ program neat
             write (650,"(/A,/A/)") "Recombination line diagnostics","-----------"
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{Recombination line diagnostics}\\ \hline"
           elseif (j .eq. 71) then
-            if (subtract_recombination .eqv. .true.) then
+            if (subtract_recombination .eq. 2) then
               write (650,"(/A,/A/)") "Recombination contribution to CELs (%) (RL value has been subtracted from line fluxes)","-----------"
               write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{Recombination contribution to CELs (\%)}\\ \hline"
             else
