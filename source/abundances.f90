@@ -86,7 +86,7 @@ use mod_hydrogen
 
 ! recombination contribution to CEL line fluxes for both RL and CEL abundances
 
-        real(kind=dp) :: nii5754recCEL=0.d0, oii7325recCEL=0.d0, oiii4363recCEL=0.d0, nii5754recRL=0.d0, oii7325recRL=0.d0, oiii4363recRL=0.d0
+        real(kind=dp) :: nii5754recCEL, oii7325recCEL, oiii4363recCEL, nii5754recRL, oii7325recRL, oiii4363recRL
 
 ! upper and lower limits for CEL calculations. todo: implement as command line option
 
@@ -115,6 +115,13 @@ use mod_hydrogen
         SabundCEL = 0.d0
         ClabundCEL = 0.d0
         ArabundCEL = 0.d0
+
+        nii5754recCEL = 0.d0
+        oii7325recCEL = 0.d0
+        oiii4363recCEL = 0.d0
+        nii5754recRL = 0.d0
+        oii7325recRL = 0.d0
+        oiii4363recRL = 0.d0
 
         hetotabund = 0.d0
         CabundRL = 0.d0
