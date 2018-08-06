@@ -286,9 +286,9 @@ use mod_hydrogen
 ! subtract recombination contributions assuming RL abundances
 ! on the first pass, rec. contrib. will still have its initial value of zero
 
-      if (nii5754recRL .gt. 0.d0) niiTratio = niiTratio / (1. - (0.01*nii5754recRL/get_cel_flux("nii5754    ",linelist,ILs)))
-      if (oii7325recRL .gt. 0.d0) oiiTratio = oiiTratio / (1. - (0.01*oii7325recRL/(get_cel_flux("oii7319b   ",linelist,ILs)+get_cel_flux("oii7330b   ",linelist,ILs))))
-      if (oiii4363recRL .gt. 0.d0) oiiiTratio = oiiiTratio / (1. - (0.01*oiii4363recRL/get_cel_flux("oiii4363   ",linelist,ILs)))
+      if (nii5754recRL .gt. 0.d0) niiTratio = niiTratio / (1. - (0.01*nii5754recRL))
+      if (oii7325recRL .gt. 0.d0) oiiTratio = oiiTratio / (1. - (0.01*oii7325recRL))
+      if (oiii4363recRL .gt. 0.d0) oiiiTratio = oiiiTratio / (1. - (0.01*oiii4363recRL))
 
 ! now get diagnostics zone by zone.
 
