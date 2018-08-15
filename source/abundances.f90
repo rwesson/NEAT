@@ -1386,7 +1386,7 @@ endif
 !if CELicfN = 1.0, then there should be no N2+ or N3+
 
      if (CELicfN .gt. 1.0) then
-       RLicfN = CELicfN/(CELicfN-1.0)
+       RLicfN = NabundCEL/(NabundCEL-niiCELabund)
      else
        RLicfN = 1.0
      endif
