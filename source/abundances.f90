@@ -1381,9 +1381,16 @@ endif
      endif
 
 !Nitrogen
+!from CELs we have N+ and N+/N, from RLs we have N2+ + N3+
+!so assuming no N4+, RLicf(N) = CELicf(N)/(CELicf(N)-1)
+!if CELicfN = 1.0, then there should be no N2+ or N3+
 
-     RLicfN = 1.0
-     NabundRL = niiRLabund + niiiRLabund
+     if (CELicfN .gt. 1.0) then
+       RLicfN = CELicfN/(CELicfN-1.0)
+     else
+       RLicfN = 1.0
+     endif
+     NabundRL = RLicfN*(niiRLabund + niiiRLabund)
 
 !Carbon
 
