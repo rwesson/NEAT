@@ -339,6 +339,8 @@ program neat
                 call exit(1)
         elseif (btest(errstat,2) .and. runs .gt. 1) then !only relevant if uncertainties were requested
                 print*, gettime(),"warning: no uncertainties given, arbitrarily assuming 10 per cent for everything"
+        elseif (btest(errstat,3)) then
+                print *,gettime(),"warning: duplicate line measurements detected. Only the second measurement is used in abundance determinations"
         else
                 print "(X,A,A,A,A,I3,A)", gettime(),"line list file ",trim(filename)," read successfully (",listlength," lines)"
         endif

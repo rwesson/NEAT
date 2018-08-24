@@ -167,6 +167,19 @@ subroutine read_linelist(filename,linelist,listlength,ncols,errstat)
         102 print *
         close(100)
 
+!check for any duplicate lines, warn if found
+
+        do i=1,listlength
+          do j=1,listlength
+            if (linelist(i)%wavelength .eq. linelist(j)%wavelength .and. i.ne.j) then
+              errstat=errstat+8
+              goto 155
+            endif
+          enddo
+        enddo
+
+155     continue
+
 !fix some common blends.  If first member of blend is in the list but the second is not, or if second is present but with zero flux, then presume the feature is blended.
 
         call fix_blend(3726.03d0,3728.82d0,3727.00d0,linelist)
