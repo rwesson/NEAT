@@ -339,7 +339,7 @@ integer function get_atomicdata(ionname, atomicdatatable)
 end function
 
 subroutine fix_blend(line1, line2, blendwavelength, linelist)
-
+! rewrites blended CELs as a single line such that abundances can be straightforwardly calculated
         implicit none
         type(line), dimension(:) :: linelist
         real(kind=dp) :: line1, line2, blendwavelength,line2flux
@@ -359,6 +359,8 @@ subroutine fix_blend(line1, line2, blendwavelength, linelist)
 
         if ( (location1 .gt. 0 .and. location2 .eq. 0) .or. (location1 .gt. 0 .and. location2 .gt. 0 .and. line2flux .eq. 0.d0) ) then
           linelist(location1)%wavelength = blendwavelength
+          linelist(location1)%intensity = linelist(location1)%blend_intensity ! copy blend intensity back to intensity so it is used in abundance calculation
+          linelist(location1)%blend_intensity = 0.d0
           print "(12X,A,F7.2,A,F7.2)","unresolved blend: changed wavelength ",line1," to ",blendwavelength
         endif
 
