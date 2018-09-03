@@ -173,6 +173,12 @@ For the Porter et al. data, the emissivities are tabulated between 5000 and 2500
 
 In deep spectra, many more RLs may be available than CELs. The code calculates the ionic abundance from each individual RL intensity using the atomic data listed in Table 1 of Wesson et al. (2012). Then, to determine the ionic abundance to adopt, it first derives an ionic abundance for each individual multiplet from the multiplet’s co-added intensity, and then averages the abundances derived for each multiplet to obtain the ionic abundance used in subsequent calculations.
 
+The weakness of recombination lines means that care must be taken in deriving abundances from them. \fBneat\fR applies some simple checks to the N2+/H+ and O2+/H+ abundances it derives to see if they are reliable: they will be flagged as possibly unreliable in the _results file if any of the following apply:
+
+ 1. only one multiplet is detected
+ 2. the highest abundance calculated for a multiplet exceeds the lowest by a factor greater than 3.0
+ 3. (O2+ only) no lines are detected from either the V1 or V10 multiplets
+
 .SS Total abundances
 
 Total elemental abundances are estimated using the ionisation correction scheme selected from Kingsburgh and Barlow (1994), Peimbert, Torres-Peimbert and Ruiz (1992), or Delgado-Inglada et al. (2014). Total oxygen abundances estimated from several strong line methods are also reported.
