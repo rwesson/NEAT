@@ -935,11 +935,12 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         niiRLabund = 0.D0
       endif
 
-! simple check for the reliability of the abundance:
-! if any multiplets have >3x the abundance of the lowest value, then flag them
+! simple checks for the reliability of the abundance: flagged as unreliable if any of the following apply:
+!  - only one multiplet detected
+!  - any multiplets have >3x the abundance of the lowest value
 ! todo: report which multiplets exceed 3x
 
-      if (maxval(niimultiplets%abundance) .gt. 3.0*minval(niimultiplets%abundance,mask=(niimultiplets%weight.gt.0.d0 .and. niimultiplets%abundance.gt.0.d0))) then
+      if (maxval(niimultiplets%abundance) .gt. 3.0*minval(niimultiplets%abundance,mask=(niimultiplets%weight.gt.0.d0 .and. niimultiplets%abundance.gt.0.d0)) .or. count(niimultiplets%abundance .gt. 0.d0) .le. 1) then
         niiRLreliable = .false.
       else
         niiRLreliable = .true.
@@ -992,12 +993,13 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         oiiRLabund = 0.D0
       endif
 
-! simple checks for the reliability of the abundance:
-! if any multiplets have >3x the abundance of the lowest value, then flag them
-! and if neither V1 nor V10 is detected, flag it
+! simple checks for the reliability of the abundance: flagged as unreliable if any of the following apply:
+!  - only one multiplet detected
+!  - any multiplets have >3x the abundance of the lowest value
+!  - neither V1 nor V10 is detected
 ! todo: report which multiplets exceed 3x
 
-      if (maxval(oiimultiplets%abundance) .gt. 3.0*minval(oiimultiplets%abundance,mask=(oiimultiplets%weight.gt.0.d0 .and. oiimultiplets%abundance.gt.0.d0)) .or. (oiimultiplets(1)%abundance.eq.0.d0 .and. oiimultiplets(4)%abundance.eq.0.d0)) then
+      if (maxval(oiimultiplets%abundance) .gt. 3.0*minval(oiimultiplets%abundance,mask=(oiimultiplets%weight.gt.0.d0 .and. oiimultiplets%abundance.gt.0.d0)) .or. (oiimultiplets(1)%abundance.eq.0.d0 .and. oiimultiplets(4)%abundance.eq.0.d0) .or. count(oiimultiplets%abundance .gt. 0.d0) .le. 1) then
         oiiRLreliable = .false.
       else
         oiiRLreliable = .true.
