@@ -181,9 +181,9 @@ Where ionic or total abundances are available from both collisionally excited li
 
 .SH OUTPUTS
 
-The code prints some logging messages to the terminal, so that you can see which iteration it is on, and if anything has gone wrong. The results are written to a summary file, and a linelist file, the paths to which are indicated in the terminal output. In the case of a single iteration, these files are the only output.
+The code prints some logging messages to the terminal, so that you can see which iteration it is on, and if anything has gone wrong. The results are written to a summary file, and a linelist file, the paths to which are indicated in the terminal output. The summary file lists the results of the calculations of extinction, temperatures, densities, ionic and total abundances. Two linelist files are written - one is a plain text file listing observed and rest wavelengths, ionic identifications, observed and dereddened fluxes, and ionic abundances for each line used in the abundance calculations. The other is latex-formatted, intended to be usable with minimal further editing in a publication.
 
-If you have run multiple iterations, you can also use the \fB-v\fR option to tell the code to create additional results files for each quantity calculated: \fB \-v 1\fR tells the code to write out for each quantity all the individual results, and a binned probability distribution file; with \fB-v 2\fR, only the binned distributions are written out, and with \fB-v 3\fR \- the default \- no additional results files are created.
+In the case of a single iteration, these files are the only output. If you have run multiple iterations, you can also use the \fB-v\fR option to tell the code to create additional results files for each quantity calculated: \fB \-v 1\fR tells the code to write out for each quantity all the individual results, and a binned probability distribution file; with \fB-v 2\fR, only the binned distributions are written out, and with \fB-v 3\fR \- the default \- no additional results files are created.
 
 .SS Normality test
 
