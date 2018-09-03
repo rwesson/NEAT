@@ -1148,7 +1148,7 @@ program neat
           elseif (j .eq. 115) then
             write (650,"(/A,/A/)") "ORL abundances","=============="
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{ORL abundances}\\ \hline"
-          elseif (j .eq. 118 .or. j .eq. 122 .or. j .eq. 133 .or. j .eq. 148) then
+          elseif (j .eq. 83 .or. j .eq. 89 .or. j .eq. 95 .or. j .eq. 101 .or. j .eq. 106 .or. j .eq. 110 .or. j .eq. 115 .or. j .eq. 118 .or. j .eq. 122 .or. j .eq. 133 .or. j .eq. 148) then
             if (j .eq. 133 .and. any(all_results%niiRLreliable .eqv. .false.)) then
               write (650,*) "(multiplet abundances do not agree - abundance may be unreliable)"
             endif
