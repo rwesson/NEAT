@@ -270,6 +270,8 @@ TYPE resultarray
         real(kind=dp) :: oiii4363recRL=0.d0
         real(kind=dp) :: balmerdec_density=0.d0
         real(kind=dp) :: paschendec_density=0.d0
+        logical       :: oiiRLreliable=.false.
+        logical       :: niiRLreliable=.false.
 end type resultarray
 
 type arraycount

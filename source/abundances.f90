@@ -76,6 +76,8 @@ use mod_hydrogen
 
         real(kind=dp) :: balmerdec_density, paschendec_density
 
+        logical :: oiiRLreliable,niiRLreliable ! report reliability of recombination line O/H and N/H abundances
+
 ! abundances relative to Halpha? todo, implement as command line option
 
         logical :: relativetoha=.false.
@@ -933,6 +935,17 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         niiRLabund = 0.D0
       endif
 
+! simple check for the reliability of the abundance:
+! if any multiplets have >3x the abundance of the lowest value, then flag them
+! todo: report which multiplets exceed 3x
+
+      if (maxval(niimultiplets%abundance) .gt. 3.0*minval(niimultiplets%abundance,mask=(niimultiplets%weight.gt.0.d0 .and. niimultiplets%abundance.gt.0.d0))) then
+        niiRLreliable = .false.
+      else
+        niiRLreliable = .true.
+      endif
+
+
   endif
 
 !oii recombination lines
@@ -977,6 +990,17 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         oiiRLabund = sum(oiimultiplets%abundance*oiimultiplets%weight)/sum(oiimultiplets%weight)
       else
         oiiRLabund = 0.D0
+      endif
+
+! simple checks for the reliability of the abundance:
+! if any multiplets have >3x the abundance of the lowest value, then flag them
+! and if neither V1 nor V10 is detected, flag it
+! todo: report which multiplets exceed 3x
+
+      if (maxval(oiimultiplets%abundance) .gt. 3.0*minval(oiimultiplets%abundance,mask=(oiimultiplets%weight.gt.0.d0 .and. oiimultiplets%abundance.gt.0.d0)) .or. (oiimultiplets(1)%abundance.eq.0.d0 .and. oiimultiplets(4)%abundance.eq.0.d0)) then
+        oiiRLreliable = .false.
+      else
+        oiiRLreliable = .true.
       endif
 
    endif
@@ -1571,6 +1595,8 @@ endif
         iteration_result(1)%nii_v20_abund_orl = niimultiplets(5)%abundance
         iteration_result(1)%nii_v28_abund_orl = niimultiplets(6)%abundance
         iteration_result(1)%nii_3d4f_abund_orl = niimultiplets(7)%abundance
+        iteration_result(1)%oiiRLreliable = oiiRLreliable
+        iteration_result(1)%niiRLreliable = niiRLreliable
 
 !Strong line methods
 

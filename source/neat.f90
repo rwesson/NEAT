@@ -1149,6 +1149,12 @@ program neat
             write (650,"(/A,/A/)") "ORL abundances","=============="
             write (651,*) "\vspace{0.2cm}\\\multicolumn{2}{l}{ORL abundances}\\ \hline"
           elseif (j .eq. 118 .or. j .eq. 122 .or. j .eq. 133 .or. j .eq. 148) then
+            if (j .eq. 133 .and. any(all_results%niiRLreliable .eqv. .false.)) then
+              write (650,*) "(multiplet abundances do not agree - abundance may be unreliable)"
+            endif
+            if (j .eq. 148 .and. any(all_results%oiiRLreliable .eqv. .false.)) then
+              write (650,*) "(multiplet abundances do not agree and/or V1 and V10 not detected - abundance may be unreliable)"
+            endif
             write (650,"(/A,/A/)")
             write (651,*) "\\"
           elseif (j .eq. 151) then
