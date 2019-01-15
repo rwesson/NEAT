@@ -711,9 +711,9 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         oii4662=0.d0
 
         do i=1,listlength
-          if (abs(linelist(i)%wavelength-4089.29) .lt. 0.005) oii4089=linelist(i)%int_dered
-          if (abs(linelist(i)%wavelength-4649.13) .lt. 0.005) oii4649=linelist(i)%int_dered
-          if (abs(linelist(i)%wavelength-4661.63) .lt. 0.005) oii4662=linelist(i)%int_dered
+          if (abs(linelist(i)%wavelength-4089.29) .lt. 0.006) oii4089=linelist(i)%int_dered
+          if (abs(linelist(i)%wavelength-4649.13) .lt. 0.006) oii4649=linelist(i)%int_dered
+          if (abs(linelist(i)%wavelength-4661.63) .lt. 0.006) oii4662=linelist(i)%int_dered
         enddo
 
         if (oii4089.gt.0 .and. oii4649.gt.0 .and. oii4662.gt.0) then
@@ -798,7 +798,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
        do i = 1,listlength
          do j = 1,size(oiiRLs)
-          if (abs(linelist(i)%wavelength-oiiRLs(j)%Wave) .le. 0.005) then
+          if (abs(linelist(i)%wavelength-oiiRLs(j)%Wave) .le. 0.006) then
             oiiRLs(j)%Obs = linelist(i)%int_dered
             if (oiiRLs(j)%Int .eq. 0.0) then
               oiiRLs(j)%abundance = 0.D0
@@ -818,7 +818,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
        do i = 1,listlength
          do j = 1,size(niiRLs)
-          if (abs(linelist(i)%wavelength-niiRLs(j)%Wave) .le. 0.005) then
+          if (abs(linelist(i)%wavelength-niiRLs(j)%Wave) .le. 0.006) then
             niiRLs(j)%Obs = linelist(i)%int_dered
             niiRLs(j)%abundance = niiRLs(j)%obs/niiRLs(j)%Int
             linelist(i)%abundance = niiRLs(j)%abundance
@@ -833,7 +833,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
        do i = 1,listlength
          do j = 1,size(ciiRLs)
-          if (abs(linelist(i)%wavelength-ciiRLs(j)%Wave) .le. 0.005) then
+          if (abs(linelist(i)%wavelength-ciiRLs(j)%Wave) .le. 0.006) then
             ciiRLs(j)%Obs = linelist(i)%int_dered
             ciiRLs(j)%abundance = ciiRLs(j)%obs/ciiRLs(j)%Int
             linelist(i)%abundance = ciiRLs(j)%abundance
@@ -848,7 +848,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
        do i = 1,listlength
          do j = 1,size(neiiRLs)
-          if (abs(linelist(i)%wavelength-neiiRLs(j)%Wave) .le. 0.005) then
+          if (abs(linelist(i)%wavelength-neiiRLs(j)%Wave) .le. 0.006) then
             neiiRLs(j)%Obs = linelist(i)%int_dered
             neiiRLs(j)%abundance = neiiRLs(j)%obs/neiiRLs(j)%Int
             linelist(i)%abundance = neiiRLs(j)%abundance
@@ -863,7 +863,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
        do i = 1,listlength
          do j = 1,size(xiiiRLs)
-          if (abs(linelist(i)%wavelength-xiiiRLs(j)%Wave) .le. 0.005) then
+          if (abs(linelist(i)%wavelength-xiiiRLs(j)%Wave) .le. 0.006) then
             xiiiRLs(j)%Obs = linelist(i)%int_dered
             xiiiRLs(j)%abundance = xiiiRLs(j)%obs/xiiiRLs(j)%Int
             linelist(i)%abundance = xiiiRLs(j)%abundance
