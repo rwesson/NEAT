@@ -60,7 +60,11 @@ Default: DI14.  The KB94 ICF implemented in \fBneat\fR additionally contains a c
 
 .TP
 .B \-id, \-\-identify
-This option triggers an algorithm which attempts to convert observed wavelengths into rest wavelengths. If the option is not present, \fBneat\fR assumes that the input line list already has rest wavelengths in the first column
+This option triggers an algorithm which attempts to convert observed wavelengths into rest wavelengths. If the option is not present, \fBneat\fR assumes that the input line list already has rest wavelengths in the first column.
+
+.TP
+.B \-idc, \-\-identify\-confirm
+Does the same as \-\-identify but without stopping for user confirmation. Useful when reanalysing a line list where you already used \-\-identify and were happy with the result.
 
 .TP
 .B \-n, \-\-n\-iterations [VALUE]

@@ -49,7 +49,7 @@ program neat
 !file reading variables
 
         logical :: file_exists
-        logical :: identifylines
+        logical :: identifylines,identifyconfirm
         type(line),dimension(:), allocatable :: linelist
         type(line),dimension(:), allocatable :: linelist_original
         type(line),dimension(:,:), allocatable :: all_linelists
@@ -166,6 +166,7 @@ program neat
         verbosity=3
         R=3.1
         identifylines=.false.
+        identifyconfirm=.false.
         nbins=25
         normalise = 0.d0
 
@@ -242,6 +243,10 @@ program neat
                 endif
                 if (trim(options(i))=="-id" .or. trim(options(i))=="--identify") then
                   identifylines=.true.
+                endif
+                if (trim(options(i))=="-idc" .or. trim(options(i))=="--identify-confirm") then
+                  identifylines=.true.
+                  identifyconfirm=.true.
                 endif
                 if ((trim(options(i))=="-R") .and. (i+1) .le. Narg) then
                   read (options(i+1),*) R
@@ -351,18 +356,22 @@ program neat
 
         if (identifylines) then
                 print *,gettime()," : running line finder"
-                print *,"---------------------------------"
+                print *,gettime(),"---------------------------------"
                 call linefinder(linelist, listlength)
                 print *
                 print *,gettime()," : line finder finished"
                 print *,gettime()," : WARNING!!!  The line finding algorithm is intended as an aid only and is not designed to be highly robust"
                 print *,gettime()," : check your line list very carefully for potentially wrongly identified lines!!"
-                print *,"---------------------------------"
-                print *,"Are these line IDs ok? (y/n)"
-                read (5,*) blank
-                if (blank .ne. "y" .and. blank .ne. "Y") then
-                  print *,gettime()," : analysis cancelled."
-                  call exit(1)
+                print *,gettime(),"---------------------------------"
+                if (.not. identifyconfirm) then
+                  print *,"Are these line IDs ok? (y/n)"
+                  read (5,*) blank
+                  if (blank .ne. "y" .and. blank .ne. "Y") then
+                    print *,gettime()," : analysis cancelled."
+                    call exit(1)
+                  endif
+                else
+                  print *,gettime()," : line finder finished, assignments automatically accepted"
                 endif
         endif
 
