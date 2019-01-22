@@ -112,7 +112,7 @@ program neat
 
 !diagnostic array
 
-        real(kind=dp), dimension(6) :: diagnostic_array
+        type(diagnostic_array) :: diagnostics
 
 !output formats
 
@@ -162,7 +162,12 @@ program neat
         switch_icf="D" !DI14 ICF
         filename=""
         meanextinction=0.D0
-        diagnostic_array=0.D0
+        diagnostics%lowtemp=0.D0
+        diagnostics%lowdens=0.D0
+        diagnostics%medtemp=0.D0
+        diagnostics%meddens=0.D0
+        diagnostics%hightemp=0.D0
+        diagnostics%highdens=0.D0
         verbosity=3
         R=3.1
         identifylines=.false.
@@ -202,22 +207,22 @@ program neat
                    calculate_extinction = .false.
                 endif
                 if (trim(options(i))=="-nelow" .and. (i+1) .le. Narg) then
-                   read (options(i+1),*) diagnostic_array(1)
+                   read (options(i+1),*) diagnostics%lowdens
                 endif
                 if (trim(options(i))=="-nemed" .and. (i+1) .le. Narg) then
-                   read (options(i+1),*) diagnostic_array(2)
+                   read (options(i+1),*) diagnostics%meddens
                 endif
                 if (trim(options(i))=="-nehigh" .and. (i+1) .le. Narg) then
-                   read (options(i+1),*) diagnostic_array(3)
+                   read (options(i+1),*) diagnostics%highdens
                 endif
                 if (trim(options(i))=="-telow" .and. (i+1) .le. Narg) then
-                   read (options(i+1),*) diagnostic_array(4)
+                   read (options(i+1),*) diagnostics%lowtemp
                 endif
                 if (trim(options(i))=="-temed" .and. (i+1) .le. Narg) then
-                   read (options(i+1),*) diagnostic_array(5)
+                   read (options(i+1),*) diagnostics%medtemp
                 endif
                 if (trim(options(i))=="-tehigh" .and. (i+1) .le. Narg) then
-                   read (options(i+1),*) diagnostic_array(6)
+                   read (options(i+1),*) diagnostics%hightemp
                 endif
                 if ((trim(options(i))=="-he" .or. trim(options(i))=="--helium-data") .and. (i+1) .le. Narg) then
                   if (trim(options(i+1))=="S96") then
@@ -511,7 +516,7 @@ program neat
         if(runs == 1)then !calculates abundances without uncertainties
                 print *
                 print *,gettime(),"doing abundance calculations"
-                call abundances(linelist, listlength, iteration_result, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf, H_Balmer, H_Paschen, HeI_lines, HeII_lines, weights,subtract_recombination)
+                call abundances(linelist, listlength, iteration_result, meanextinction, calculate_extinction, ILs, diagnostics,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf, H_Balmer, H_Paschen, HeI_lines, HeII_lines, weights,subtract_recombination)
                 all_results(1)=iteration_result(1) ! copy the iteration result to all_results to simplify the writing out of results later
                 print *,gettime(),"finished abundance calculations"
         else if(runs .gt. 1)then
@@ -527,7 +532,7 @@ program neat
                 allocate(all_linelists(size(linelist),runs))
 
                 !main loop
-!$OMP PARALLEL default(firstprivate) shared(all_linelists,listlength,norp,calculate_extinction,ILs,diagnostic_array,iion,atomicdata,maxlevs,maxtemps,switch_he,switch_icf,all_results,subtract_recombination)
+!$OMP PARALLEL default(firstprivate) shared(all_linelists,listlength,norp,calculate_extinction,ILs,diagnostics,iion,atomicdata,maxlevs,maxtemps,switch_he,switch_icf,all_results,subtract_recombination)
 !$OMP MASTER
 
                 print *
@@ -545,7 +550,7 @@ program neat
 !                        print*, "iteration ", i, "of", runs
 
                         call randomizer(linelist, listlength, norp)
-                        call abundances(linelist, listlength, iteration_result, meanextinction, calculate_extinction, ILs, diagnostic_array,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf, H_Balmer, H_Paschen, HeI_lines, HeII_lines, weights, subtract_recombination)
+                        call abundances(linelist, listlength, iteration_result, meanextinction, calculate_extinction, ILs, diagnostics,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf, H_Balmer, H_Paschen, HeI_lines, HeII_lines, weights, subtract_recombination)
 
                         !store all line and derived quantity in arrays
                         all_linelists(:,i)=linelist

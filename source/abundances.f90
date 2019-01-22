@@ -1,6 +1,6 @@
 !abundances.f90, the core of NEAT which does all of the physical analysis
 !(C) Roger Wesson, Dave Stock, Peter Scicluna
-subroutine abundances(linelist,listlength,iteration_result,meanextinction,calculate_extinction,ILs,diagnostic_array,iion,atomicdata,maxlevs,maxtemps,heidata,switch_he,switch_icf,H_Balmer,H_Paschen,HeI_lines,HeII_lines,weights,subtract_recombination)
+subroutine abundances(linelist,listlength,iteration_result,meanextinction,calculate_extinction,ILs,diagnostics,iion,atomicdata,maxlevs,maxtemps,heidata,switch_he,switch_icf,H_Balmer,H_Paschen,HeI_lines,HeII_lines,weights,subtract_recombination)
 use mod_abundtypes
 use mod_equib
 use mod_abundIO
@@ -20,7 +20,7 @@ use mod_hydrogen
         character :: switch_he !switch for helium atomic data
         character :: switch_icf !switch for which ICF to use
         type(resultarray), dimension(1) :: iteration_result
-        real(kind=dp), dimension(6), intent(in) :: diagnostic_array
+        type(diagnostic_array), intent(in) :: diagnostics
         real(kind=dp) :: flux_no1, flux_no2, flux_no3, flux_no4, flux_no5, flux_no6
 
         real(kind=dp) :: oiiNratio, oiiDens, oiiiTratio, oiiiTemp, oiiiIRNratio, oiiiIRTratio, oiiiIRtemp, oiiiUVTratio, oiiiUVtemp, oiiiIRdens, niiTratio, niiTemp, ariiiIRNratio, ariiiIRdens, arivNratio, arivDens, cliiiNratio, cliiiDens, siiNratio, siiDens, siiTratio, siiTemp, siiiIRNratio, siiiIRdens, oiiTratio, oiiTemp, neiiiTratio, neiiiIRTratio, neiiiIRNratio, neiiiIRdens, neiiiTemp, neiiiIRTemp, oitemp, citemp
@@ -309,10 +309,10 @@ use mod_hydrogen
         if (oiidens .le. 0.d0) weights%oiiDens = 0.d0
         if (siidens .le. 0.d0) weights%siiDens = 0.d0
 
-        if ((weights%oiiDens + weights%siiDens) .eq. 0 .and. diagnostic_array(1) .eq. 0) then
+        if ((weights%oiiDens + weights%siiDens) .eq. 0 .and. diagnostics%lowdens .eq. 0) then
           lowdens = 1000.d0
-        elseif (diagnostic_array(1) .gt. 0.0) then
-          lowdens = diagnostic_array(1)
+        elseif (diagnostics%lowdens .gt. 0.0) then
+          lowdens = diagnostics%lowdens
         else
           lowdens = (weights%oiiDens*oiiDens + weights%siiDens*siiDens) / (weights%oiiDens + weights%siiDens)
         endif
@@ -331,10 +331,10 @@ use mod_hydrogen
         if (ciTemp .le. tlower .or. ciTemp .gt. tupper) weights%ciTemp = 0.d0
         if (oiTemp .le. tlower .or. oiTemp .gt. tupper) weights%oiTemp = 0.d0
 
-        if ((weights%oiiTemp + weights%siiTemp + weights%niiTemp + weights%ciTemp + weights%oiTemp) .gt. 0 .and. diagnostic_array(4) .eq. 0) then
+        if ((weights%oiiTemp + weights%siiTemp + weights%niiTemp + weights%ciTemp + weights%oiTemp) .gt. 0 .and. diagnostics%lowtemp .eq. 0) then
           lowtemp = (weights%oiiTemp*oiiTemp + weights%siiTemp*siiTemp + weights%niiTemp*niiTemp + weights%ciTemp*ciTemp + weights%oiTemp*oiTemp) / (weights%oiiTemp + weights%siiTemp + weights%niiTemp + weights%ciTemp + weights%oiTemp)
-        elseif (diagnostic_array(4) .gt. 0.0) then
-          lowtemp = diagnostic_array(4)
+        elseif (diagnostics%lowtemp .gt. 0.0) then
+          lowtemp = diagnostics%lowtemp
         else
           lowtemp = 10000.d0
         endif
@@ -373,10 +373,10 @@ use mod_hydrogen
         if (siiiIRDens .le. 0.d0) weights%siiiIRDens = 0.d0
         if (neiiiIRDens .le. 0.d0) weights%neiiiIRDens = 0.d0
 
-        if ((weights%cliiiDens + weights%ciiiDens + weights%arivDens) .eq. 0.d0 .and. diagnostic_array(2) .eq. 0) then
+        if ((weights%cliiiDens + weights%ciiiDens + weights%arivDens) .eq. 0.d0 .and. diagnostics%meddens .eq. 0) then
           meddens = lowdens
-        elseif (diagnostic_array(2) .gt. 0.0) then
-          meddens = diagnostic_array(2)
+        elseif (diagnostics%meddens .gt. 0.0) then
+          meddens = diagnostics%meddens
         else
           meddens = (weights%ciiiDens*ciiiDens + weights%cliiiDens*cliiiDens + weights%arivDens*arivDens + weights%oiiiIRDens*oiiiIRDens + weights%ariiiIRDens*ariiiIRDens + weights%siiiIRDens*siiiIRDens + weights%neiiiIRDens*neiiiIRDens) / (weights%cliiiDens + weights%ciiiDens + weights%arivDens + weights%oiiiIRDens + weights%ariiiIRDens + weights%siiiIRDens + weights%neiiiIRDens)
         endif
@@ -400,10 +400,10 @@ use mod_hydrogen
         if (ariiiTemp .le. tlower .or. ariiiTemp .gt. tupper) weights%ariiiTemp = 0.d0
         if (neiiiTemp .le. tlower .or. neiiiTemp .gt. tupper) weights%neiiiTemp = 0.d0
 
-        if ((weights%oiiitemp + weights%siiitemp + weights%ariiitemp + weights%neiiitemp) .gt. 0 .and. diagnostic_array(5) .eq. 0.0) then
+        if ((weights%oiiitemp + weights%siiitemp + weights%ariiitemp + weights%neiiitemp) .gt. 0 .and. diagnostics%medtemp .eq. 0.0) then
           medtemp = (weights%oiiitemp*oiiitemp + weights%siiitemp*siiitemp + weights%ariiitemp*ariiitemp + weights%neiiitemp*neiiitemp) / (weights%oiiitemp + weights%siiitemp + weights%ariiitemp + weights%neiiitemp)
-        elseif (diagnostic_array(5) .gt. 0.0) then
-          medtemp = diagnostic_array(5)
+        elseif (diagnostics%medtemp .gt. 0.0) then
+          medtemp = diagnostics%medtemp
         else
           medtemp = lowtemp
         endif
@@ -444,8 +444,8 @@ use mod_hydrogen
 
         call get_diagnostic("[Ne IV]   ","1,2/                ","1,3/                ",neivNratio,"D",hightemp, neivDens,maxlevs,maxtemps,atomicdata,iion,tlower,tupper)
 
-        if (diagnostic_array(3) .gt. 0.0) then
-          highdens = diagnostic_array(3)
+        if (diagnostics%highdens .gt. 0.0) then
+          highdens = diagnostics%highdens
         elseif (neivdens .le. 0d0) then
           neivdens = 0d0
           highdens = meddens
@@ -463,10 +463,10 @@ use mod_hydrogen
         if (arvTemp .le. tlower .or. arvTemp .gt. tupper) weights%arvTemp = 0.d0
         if (nevTemp .le. tlower .or. nevTemp .gt. tupper) weights%nevTemp = 0.d0
 
-        if ((weights%arvTemp+weights%nevTemp) .gt. 0 .and. diagnostic_array(6) .eq. 0) then
+        if ((weights%arvTemp+weights%nevTemp) .gt. 0 .and. diagnostics%hightemp .eq. 0) then
           hightemp = (arvtemp*weights%arvTemp + nevtemp*weights%nevTemp) / (weights%arvTemp+weights%nevTemp)
-        elseif (diagnostic_array(6) .gt. 0.0) then
-          hightemp = diagnostic_array(6)
+        elseif (diagnostics%hightemp .gt. 0.0) then
+          hightemp = diagnostics%hightemp
         else
           hightemp = medtemp
         endif

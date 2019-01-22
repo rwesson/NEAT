@@ -97,6 +97,17 @@ type weightingarray
 
 end type weightingarray
 
+type diagnostic_array
+        real(kind=dp) :: lowtemp
+        real(kind=dp) :: lowdens
+        real(kind=dp) :: medtemp
+        real(kind=dp) :: meddens
+        real(kind=dp) :: hightemp
+        real(kind=dp) :: highdens
+        real(kind=dp) :: rltemp
+        real(kind=dp) :: rldens
+end type diagnostic_array
+
 end module mod_abundtypes
 
 module mod_resultarrays
