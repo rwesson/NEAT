@@ -380,10 +380,10 @@ oii_A_3p2S_low => oii_coefficients(36,:)
 
 end subroutine read_orl_data
 
-subroutine oii_rec_lines(te,ne,abund,oiiRLs)
+subroutine oii_rec_lines(te,ne,abund,oiiRLs,aeff_hb,em_hb)
 
       implicit none
-      real(kind=dp) :: aeff, aeff_hb, Em_Hb, Te, Ne, abund, tered
+      real(kind=dp) :: aeff, aeff_hb, em_hb, Te, Ne, abund, tered
 
       type(oiiRL), dimension(:) :: oiiRLs
 
@@ -391,8 +391,6 @@ subroutine oii_rec_lines(te,ne,abund,oiiRLs)
 #ifdef CO
         print *,"subroutine: oii_rec_lines"
 #endif
-
-      call get_aeff_hb(te,ne, aeff_hb, em_hb)
 
 ! interpolate the a values
 
@@ -584,10 +582,10 @@ subroutine oii_rec_lines(te,ne,abund,oiiRLs)
 
 end subroutine oii_rec_lines
 
-subroutine nii_rec_lines(te, ne, abund, niiRLs)
+subroutine nii_rec_lines(te, ne, abund, niiRLs,aeff_hb,em_hb)
 
       implicit none
-      real(kind=dp) :: aeff_hb, Em_Hb, Te, Ne, abund, tered
+      real(kind=dp) :: aeff_hb, em_hb, Te, Ne, abund, tered
 
       type(niiRL), dimension(:) :: niiRLs
 
@@ -595,8 +593,6 @@ subroutine nii_rec_lines(te, ne, abund, niiRLs)
 #ifdef CO
         print *,"subroutine: nii_rec_lines"
 #endif
-
-      call get_aeff_hb(te,ne, aeff_hb, em_hb)
 
       tered = te/10000.
 
@@ -822,10 +818,10 @@ subroutine nii_rec_lines(te, ne, abund, niiRLs)
 
 end subroutine nii_rec_lines
 
-subroutine cii_rec_lines(te, ne, abund, ciiRLs)
+subroutine cii_rec_lines(te, ne, abund, ciiRLs,aeff_hb,em_hb)
 
       implicit none
-      real(kind=dp) :: aeff_Hb, Em_Hb, Te, Ne, abund, tered
+      real(kind=dp) :: aeff_Hb, em_hb, Te, Ne, abund, tered
 
       type(ciiRL), dimension(:) :: ciiRLs
 
@@ -833,8 +829,6 @@ subroutine cii_rec_lines(te, ne, abund, ciiRLs)
 #ifdef CO
         print *,"subroutine: cii_rec_lines"
 #endif
-
-      call get_aeff_hb(te,ne, aeff_hb, em_hb)
 
       tered = te/10000
 
@@ -847,10 +841,10 @@ subroutine cii_rec_lines(te, ne, abund, ciiRLs)
 
 end subroutine cii_rec_lines
 
-subroutine neii_rec_lines(te, ne, abund, neiiRLs)
+subroutine neii_rec_lines(te, ne, abund, neiiRLs,aeff_hb,em_hb)
 
       implicit none
-      real(kind=dp) :: aeff_Hb, Em_Hb, Te, Ne, abund, tered
+      real(kind=dp) :: aeff_Hb, em_hb, Te, Ne, abund, tered
 
       type(neiiRL), dimension(:) :: neiiRLs
 
@@ -858,8 +852,6 @@ subroutine neii_rec_lines(te, ne, abund, neiiRLs)
 #ifdef CO
         print *,"subroutine: neii_rec_lines"
 #endif
-
-      call get_aeff_hb(te,ne, aeff_hb, em_hb)
 
       tered = te/10000.
 
@@ -873,14 +865,12 @@ subroutine neii_rec_lines(te, ne, abund, neiiRLs)
 
 end subroutine neii_rec_lines
 
-subroutine xiii_rec_lines(te, ne, abund, xiiiRLs)
+subroutine xiii_rec_lines(te, ne, abund, xiiiRLs,aeff_hb,em_hb)
 
       implicit none
-      real(kind=dp) :: aeff_Hb, Em_Hb, Te, Ne, abund, tered
+      real(kind=dp) :: aeff_Hb, em_hb, Te, Ne, abund, tered
 
       type(xiiiRL), dimension(:) :: xiiiRLs
-
-      call get_aeff_hb(te,ne, aeff_hb, em_hb)
 
       tered = te/90000. !ionic charge=3 so divide by 9
 

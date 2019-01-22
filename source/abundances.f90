@@ -38,6 +38,7 @@ use mod_hydrogen
         real(kind=dp) :: Te_balmer, Te_paschen
         real(kind=dp) :: oii4649, oii4089,oii4662,oii_te,oii_ne
         real(kind=dp) :: ratio_5876_4471, ratio_6678_4471, te_5876_4471, te_6678_4471
+        real(kind=dp) :: aeff_hb,em_hb
 
         type(weightingarray) :: weights, weights_orig
 
@@ -793,8 +794,11 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         NOabundCEL = oiCELabund
 
 ! now get abundances for ORLs
+
+       call get_aeff_hb(medtemp,meddens,aeff_hb,em_hb)
+
 ! o2+
-       call oii_rec_lines(medtemp,meddens,1.d0,oiiRLs)
+       call oii_rec_lines(medtemp,meddens,1.d0,oiiRLs,aeff_hb,em_hb)
 
        do i = 1,listlength
          do j = 1,size(oiiRLs)
@@ -814,7 +818,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
 !N2+
 
-       call nii_rec_lines(medtemp,meddens,1.d0,niiRLs)
+       call nii_rec_lines(medtemp,meddens,1.d0,niiRLs,aeff_hb,em_hb)
 
        do i = 1,listlength
          do j = 1,size(niiRLs)
@@ -829,7 +833,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
        enddo
 
 !C2+
-       call cii_rec_lines(medtemp,meddens,1.d0,ciiRLs)
+       call cii_rec_lines(medtemp,meddens,1.d0,ciiRLs,aeff_hb,em_hb)
 
        do i = 1,listlength
          do j = 1,size(ciiRLs)
@@ -844,7 +848,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
        enddo
 
 !Ne2+
-       call neii_rec_lines(medtemp,meddens,1.d0,neiiRLs)
+       call neii_rec_lines(medtemp,meddens,1.d0,neiiRLs,aeff_hb,em_hb)
 
        do i = 1,listlength
          do j = 1,size(neiiRLs)
@@ -859,7 +863,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
        enddo
 
 !C3+, N3+
-       call xiii_rec_lines(medtemp,meddens,1.d0,xiiiRLs)
+       call xiii_rec_lines(medtemp,meddens,1.d0,xiiiRLs,aeff_hb,em_hb)
 
        do i = 1,listlength
          do j = 1,size(xiiiRLs)
