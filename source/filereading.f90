@@ -88,7 +88,7 @@ subroutine read_linelist(filename,linelist,listlength,ncols,errstat)
         DO while (I.le.listlength)
           read(199,"(A)",end=110) rowdata
 
-          if (index(rowdata,"#") .ne. 1) then !not a comment, read in the columns
+          if (index(adjustl(rowdata),"#") .ne. 1) then !not a comment, read in the columns
             read(rowdata,*) invar(1:ncols)
           else !do nothing with comment lines
             cycle
