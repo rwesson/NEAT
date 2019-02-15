@@ -75,7 +75,7 @@ subroutine read_linelist(filename,linelist,listlength,ncols,errstat)
 
         do while (IO .ge. 0)
           read (199,"(A)") rowdata
-          if (index(rowdata,"#") .ne. 1) then
+          if (index(adjustl(rowdata),"#") .ne. 1) then
             read (rowdata,*,end=113) rowdata2(:)
           endif
         enddo
