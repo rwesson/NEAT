@@ -58,7 +58,7 @@ for wlen in wlens_old:
 
     if term_old==term_new:
         newlinedata[inew*84+28]=newlinedata[inew*84+28].strip()+" "+data_old[iold].strip()+"\n"
-        newdata.extend(newlinedata[inew*84+28:(inew*84)+56])
+        newdata.extend(newlinedata[inew*84+28:(inew*84)+55])
 
 # save the new data
 
