@@ -57,11 +57,11 @@ for wlen in wlens_old:
 # copy the multiplet name, terms and stat weights
 
     if term_old==term_new:
-        newlinedata[inew*84+28]=newlinedata[inew*84+28].strip()+" "+data_old[iold][46:51]+"  "+data_old[iold][77:84]+" - "+data_old[iold][108:116]+"  "+data_old[iold][70:72]+" "+data_old[iold][101:103]+"\n"
+        newlinedata[inew*84+28]=newlinedata[inew*84+28].strip()+" "+data_old[iold].strip()+"\n"
         newdata.extend(newlinedata[inew*84+28:(inew*84)+56])
 
 # save the new data
 
-with open('Roii_new.txt', 'w') as f:
+with open('Roii_storey2017.txt', 'w') as f:
     for item in newdata:
         f.write("%s" % item)
