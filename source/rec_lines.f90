@@ -45,6 +45,20 @@ module mod_recombination_lines
 
       type(oiiRL), dimension(:), allocatable :: oiiRLs
 
+      type oiiRL_s2017
+        real(kind=dp) :: Wave
+        character(len=8) :: Mult
+        character(len=9) :: Term1
+        character(len=9) :: Term2
+        real(kind=dp) :: Int
+        real(kind=dp) :: Obs
+        real(kind=dp) :: abundance
+        real(kind=dp), dimension(25,16) :: aeffs
+        real(kind=dp) :: aeff_interpolated
+      end type oiiRL_s2017
+
+      type(oiiRL_s2017), dimension(276) :: oiiRLs_s2017
+
       real(kind=dp), dimension(36,9), target :: oii_coefficients
       real(kind=dp), dimension(:), pointer :: oii_A_4f, oii_A_3d4F, oii_A_3d4D, oii_B_3d4D, oii_C_3d4D, oii_A_3d2F, oii_B_3d2F, oii_C_3d2F, oii_A_3d2D, oii_C_3d2D, oii_A_3d2P, oii_C_3d2P, oii_A_3p4D, oii_B_3p4D, oii_A_3p4P, oii_B_3p4P, oii_A_3p4S, oii_B_3p4S, oii_A_3p2D, oii_C_3p2D, oii_A_3p2P, oii_C_3p2P, oii_A_3p2S, oii_C_3p2S, oii_A_4f_low, oii_A_3d4F_low, oii_B_3d4D_low, oii_A_3d2F_low, oii_A_3d2D_low, oii_A_3d2P_low, oii_A_3p4D_low, oii_A_3p4P_low, oii_A_3p4S_low, oii_A_3p2D_low, oii_A_3p2P_low, oii_A_3p2S_low
 
@@ -581,6 +595,118 @@ subroutine oii_rec_lines(te,ne,abund,oiiRLs,aeff_hb,em_hb)
       endwhere
 
 end subroutine oii_rec_lines
+
+subroutine read_oii_s2017
+
+!read in tables of recombination coefficients from Storey et al. 2017.
+!full file online at http://cdsarc.u-strasbg.fr/ftp/VI/150/DataFiles/OIIlines_ABC
+!data for 276 lines extracted and put in Roii_new.txt
+!data comes in blocks for log(Te)=2.0..0.1..4.4, and log(ne)=2.0..0.2..5.0
+
+implicit none
+real(kind=dp), dimension(17) :: temp
+integer :: i,j,k,io
+character(len=220) :: dump
+
+!debugging
+#ifdef CO
+        print *,"subroutine: read_oii_s2017"
+#endif
+
+open(100,file=trim(PREFIX)//'/share/neat/Roii_storey2017.txt', iostat=IO, status='old')
+
+do i=1,276
+  read(100,"(A220)") dump ! first line of each block contains transition data
+
+  read(dump(32:39),"(F7.2)") oiiRLs_s2017(i)%wave
+  read(dump(129:134),"(A5)") oiiRLs_s2017(i)%mult
+  read(dump(160:169),"(A9)") oiiRLs_s2017(i)%Term1
+  read(dump(191:200),"(A9)") oiiRLs_s2017(i)%Term2
+
+  read(100,*) dump ! second line is just restatement of density points
+
+  do j=1,25 ! loop over temperatures
+    read (100,*) temp ! read in row, 1 temperature value followed by 15 recombination coefficients
+    do k=1,16 ! loop over density
+      oiiRLs_s2017(i)%aeffs(j,k)=temp(k+1)
+    enddo
+  enddo
+
+enddo
+
+end subroutine read_oii_s2017
+
+subroutine oii_rec_lines_s2017(Te,Ne,abund,oiiRLs_s2017,aeff_hb,em_hb)
+! supersedes oii_rec_lines
+! first interpolates logarithmically in Te and Ne to get all the recombination coefficients
+! then calculates the predicted intensities
+
+implicit none
+real(kind=dp) :: aeff, aeff_hb, em_hb, Te, Ne, abund, tered
+real(kind=dp) :: logte,logne
+real(kind=dp) :: aa1, aa2, bb1, bb2, interp_te, interp_ne, aeff_t1, aeff_t2
+integer :: te1,ne1,te2,ne2
+integer :: i
+
+type(oiiRL_s2017), dimension(276) :: oiiRLs_s2017
+
+!debugging
+#ifdef CO
+        print *,"subroutine: oii_rec_lines_s2017"
+#endif
+
+! oii coefficients cover 16 densities (log(ne)=2.0..5.0..0.2) and 25 temperatures (log(te)=2.0..4.4..0.1)
+! find the array indices to interpolate between
+! 2.0 = 1    (log(te)-1.9)/0.1
+! 2.1 = 2
+! 2.2 = 3
+
+te1=floor((log10(te)-1.9)/0.1)
+ne1=floor((log10(ne)-1.8)/0.2)
+
+if (te1 .lt. 1) then
+  te1=1
+  te2=1
+  interp_te=0.
+elseif (te1 .gt. 25) then
+  te1=25
+  te2=25
+  interp_te=0.
+else
+  te2=te1+1
+  interp_te=(log10(te)-1.9)/0.1 - real(te1)
+endif
+
+if (ne1 .lt. 1) then
+  ne1=1
+  ne2=1
+elseif (ne1 .gt. 16) then
+  ne1=16
+  ne2=16
+else
+  ne2=ne1+1
+  interp_ne=(log10(ne)-1.8)/0.2 - real(ne1)
+endif
+
+do i=1,size(oiiRLs_s2017)
+  aa1=oiiRLs_s2017(i)%aeffs(te1,ne1)
+  aa2=oiiRLs_s2017(i)%aeffs(te2,ne1)
+  bb1=oiiRLs_s2017(i)%aeffs(te1,ne2)
+  bb2=oiiRLs_s2017(i)%aeffs(te2,ne2)
+
+
+  aeff_t1 = aa1+(aa2-aa1)*interp_te
+  aeff_t2 = bb1+(bb2-bb1)*interp_te
+
+  ! tabulated values are emission coefficients in erg.cm3/s
+  ! need recombination coefficients in cm3/s
+  ! = em / hc/lambda (in cgs) = 1.98644582e-25m3kg/lambda(m) = 1.986e-16cm3g/m = 1.986e-18cm3g/cm
+
+  oiiRLs_s2017(i)%aeff_interpolated = aeff_t1+(aeff_t2-aeff_t1)*interp_ne
+  oiiRLs_s2017(i)%Int = 100.*abund*oiiRLs_s2017(i)%aeff_interpolated / Em_hb
+enddo
+
+end subroutine oii_rec_lines_s2017
 
 subroutine nii_rec_lines(te, ne, abund, niiRLs,aeff_hb,em_hb)
 

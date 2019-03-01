@@ -503,6 +503,7 @@ program neat
 
         print *,gettime(),"reading OII diagnostics data"
         call read_oii_diagnosticdata
+        call read_oii_s2017
 
 !find maximum #levels and temperatures - pass to equib to reduce footprint
 

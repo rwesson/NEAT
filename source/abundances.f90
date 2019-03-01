@@ -798,18 +798,18 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
        call get_aeff_hb(medtemp,meddens,aeff_hb,em_hb)
 
 ! o2+
-       call oii_rec_lines(medtemp,meddens,1.d0,oiiRLs,aeff_hb,em_hb)
-
+!       call oii_rec_lines(medtemp,meddens,1.d0,oiiRLs,aeff_hb,em_hb)
+       call oii_rec_lines_s2017(medtemp,meddens,1.d0,oiiRLs_s2017,aeff_hb,em_hb)
        do i = 1,listlength
-         do j = 1,size(oiiRLs)
-          if (abs(linelist(i)%wavelength-oiiRLs(j)%Wave) .le. 0.006) then
-            oiiRLs(j)%Obs = linelist(i)%int_dered
-            if (oiiRLs(j)%Int .eq. 0.0) then
-              oiiRLs(j)%abundance = 0.D0
+         do j = 1,size(oiiRLs_s2017)
+          if (abs(linelist(i)%wavelength-oiiRLs_s2017(j)%Wave) .le. 0.006) then
+            oiiRLs_s2017(j)%Obs = linelist(i)%int_dered
+            if (oiiRLs_s2017(j)%Int .eq. 0.0) then
+              oiiRLs_s2017(j)%abundance = 0.D0
             else
-              oiiRLs(j)%abundance = oiiRLs(j)%obs/oiiRLs(j)%Int
+              oiiRLs_s2017(j)%abundance = oiiRLs_s2017(j)%obs/oiiRLs_s2017(j)%Int
             endif
-            linelist(i)%abundance = oiiRLs(j)%abundance
+            linelist(i)%abundance = oiiRLs_s2017(j)%abundance
             linelist(i)%name="O II       "
             linelist(i)%latextext="O~{\sc ii}     "
           endif
@@ -955,22 +955,22 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
 !oii recombination lines
 
-  if (sum(oiiRLs%Int).gt. 0) then
+  if (sum(oiiRLs_s2017%Int).gt. 0) then
 
-      oiimultiplets%Multiplet = (/" V1    "," V2    "," V5    " ," V10   "," V11   "," V12   "," V19   "," V20   "," V25   "," V28   "," V33   "," 3d-4f "/)
+      oiimultiplets%Multiplet = (/"V1     ","V2     ","V5     " ,"V10    ","V11    ","V12    ","V19    ","V20    ","V25    ","V28    ","V33    "," 3d-4f "/)
       oiimultiplets%weight = (/ weights%oiiV1, weights%oiiV2, weights%oiiV5, weights%oiiV10, weights%oiiV11, weights%oiiV12, weights%oiiV19, weights%oiiV20, weights%oiiV25, weights%oiiV28, weights%oiiV33, weights%oii3d4f /)
 
 ! get observed and predicted coadded intensity for each multiplet
 
       do j = 1,11
-        oiimultiplets(j)%coadded_observed=sum(oiiRLs%obs,mask=oiiRLs%Mult .eq. oiimultiplets(j)%Multiplet .and. oiiRLs%obs .gt. 0)
-        oiimultiplets(j)%coadded_predicted=sum(oiiRLs%Int,mask=oiiRLs%Mult .eq. oiimultiplets(j)%Multiplet .and. oiiRLs%obs .gt. 0)
+        oiimultiplets(j)%coadded_observed=sum(oiiRLs_s2017%obs,mask=oiiRLs_s2017%Mult .eq. oiimultiplets(j)%Multiplet .and. oiiRLs_s2017%obs .gt. 0)
+        oiimultiplets(j)%coadded_predicted=sum(oiiRLs_s2017%Int,mask=oiiRLs_s2017%Mult .eq. oiimultiplets(j)%Multiplet .and. oiiRLs_s2017%obs .gt. 0)
       enddo
 
 ! 3d-4f transitions
 
-      oiimultiplets(12)%coadded_observed=sum(oiiRLs%obs,mask=oiiRLs%Term1(4:5) .eq. "3d" .and. oiiRLs%Term2(3:4) .eq. "4f" .and. oiiRLs%Mult .ne. "       " .and. oiiRLs%obs .gt. 0)
-      oiimultiplets(12)%coadded_predicted=sum(oiiRLs%Int,mask=oiiRLs%Term1(4:5) .eq. "3d" .and. oiiRLs%Term2(3:4) .eq. "4f" .and. oiiRLs%Mult .ne. "       " .and. oiiRLs%obs .gt. 0)
+      oiimultiplets(12)%coadded_observed=sum(oiiRLs_s2017%obs,mask=oiiRLs_s2017%Term1(1:2) .eq. "3d" .and. oiiRLs_s2017%Term2(1:2) .eq. "4f" .and. oiiRLs_s2017%Mult .ne. "       " .and. oiiRLs_s2017%obs .gt. 0)
+      oiimultiplets(12)%coadded_predicted=sum(oiiRLs_s2017%Int,mask=oiiRLs_s2017%Term1(1:2) .eq. "3d" .and. oiiRLs_s2017%Term2(1:2) .eq. "4f" .and. oiiRLs_s2017%Mult .ne. "       " .and. oiiRLs_s2017%obs .gt. 0)
 
 !get multiplet abundances from coadded intensity
 
