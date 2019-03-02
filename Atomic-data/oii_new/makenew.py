@@ -65,4 +65,4 @@ for wlen in wlens_old:
 with open('Roii_storey2017.dat', 'w') as f:
     for item in newdata:
 # fix some wavelengths for backward compatibility when writing
-        f.write("%s" % item.replace("4283.72","4283.73").replace("4676.23","4676.24").replace("4285.69","4285.68").replace("4491.22","4491.23"))
+        f.write("%s" % item.replace("4283.72","4283.73").replace("4676.23","4676.24").replace("4285.68","4285.69").replace("4491.22","4491.23").replace("4069.88","4069.89").replace("4072.15","4072.16").replace("4110.79","4110.78"))
