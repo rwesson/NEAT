@@ -62,7 +62,7 @@ for wlen in wlens_old:
 
 # save the new data
 
-with open('Roii_storey2017.txt', 'w') as f:
+with open('Roii_storey2017.dat', 'w') as f:
     for item in newdata:
 # fix some wavelengths for backward compatibility when writing
         f.write("%s" % item.replace("4283.72","4283.73").replace("4676.23","4676.24").replace("4285.69","4285.68").replace("4491.22","4491.23"))
