@@ -613,7 +613,7 @@ character(len=220) :: dump
         print *,"subroutine: read_oii_s2017"
 #endif
 
-open(100,file=trim(PREFIX)//'/share/neat/Roii_storey2017.txt', iostat=IO, status='old')
+open(100,file=trim(PREFIX)//'/share/neat/Roii_storey2017.dat', iostat=IO, status='old')
 
 do i=1,276
   read(100,"(A220)") dump ! first line of each block contains transition data
