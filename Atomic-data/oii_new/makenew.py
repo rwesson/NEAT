@@ -64,5 +64,18 @@ for wlen in wlens_old:
 
 with open('Roii_storey2017.dat', 'w') as f:
     for item in newdata:
-# fix some wavelengths for backward compatibility when writing
-        f.write("%s" % item.replace("4283.72","4283.73").replace("4676.23","4676.24").replace("4285.68","4285.69").replace("4491.22","4491.23").replace("4069.88","4069.89").replace("4072.15","4072.16").replace("4110.79","4110.78"))
+        f.write("%s" % item)
+
+# update the wavelengths in complete_line_list
+
+with open("../../utilities/complete_line_list") as f:
+    content=f.readlines()
+
+for i in xrange(len(content)):
+    for wlen in wlens_new:
+        if abs(float(content[i][0:7])-wlen)<0.03 and content[i][10:11]=="O":
+            content[i]=str(wlen)+content[i][7:]
+
+with open("complete_line_list","w") as f:
+    for item in content:
+        f.write("%s" % item)
