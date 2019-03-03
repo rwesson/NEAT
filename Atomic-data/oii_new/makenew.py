@@ -74,7 +74,7 @@ with open("../../utilities/complete_line_list") as f:
 for i in xrange(len(content)):
     for wlen in wlens_new:
         if abs(float(content[i][0:7])-wlen)<0.03 and content[i][10:11]=="O":
-            content[i]=str(wlen)+content[i][7:]
+            content[i]="%7.2f%s" % (wlen,content[i][7:])
 
 with open("complete_line_list","w") as f:
     for item in content:
