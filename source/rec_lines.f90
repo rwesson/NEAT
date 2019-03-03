@@ -53,8 +53,8 @@ module mod_recombination_lines
         real(kind=dp) :: Int
         real(kind=dp) :: Obs
         real(kind=dp) :: abundance
-        real(kind=dp), dimension(25,16) :: aeffs
-        real(kind=dp) :: aeff_interpolated
+        real(kind=dp), dimension(25,16) :: ems
+        real(kind=dp) :: em_interpolated
       end type oiiRL_s2017
 
       type(oiiRL_s2017), dimension(276) :: oiiRLs_s2017
@@ -628,7 +628,7 @@ do i=1,276
   do j=1,25 ! loop over temperatures
     read (100,*) temp ! read in row, 1 temperature value followed by 15 recombination coefficients
     do k=1,16 ! loop over density
-      oiiRLs_s2017(i)%aeffs(j,k)=temp(k+1)
+      oiiRLs_s2017(i)%ems(j,k)=temp(k+1)
     enddo
   enddo
 
@@ -644,7 +644,7 @@ subroutine oii_rec_lines_s2017(Te,Ne,abund,oiiRLs_s2017,aeff_hb,em_hb)
 implicit none
 real(kind=dp) :: aeff, aeff_hb, em_hb, Te, Ne, abund, tered
 real(kind=dp) :: logte,logne
-real(kind=dp) :: aa1, aa2, bb1, bb2, interp_te, interp_ne, aeff_t1, aeff_t2
+real(kind=dp) :: aa1, aa2, bb1, bb2, interp_te, interp_ne, em_t1, em_t2
 integer :: te1,ne1,te2,ne2
 integer :: i
 
@@ -689,21 +689,21 @@ else
 endif
 
 do i=1,size(oiiRLs_s2017)
-  aa1=oiiRLs_s2017(i)%aeffs(te1,ne1)
-  aa2=oiiRLs_s2017(i)%aeffs(te2,ne1)
-  bb1=oiiRLs_s2017(i)%aeffs(te1,ne2)
-  bb2=oiiRLs_s2017(i)%aeffs(te2,ne2)
+  aa1=oiiRLs_s2017(i)%ems(te1,ne1)
+  aa2=oiiRLs_s2017(i)%ems(te2,ne1)
+  bb1=oiiRLs_s2017(i)%ems(te1,ne2)
+  bb2=oiiRLs_s2017(i)%ems(te2,ne2)
 
 
-  aeff_t1 = aa1+(aa2-aa1)*interp_te
-  aeff_t2 = bb1+(bb2-bb1)*interp_te
+  em_t1 = aa1+(aa2-aa1)*interp_te
+  em_t2 = bb1+(bb2-bb1)*interp_te
 
   ! tabulated values are emission coefficients in erg.cm3/s
   ! need recombination coefficients in cm3/s
   ! = em / hc/lambda (in cgs) = 1.98644582e-25m3kg/lambda(m) = 1.986e-16cm3g/m = 1.986e-18cm3g/cm
 
-  oiiRLs_s2017(i)%aeff_interpolated = aeff_t1+(aeff_t2-aeff_t1)*interp_ne
-  oiiRLs_s2017(i)%Int = 100.*abund*oiiRLs_s2017(i)%aeff_interpolated / Em_hb
+  oiiRLs_s2017(i)%em_interpolated = em_t1+(em_t2-em_t1)*interp_ne
+  oiiRLs_s2017(i)%Int = 100.*abund*oiiRLs_s2017(i)%em_interpolated / Em_hb
 enddo
 
 end subroutine oii_rec_lines_s2017
