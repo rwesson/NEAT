@@ -1272,7 +1272,7 @@ elseif (switch_icf .eq. "P") then
        Hetotabund = RLicfHe * Heiabund ! (21) - note that this icf is not meaningful if only S+ is seen
      endif
 
-elseif (switch_icf .eq. "D") then
+elseif (switch_icf .eq. "D" .or. switch_icf .eq. "E") then
 !Delgado-Inglada 2014
 
 !starting definitions
@@ -1305,17 +1305,31 @@ elseif (switch_icf .eq. "D") then
   endif
 
 !nitrogen
-!equation 14:
-
-  if (niiCELabund .gt. 0.D0 .and. oiiCELabund .gt. 0.D0 .and. upsilon .gt. 0.D0) then
-    CELicfN = 10.**(-0.16*oICFfactor*(1+log10(upsilon)))
-    nabundCEL = CELicfN * niiCELabund * OabundCEL / oiiCELabund
-  elseif (niiCELabund .gt. 0.D0 .and. oiiCELabund .gt. 0.D0 .and. upsilon .eq. 0.D0) then
-    CELicfN = 10**(0.64*Oicffactor)
-    nabundCEL = CELicfN * niiCELabund * OabundCEL / oiiCELabund
+!use the classical icf if DI14mod selected
+  if (switch_icf=="E") then
+    NabundCEL = 0.d0
+    if (niiCELabund .ge. 1e-20 .and. niiiUVCELabund .ge. 1e-20 .and. nivCELabund .ge. 1e-20) then !all ionisation stages seen
+      CELicfN = 1.
+      NabundCEL = niiCELabund + niiiCELabund + nivCELabund
+    elseif (niiCELabund .ge. 1e-20 .and. niiiUVCELabund .lt. 1e-20 .and. nivCELabund .ge. 1e-20) then !no N2+ seen
+      CELicfN = 1.5
+      NabundCEL = 1.5*(niiCELabund + nivCELabund)
+    elseif (niiCELabund .ge. 1e-20 .and. niiiUVCELabund .lt. 1e-20 .and. nivCELabund .lt. 1e-20) then !Only N+ seen
+      CELicfN = OabundCEL/oiiCELabund
+      NabundCEL = niiCELabund * CELicfN
+    endif
   else
-    CELicfN = 1.0
-    nabundCEL = 0.D0
+!use DI14 as published: equation 14:
+    if (niiCELabund .gt. 0.D0 .and. oiiCELabund .gt. 0.D0 .and. upsilon .gt. 0.D0) then
+      CELicfN = 10.**(-0.16*oICFfactor*(1+log10(upsilon)))
+      nabundCEL = CELicfN * niiCELabund * OabundCEL / oiiCELabund
+    elseif (niiCELabund .gt. 0.D0 .and. oiiCELabund .gt. 0.D0 .and. upsilon .eq. 0.D0) then
+      CELicfN = 10**(0.64*Oicffactor)
+      nabundCEL = CELicfN * niiCELabund * OabundCEL / oiiCELabund
+    else
+      CELicfN = 1.0
+      nabundCEL = 0.D0
+    endif
   endif
 
 !neon

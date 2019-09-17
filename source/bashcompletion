@@ -20,7 +20,7 @@ _neat()
             return 0
             ;;
 	--ionisation-correction-scheme|-icf)
-	    icf_options="DI14 KB94 PT92"
+	    icf_options="DI14 DI14mod KB94 PT92"
 	    COMPREPLY=( $( compgen -W "$icf_options" -- "$cur" ) )
             return 0
             ;;

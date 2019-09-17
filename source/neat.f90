@@ -237,6 +237,8 @@ program neat
                     switch_icf="P"
                   elseif (trim(options(i+1))=="KB94") then
                     switch_icf="K"
+                  elseif (trim(options(i+1))=="DI14mod") then
+                    switch_icf="E"
                   endif
                 endif
                 if ((trim(options(i))=="-v" .or.  trim(options(i))=="--verbosity") .and. (i+1) .le. Narg) then
@@ -438,6 +440,8 @@ program neat
                 print *,gettime(),"using Kingsburgh & Barlow (1994) ICF"
         elseif (switch_ICF == "D") then
                 print *,gettime(),"using Delgado-Inglada et al. (2014) ICF"
+        elseif (switch_ICF == "E") then
+                print *,gettime(),"using Delgado-Inglada et al. (2014) ICF with classical icf(N)"
         else
                 print *,gettime(),"using Peimbert et al. (1992) ICF"
         endif
