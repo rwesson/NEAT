@@ -668,7 +668,7 @@ if (te1 .lt. 1) then
   te1=1
   te2=1
   interp_te=0.
-elseif (te1 .gt. 25) then
+elseif (te1 .ge. 25) then
   te1=25
   te2=25
   interp_te=0.
@@ -680,7 +680,7 @@ endif
 if (ne1 .lt. 1) then
   ne1=1
   ne2=1
-elseif (ne1 .gt. 16) then
+elseif (ne1 .ge. 16) then
   ne1=16
   ne2=16
 else
