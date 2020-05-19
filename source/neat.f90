@@ -20,7 +20,7 @@
 
 program neat
 
-        use mod_abundtypes
+        use mod_types
         use mod_resultarrays
         use mod_extinction
         use mod_quicksort

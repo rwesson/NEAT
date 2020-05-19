@@ -1,7 +1,7 @@
 !filereading.f90, routines to read in the input file and various atomic data files, and also lookup routines for line identification
 !(C) Roger Wesson, Dave Stock, Peter Scicluna
 module mod_abundIO
-use mod_abundtypes
+use mod_types
 use mod_atomicdata
 implicit none
 private :: dp

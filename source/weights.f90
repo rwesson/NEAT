@@ -1,7 +1,7 @@
 !weights.f90, read in a configuration file defining the weighting scheme to be used
 !(C) Roger Wesson
 module mod_weights
-use mod_abundtypes
+use mod_types
 use mod_abundIO
 contains
 

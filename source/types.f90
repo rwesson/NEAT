@@ -1,6 +1,6 @@
-!abundtypes.f90, definitions of various data structures.
+!types.f90, definitions of various data structures.
 !(C) Roger Wesson, Dave Stock, Peter Scicluna
-module mod_abundtypes
+module mod_types
 
 implicit none
 private :: dp
@@ -108,7 +108,7 @@ type diagnostic_array
         real(kind=dp) :: rldens
 end type diagnostic_array
 
-end module mod_abundtypes
+end module mod_types
 
 module mod_resultarrays
 

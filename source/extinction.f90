@@ -1,7 +1,7 @@
 !extinction.f90, calculation of extinction coefficients for various interstellar reddening laws
 !(C) Roger Wesson, Dave Stock, Peter Scicluna
 module mod_extinction
-use mod_abundtypes
+use mod_types
 implicit none
 private :: dp
 integer, parameter :: dp = kind(1.d0)

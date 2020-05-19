@@ -1,7 +1,7 @@
 !helium.f90, routines to calculate He+ and He2+ abundances
 !(C) Roger Wesson, Dave Stock, Peter Scicluna
 module mod_helium
-use mod_abundtypes
+use mod_types
 
       implicit none
       private :: dp
@@ -31,7 +31,7 @@ end subroutine get_heii_abund
 
 subroutine get_hei_porter(linelist,Te, ne, he_lines, heidata, Heiabund, weight4471, weight5876, weight6678)
 
-      use mod_abundtypes
+      use mod_types
 
       IMPLICIT NONE
       real(kind=dp) :: te, ne
@@ -160,7 +160,7 @@ end subroutine get_emissivity_porter
 
 subroutine get_hei_smits_new(linelist,Te, ne, he_lines, heidata, Heiabund, weight4471, weight5876, weight6678)
 
-      use mod_abundtypes
+      use mod_types
 
       IMPLICIT NONE
       real(kind=dp) :: te, ne, tereduced

@@ -1,7 +1,7 @@
 !hydrogen.f90, calculations of balmer and paschen densities and temperatures
 !(C) Roger Wesson
 module mod_hydrogen
-use mod_abundtypes
+use mod_types
 
 implicit none
 private :: dp

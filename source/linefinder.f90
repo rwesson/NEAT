@@ -5,7 +5,7 @@ contains
 
 subroutine linefinder(linelist, listlength)
 
-use mod_abundtypes
+use mod_types
 use mod_quicksort
 
 implicit none
