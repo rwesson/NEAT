@@ -2,10 +2,11 @@
 !(C) Roger Wesson, Dave Stock, Peter Scicluna
 module mod_linefinder
 use mod_globals
+use mod_functions
 
 contains
 
-subroutine linefinder(linelist, listlength)
+subroutine linefinder(linelist, listlength, identifyconfirm)
 
 use mod_types
 use mod_quicksort
@@ -33,13 +34,17 @@ real(kind=dp), dimension(20) :: linelist_compare
 
 integer :: I, J, n_neatlines, IO, assign_1, assign_2, count
 real(kind=dp) :: temp_wave, diff, shift, rms
-character(len=1) :: null
+character(len=1) :: readchar
 character(len=5) :: temp_ion1, temp_ion2
+logical :: identifyconfirm
 
 !debugging
 #ifdef CO
         print *,"subroutine: linefinder"
 #endif
+
+print *,gettime()," : running line finder"
+print *,gettime(),"---------------------------------"
 
 xcorr = 0.D0
 xcorr_array%restwavelength = 0.D0
@@ -53,7 +58,7 @@ xcorr_array%match = 0
         I = 1
         open(100, file=trim(PREFIX)//'/share/neat/complete_line_list', iostat=IO, status='old')
                 do while (IO .ge. 0)
-                        read(100,"(A200)",end=101) null
+                        read(100,"(A200)",end=101) readchar
                         I = I + 1
                 enddo
         101 n_neatlines=I-1
@@ -63,7 +68,7 @@ xcorr_array%match = 0
 
         rewind (100)
         do I=1,n_neatlines
-                read(100,*,end=102) temp_wave, null, temp_ion1, temp_ion2
+                read(100,*,end=102) temp_wave, readchar, temp_ion1, temp_ion2
                 neatlines(i)%wavelength = temp_wave
                 neatlines(i)%ion = temp_ion1//temp_ion2
         enddo
@@ -185,8 +190,24 @@ do I=1,listlength
 enddo
 print *,"-------------------------------------"
 print *
-print *,count," lines identified; ",listlength-count," unidentified"
-print *,"Wavelengths of identified lines changed as necessary"
+print *,gettime(),count," lines identified; ",listlength-count," unidentified"
+print *,gettime()," : Wavelengths of identified lines changed as necessary"
+
+print *
+print *,gettime()," : line finder finished"
+print *,gettime()," : WARNING!!!  The line finding algorithm is intended as an aid only and is not designed to be highly robust"
+print *,gettime()," : check your line list very carefully for potentially wrongly identified lines!!"
+print *,gettime(),"---------------------------------"
+if (.not. identifyconfirm) then
+  print *,gettime()," : Are these line IDs ok? (y/n)"
+  read (5,*) readchar
+  if (readchar .ne. "y" .and. readchar .ne. "Y") then
+    print *,gettime()," : analysis cancelled."
+    call exit(1)
+  endif
+else
+  print *,gettime()," : line finder finished, assignments automatically accepted"
+endif
 
 end subroutine linefinder
 end module mod_linefinder

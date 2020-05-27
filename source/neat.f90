@@ -177,24 +177,7 @@ program neat
 ! run line identifier if required
 
         if (identifylines) then
-                print *,gettime()," : running line finder"
-                print *,gettime(),"---------------------------------"
-                call linefinder(linelist, listlength)
-                print *
-                print *,gettime()," : line finder finished"
-                print *,gettime()," : WARNING!!!  The line finding algorithm is intended as an aid only and is not designed to be highly robust"
-                print *,gettime()," : check your line list very carefully for potentially wrongly identified lines!!"
-                print *,gettime(),"---------------------------------"
-                if (.not. identifyconfirm) then
-                  print *,"Are these line IDs ok? (y/n)"
-                  read (5,*) blank
-                  if (blank .ne. "y" .and. blank .ne. "Y") then
-                    print *,gettime()," : analysis cancelled."
-                    call exit(1)
-                  endif
-                else
-                  print *,gettime()," : line finder finished, assignments automatically accepted"
-                endif
+                call linefinder(linelist, listlength, identifyconfirm)
         endif
 
 ! normalise to Hbeta
