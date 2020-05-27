@@ -3,12 +3,13 @@
 module mod_weights
 use mod_types
 use mod_abundIO
+use mod_globals
+
 contains
 
 subroutine setweights(configfile,weights,linelist,ILs,H_Balmer,H_Paschen,HeII_lines)
 
         implicit none
-        integer, parameter :: dp=kind(1.d0)
         character(len=512) :: configfile
         character(len=16) :: quantity
         character(len=24) :: filecheck

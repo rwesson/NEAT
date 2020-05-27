@@ -1,10 +1,9 @@
 !types.f90, definitions of various data structures.
 !(C) Roger Wesson, Dave Stock, Peter Scicluna
 module mod_types
+use mod_globals
 
 implicit none
-private :: dp
-integer, parameter :: dp = kind(1.d0)
 
 TYPE line
         character(len=11) :: name
@@ -111,10 +110,9 @@ end type diagnostic_array
 end module mod_types
 
 module mod_resultarrays
+use mod_globals
 
 implicit none
-private :: dp
-integer, parameter :: dp = kind(1.d0)
 
 TYPE resultarray
         real(kind=dp) :: NC_abund_CEL=0d0
@@ -293,10 +291,9 @@ end type arraycount
 end module mod_resultarrays
 
 module mod_atomicdata
+use mod_globals
 
 implicit none
-private :: dp
-integer, parameter :: dp = kind(1.d0)
 
 type atomic_data
 

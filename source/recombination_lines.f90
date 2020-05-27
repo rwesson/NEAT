@@ -4,10 +4,9 @@
 ! RW May 2009
 
 module mod_recombination_lines
+use mod_globals
 
       implicit none
-      private :: dp
-      integer, parameter :: dp = kind(1.d0)
 
       type oiiRL
             character(len=1) :: Hyb

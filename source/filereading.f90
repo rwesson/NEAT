@@ -3,9 +3,9 @@
 module mod_abundIO
 use mod_types
 use mod_atomicdata
+use mod_globals
+
 implicit none
-private :: dp
-integer, parameter :: dp = kind(1.d0)
 
 contains
 
@@ -431,7 +431,6 @@ end subroutine get_cels
 subroutine get_H(H_Balmer, H_paschen, linelist)
 !index the location of Balmer and Paschen lines in the main array
   implicit none
-  integer, parameter :: dp = kind(1.d0)
   integer, dimension(3:40), intent(out) :: H_balmer ! indexing starts at 3 so that it represents the upper level of the line
   integer, dimension(4:39), intent(out) :: H_paschen ! indexing starts at 4 for the same reason
   real(kind=dp), dimension(3:40) :: balmerwavelengths
@@ -478,7 +477,6 @@ end subroutine get_H
 subroutine get_HeI(HeI_lines, linelist)
 !index the locations of He I lines in the main linelist array
         implicit none
-        integer, parameter :: dp = kind(1.d0)
         integer, dimension(44), intent(out) :: HeI_lines
         type(line), dimension(:) :: linelist
         real(kind=dp), dimension(44) :: wavelengths
@@ -509,7 +507,6 @@ end subroutine get_HeI
 subroutine get_HeII(HeII_lines, linelist)
 !index the location of He II lines (only 4686 at the moment) in the linelist array
         implicit none
-        integer, parameter :: dp = kind(1.d0)
         integer, dimension(20,2:6), intent(out) :: HeII_lines ! array indices represent quantum numbers
         type(line), dimension(:) :: linelist
         real(kind=dp), dimension(20,2:6) :: wavelengths
@@ -633,9 +630,6 @@ end module
 
 module mod_atomic_read
 use mod_atomicdata
-
-private :: dp
-integer, parameter :: dp = kind(1.d0)
 
 contains
 subroutine read_atomic_data(ion)

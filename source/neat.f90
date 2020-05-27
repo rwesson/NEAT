@@ -21,6 +21,7 @@
 program neat
 
         use mod_types
+        use mod_globals
         use mod_resultarrays
         use mod_extinction
         use mod_quicksort

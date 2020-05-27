@@ -1,10 +1,9 @@
 !oii_diagnostics, routines to interpolate data from Storey et al 2017 to estimate the temperature and density from OII recombination line ratios
 !(C) Roger Wesson
 module mod_oii_diagnostics
+use mod_globals
 
 implicit none
-private :: dp
-integer, parameter :: dp = kind(1.d0)
 real(kind=dp), dimension(9,8,4) :: oiidiagnostics
 
 contains
@@ -12,7 +11,6 @@ contains
 subroutine read_oii_diagnosticdata
 
 implicit none
-integer, parameter :: dp = kind(1.d0)
 integer :: i,j
 character(len=7) :: x
 character(len=5) :: in1, in2

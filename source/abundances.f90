@@ -11,9 +11,9 @@ use mod_resultarrays
 use mod_atomicdata
 use mod_oii_diagnostics
 use mod_hydrogen
+use mod_globals
 
         implicit none
-        integer, parameter :: dp=kind(1.d0)
         integer :: counter, i, j
         integer, intent(in) :: listlength
         type(line), dimension(listlength) :: linelist, linelist_orig
@@ -1835,8 +1835,6 @@ contains
 
 subroutine get_diag(name1, name2, diag)
         implicit none
-        integer, parameter :: dp = kind(1.d0)
-
         character(len=11) :: name1, name2
         real(kind=dp) :: flux_no1, flux_no2
         real(kind=dp) :: diag
@@ -1860,8 +1858,6 @@ end subroutine get_diag
 subroutine get_Tdiag(name1, name2, name3, ion, ratio)
         !this routine gets the ratio for nebular to auroral diagnostics.  In case one of nebular pair is not observed, it assumes the intensity of the other is given by the theoretical ratio
         implicit none
-        integer, parameter :: dp = kind(1.d0)
-
         character(len=11) :: name1, name2, name3
         character(len=20) :: ion
         integer :: ion_no1, ion_no2, ion_no3

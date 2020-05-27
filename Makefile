@@ -84,7 +84,7 @@ new: clean all
 %.o: %.f90
 	$(FC) $(FFLAGS) $< -c -o $@
 
-neat: source/types.o source/oii_diagnostics.o source/hydrogen.o source/extinction.o source/recombination_lines.o source/helium.o source/equib_routines.o source/filereading.o source/abundances.o source/quicksort.o source/linefinder.o source/weights.o source/neat.o
+neat: source/globals.o source/types.o source/oii_diagnostics.o source/hydrogen.o source/extinction.o source/recombination_lines.o source/helium.o source/equib_routines.o source/filereading.o source/abundances.o source/quicksort.o source/linefinder.o source/weights.o source/neat.o
 	$(LD) $(LDFLAGS) $(FFLAGS) -o $@ $^
 
 clean:

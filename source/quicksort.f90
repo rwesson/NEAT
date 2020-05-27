@@ -51,30 +51,6 @@ CONTAINS
 
 End MODULE mod_error
 
-MODULE mod_numtypes
-! *
-! ***************************************************
-! *
-! * Define the numerical Types Single precision,
-! * Double Precision, and Complex double precision
-! * to make the code portable.
-! *
-! ***************************************************
-
-  IMPLICIT NONE
-
-  ! Here we define our Single Precision (SP)
-  ! and Double Precision (DP) data types, for
-  ! both Real and Complex variables.
-
-  Integer, Parameter :: SP = Kind(1.0)
-  Integer, Parameter :: DP = Kind(1.D0)
-
-  Integer, Parameter :: SPC = Kind( (1.0_SP, 1.0_SP) )
-  Integer, Parameter :: DPC = Kind( (1.0_DP, 1.0_DP) )
-
-End MODULE mod_numtypes
-
 ! A MODULE for non numerical routines (sorting and locate)
 !
 ! Copyright (C) 2005  Alberto Ramos <alberto@martin.ft.uam.es>
@@ -107,7 +83,7 @@ MODULE mod_quicksort
 ! ***************************************************
 
 
-  USE mod_numtypes
+  USE mod_globals
   USE mod_error
 
   IMPLICIT NONE

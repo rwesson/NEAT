@@ -2,10 +2,9 @@
 !(C) Roger Wesson
 module mod_hydrogen
 use mod_types
+use mod_globals
 
 implicit none
-private :: dp
-integer, parameter :: dp = kind(1.d0)
 real(kind=dp), dimension(:,:,:,:), allocatable :: hidata
 real(kind=dp), dimension(:), allocatable :: temperatures
 integer :: ntemps, ndens, nlevs
@@ -58,8 +57,6 @@ end subroutine read_hydrogen
 subroutine balmer_densities(linelist,H_Balmer,medtemp,density)
 
 implicit none
-integer, parameter :: dp = kind(1.d0)
-
 integer, dimension(3:40), intent(in) :: H_Balmer
 type(line), dimension(:), intent(in) :: linelist
 real(kind=dp), dimension(10:25) :: ratios,densities
@@ -167,8 +164,6 @@ subroutine paschen_densities(linelist,H_Paschen,medtemp,density)
 ! computed using ratios of Paschen lines to Hbeta
 ! will change to P9, checking if it is observed
 implicit none
-integer, parameter :: dp = kind(1.d0)
-
 integer, dimension(4:39),intent(in) :: H_Paschen
 type(line), dimension(:), intent(in) :: linelist
 real(kind=dp), dimension(10:25) :: ratios,densities

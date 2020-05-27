@@ -1,11 +1,10 @@
 !helium.f90, routines to calculate He+ and He2+ abundances
 !(C) Roger Wesson, Dave Stock, Peter Scicluna
 module mod_helium
+use mod_globals
 use mod_types
 
       implicit none
-      private :: dp
-      integer, parameter :: dp = kind(1.d0)
       real(kind=dp), dimension(:,:,:,:), allocatable :: heiidata
       real(kind=dp), dimension(:), allocatable :: temperatures
       integer :: ntemps, ndens, nlevs
@@ -15,8 +14,6 @@ use mod_types
       subroutine get_heii_abund(te, ne, IHeII4686, heiiabund)
 
       implicit none
-      integer, parameter :: dp = kind(1.d0)
-
       real(kind=dp) :: A4686,TE,NE,IHeII4686,heiiabund
 
 !debugging
@@ -90,8 +87,6 @@ end subroutine get_hei_porter
 subroutine get_emissivity_porter(te, ne, line, emissivity, heidata)
 
         implicit none
-        integer, parameter :: dp = kind(1.d0)
-
         real(kind=dp), intent(in) :: te, ne
         real(kind=dp) :: testart, nestart, logne, te_copied
         real(kind=dp) :: interp_factor_te, interp_factor_ne, interp_t1, interp_t2, emissivity
@@ -260,8 +255,6 @@ real(kind=dp) function GAMM4861(TE,NE)
 !     Storey P. J., Hummer D. G., 1995, MNRAS, 272, 41
 
       implicit none
-      integer, parameter :: dp = kind(1.d0)
-
       real(kind=dp) TE,NE,AE2,AE3,AE4,AE5,AE6,AE7,AE8,AEFF,HCLL
       real(kind=dp) LNE, LTE
 
@@ -345,8 +338,6 @@ real(kind=dp) function GAMM6563(TE,NE)
 !     Storey P. J., Hummer D. G., 1995, MNRAS, 272, 41
 
       implicit none
-      integer, parameter :: dp = kind(1.d0)
-
       real(kind=dp) TE,NE,AE2,AE3,AE4,AE5,AE6,AE7,AE8,AEFF,HCLL
       real(kind=dp) LNE, LTE
 
@@ -430,8 +421,6 @@ real(kind=dp) function GAMM4686(TE,NE)
 !     Storey P. J., Hummer D. G., 1995, MNRAS, 272, 41
 
       implicit none
-      integer, parameter :: dp = kind(1.d0)
-
       real(kind=dp) TE,NE,AE2,AE3,AE4,AE5,AE6,AE7,AE8,AEFF,HCLL
       real(kind=dp) LNE, LTE
 
@@ -515,8 +504,6 @@ real(kind=dp) function GAMM6683(TE,NE)
 !     Storey P. J., Hummer D. G., 1995, MNRAS, 272, 41
 
       implicit none
-      integer, parameter :: dp = kind(1.d0)
-
       real(kind=dp) TE,NE,AE2,AE3,AE4,AE5,AE6,AE7,AE8,AEFF,HCLL
       real(kind=dp) LNE, LTE
 

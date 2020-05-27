@@ -32,13 +32,13 @@
 ! ***** N.B!!  NO TRAPS FOR BAD DATA!!  TAKE CARE!! ****C
 !
       module mod_equib
+      use mod_globals
       contains
 
       subroutine get_diagnostic(ion,levu,levl,inratio,diagtype,fixedq,result,ndim2,ndim1,atomicdata,iion,tlower,tupper)
       use mod_atomicdata
       use mod_helium
       implicit none
-      integer, parameter :: dp = kind(1.d0)
 
       integer :: NDIM1, NDIM2, NDIM1T3, MAXND
                                                       !Maximum no of Te & levels
@@ -443,7 +443,6 @@ end subroutine get_diagnostic
       subroutine get_abundance(ion,levels,tempi,densi,iobs,abund,ndim2,ndim1,atomicdata,iion)
       use mod_atomicdata
       implicit none
-      integer, parameter :: dp = kind(1.d0)
 
           !INTEGER maxlevs,maxtemps
       integer :: NDIM1, NDIM2, NDIM1T3, MAXND
@@ -725,7 +724,6 @@ end subroutine get_abundance
                                                        !Solving linear equations
       subroutine LUSLV(A,B,N,M)
       implicit none
-      integer, parameter :: dp = kind(1.d0)
 
       integer :: M, N
       real(kind=dp) :: A(M,M),B(M)
@@ -741,7 +739,6 @@ end subroutine luslv
 !---- PROC LURED
       subroutine LURED(A,N,NR)
       implicit none
-      integer, parameter :: dp = kind(1.d0)
 
       integer :: N, NR, NM1, I, J, K, IP1
       real(kind=dp) :: A(NR,NR), FACT
@@ -769,7 +766,6 @@ end subroutine lured
                                                                !Resolve A with B
       subroutine RESLV(A,B,N,NR)
       implicit none
-      integer, parameter :: dp = kind(1.d0)
 
       integer :: N, NR, NM1, I, J, K, L, IP1
       real(kind=dp) :: A(NR,NR),B(NR)
@@ -804,7 +800,6 @@ end subroutine reslv
 !---- PROC SPLMAT
       subroutine SPLMAT(XX,NPT,IOPT,NDIM, NDIMT3, HMH)
       implicit none
-      integer, parameter :: dp = kind(1.d0)
 
       integer :: NDIM, NDIMT3, NPT, IOPT, NPM, NELEM
       real(kind=dp) :: XX(NDIM),GH(NDIMT3),Y(NDIM), HMH(NDIM,NDIM)
@@ -829,7 +824,6 @@ end subroutine splmat
 !     in the array D(I), I=1 to N.
       subroutine DERIV(XY,D,X,N,NDIM)
       implicit none
-      integer, parameter :: dp = kind(1.d0)
 
       integer :: N ,NDIM, I, J, K
       real(kind=dp) :: XY(NDIM),D(NDIM), X, P1, P2, S
@@ -871,7 +865,6 @@ end subroutine deriv
 !     internal points.
       subroutine HGEN(XX,GH,Y,NPT,IOPT,NDIM,NDIMT3,HMH)
       implicit none
-      integer, parameter :: dp = kind(1.d0)
 
       integer :: NPT, IOPT, NDIM, NDIMT3, NDIM3, NIP, I, J, K, NPM,        &
      & INDX
@@ -977,7 +970,6 @@ end subroutine hgen
 !---- PROC GHGEN
       subroutine GHGEN(GH,XX,NPT,IOPT,NDIM,NDIMT3)
       implicit none
-      integer, parameter :: dp = kind(1.d0)
 
       integer :: NPT, IOPT, NDIM, NDIMT3, INDX, NPTM, I, J, IP, JP, IK
       real(kind=dp) :: XX(NDIM),GH(NDIMT3)
@@ -1013,7 +1005,6 @@ end subroutine ghgen
 !---- PROC ELU
       subroutine ELU(GH,N,NDIM)
       implicit none
-      integer, parameter :: dp = kind(1.d0)
 
       integer :: N, NDIM, INDX, I, J, JP
       real(kind=dp) :: GH(NDIM)
@@ -1045,7 +1036,6 @@ end subroutine elu
 !---- PROC CFY
       subroutine CFY(X,Y,XX,YY,NPT,NDIM,D)
       implicit none
-      integer, parameter :: dp = kind(1.d0)
 
       integer :: NPT, NDIM, J
       real(kind=dp) :: XX(NDIM),YY(NDIM), D(NDIM), X, Y, TT
@@ -1072,7 +1062,6 @@ end subroutine cfy
 !---- PROC CFD
       subroutine CFD(X,XX,NPT,NDIM, HMH, D)
       implicit none
-      integer, parameter :: dp = kind(1.d0)
 
       integer :: NPT, NDIM, NPTM, I, J
       real(kind=dp) :: X, XX(NDIM), HMH(NDIM,NDIM), D(NDIM), X1, X2, A1, A2, HI
