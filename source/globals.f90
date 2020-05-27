@@ -12,4 +12,9 @@ module mod_globals
   integer,parameter :: spc = kind( (1.0_sp,1.0_sp) )
   integer,parameter :: dpc = kind( (1.0_dp,1.0_dp) )
 
+! command line and file names
+
+  character(len=2048) :: commandline
+  character(len=512) :: filename,configfile,defaultconfigfile
+
 end module mod_globals

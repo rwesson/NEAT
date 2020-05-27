@@ -6,13 +6,12 @@ use mod_functions
 
 contains
 
-subroutine readcommandline(runs,switch_ext,switch_he,switch_icf,filename,meanextinction,diagnostics,verbosity,R,identifylines,identifyconfirm,nbins,normalise,norp,calculate_extinction,subtract_recombination,configfile,nperbin,commandline)
+subroutine readcommandline(runs,switch_ext,switch_he,switch_icf,meanextinction,diagnostics,verbosity,R,identifylines,identifyconfirm,nbins,normalise,norp,calculate_extinction,subtract_recombination,configfile,nperbin)
 
   implicit none
 
-  character(len=2048) :: commandline
   character(len=2048), dimension(:), allocatable :: options
-  character(len=512) :: filename,configfile
+  character(len=512) :: configfile
   integer :: i,Narg,runs,verbosity,nbins,nperbin,subtract_recombination
   character :: switch_ext !switch for extinction laws
   character :: switch_he  !switch for helium atomic data
@@ -20,6 +19,10 @@ subroutine readcommandline(runs,switch_ext,switch_he,switch_icf,filename,meanext
   logical :: file_exists,identifylines,identifyconfirm,norp,calculate_extinction
   type(diagnostic_array) :: diagnostics
   real(kind=dp) :: meanextinction, R, normalise
+
+#ifdef CO
+        print *,"subroutine: readcommandline"
+#endif
 
   Narg = IARGC() !count input arguments
 

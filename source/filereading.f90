@@ -10,12 +10,12 @@ implicit none
 
 contains
 
-subroutine read_linelist(filename,linelist,listlength,ncols,runs)
+subroutine read_linelist(linelist,listlength,ncols,runs)
         implicit none
         integer :: i, j, io, nlines, listlength, errstat, ncols, runs
         character(len=1) :: blank
         type(line), dimension(:), allocatable :: linelist
-        character(len=512) :: filename, rowdata
+        character(len=512) :: rowdata
         character(len=15),dimension(6) :: invar !line fluxes and uncertainties are read as strings into these variables
         real(kind=dp),dimension(7) :: rowdata2 !to check number of columns, first row of file is read as character, then read as real into this array
 
@@ -655,7 +655,7 @@ use mod_atomicdata
     integer :: I,J,K,L,N,NCOMS,ID(2),JD(2),KP1,NLEV1,GX,ionl,dummy
     character(len=1) :: comments(78)
     character(len=10) :: ionname
-    character(len=128) :: filename
+    character(len=128) :: atomicdatafile
     real(kind=dp) :: WN,AX,QX
 
 !debugging
@@ -670,23 +670,23 @@ use mod_atomicdata
     ionl = index(ionname,' ') - 1
 !get file name by removing [, " " and ] and converting to lower case
 
-    filename=""
+    atomicdatafile=""
     i=1
     j=1
 
     do while (i .le. len(ionname))
       if (iachar(ionname(i:i)).ge.iachar("A") .and. iachar(ionname(i:i)).le.iachar("Z")) then !convert to lower case
-        filename(j:j) = achar(iachar(ionname(i:i))+32)
+        atomicdatafile(j:j) = achar(iachar(ionname(i:i))+32)
         j=j+1
       elseif (ionname(i:i).ne."[".and.ionname(i:i).ne." ".and.ionname(i:i).ne."]") then !remove
-        filename(j:j)=ionname(i:i)
+        atomicdatafile(j:j)=ionname(i:i)
         j=j+1
       endif
         i=i+1
     enddo
 
-    filename = trim(PREFIX)//'/share/neat/'//trim(filename)//'.dat'
-    open(unit=1, status = 'old', file=filename,action='read')
+    atomicdatafile = trim(PREFIX)//'/share/neat/'//trim(atomicdatafile)//'.dat'
+    open(unit=1, status = 'old', file=atomicdatafile,action='read')
 
 !read # of comment lines and skip them
         read(1,*)NCOMS
