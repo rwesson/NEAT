@@ -119,26 +119,7 @@ program neat
 
         character(len=35) :: extinction_format, diagnostic_format, diagnostic_ratio_format, abundances_format, adf_format
 
-        configfile=""
-        defaultconfigfile=trim(PREFIX)//"/share/neat/default.cfg"
-
-        iion=24 ! number of ions for which we can calculate abundances
-                ! todo: calculate this automatically
-                ! and replace it in calls to subroutines with getting the array size within the subroutine
-
-!multiple output formats defined as variables so they can be passed to
-!the printout subroutine
-
-        extinction_format = "(X,A,F9.3,SP,F9.3,F9.3,S)"
-        diagnostic_format = "(X,A,F9.1,SP,F9.1,F9.1,S)"
-        diagnostic_ratio_format = "(X,A,F9.3,SP,F9.3,F9.3,S)"
-        abundances_format = "(X,A,ES14.3,SP,ES14.3,ES14.3,S)"
-        adf_format = "(X,A,F8.2,SP,F8.2,F8.2,S)"
-
-        print *,"NEAT, the Nebular Empirical Analysis Tool"
-        print *,"version ",VERSION
-        print *
-        print *,gettime(),"starting code"
+! default values
 
         runs=1
         switch_ext="S" !Howarth 1983 Galactic law
@@ -161,6 +142,26 @@ program neat
         norp=.true.
         calculate_extinction=.true.
         subtract_recombination=1
+        configfile=""
+        defaultconfigfile=trim(PREFIX)//"/share/neat/default.cfg"
+
+        iion=24 ! number of ions for which we can calculate abundances
+                ! todo: calculate this automatically
+                ! and replace it in calls to subroutines with getting the array size within the subroutine
+
+!multiple output formats defined as variables so they can be passed to
+!the printout subroutine
+
+        extinction_format = "(X,A,F9.3,SP,F9.3,F9.3,S)"
+        diagnostic_format = "(X,A,F9.1,SP,F9.1,F9.1,S)"
+        diagnostic_ratio_format = "(X,A,F9.3,SP,F9.3,F9.3,S)"
+        abundances_format = "(X,A,ES14.3,SP,ES14.3,ES14.3,S)"
+        adf_format = "(X,A,F8.2,SP,F8.2,F8.2,S)"
+
+        print *,"NEAT, the Nebular Empirical Analysis Tool"
+        print *,"version ",VERSION
+        print *
+        print *,gettime(),"starting code"
 
         call readcommandline(runs,switch_ext,switch_he,switch_icf,filename,meanextinction,diagnostics,verbosity,R,identifylines,identifyconfirm,nbins,normalise,norp,calculate_extinction,subtract_recombination,configfile,nperbin,commandline)
 
