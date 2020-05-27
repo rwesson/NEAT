@@ -56,7 +56,7 @@ program neat
         type(line),dimension(:,:), allocatable :: all_linelists
         character(len=512) :: filename,configfile,defaultconfigfile
         character(len=1) :: blank
-        integer :: listlength, ncols, errstat
+        integer :: listlength, ncols
         real(kind=dp) :: normalise
 
 !results and result processing
@@ -166,25 +166,10 @@ program neat
 
 ! read in the line list, allocate original linelist array
 
-        call read_linelist(filename,linelist,listlength,ncols,errstat)
+        call read_linelist(filename,linelist,listlength,ncols,runs)
 
 ! error status was incremented by 1, 2 or 4 depending on error so btest function determines which errors were encountered
 ! test the two fatal errors first, then the warning.
-
-        if (btest(errstat,0)) then
-                print *,gettime(),"error: line list reading failed"
-                print *,"            This can happen if it doesn't have three columns"
-                call exit(1)
-        elseif (btest(errstat,1)) then
-                print*, gettime(),"cheese shop error - no inputs"
-                call exit(1)
-        elseif (btest(errstat,2) .and. runs .gt. 1) then !only relevant if uncertainties were requested
-                print*, gettime(),"warning: no uncertainties given, arbitrarily assuming 10 per cent for everything"
-        elseif (btest(errstat,3)) then
-                print *,gettime(),"warning: duplicate line measurements detected. Only the second measurement is used in abundance determinations"
-        else
-                print "(X,A,A,A,A,I3,A)", gettime(),"line list file ",trim(filename)," read successfully (",listlength," lines)"
-        endif
 
         allocate (linelist_original(listlength))
 

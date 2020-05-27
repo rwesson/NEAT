@@ -4,14 +4,15 @@ module mod_abundIO
 use mod_types
 use mod_atomicdata
 use mod_globals
+use mod_functions
 
 implicit none
 
 contains
 
-subroutine read_linelist(filename,linelist,listlength,ncols,errstat)
+subroutine read_linelist(filename,linelist,listlength,ncols,runs)
         implicit none
-        integer :: i, j, io, nlines, listlength, errstat, ncols
+        integer :: i, j, io, nlines, listlength, errstat, ncols, runs
         character(len=1) :: blank
         type(line), dimension(:), allocatable :: linelist
         character(len=512) :: filename, rowdata
@@ -190,6 +191,21 @@ subroutine read_linelist(filename,linelist,listlength,ncols,errstat)
         call fix_blend(4714.17d0,4715.66d0,4715.21d0,linelist)
         call fix_blend(4724.15d0,4725.62d0,4724.89d0,linelist)
         call fix_blend(1483.32d0,1486.50d0,1485.00d0,linelist)
+
+        if (btest(errstat,0)) then
+                print *,gettime(),"error: line list reading failed"
+                print *,"            This can happen if it doesn't have three columns"
+                call exit(1)
+        elseif (btest(errstat,1)) then
+                print*, gettime(),"cheese shop error - no inputs"
+                call exit(1)
+        elseif (btest(errstat,2) .and. runs .gt. 1) then !only relevant if uncertainties were requested
+                print*, gettime(),"warning: no uncertainties given, arbitrarily assuming 10 per cent for everything"
+        elseif (btest(errstat,3)) then
+                print *,gettime(),"warning: duplicate line measurements detected. Only the second measurement is used in abundance determinations"
+        else
+                print "(X,A,A,A,A,I3,A)", gettime(),"line list file ",trim(filename)," read successfully (",listlength," lines)"
+        endif
 
 !todo:remove elements from the array?
 
