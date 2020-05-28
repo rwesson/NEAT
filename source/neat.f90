@@ -52,7 +52,7 @@ program neat
         type(line),dimension(:), allocatable :: linelist_original
         type(line),dimension(:,:), allocatable :: all_linelists
         character(len=1) :: blank
-        integer :: listlength, ncols
+        integer :: listlength, ncols, strpos
         real(kind=dp) :: normalise
 
 !results and result processing
@@ -145,7 +145,12 @@ program neat
 
 ! read in the line list, allocate original linelist array
 
-        call read_linelist(linelist,listlength,ncols,runs)
+        strpos=index(filename,".",.true.)+1
+        if (trim(filename(strpos:len(filename))).eq."fit" .or. trim(filename(strpos:len(filename))).eq."fits".or.trim(filename(strpos:len(filename))).eq."FIT".or.trim(filename(strpos:len(filename))).eq."FITS") then
+          call read_fits_linelist(linelist,listlength,ncols,runs)
+        else
+          call read_text_linelist(linelist,listlength,ncols,runs)
+        endif
 
 ! error status was incremented by 1, 2 or 4 depending on error so btest function determines which errors were encountered
 ! test the two fatal errors first, then the warning.

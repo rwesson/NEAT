@@ -671,4 +671,11 @@ subroutine write_output(runs,listlength,ncols,all_linelists,all_results,verbosit
         print *,"              ",trim(filename),"_results.tex"
 
 end subroutine write_output
+! fits output. requires input to have been ALFA-generated FITS, which will have four columns.
+
+
+subroutine write_fits()
+
+end subroutine write_fits
+
 end module mod_output
