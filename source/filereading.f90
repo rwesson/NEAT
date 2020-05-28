@@ -183,14 +183,7 @@ subroutine read_text_linelist(linelist,listlength,ncols,runs)
 
 !fix some common blends.  If first member of blend is in the list but the second is not, or if second is present but with zero flux, then presume the feature is blended.
 
-        call fix_blend(3726.03d0,3728.82d0,3727.00d0,linelist)
-        call fix_blend(7318.92d0,7319.99d0,7319.45d0,linelist)
-        call fix_blend(7329.67d0,7330.73d0,7330.20d0,linelist)
-        call fix_blend(1906.68d0,1908.73d0,1909.00d0,linelist)
-        call fix_blend(2422.36d0,2425.01d0,2424.00d0,linelist)
-        call fix_blend(4714.17d0,4715.66d0,4715.21d0,linelist)
-        call fix_blend(4724.15d0,4725.62d0,4724.89d0,linelist)
-        call fix_blend(1483.32d0,1486.50d0,1485.00d0,linelist)
+        call fix_blends(linelist)
 
         if (btest(errstat,0)) then
                 print *,gettime(),"error: line list reading failed"
@@ -217,7 +210,7 @@ subroutine read_fits_linelist(linelist,listlength,ncols,runs)
   implicit none
   type(line), dimension(:), allocatable :: linelist
   logical, dimension(:), allocatable :: blends
-  integer :: listlength, ncols, runs
+  integer :: listlength, ncols, runs, i
 
 ! cfitsio variables
 
@@ -226,6 +219,7 @@ subroutine read_fits_linelist(linelist,listlength,ncols,runs)
 
   status=0
   readwrite=1
+  ncols=4
 
 ! open the file, go to the LINES extension
   call ftgiou(unit,status)
@@ -265,9 +259,37 @@ subroutine read_fits_linelist(linelist,listlength,ncols,runs)
   call ftgcvd(unit,5,1,1,listlength,0,linelist%int_err,anyf,status)
 
 !do blends here
+
+  do i=1,size(linelist)
+    if (blends(i)) then
+      linelist(i-1)%blend_intensity=linelist(i-1)%intensity
+      linelist(i-1)%blend_int_err=linelist(i-1)%int_err
+      linelist(i-1:i)%intensity = 0.d0
+      linelist(i-1:i)%int_err = 0.d0
+    endif
+  enddo
+
 ! read the blends column, deal with appropriately
 
+  call fix_blends(linelist)
+
 end subroutine read_fits_linelist
+
+subroutine fix_blends(linelist)
+
+  implicit none
+  type(line),dimension(:) :: linelist
+
+  call fix_blend(3726.03d0,3728.82d0,3727.00d0,linelist)
+  call fix_blend(7318.92d0,7319.99d0,7319.45d0,linelist)
+  call fix_blend(7329.67d0,7330.73d0,7330.20d0,linelist)
+  call fix_blend(1906.68d0,1908.73d0,1909.00d0,linelist)
+  call fix_blend(2422.36d0,2425.01d0,2424.00d0,linelist)
+  call fix_blend(4714.17d0,4715.66d0,4715.21d0,linelist)
+  call fix_blend(4724.15d0,4725.62d0,4724.89d0,linelist)
+  call fix_blend(1483.32d0,1486.50d0,1485.00d0,linelist)
+
+end subroutine fix_blends
 
 subroutine read_celdata(ILs, ionlist)
 !this subroutine reads in the parameters of CEL diagnostic lines - the line id, ion name, wavelength, energy levels, and zone.  the index locating the line in the main line list is filled in later.
