@@ -19,11 +19,6 @@ type xcorrarray
         integer :: match ! 0 if the reference line is not observed, 1 if it is
 end type xcorrarray
 
-type neat_line
-        real(kind=dp) :: wavelength
-        character(len=20) :: ion
-end type neat_line
-
 type(neat_line), dimension(:), allocatable :: neatlines
 type(xcorrarray), dimension(10) :: xcorr_array
 real(kind=dp), dimension(2001) :: xcorr
@@ -70,7 +65,7 @@ xcorr_array%match = 0
         do I=1,n_neatlines
                 read(100,*,end=102) temp_wave, readchar, temp_ion1, temp_ion2
                 neatlines(i)%wavelength = temp_wave
-                neatlines(i)%ion = temp_ion1//temp_ion2
+                neatlines(i)%linedata = temp_ion1//temp_ion2
         enddo
         102 print *
         close(100)
