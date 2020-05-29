@@ -213,7 +213,7 @@ subroutine read_fits_linelist(linelist,listlength,ncols,runs)
   implicit none
   type(line), dimension(:), allocatable :: linelist
   logical, dimension(:), allocatable :: blends
-  integer :: listlength, ncols, runs, i
+  integer :: detectedlines, listlength, ncols, runs, i
 
 ! cfitsio variables
 
@@ -224,12 +224,16 @@ subroutine read_fits_linelist(linelist,listlength,ncols,runs)
   readwrite=1
   ncols=4
 
-! open the file, go to the LINES extension
+! open the file
   call ftgiou(unit,status)
   call ftopen(unit,filename,readwrite,blocksize,status)
-  call ftmnhd(unit,-1,"LINES",0,status)
 
-! get number of rows, allocate, initialise
+! get the number of detected lines from the QC extension
+  call ftmnhd(unit,-1,"QC",0,status)
+  call ftgcvj(unit,1,1,1,1,0,detectedlines,anyf,status)
+
+! go to the LINES extension, get number of rows, allocate, initialise
+  call ftmnhd(unit,-1,"LINES",0,status)
   call ftgnrw(unit,listlength,status)
 
   allocate(linelist(listlength))
@@ -261,7 +265,12 @@ subroutine read_fits_linelist(linelist,listlength,ncols,runs)
   call ftgcvd(unit,4,1,1,listlength,0,linelist%intensity,anyf,status)
   call ftgcvd(unit,5,1,1,listlength,0,linelist%int_err,anyf,status)
 
-!do blends here
+! remove non-detections
+
+  call remove_nondetections(linelist)
+  listlength=size(linelist)
+
+! blends
 
   do i=1,size(linelist)
     if (blends(i)) then
@@ -272,11 +281,36 @@ subroutine read_fits_linelist(linelist,listlength,ncols,runs)
     endif
   enddo
 
-! read the blends column, deal with appropriately
-
   call fix_blends(linelist)
 
 end subroutine read_fits_linelist
+
+subroutine remove_nondetections(linelist)
+! non-detections and subsequent blends appear in ALFA output with negative fluxes
+! this subroutine removes these from the linelist
+
+  implicit none
+  type(line),dimension(:),allocatable :: linelist,linelistcopy,filteredlist
+  integer :: detectedlines,i
+  real(kind=dp) :: referenceflux
+
+  allocate(linelistcopy(size(linelist)))
+
+  detectedlines=0
+  do i=1,size(linelist)
+    if (linelist(i)%intensity.ge.0.d0) then
+      detectedlines=detectedlines+1
+      linelistcopy(detectedlines)=linelist(i)
+    endif
+  enddo
+
+  allocate(filteredlist(detectedlines))
+  filteredlist=linelistcopy(1:detectedlines)
+  deallocate(linelist)
+  allocate(linelist(detectedlines))
+  linelist=filteredlist
+
+end subroutine remove_nondetections
 
 subroutine fix_blends(linelist)
 
