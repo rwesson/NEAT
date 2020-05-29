@@ -107,6 +107,11 @@ type diagnostic_array
         real(kind=dp) :: rldens
 end type diagnostic_array
 
+type neat_line
+        real(kind=dp) :: wavelength
+        character(len=85) :: linedata
+end type neat_line
+
 end module mod_types
 
 module mod_resultarrays

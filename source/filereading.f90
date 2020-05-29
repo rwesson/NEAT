@@ -18,12 +18,6 @@ subroutine read_text_linelist(linelist,listlength,ncols,runs)
         character(len=512) :: rowdata
         character(len=15),dimension(6) :: invar !line fluxes and uncertainties are read as strings into these variables
         real(kind=dp),dimension(7) :: rowdata2 !to check number of columns, first row of file is read as character, then read as real into this array
-
-        type neat_line
-          real(kind=dp) :: wavelength
-          character(len=85) :: linedata
-        end type neat_line
-
         type(neat_line), dimension(:), allocatable :: neatlines
 
 !debugging
@@ -220,6 +214,15 @@ subroutine read_fits_linelist(linelist,listlength,ncols,runs)
   integer :: status,unit,readwrite,blocksize
   logical :: anyf
 
+! line data
+
+  type(neat_line), dimension(:), allocatable :: neatlines
+
+! other
+
+  character(len=1) :: blank
+  integer :: j,io,nlines
+
   status=0
   readwrite=1
   ncols=4
@@ -282,6 +285,32 @@ subroutine read_fits_linelist(linelist,listlength,ncols,runs)
   enddo
 
   call fix_blends(linelist)
+
+! read in atomic data
+
+  I = 1
+  open(100, file=trim(PREFIX)//'/share/neat/complete_line_list', iostat=IO, status='old')
+    do while (IO .ge. 0)
+      read(100,"(A1)",end=101) blank
+      I = I + 1
+    enddo
+  101 nlines=I-1
+
+!then allocate and read
+  allocate (neatlines(nlines))
+
+  rewind (100)
+  DO I=1,nlines
+    read(100,"(F8.2,A85)",end=102) neatlines(i)%wavelength,neatlines(i)%linedata
+    do j=1,listlength
+      if (abs(linelist(j)%wavelength - neatlines(i)%wavelength) .lt. 0.011) then
+        linelist(j)%linedata = neatlines(i)%linedata
+        linelist(j)%name = latextoplain(linelist(j)%linedata(3:19))
+      endif
+    enddo
+  enddo
+  102 print *
+  close(100)
 
 end subroutine read_fits_linelist
 
