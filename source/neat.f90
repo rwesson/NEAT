@@ -152,9 +152,6 @@ program neat
           call read_text_linelist(linelist,listlength,ncols,runs)
         endif
 
-! error status was incremented by 1, 2 or 4 depending on error so btest function determines which errors were encountered
-! test the two fatal errors first, then the warning.
-
         allocate (linelist_original(listlength))
 
 ! run line identifier if required

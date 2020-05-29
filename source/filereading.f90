@@ -185,6 +185,9 @@ subroutine read_text_linelist(linelist,listlength,ncols,runs)
 
         call fix_blends(linelist)
 
+! error status was incremented by 1, 2 or 4 depending on error so btest function determines which errors were encountered
+! test the two fatal errors first, then the warning.
+
         if (btest(errstat,0)) then
                 print *,gettime(),"error: line list reading failed"
                 print *,"            This can happen if it doesn't have three columns"
