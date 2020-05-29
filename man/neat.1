@@ -196,6 +196,10 @@ The code prints some logging messages to the terminal, so that you can see which
 
 In the case of a single iteration, these files are the only output. If you have run multiple iterations, you can also use the \fB-v\fR option to tell the code to create additional results files for each quantity calculated: \fB \-v 1\fR tells the code to write out for each quantity all the individual results, and a binned probability distribution file; with \fB-v 2\fR, only the binned distributions are written out, and with \fB-v 3\fR \- the default \- no additional results files are created.
 
+FITS output was added in version 2.3. If selected, a FITS file is written with two binary table extensions, one for the linelist and one for the results of the analysis. If the input file was in FITS format, the tables will be written to the input file, with the linelist extension overwriting the input file's linelist extension (it contains all the same information, just with extra columns for the abundances from each line.
+
+FITS output will eventually become the default and other output formats deprecated.
+
 .SS Normality test
 
 The code now applies a simple test to the probability distributions to determine whether they are well described by a normal, log-normal or exp-normal distribution. The test applied is that the code calculates the mean and standard deviation of the measured values, their logarithm and their exponent, and calculates in each case the fraction of values lying within 1, 2 and 3σ of the mean. If the fractions are close to the expected values of 68.3%, 95.5% and 99.7%, then the relevant distribution is considered to apply. In these cases, the summary file contains the calculated mean and reports the standard deviation as the 1σ uncertainty.
