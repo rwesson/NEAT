@@ -264,9 +264,8 @@ subroutine read_fits_linelist(linelist,listlength,ncols,runs)
 
   call ftgcvd(unit,1,1,1,listlength,0,linelist%wavelength_observed,anyf,status)
   call ftgcvd(unit,2,1,1,listlength,0,linelist%wavelength,anyf,status)
-  call ftgcvl(unit,3,1,1,listlength,0,blends,anyf,status)
-  call ftgcvd(unit,4,1,1,listlength,0,linelist%intensity,anyf,status)
-  call ftgcvd(unit,5,1,1,listlength,0,linelist%int_err,anyf,status)
+  call ftgcvd(unit,3,1,1,listlength,0,linelist%intensity,anyf,status)
+  call ftgcvd(unit,4,1,1,listlength,0,linelist%int_err,anyf,status)
 
 ! remove non-detections
 
@@ -276,7 +275,7 @@ subroutine read_fits_linelist(linelist,listlength,ncols,runs)
 ! blends
 
   do i=1,size(linelist)
-    if (blends(i)) then
+    if (linelist(i)%wavelength_observed.eq.0.d0) then
       linelist(i-1)%blend_intensity=linelist(i-1)%intensity
       linelist(i-1)%blend_int_err=linelist(i-1)%int_err
       linelist(i-1:i)%intensity = 0.d0
@@ -312,6 +311,12 @@ subroutine read_fits_linelist(linelist,listlength,ncols,runs)
   102 print *
   close(100)
 
+! ALFA writes out single precision real numbers (double precision makes it 30% slower)
+! but reading in double precision from FITS file results in rounding errors
+! so, this obscenity seems like the best way to get wavelengths to 2dp, to ensure that all lines are identified correctly
+
+  linelist%wavelength=0.01d0*(nint(100.d0*linelist%wavelength))
+
 end subroutine read_fits_linelist
 
 subroutine remove_nondetections(linelist)
@@ -327,7 +332,7 @@ subroutine remove_nondetections(linelist)
 
   detectedlines=0
   do i=1,size(linelist)
-    if (linelist(i)%intensity.ge.0.d0) then
+    if (linelist(i)%int_err.ge.0.d0) then
       detectedlines=detectedlines+1
       linelistcopy(detectedlines)=linelist(i)
     endif
