@@ -224,7 +224,7 @@ subroutine read_fits_linelist(linelist,listlength,ncols,runs)
   integer :: j,io,nlines
 
   status=0
-  readwrite=1
+  readwrite=0
   ncols=4
 
 ! open the file
@@ -271,6 +271,11 @@ subroutine read_fits_linelist(linelist,listlength,ncols,runs)
 
   call remove_nondetections(linelist)
   listlength=size(linelist)
+
+! close
+
+  call ftclos(unit, status)
+  call ftfiou(unit, status)
 
 ! blends
 
