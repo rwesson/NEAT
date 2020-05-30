@@ -278,24 +278,28 @@ subroutine write_output(runs,listlength,ncols,all_linelists,all_results,verbosit
         print *,"              ",trim(filename),"_results.tex"
 
 end subroutine write_output
+
+subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,nbins,subtract_recombination)
 ! fits output. requires input to have been ALFA-generated FITS, which will have four columns.
 
-
-subroutine write_fits()
-
   implicit none
+  type(line), dimension(:,:) :: all_linelists
+  type(resultarray), dimension(:) :: all_results
+  type(resultarray), dimension(1) :: iteration_result
+  real(kind=dp), dimension(:), allocatable :: quantity_result
+  integer :: runs,listlength,ncols,verbosity
+  integer :: nbins,subtract_recombination
+  real(kind=dp), dimension(:,:), allocatable :: resultprocessingarray
+  character(len=40), dimension(:,:), allocatable :: resultprocessingtext
+  integer :: j
+  real(kind=dp), dimension(3) :: uncertainty_array=0d0
+  type(arraycount), dimension (:), allocatable :: binned_quantity_result
+  logical :: unusual
 
+!cfitsio variables
   integer :: status,unit,readwrite,blocksize,tfields,varidat
   character(len=16) :: extname
   character(len=16),dimension(4) :: ttype_results,tform_results,tunit_results
-!  real,dimension(:),allocatable :: linefluxes,linesigmas,linelambdas
-!  type(linelist), dimension(:), allocatable :: fittedlines
-!  type(spectrum), dimension(:), allocatable :: realspec,fittedspectrum, skyspectrum, continuum, maskedspectrum
-!  character(len=512) :: outputbasename
-!  real :: redshiftguess_overall,resolutionguess
-!  integer :: totallines,detectedlines,i
-!  character(len=8) :: writevalue
-logical :: file_exists
 
 #ifdef CO
         print *,"subroutine: write_fits"
@@ -311,27 +315,53 @@ logical :: file_exists
 
 ! go to extension LINES to update linelist
 
-  call ftmnhd(unit,-1,"LINES",0,status)
+!  call ftmnhd(unit,-1,"LINES",0,status)
 
 ! todo: move this to filereading
-  if (status.ne.0) then
-    print *,gettime(),"error: FITS file does not have a LINES extension"
-    call exit(1)
-  endif
+!  if (status.ne.0) then
+!    print *,gettime(),"error: FITS file does not have a LINES extension"
+!    call exit(1)
+!  endif
 
 ! todo: write lines here
 
-! create extension RESULTS
+! if RESULTS extension does not exist, create it, otherwise overwrite
 ! columns for quantity name, value, upper and lower uncertainties
 ! 162 quantities calculated
 
   tfields=4
   extname="RESULTS"
   ttype_results=(/"Quantity        ","Value           ","UpperUncertainty","LowerUncertainty"/)
-  tform_results=(/"1A","1E","1E","1E"/)
+  tform_results=(/"40A","1E ","1E ","1E "/)
   tunit_results=(/"                ","                ","                ","                "/)
 
-  call ftibin(unit,164,tfields,ttype_results,tform_results,tunit_results,extname,varidat,status)
+  call ftmnhd(unit,-1,"RESULTS",0,status)
+  if (status.eq.301) then
+    print *,gettime(),"created RESULTS extension"
+    status=0
+    call ftmnhd(unit,-1,"QC",0,status)
+    call ftibin(unit,164,tfields,ttype_results,tform_results,tunit_results,extname,varidat,status)
+  else
+    print *,gettime(),"RESULTS extension already present - overwriting"
+  endif
+
+! get the result arrays
+
+  call create_output_arrays(all_results,runs,resultprocessingarray,resultprocessingtext)
+
+! write out
+! get_uncertainties returns array with (-,value,+)
+
+  allocate(quantity_result(runs))
+
+  do j=1,164
+    quantity_result=resultprocessingarray(j,:)
+    call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins)
+    call ftpcls(unit,1,j,1,1,resultprocessingtext(j,1),status)
+    call ftpcld(unit,2,j,1,1,uncertainty_array(2),status)
+    call ftpcld(unit,3,j,1,1,uncertainty_array(2)+uncertainty_array(1),status)
+    call ftpcld(unit,4,j,1,1,uncertainty_array(2)-uncertainty_array(3),status)
+  enddo
 
 ! create extension QC
 ! contains reliability flags
@@ -341,7 +371,6 @@ logical :: file_exists
   call ftclos(unit, status)
   call ftfiou(unit, status)
 
-print *,status
 end subroutine write_fits
 
 subroutine create_output_arrays(all_results,runs,resultprocessingarray,resultprocessingtext)
