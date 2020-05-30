@@ -345,6 +345,13 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
     print *,gettime(),"RESULTS extension already present - overwriting"
   endif
 
+! add header comments
+
+  call ftpcom(unit,"Produced by neat version "//VERSION,status)
+  call ftpcom(unit,"Command line: '"//trim(commandline)//"'",status)
+  call ftpcom(unit,"input file: "//trim(filename),status)
+! todo: record extinction law, helium data, ICF
+
 ! get the result arrays
 
   call create_output_arrays(all_results,runs,resultprocessingarray,resultprocessingtext)
