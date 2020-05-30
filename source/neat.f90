@@ -355,7 +355,7 @@ program neat
 !now write out the line list and results files
 
         if (fitsinput) then
-          call write_fits()
+          call write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,nbins,subtract_recombination)
         else
           call write_output(runs,listlength,ncols,all_linelists,all_results,verbosity,nbins,subtract_recombination)
         endif
