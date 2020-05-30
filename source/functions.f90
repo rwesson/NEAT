@@ -225,7 +225,7 @@ uncertainty_array = (/0.0,0.0,0.0/)
 arraysize = size(input_array)
 
 if (arraysize.eq.1) then
-  uncertainty_array = (/input_array(1),0.d0,0.d0/)
+  uncertainty_array = (/0.d0,input_array(1),0.d0/)
   return
 endif
 
