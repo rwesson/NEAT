@@ -224,6 +224,11 @@ sds=0.D0
 uncertainty_array = (/0.0,0.0,0.0/)
 arraysize = size(input_array)
 
+if (arraysize.eq.1) then
+  uncertainty_array = (/input_array(1),0.d0,0.d0/)
+  return
+endif
+
 !todo: include a verbosity switch
 !verbosity: 0=summary file only, 1=summary file + binned results, 2=summary, binned and full
 !set verbosity to 0 automatically for single iteration, then we can use the same routine for any n
