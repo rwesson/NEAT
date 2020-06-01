@@ -231,6 +231,13 @@ subroutine read_fits_linelist(linelist,listlength,ncols,runs)
   call ftgiou(unit,status)
   call ftopen(unit,filename,readwrite,blocksize,status)
 
+! check if already analysed
+  call ftmnhd(unit,-1,"RESULTS",0,status)
+  if (status.eq.0) then
+    print *,gettime(),"line list already analysed - previous results will be overwritten"
+  endif
+  status=0
+
 ! get the number of detected lines from the QC extension
   call ftmnhd(unit,-1,"QC",0,status)
   call ftgcvj(unit,1,1,1,1,0,detectedlines,anyf,status)
