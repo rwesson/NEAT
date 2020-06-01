@@ -350,6 +350,8 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
   call ftpcom(unit,"Produced by neat version "//VERSION,status)
   call ftpcom(unit,"Command line: '"//trim(commandline)//"'",status)
   call ftpcom(unit,"input file: "//trim(filename),status)
+  call ftpdat(unit,status)
+
 ! todo: record extinction law, helium data, ICF
 
 ! get the result arrays
