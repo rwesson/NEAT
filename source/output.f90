@@ -321,15 +321,20 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
 
   call ftmnhd(unit,-1,"LINES",0,status)
 
-! todo: check number of columns, overwrite if previous analysis exists
+! check number of columns. if 6 then create cols 7-13 for ion, dereddened flux+- and abundance+-
 
-! add columns: dereddened flux, err, ion, linedata,abundance,err
+  call ftgncl(unit,ncols,status)
 
-  ttype_lines=(/"Ion             ","DereddenedFlux  ","DereddenedFluxLo","DereddenedFluxHi","Abundance       ","AbundanceLow    ","AbundanceHigh   "/)
-  tform_lines=(/"10A","1E ","1E ","1E ","1E ","1E ","1E "/)
-  tunit_lines=(/"                ","                ","                ","                ","                ","                ","                "/)
+  if (ncols.eq.6) then
+    ttype_lines=(/"Ion             ","DereddenedFlux  ","DereddenedFluxLo","DereddenedFluxHi","Abundance       ","AbundanceLow    ","AbundanceHigh   "/)
+    tform_lines=(/"10A","1E ","1E ","1E ","1E ","1E ","1E "/)
+    tunit_lines=(/"                ","                ","                ","                ","                ","                ","                "/)
+    call fticls(unit,7,7,ttype_lines,tform_lines,status)
+    print *,gettime(),"adding NEAT analysis to LINES extension"
+  else
+    print *,gettime(),"overwriting previous analysis in LINES extension"
+  endif
 
-  call fticls(unit,7,7,ttype_lines,tform_lines,status)
   call ftpcls(unit,7,1,1,listlength,all_linelists(:,1)%name,status)
 !  call ftpcls(unit,10,1,1,listlength,all_linelists(:,1)%linedata,status)
 
@@ -350,8 +355,6 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
     call ftpcld(unit,13,i,1,1,uncertainty_array(2)-uncertainty_array(3),status)
   enddo
 
-  print *,gettime(),"updated LINES extension"
-
 ! if RESULTS extension does not exist, create it, otherwise overwrite
 ! columns for quantity name, value, upper and lower uncertainties
 ! 162 quantities calculated
@@ -369,7 +372,7 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
     call ftmnhd(unit,-1,"QC",0,status)
     call ftibin(unit,164,tfields,ttype_results,tform_results,tunit_results,extname,varidat,status)
   else
-    print *,gettime(),"RESULTS extension already present - overwriting"
+    print *,gettime(),"overwriting previous analysis in RESULTS extension"
   endif
 
 ! add header comments
