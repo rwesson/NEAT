@@ -294,13 +294,14 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
   integer :: i,j
   real(kind=dp), dimension(3) :: uncertainty_array=0d0
   type(arraycount), dimension (:), allocatable :: binned_quantity_result
-  logical :: unusual
+  logical :: unusual,file_exists
   character(len=30) :: cfitsioerror
 
 !cfitsio variables
   integer :: status,unit,readwrite,blocksize,tfields,varidat
   character(len=16) :: extname
-  character(len=16),dimension(7) :: ttype_lines,tform_lines,tunit_lines
+  character(len=16),dimension(6) :: ttype_lines,tform_lines,tunit_lines
+  character(len=16),dimension(7) :: ttype_lines_analysis,tform_lines_analysis,tunit_lines_analysis
   character(len=16),dimension(4) :: ttype_results,tform_results,tunit_results
 
 #ifdef CO
@@ -310,12 +311,49 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
   status=0
   readwrite=1
 
-! open the input file, add date and history to primary HDU
+! get a unit number
 
   call ftgiou(unit,status)
-  call ftopen(unit,trim(filename),readwrite,blocksize,status)
-  call ftpdat(unit,status)
-  call ftphis(unit,trim(commandline),status)
+
+! if the input file name does not end in ".fits" then create new FITS file with LINES extension from input
+
+  if (trim(filename(index(filename,".",.true.)+1:len(filename))).ne."fits") then
+    filename=trim(filename)//".fits"
+  endif
+
+  inquire(file=filename, exist=file_exists)
+
+  if (.not.file_exists) then
+
+    print *,gettime(),"creating output file ",trim(filename)
+    call ftinit(unit,trim(filename),blocksize,status)
+    call ftphps(unit,16,0,0,status)
+    call ftpdat(unit,status)
+    call ftphis(unit,trim(commandline),status)
+
+    extname="LINES"
+    tfields=6
+
+    ttype_lines=(/"WlenObserved    ","WlenRest        ","Flux            ","Uncertainty     ","Peak            ","FWHM            "/)
+    tform_lines=(/"1E","1E","1E","1E","1E","1E"/)
+    tunit_lines=(/"Angstrom        ","Angstrom        ","Flux            ","Flux            ","Flux            ","Angstrom        "/)
+
+    call ftibin(unit,listlength,tfields,ttype_lines,tform_lines,tunit_lines,extname,varidat,status)
+
+    call ftpcld(unit,1,1,1,listlength,all_linelists(:,1)%wavelength,status)
+    call ftpcld(unit,2,1,1,listlength,all_linelists(:,1)%wavelength_observed,status)
+    call ftpcld(unit,3,1,1,listlength,all_linelists(:,1)%intensity,status)
+    call ftpcld(unit,4,1,1,listlength,all_linelists(:,1)%int_err,status)
+
+  else
+
+! we are writing to an existing FITS file
+
+    call ftopen(unit,trim(filename),readwrite,blocksize,status)
+    call ftpdat(unit,status)
+    call ftphis(unit,trim(commandline),status)
+
+  endif
 
 ! go to extension LINES to update linelist
 
@@ -326,13 +364,16 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
   call ftgncl(unit,ncols,status)
 
   if (ncols.eq.6) then
-    ttype_lines=(/"Ion             ","DereddenedFlux  ","DereddenedFluxLo","DereddenedFluxHi","Abundance       ","AbundanceLow    ","AbundanceHigh   "/)
-    tform_lines=(/"10A","1E ","1E ","1E ","1E ","1E ","1E "/)
-    tunit_lines=(/"                ","                ","                ","                ","                ","                ","                "/)
-    call fticls(unit,7,7,ttype_lines,tform_lines,status)
+    ttype_lines_analysis=(/"Ion             ","DereddenedFlux  ","DereddenedFluxLo","DereddenedFluxHi","Abundance       ","AbundanceLow    ","AbundanceHigh   "/)
+    tform_lines_analysis=(/"10A","1E ","1E ","1E ","1E ","1E ","1E "/)
+    tunit_lines_analysis=(/"                ","                ","                ","                ","                ","                ","                "/)
+    call fticls(unit,7,7,ttype_lines_analysis,tform_lines_analysis,status)
     print *,gettime(),"adding NEAT analysis to LINES extension"
-  else
+  elseif (ncols.eq.13) then
     print *,gettime(),"overwriting previous analysis in LINES extension"
+  else
+    print *,gettime(),"wrong number of columns in LINES extension: ",ncols
+    call exit(1)
   endif
 
   call ftpcls(unit,7,1,1,listlength,all_linelists(:,1)%name,status)
@@ -369,7 +410,8 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
   if (status.eq.301) then
     print *,gettime(),"created RESULTS extension"
     status=0
-    call ftmnhd(unit,-1,"QC",0,status)
+    call ftmnhd(unit,-1,"QC",0,status) ! if the input file was produced by ALFA it will have this header
+    status=0
     call ftibin(unit,164,tfields,ttype_results,tform_results,tunit_results,extname,varidat,status)
   else
     print *,gettime(),"overwriting previous analysis in RESULTS extension"
