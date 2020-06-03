@@ -300,6 +300,7 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
 !cfitsio variables
   integer :: status,unit,readwrite,blocksize,tfields,varidat
   character(len=16) :: extname
+  character(len=16),dimension(6) :: ttype_lines,tform_lines,tunit_lines
   character(len=16),dimension(4) :: ttype_results,tform_results,tunit_results
 
 #ifdef CO
@@ -320,7 +321,24 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
 
   call ftmnhd(unit,-1,"LINES",0,status)
 
-! todo: write lines here
+! todo: check number of columns, overwrite if previous analysis exists
+
+! add columns: dereddened flux, err, ion, linedata,abundance,err
+
+  ttype_lines=(/"DereddenedFlux  ","DereddenedFluxE ","Ion             ","Linedata        ","Abundance       ","AbundanceUncert "/)
+  tform_lines=(/"1E ","1E ","10A","85A","1E ","1E "/)
+  tunit_lines=(/"                ","                ","                ","                ","                ","                "/)
+
+  call fticls(unit,7,6,ttype_lines,tform_lines,status)
+
+!  call ftpcls(unit,7,1,1,listlength,all_linelists(:,1)%int_dered,status)
+!8 - dereddened flux uncertainty
+  call ftpcls(unit,9,1,1,listlength,all_linelists(:,1)%name,status)
+  call ftpcls(unit,10,1,1,listlength,all_linelists(:,1)%linedata,status)
+!  call ftpcls(unit,11,1,1,listlength,all_linelists(:,1)%abundance,status)
+!12 - abundance uncertainty
+
+  print *,gettime(),"updated LINES extension"
 
 ! if RESULTS extension does not exist, create it, otherwise overwrite
 ! columns for quantity name, value, upper and lower uncertainties
