@@ -300,7 +300,7 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
 !cfitsio variables
   integer :: status,unit,readwrite,blocksize,tfields,varidat
   character(len=16) :: extname
-  character(len=16),dimension(6) :: ttype_lines,tform_lines,tunit_lines
+  character(len=16),dimension(7) :: ttype_lines,tform_lines,tunit_lines
   character(len=16),dimension(4) :: ttype_results,tform_results,tunit_results
 
 #ifdef CO
@@ -325,13 +325,13 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
 
 ! add columns: dereddened flux, err, ion, linedata,abundance,err
 
-  ttype_lines=(/"DereddenedFlux  ","DereddenedFluxE ","Ion             ","Linedata        ","Abundance       ","AbundanceUncert "/)
-  tform_lines=(/"1E ","1E ","10A","85A","1E ","1E "/)
-  tunit_lines=(/"                ","                ","                ","                ","                ","                "/)
+  ttype_lines=(/"Ion             ","DereddenedFlux  ","DereddenedFluxLo","DereddenedFluxHi","Abundance       ","AbundanceLow    ","AbundanceHigh   "/)
+  tform_lines=(/"10A","1E ","1E ","1E ","1E ","1E ","1E "/)
+  tunit_lines=(/"                ","                ","                ","                ","                ","                ","                "/)
 
-  call fticls(unit,7,6,ttype_lines,tform_lines,status)
-  call ftpcls(unit,9,1,1,listlength,all_linelists(:,1)%name,status)
-  call ftpcls(unit,10,1,1,listlength,all_linelists(:,1)%linedata,status)
+  call fticls(unit,7,7,ttype_lines,tform_lines,status)
+  call ftpcls(unit,7,1,1,listlength,all_linelists(:,1)%name,status)
+!  call ftpcls(unit,10,1,1,listlength,all_linelists(:,1)%linedata,status)
 
 ! loop to get uncertainties
 ! todo: maybe quicker to add property to type in the loop, then write to FITS in one go afterwards?
@@ -339,11 +339,15 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
   do i=1,listlength
     quantity_result = all_linelists(i,:)%int_dered
     call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins)
-    call ftpcld(unit,7,i,1,1,uncertainty_array(2),status)
+    call ftpcld(unit,8,i,1,1,uncertainty_array(2),status)
+    call ftpcld(unit,9,i,1,1,uncertainty_array(2)+uncertainty_array(1),status)
+    call ftpcld(unit,10,i,1,1,uncertainty_array(2)-uncertainty_array(3),status)
 
     quantity_result = all_linelists(i,:)%abundance
     call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins)
     call ftpcld(unit,11,i,1,1,uncertainty_array(2),status)
+    call ftpcld(unit,12,i,1,1,uncertainty_array(2)+uncertainty_array(1),status)
+    call ftpcld(unit,13,i,1,1,uncertainty_array(2)-uncertainty_array(3),status)
   enddo
 
   print *,gettime(),"updated LINES extension"
