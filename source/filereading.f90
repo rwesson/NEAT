@@ -220,6 +220,7 @@ subroutine read_fits_linelist(linelist,listlength,ncols,runs)
 
 ! other
 
+  character(len=30) :: cfitsioerror
   character(len=1) :: blank
   integer :: j,io,nlines
 
@@ -242,8 +243,16 @@ subroutine read_fits_linelist(linelist,listlength,ncols,runs)
   call ftmnhd(unit,-1,"QC",0,status)
   call ftgcvj(unit,1,1,1,1,0,detectedlines,anyf,status)
 
-! go to the LINES extension, get number of rows, allocate, initialise
+! go to the LINES extension
   call ftmnhd(unit,-1,"LINES",0,status)
+  if (status.ne.0) then
+    call ftgerr(status,cfitsioerror)
+    print *,gettime(),"error opening file ",trim(filename),": ",status,cfitsioerror
+    call exit(1)
+  endif
+
+! get number of rows, allocate, initialise
+
   call ftgnrw(unit,listlength,status)
 
   allocate(linelist(listlength))
@@ -278,6 +287,14 @@ subroutine read_fits_linelist(linelist,listlength,ncols,runs)
 
   call remove_nondetections(linelist)
   listlength=size(linelist)
+
+! break if there were errors
+
+  if (status.ne.0) then
+    call ftgerr(status,cfitsioerror)
+    print *,gettime(),"error opening file ",trim(filename),": ",status,cfitsioerror
+    call exit(1)
+  endif
 
 ! close
 

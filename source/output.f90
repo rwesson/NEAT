@@ -295,6 +295,7 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
   real(kind=dp), dimension(3) :: uncertainty_array=0d0
   type(arraycount), dimension (:), allocatable :: binned_quantity_result
   logical :: unusual
+  character(len=30) :: cfitsioerror
 
 !cfitsio variables
   integer :: status,unit,readwrite,blocksize,tfields,varidat
@@ -308,20 +309,16 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
   status=0
   readwrite=1
 
-! open the input file
+! open the input file, add date and history to primary HDU
 
   call ftgiou(unit,status)
   call ftopen(unit,trim(filename),readwrite,blocksize,status)
+  call ftpdat(unit,status)
+  call ftphis(unit,trim(commandline),status)
 
 ! go to extension LINES to update linelist
 
-!  call ftmnhd(unit,-1,"LINES",0,status)
-
-! todo: move this to filereading
-!  if (status.ne.0) then
-!    print *,gettime(),"error: FITS file does not have a LINES extension"
-!    call exit(1)
-!  endif
+  call ftmnhd(unit,-1,"LINES",0,status)
 
 ! todo: write lines here
 
@@ -350,7 +347,6 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
   call ftpcom(unit,"Produced by neat version "//VERSION,status)
   call ftpcom(unit,"Command line: '"//trim(commandline)//"'",status)
   call ftpcom(unit,"input file: "//trim(filename),status)
-  call ftpdat(unit,status)
 
 ! todo: record extinction law, helium data, ICF
 
@@ -374,6 +370,14 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
 
 ! create extension QC
 ! contains reliability flags
+
+! break if there were errors
+
+  if (status.ne.0) then
+    call ftgerr(status,cfitsioerror)
+    print *,gettime(),"FITS output error: ",trim(filename),": ",status,cfitsioerror
+    call exit(1)
+  endif
 
 ! close
 
