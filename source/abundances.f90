@@ -1680,13 +1680,13 @@ endif
 
 !abundance discrepancy factors
 
-  if (oiiiCELabund .gt. 0) then
+  if (oiiiCELabund .gt. 0 .and. oiiRLreliable) then
     adfO2plus = oiiRLabund/oiiiCELabund
   else
     adfO2plus = 0.d0
   endif
 
-  if (oabundCEL .gt. 0) then
+  if (oabundCEL .gt. 0 .and. oiiRLreliable) then
     adfO = OabundRL/OabundCEL
   else
     adfO = 0.d0
@@ -1706,13 +1706,13 @@ endif
   endif
 
 
-  if (NiiiCELabund .gt. 0) then
+  if (NiiiCELabund .gt. 0 .and. niiRLreliable) then
     adfN2plus = NiiRLabund/NiiiCELabund
   else
     adfN2plus = 0.d0
   endif
 
-  if (NabundCEL .gt. 0) then
+  if (NabundCEL .gt. 0 .and. niiRLreliable) then
     adfN = NabundRL/NabundCEL
   else
     adfN = 0.d0
