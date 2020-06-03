@@ -291,7 +291,7 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
   integer :: nbins,subtract_recombination
   real(kind=dp), dimension(:,:), allocatable :: resultprocessingarray
   character(len=40), dimension(:,:), allocatable :: resultprocessingtext
-  integer :: j
+  integer :: i,j
   real(kind=dp), dimension(3) :: uncertainty_array=0d0
   type(arraycount), dimension (:), allocatable :: binned_quantity_result
   logical :: unusual
@@ -330,13 +330,21 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
   tunit_lines=(/"                ","                ","                ","                ","                ","                "/)
 
   call fticls(unit,7,6,ttype_lines,tform_lines,status)
-
-!  call ftpcls(unit,7,1,1,listlength,all_linelists(:,1)%int_dered,status)
-!8 - dereddened flux uncertainty
   call ftpcls(unit,9,1,1,listlength,all_linelists(:,1)%name,status)
   call ftpcls(unit,10,1,1,listlength,all_linelists(:,1)%linedata,status)
-!  call ftpcls(unit,11,1,1,listlength,all_linelists(:,1)%abundance,status)
-!12 - abundance uncertainty
+
+! loop to get uncertainties
+! todo: maybe quicker to add property to type in the loop, then write to FITS in one go afterwards?
+! allocate quantity result?
+  do i=1,listlength
+    quantity_result = all_linelists(i,:)%int_dered
+    call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins)
+    call ftpcld(unit,7,i,1,1,uncertainty_array(2),status)
+
+    quantity_result = all_linelists(i,:)%abundance
+    call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins)
+    call ftpcld(unit,11,i,1,1,uncertainty_array(2),status)
+  enddo
 
   print *,gettime(),"updated LINES extension"
 
@@ -374,8 +382,6 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
 
 ! write out
 ! get_uncertainties returns array with (-,value,+)
-
-  allocate(quantity_result(runs))
 
   do j=1,164
     quantity_result=resultprocessingarray(j,:)
