@@ -283,9 +283,9 @@ subroutine read_fits_linelist(linelist,listlength,ncols,runs)
   call ftgcvd(unit,3,1,1,listlength,0,linelist%intensity,anyf,status)
   call ftgcvd(unit,4,1,1,listlength,0,linelist%int_err,anyf,status)
 
-! remove non-detections
+! remove non-detections - actually not necessary, abundances subroutine ignores anything not greater than zero so the upper limits just get ignored
 
-  call remove_nondetections(linelist)
+!  call remove_nondetections(linelist)
   listlength=size(linelist)
 
 ! break if there were errors
