@@ -150,7 +150,9 @@ subroutine readcommandline(runs,switch_ext,switch_he,switch_icf,meanextinction,d
              print *,"}"
              call exit(0)
           endif
-
+          if ((trim(options(i))=="-o" .or. trim(options(i))=="--output-dir") .and. (i+1) .le. Narg) then
+            outputdirectory=trim(options(i+1))
+          endif
   !  to be fully implemented:
   !  -R                     : R (default 3.1) - only used with CCM at the moment
   !  -b                     : batch mode

@@ -15,6 +15,6 @@ module mod_globals
 ! command line and file names
 
   character(len=2048) :: commandline
-  character(len=512) :: filename,configfile,defaultconfigfile
+  character(len=512) :: filename,configfile,defaultconfigfile,outputdirectory,outputfilename
 
 end module mod_globals

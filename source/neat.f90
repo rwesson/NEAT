@@ -114,6 +114,7 @@ program neat
         switch_he="P"  !Porter 2012 data
         switch_icf="D" !DI14 ICF
         filename=""
+        outputdirectory=""
         meanextinction=0.D0
         diagnostics%lowtemp=0.D0
         diagnostics%lowdens=0.D0
@@ -145,11 +146,24 @@ program neat
 
         call readcommandline(runs,switch_ext,switch_he,switch_icf,meanextinction,diagnostics,verbosity,R,identifylines,identifyconfirm,nbins,normalise,norp,calculate_extinction,subtract_recombination,configfile,nperbin)
 
+! set up filenames. if input file is FITS, output will be written to it. Output will be put in same directory as input by default.
+! todo: allow non-FITS to be requested
+
+        write (outputfilename,"(A)") filename(index(filename,"/",back=.true.)+1:len(trim(filename)))
+        if (trim(outputfilename(index(outputfilename,".",.true.)+1:len(filename))).ne."fits") then
+          outputfilename=trim(outputfilename)//".fits"
+        endif
+
+        if (trim(outputdirectory).eq."") then
+          outputdirectory=trim(filename(1:index(filename,"/",.true.)))
+        endif
+
+        outputfilename=trim(outputdirectory)//"/"//trim(outputfilename)
+
 ! read in the line list, allocate original linelist array
 
         strpos=index(filename,".",.true.)+1
         if (trim(filename(strpos:len(filename))).eq."fit" .or. trim(filename(strpos:len(filename))).eq."fits".or.trim(filename(strpos:len(filename))).eq."FIT".or.trim(filename(strpos:len(filename))).eq."FITS") then
-          fitsinput=.true.
           call read_fits_linelist(linelist,listlength,ncols,runs)
         else
           call read_text_linelist(linelist,listlength,ncols,runs)
@@ -354,11 +368,11 @@ program neat
 
 !now write out the line list and results files
 
-        if (fitsinput) then
+!        if (fitsinput) then
           call write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,nbins,subtract_recombination)
-        else
-          call write_output(runs,listlength,ncols,all_linelists,all_results,verbosity,nbins,subtract_recombination)
-        endif
+!        else
+!          call write_output(runs,listlength,ncols,all_linelists,all_results,verbosity,nbins,subtract_recombination)
+!        endif
 
         print *
         print *,gettime(),"all done"

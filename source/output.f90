@@ -315,18 +315,12 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
 
   call ftgiou(unit,status)
 
-! if the input file name does not end in ".fits" then create new FITS file with LINES extension from input
-
-  if (trim(filename(index(filename,".",.true.)+1:len(filename))).ne."fits") then
-    filename=trim(filename)//".fits"
-  endif
-
-  inquire(file=filename, exist=file_exists)
+  inquire(file=outputfilename, exist=file_exists)
 
   if (.not.file_exists) then
 
-    print *,gettime(),"creating output file ",trim(filename)
-    call ftinit(unit,trim(filename),blocksize,status)
+    print *,gettime(),"creating output file ",trim(outputfilename)
+    call ftinit(unit,trim(outputfilename),blocksize,status)
     call ftphps(unit,16,0,0,status)
     call ftpdat(unit,status)
     call ftphis(unit,trim(commandline),status)
@@ -349,7 +343,8 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
 
 ! we are writing to an existing FITS file
 
-    call ftopen(unit,trim(filename),readwrite,blocksize,status)
+    print *,gettime(),"writing results to ",trim(outputfilename)
+    call ftopen(unit,trim(outputfilename),readwrite,blocksize,status)
     call ftpdat(unit,status)
     call ftphis(unit,trim(commandline),status)
 
@@ -421,7 +416,7 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
 
   call ftpcom(unit,"Produced by neat version "//VERSION,status)
   call ftpcom(unit,"Command line: '"//trim(commandline)//"'",status)
-  call ftpcom(unit,"input file: "//trim(filename),status)
+  call ftpcom(unit,"input file: "//trim(outputfilename),status)
 
 ! todo: record extinction law, helium data, ICF
 
@@ -448,7 +443,7 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
 
   if (status.ne.0) then
     call ftgerr(status,cfitsioerror)
-    print *,gettime(),"FITS output error: ",trim(filename),": ",status,cfitsioerror
+    print *,gettime(),"FITS output error: ",trim(outputfilename),": ",status,cfitsioerror
     call exit(1)
   endif
 
