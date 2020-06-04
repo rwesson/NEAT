@@ -158,6 +158,10 @@ program neat
           outputdirectory=trim(filename(1:index(filename,"/",.true.)))
         endif
 
+        if (trim(outputdirectory).eq."") then
+          outputdirectory="./"
+        endif
+
         outputfilename=trim(outputdirectory)//"/"//trim(outputfilename)
 
 ! read in the line list, allocate original linelist array
