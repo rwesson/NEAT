@@ -54,7 +54,6 @@ program neat
         character(len=1) :: blank
         integer :: listlength, ncols, strpos
         real(kind=dp) :: normalise
-        logical :: fitsinput
 
 !results and result processing
 
@@ -133,7 +132,7 @@ program neat
         subtract_recombination=1
         configfile=""
         defaultconfigfile=trim(PREFIX)//"/share/neat/default.cfg"
-        fitsinput=.false.
+        outputformat="fits"
 
         iion=24 ! number of ions for which we can calculate abundances
                 ! todo: calculate this automatically
@@ -372,11 +371,11 @@ program neat
 
 !now write out the line list and results files
 
-!        if (fitsinput) then
+        if (outputformat.eq."fits") then
           call write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,nbins,subtract_recombination)
-!        else
-!          call write_output(runs,listlength,ncols,all_linelists,all_results,verbosity,nbins,subtract_recombination)
-!        endif
+        elseif (outputformat.eq."text") then
+          call write_output(runs,listlength,ncols,all_linelists,all_results,verbosity,nbins,subtract_recombination)
+        endif
 
         print *
         print *,gettime(),"all done"

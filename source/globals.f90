@@ -16,5 +16,6 @@ module mod_globals
 
   character(len=2048) :: commandline
   character(len=512) :: filename,configfile,defaultconfigfile,outputdirectory,outputfilename
+  character(len=4) :: outputformat
 
 end module mod_globals

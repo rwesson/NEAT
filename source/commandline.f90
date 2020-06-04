@@ -153,6 +153,13 @@ subroutine readcommandline(runs,switch_ext,switch_he,switch_icf,meanextinction,d
           if ((trim(options(i))=="-o" .or. trim(options(i))=="--output-dir") .and. (i+1) .le. Narg) then
             outputdirectory=trim(options(i+1))
           endif
+          if ((trim(options(i))=="-of" .or. trim(options(i))=="--output-format") .and. (i+1) .le. Narg) then
+            outputformat=trim(options(i+1))
+            if (outputformat.ne."fits" .and. outputformat.ne."text") then
+              print *,gettime(),"invalid output format. valid options are 'text' and 'fits'"
+              call exit(1)
+            endif
+          endif
   !  to be fully implemented:
   !  -R                     : R (default 3.1) - only used with CCM at the moment
   !  -b                     : batch mode
