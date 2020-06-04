@@ -175,6 +175,12 @@ subroutine read_text_linelist(linelist,listlength,ncols,runs)
 
 155     continue
 
+!fill observed wavelength column if necessary
+
+        if (ncols.lt.4) then
+          linelist%wavelength_observed=linelist%wavelength
+        endif
+
 !fix some common blends.  If first member of blend is in the list but the second is not, or if second is present but with zero flux, then presume the feature is blended.
 
         call fix_blends(linelist)
