@@ -285,9 +285,6 @@ subroutine read_fits_linelist(linelist,listlength,ncols,runs)
   call ftgcvd(unit,3,1,1,listlength,0,linelist%intensity,anyf,status)
   call ftgcvd(unit,4,1,1,listlength,0,linelist%int_err,anyf,status)
 
-! remove non-detections - actually not necessary, abundances subroutine ignores anything not greater than zero so the upper limits just get ignored
-
-!  call remove_nondetections(linelist)
   listlength=size(linelist)
 
 ! break if there were errors
@@ -349,33 +346,6 @@ subroutine read_fits_linelist(linelist,listlength,ncols,runs)
   linelist%wavelength=0.01d0*(nint(100.d0*linelist%wavelength))
 
 end subroutine read_fits_linelist
-
-subroutine remove_nondetections(linelist)
-! non-detections and subsequent blends appear in ALFA output with negative fluxes
-! this subroutine removes these from the linelist
-
-  implicit none
-  type(line),dimension(:),allocatable :: linelist,linelistcopy,filteredlist
-  integer :: detectedlines,i
-  real(kind=dp) :: referenceflux
-
-  allocate(linelistcopy(size(linelist)))
-
-  detectedlines=0
-  do i=1,size(linelist)
-    if (linelist(i)%int_err.ge.0.d0) then
-      detectedlines=detectedlines+1
-      linelistcopy(detectedlines)=linelist(i)
-    endif
-  enddo
-
-  allocate(filteredlist(detectedlines))
-  filteredlist=linelistcopy(1:detectedlines)
-  deallocate(linelist)
-  allocate(linelist(detectedlines))
-  linelist=filteredlist
-
-end subroutine remove_nondetections
 
 subroutine fix_blends(linelist)
 
