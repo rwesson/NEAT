@@ -295,7 +295,6 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
   real(kind=dp), dimension(3) :: uncertainty_array=0d0
   type(arraycount), dimension (:), allocatable :: binned_quantity_result
   logical :: unusual,file_exists
-  character(len=30) :: cfitsioerror
 
 !cfitsio variables
   integer :: status,unit,readwrite,blocksize,tfields,varidat
@@ -303,6 +302,7 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
   character(len=16),dimension(6) :: ttype_lines,tform_lines,tunit_lines
   character(len=16),dimension(7) :: ttype_lines_analysis,tform_lines_analysis,tunit_lines_analysis
   character(len=16),dimension(4) :: ttype_results,tform_results,tunit_results
+  character(len=30) :: cfitsioerror
 
 #ifdef CO
         print *,"subroutine: write_fits"
