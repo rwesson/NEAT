@@ -153,7 +153,7 @@ subroutine read_text_linelist(linelist,listlength,ncols,runs)
 
         rewind (100)
         DO I=1,nlines
-          read(100,"(F8.2,2X,A12,X,A12,X,A12,X,A12,X,I12,X,I9)",end=102) neatlines(i)%wavelength,neatlines(i)%ion,neatlines(i)%multiplet,neatlines(i)%lowerterm,neatlines(i)%upperterm,neatlines(i)%g1,neatlines(i)%g2
+          read(100,"(F8.2,X,A12,X,A12,X,A12,X,A12,X,I12,X,I9)",end=102) neatlines(i)%wavelength,neatlines(i)%ion,neatlines(i)%multiplet,neatlines(i)%lowerterm,neatlines(i)%upperterm,neatlines(i)%g1,neatlines(i)%g2
           do j=1,listlength
             if (abs(linelist(j)%wavelength - neatlines(i)%wavelength) .lt. 0.011) then
               linelist(j)%ion = neatlines(i)%ion
