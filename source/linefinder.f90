@@ -63,9 +63,7 @@ xcorr_array%match = 0
 
         rewind (100)
         do I=1,n_neatlines
-                read(100,*,end=102) temp_wave, readchar, temp_ion1, temp_ion2
-                neatlines(i)%wavelength = temp_wave
-                neatlines(i)%linedata = temp_ion1//temp_ion2
+                read(100,"(F8.2,2X,A12,X,A12,X,A12,X,A12,X,I12,X,I9)",end=102) neatlines(i)%wavelength,neatlines(i)%ion,neatlines(i)%multiplet,neatlines(i)%lowerterm,neatlines(i)%upperterm,neatlines(i)%g1,neatlines(i)%g2
         enddo
         102 print *
         close(100)

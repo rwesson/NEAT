@@ -6,8 +6,6 @@ use mod_globals
 implicit none
 
 TYPE line
-        character(len=11) :: name
-        character(len=10) :: ion
         real(kind=dp) :: wavelength
         real(kind=dp) :: wavelength_observed !for use with output from ALFA
         real(kind=dp) :: intensity
@@ -23,8 +21,9 @@ TYPE line
         real(kind=dp) :: weight ! to be used in abundance calculations
         character(len=4) :: zone !high, medium or low ionisation zone
         integer :: location !for CELs and He, this indicates the position of the line in the main linelist array, so that when its abundance is calculated it can be copied back into the linelist array for easy outputting
-        character(len=15) :: latextext ! ion name in latex format
-        character(len=85) :: linedata
+        character(len=12) :: ion,multiplet,lowerterm,upperterm
+        integer :: g1,g2
+
 end type
 
 type CEL
@@ -109,7 +108,8 @@ end type diagnostic_array
 
 type neat_line
         real(kind=dp) :: wavelength
-        character(len=85) :: linedata
+        character(len=12) :: ion,multiplet,lowerterm,upperterm
+        integer :: g1,g2
 end type neat_line
 
 end module mod_types

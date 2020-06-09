@@ -53,12 +53,14 @@ subroutine read_text_linelist(linelist,listlength,ncols,runs)
         linelist%blend_intensity=0.d0
         linelist%blend_int_err=0d0
         linelist%zone='    '
-        linelist%name='           '
         linelist%transition='                    '
         linelist%location=0
         linelist%ion='          '
-        linelist%latextext='               '
-        linelist%linedata='                                                                           '
+        linelist%multiplet='            '
+        linelist%lowerterm='            '
+        linelist%upperterm='            '
+        linelist%g1=0
+        linelist%g2=0
 
 ! now count the columns
 ! if 2 - assume rest wavelength and intensity, read in and restrict to single iteration
@@ -112,7 +114,6 @@ subroutine read_text_linelist(linelist,listlength,ncols,runs)
               read (invar(4),*) linelist(i)%int_err
             endif
           endif
-          linelist(i)%latextext = ""
           i=i+1
         enddo
 
@@ -147,15 +148,20 @@ subroutine read_text_linelist(linelist,listlength,ncols,runs)
         101 nlines=I-1
 
 !then allocate and read
+!todo: read wavelength only, then if matched, rewind and read rest
         allocate (neatlines(nlines))
 
         rewind (100)
         DO I=1,nlines
-          read(100,"(F8.2,A85)",end=102) neatlines(i)%wavelength,neatlines(i)%linedata
+          read(100,"(F8.2,2X,A12,X,A12,X,A12,X,A12,X,I12,X,I9)",end=102) neatlines(i)%wavelength,neatlines(i)%ion,neatlines(i)%multiplet,neatlines(i)%lowerterm,neatlines(i)%upperterm,neatlines(i)%g1,neatlines(i)%g2
           do j=1,listlength
             if (abs(linelist(j)%wavelength - neatlines(i)%wavelength) .lt. 0.011) then
-              linelist(j)%linedata = neatlines(i)%linedata
-              linelist(j)%name = latextoplain(linelist(j)%linedata(3:19))
+              linelist(j)%ion = neatlines(i)%ion
+              linelist(j)%multiplet = neatlines(i)%multiplet
+              linelist(j)%lowerterm = neatlines(i)%lowerterm
+              linelist(j)%upperterm = neatlines(i)%upperterm
+              linelist(j)%g1 = neatlines(i)%g1
+              linelist(j)%g2 = neatlines(i)%g2
             endif
           enddo
         enddo
@@ -232,7 +238,7 @@ subroutine read_fits_linelist(linelist,listlength,ncols,runs)
 
   status=0
   readwrite=0
-  ncols=4
+  ncols=12
 
 ! open the file
   call ftgiou(unit,status)
@@ -271,21 +277,29 @@ subroutine read_fits_linelist(linelist,listlength,ncols,runs)
   linelist%blend_intensity=0.d0
   linelist%blend_int_err=0d0
   linelist%zone='    '
-  linelist%name='           '
   linelist%transition='                    '
   linelist%location=0
   linelist%ion='          '
-  linelist%latextext='               '
-  linelist%linedata='                                                                           '
+  linelist%multiplet='            '
+  linelist%lowerterm='            '
+  linelist%upperterm='            '
+  linelist%g1=0
+  linelist%g2=0
 
 ! read columns. todo: need ftgcfd?
+! cols from ALFA are obswlen, restwlen, int, int_err, peak, fwhm, ion, multiplet, lowerterm, upperterm, g1, g2
+! 5 & 6 are peak and FWHM
 
   call ftgcvd(unit,1,1,1,listlength,0,linelist%wavelength_observed,anyf,status)
   call ftgcvd(unit,2,1,1,listlength,0,linelist%wavelength,anyf,status)
   call ftgcvd(unit,3,1,1,listlength,0,linelist%intensity,anyf,status)
   call ftgcvd(unit,4,1,1,listlength,0,linelist%int_err,anyf,status)
-
-  listlength=size(linelist)
+  call ftgcvs(unit,7,1,1,listlength,"",linelist%ion,anyf,status)
+  call ftgcvs(unit,8,1,1,listlength,"",linelist%multiplet,anyf,status)
+  call ftgcvs(unit,9,1,1,listlength,"",linelist%lowerterm,anyf,status)
+  call ftgcvs(unit,10,1,1,listlength,"",linelist%upperterm,anyf,status)
+  call ftgcvj(unit,11,1,1,listlength,0,linelist%g1,anyf,status)
+  call ftgcvj(unit,12,1,1,listlength,0,linelist%g2,anyf,status)
 
 ! break if there were errors
 
@@ -312,32 +326,6 @@ subroutine read_fits_linelist(linelist,listlength,ncols,runs)
   enddo
 
   call fix_blends(linelist)
-
-! read in atomic data
-
-  I = 1
-  open(100, file=trim(PREFIX)//'/share/neat/complete_line_list', iostat=IO, status='old')
-    do while (IO .ge. 0)
-      read(100,"(A1)",end=101) blank
-      I = I + 1
-    enddo
-  101 nlines=I-1
-
-!then allocate and read
-  allocate (neatlines(nlines))
-
-  rewind (100)
-  DO I=1,nlines
-    read(100,"(F8.2,A85)",end=102) neatlines(i)%wavelength,neatlines(i)%linedata
-    do j=1,listlength
-      if (abs(linelist(j)%wavelength - neatlines(i)%wavelength) .lt. 0.011) then
-        linelist(j)%linedata = neatlines(i)%linedata
-        linelist(j)%name = latextoplain(linelist(j)%linedata(3:19))
-      endif
-    enddo
-  enddo
-  102 print *
-  close(100)
 
 ! ALFA writes out single precision real numbers (double precision makes it 30% slower)
 ! but reading in double precision from FITS file results in rounding errors
@@ -622,8 +610,6 @@ subroutine get_H(H_Balmer, H_paschen, linelist)
     do j=3,40
       if (abs(linelist(i)%wavelength - balmerwavelengths(j)) .lt. 0.005) then
         H_balmer(j)=i
-        linelist(i)%name="H I"
-        linelist(i)%latextext = "H~{\sc i}"
         cycle
       endif
     enddo
@@ -633,8 +619,6 @@ subroutine get_H(H_Balmer, H_paschen, linelist)
     do j=4,39
       if (abs(linelist(i)%wavelength - paschenwavelengths(j)) .lt. 0.005) then
         H_paschen(j)=i
-        linelist(i)%name="H I"
-        linelist(i)%latextext = "H~{\sc i}"
         cycle
       endif
     enddo
@@ -663,8 +647,6 @@ subroutine get_HeI(HeI_lines, linelist)
           do j = 1, size(linelist)
             if(abs(linelist(j)%wavelength - wavelengths(i)) .lt.  0.005) then
               Hei_lines(i) = j
-              linelist(j)%name="He I"
-              linelist(j)%latextext = "He~{\sc i}"
               cycle
             endif
           enddo
@@ -749,8 +731,6 @@ subroutine get_HeII(HeII_lines, linelist)
             do k = 1, size(linelist)
               if(abs(linelist(k)%wavelength - wavelengths(j,i)) .lt.  0.005) then
                 Heii_lines(j,i) = k
-                linelist(k)%name="He II"
-                linelist(k)%latextext = "He~{\sc ii}"
                 cycle
               endif
             enddo
@@ -758,41 +738,6 @@ subroutine get_HeII(HeII_lines, linelist)
         enddo
 
 end subroutine get_HeII
-
-character(len=11) function latextoplain(text)
-!converts latex-formatted ion name from linelist%linedata to plain text
-!eg [O~{\sc iii}] -> [O II]
-
-implicit none
-character(len=17) :: text,part1,part2,part3
-integer :: i
-
-if (index(text,"~{\sc") .gt. 0) then
-
-  !123456789012
-  ![O~\sc iii}]
-
-  part1="                 "
-  part2="                 "
-  part3="                 "
-
-  part1=text(1:index(text,"~{\sc")-1)
-  part2=text(index(text,"~{\sc")+5:index(text,"}")-1)
-  part3=text(index(text,"}")+1:)
-
-  do i=1,len(part2)
-    if (iachar(part2(i:i)).ge.iachar("a") .and. iachar(part2(i:i)).le.iachar("z")) then !convert to lower case
-      part2(i:i) = achar(iachar(part2(i:i))-32)
-    endif
-  enddo
-
-  latextoplain=trim(part1)//trim(part2)//trim(part3)
-
-else
-  latextoplain=text(1:11)
-endif
-
-end function
 
 end module
 

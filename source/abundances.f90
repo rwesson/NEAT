@@ -732,7 +732,6 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
         do i = 1,size(ILs)
           if (ILs(i)%location .gt. 0) then !the line is in the spectrum
-             linelist(ILs(i)%location)%name=ILs(i)%ion
              if (ILs(i)%zone .eq. "low ") then
                call get_abundance(ILs(i)%ion, ILs(i)%transition, lowtemp, lowdens,linelist(ILs(i)%location)%int_dered, linelist(ILs(i)%location)%abundance,maxlevs,maxtemps,atomicdata,iion)
              elseif (ILs(i)%zone .eq. "med ") then
@@ -810,8 +809,6 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
               oiiRLs_s2017(j)%abundance = oiiRLs_s2017(j)%obs/oiiRLs_s2017(j)%Int
             endif
             linelist(i)%abundance = oiiRLs_s2017(j)%abundance
-            linelist(i)%name="O II       "
-            linelist(i)%latextext="O~{\sc ii}     "
           endif
          enddo
        enddo
@@ -826,8 +823,6 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
             niiRLs(j)%Obs = linelist(i)%int_dered
             niiRLs(j)%abundance = niiRLs(j)%obs/niiRLs(j)%Int
             linelist(i)%abundance = niiRLs(j)%abundance
-            linelist(i)%name="N II       "
-            linelist(i)%latextext="N~{\sc ii}     "
           endif
          enddo
        enddo
@@ -841,8 +836,6 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
             ciiRLs(j)%Obs = linelist(i)%int_dered
             ciiRLs(j)%abundance = ciiRLs(j)%obs/ciiRLs(j)%Int
             linelist(i)%abundance = ciiRLs(j)%abundance
-            linelist(i)%name="C II       "
-            linelist(i)%latextext="C~{\sc ii}     "
           endif
          enddo
        enddo
@@ -856,8 +849,6 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
             neiiRLs(j)%Obs = linelist(i)%int_dered
             neiiRLs(j)%abundance = neiiRLs(j)%obs/neiiRLs(j)%Int
             linelist(i)%abundance = neiiRLs(j)%abundance
-            linelist(i)%name="Ne II      "
-            linelist(i)%latextext="Ne~{\sc ii}    "
           endif
          enddo
        enddo
@@ -871,13 +862,6 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
             xiiiRLs(j)%Obs = linelist(i)%int_dered
             xiiiRLs(j)%abundance = xiiiRLs(j)%obs/xiiiRLs(j)%Int
             linelist(i)%abundance = xiiiRLs(j)%abundance
-            if (j .le. 4) then
-              linelist(i)%name="C III      "
-              linelist(i)%latextext="C~{\sc iii}    "
-            else
-              linelist(i)%name="N III      "
-              linelist(i)%latextext="N~{\sc iii}    "
-            endif
           endif
          enddo
        enddo

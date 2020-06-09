@@ -65,7 +65,7 @@ subroutine write_output(runs,listlength,ncols,all_linelists,all_results,verbosit
 
 !rest wavelength, ion name for plain text file
 
-                write (650,"(X,F8.2,X,A11)", advance='no') all_linelists(j,1)%wavelength,all_linelists(j,1)%name
+                write (650,"(X,F8.2,X,A11)", advance='no') all_linelists(j,1)%wavelength,all_linelists(j,1)%ion
                 write (651,"(X,F8.2,' & ',A15,' & ')", advance='no') all_linelists(j,1)%wavelength
 
 !line flux
@@ -99,7 +99,7 @@ subroutine write_output(runs,listlength,ncols,all_linelists,all_results,verbosit
 ! transition data
 
 !                write (650,*)
-                write (651,*) all_linelists(j,1)%linedata, "\\"
+                write (651,*) all_linelists(j,1)%ion,all_linelists(j,1)%multiplet,all_linelists(j,1)%lowerterm,all_linelists(j,1)%upperterm,all_linelists(j,1)%g1,all_linelists(j,1)%g2, "\\"
 
 !abundance - write out if there is an abundance for the line, don't write
 !anything except a line break if there is no abundance for the line.
@@ -135,15 +135,15 @@ subroutine write_output(runs,listlength,ncols,all_linelists,all_results,verbosit
                   endif
                   if (all_linelists(i,1)%intensity .ne. 0.d0) then
                     if (all_linelists(i,1)%abundance .gt. 0.0) then
-                      write (650,"(X,F8.2,X,A11,F8.3,X,F8.3,X,ES14.3)") all_linelists(i,1)%wavelength,all_linelists(i,1)%name,all_linelists(i,1)%intensity,all_linelists(i,1)%int_dered, all_linelists(i,1)%abundance
-                      write (651,"(X,F8.2,X,'&',X,F8.3,X,'&',X,F8.3,X,A,'\\')") all_linelists(i,1)%wavelength,all_linelists(i,1)%intensity,all_linelists(i,1)%int_dered,all_linelists(i,1)%linedata
+                      write (650,"(X,F8.2,X,A11,F8.3,X,F8.3,X,ES14.3)") all_linelists(i,1)%wavelength,all_linelists(i,1)%ion,all_linelists(i,1)%intensity,all_linelists(i,1)%int_dered, all_linelists(i,1)%abundance
+                      write (651,"(X,F8.2,X,'&',X,F8.3,X,'&',X,F8.3,X,A,'\\')") all_linelists(i,1)%wavelength,all_linelists(i,1)%intensity,all_linelists(i,1)%int_dered,all_linelists(i,1)%ion,all_linelists(i,1)%multiplet,all_linelists(i,1)%lowerterm,all_linelists(i,1)%upperterm,all_linelists(i,1)%g1,all_linelists(i,1)%g2
                     else
-                      write (650,"(X,F8.2,X,A11,F8.3,X,F8.3)") all_linelists(i,1)%wavelength,all_linelists(i,1)%name,all_linelists(i,1)%intensity,all_linelists(i,1)%int_dered
-                      write (651,"(X,F8.2,X,'&',X,F8.3,X,'&',X,F8.3,X,A,'\\')") all_linelists(i,1)%wavelength,all_linelists(i,1)%intensity,all_linelists(i,1)%int_dered,all_linelists(i,1)%linedata
+                      write (650,"(X,F8.2,X,A11,F8.3,X,F8.3)") all_linelists(i,1)%wavelength,all_linelists(i,1)%ion,all_linelists(i,1)%intensity,all_linelists(i,1)%int_dered
+                      write (651,"(X,F8.2,X,'&',X,F8.3,X,'&',X,F8.3,X,A,'\\')") all_linelists(i,1)%wavelength,all_linelists(i,1)%intensity,all_linelists(i,1)%int_dered,all_linelists(i,1)%ion,all_linelists(i,1)%multiplet,all_linelists(i,1)%lowerterm,all_linelists(i,1)%upperterm,all_linelists(i,1)%g1,all_linelists(i,1)%g2
                     endif
                   else
-                    write (650,"(X,F8.2,X,A11,A7,X,A7)") all_linelists(i,1)%wavelength,all_linelists(i,1)%name,"*      ","*      "
-                    write (651,"(X,F8.2,X,'&',X,A7,X,'&',X,A7,X,A,'\\')") all_linelists(i,1)%wavelength,"*      ","*      ",all_linelists(i,1)%linedata
+                    write (650,"(X,F8.2,X,A11,A7,X,A7)") all_linelists(i,1)%wavelength,all_linelists(i,1)%ion,"*      ","*      "
+                    write (651,"(X,F8.2,X,'&',X,A7,X,'&',X,A7,X,A,'\\')") all_linelists(i,1)%wavelength,"*      ","*      ",all_linelists(i,1)%ion,all_linelists(i,1)%multiplet,all_linelists(i,1)%lowerterm,all_linelists(i,1)%upperterm,all_linelists(i,1)%g1,all_linelists(i,1)%g2
                   endif
                 enddo
 
@@ -299,8 +299,8 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
 !cfitsio variables
   integer :: status,unit,readwrite,blocksize,tfields,varidat
   character(len=16) :: extname
-  character(len=16),dimension(6) :: ttype_lines,tform_lines,tunit_lines
-  character(len=16),dimension(7) :: ttype_lines_analysis,tform_lines_analysis,tunit_lines_analysis
+  character(len=16),dimension(12) :: ttype_lines,tform_lines,tunit_lines
+  character(len=16),dimension(6) :: ttype_lines_analysis,tform_lines_analysis,tunit_lines_analysis
   character(len=16),dimension(4) :: ttype_results,tform_results,tunit_results
   character(len=30) :: cfitsioerror
 
@@ -326,11 +326,11 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
     call ftphis(unit,trim(commandline),status)
 
     extname="LINES"
-    tfields=6
+    tfields=12
 
-    ttype_lines=(/"WlenObserved    ","WlenRest        ","Flux            ","Uncertainty     ","Peak            ","FWHM            "/)
-    tform_lines=(/"1E","1E","1E","1E","1E","1E"/)
-    tunit_lines=(/"Angstrom        ","Angstrom        ","Flux            ","Flux            ","Flux            ","Angstrom        "/)
+    ttype_lines=(/"WlenObserved    ","WlenRest        ","Flux            ","Uncertainty     ","Peak            ","FWHM            ","Ion             ","Multiplet       ","LowerTerm       ","UpperTerm       ","g1              ","g2              "/)
+    tform_lines=(/"1E ","1E ","1E ","1E ","1E ","1E ","16A","16A","16A","16A","1I ","1I "/)
+    tunit_lines=(/"Angstrom        ","Angstrom        ","Flux            ","Flux            ","Flux            ","Angstrom        ","                ","                ","                ","                ","                ","                "/)
 
     call ftibin(unit,listlength,tfields,ttype_lines,tform_lines,tunit_lines,extname,varidat,status)
 
@@ -338,6 +338,8 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
     call ftpcld(unit,2,1,1,listlength,all_linelists(:,1)%wavelength_observed,status)
     call ftpcld(unit,3,1,1,listlength,all_linelists(:,1)%intensity,status)
     call ftpcld(unit,4,1,1,listlength,all_linelists(:,1)%int_err,status)
+    call ftpcld(unit,5,1,1,listlength,0.d0,status)
+    call ftpcld(unit,6,1,1,listlength,0.d0,status)
 
   else
 
@@ -354,25 +356,20 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
 
   call ftmnhd(unit,-1,"LINES",0,status)
 
-! check number of columns. if 6 then create cols 7-13 for ion, dereddened flux+- and abundance+-
+! check if column DereddenedFlux exists. If not, file has not been analysed by NEAT, so create the necessary columns
+  call ftgcno(unit,.true.,"DereddenedFlux  ",ncols,status)
 
-  call ftgncl(unit,ncols,status)
-
-  if (ncols.eq.6) then
-    ttype_lines_analysis=(/"Ion             ","DereddenedFlux  ","DereddenedFluxLo","DereddenedFluxHi","Abundance       ","AbundanceLow    ","AbundanceHigh   "/)
-    tform_lines_analysis=(/"10A","1E ","1E ","1E ","1E ","1E ","1E "/)
-    tunit_lines_analysis=(/"                ","                ","                ","                ","                ","                ","                "/)
-    call fticls(unit,7,7,ttype_lines_analysis,tform_lines_analysis,status)
+  if (status.eq.219) then
+    status=0
     print *,gettime(),"adding NEAT analysis to LINES extension"
-  elseif (ncols.eq.13) then
-    print *,gettime(),"overwriting previous analysis in LINES extension"
+    call ftgncl(unit,ncols,status)
+    ttype_lines_analysis=(/"DereddenedFlux  ","DereddenedFluxLo","DereddenedFluxHi","Abundance       ","AbundanceLow    ","AbundanceHigh   "/)
+    tform_lines_analysis=(/"1E ","1E ","1E ","1E ","1E ","1E "/)
+    tunit_lines_analysis=(/"                ","                ","                ","                ","                ","                "/)
+    call fticls(unit,ncols+1,6,ttype_lines_analysis,tform_lines_analysis,status)
   else
-    print *,gettime(),"wrong number of columns in LINES extension: ",ncols
-    call exit(1)
+    print *,gettime(),"overwriting previous analysis in LINES extension"
   endif
-
-  call ftpcls(unit,7,1,1,listlength,all_linelists(:,1)%name,status)
-!  call ftpcls(unit,10,1,1,listlength,all_linelists(:,1)%linedata,status)
 
 ! loop to get uncertainties
 ! todo: maybe quicker to add property to type in the loop, then write to FITS in one go afterwards?
@@ -380,15 +377,15 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,
   do i=1,listlength
     quantity_result = all_linelists(i,:)%int_dered
     call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins)
-    call ftpcld(unit,8,i,1,1,uncertainty_array(2),status)
-    call ftpcld(unit,9,i,1,1,uncertainty_array(2)+uncertainty_array(1),status)
-    call ftpcld(unit,10,i,1,1,uncertainty_array(2)-uncertainty_array(3),status)
+    call ftpcld(unit,13,i,1,1,uncertainty_array(2),status)
+    call ftpcld(unit,14,i,1,1,uncertainty_array(2)+uncertainty_array(1),status)
+    call ftpcld(unit,15,i,1,1,uncertainty_array(2)-uncertainty_array(3),status)
 
     quantity_result = all_linelists(i,:)%abundance
     call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins)
-    call ftpcld(unit,11,i,1,1,uncertainty_array(2),status)
-    call ftpcld(unit,12,i,1,1,uncertainty_array(2)+uncertainty_array(1),status)
-    call ftpcld(unit,13,i,1,1,uncertainty_array(2)-uncertainty_array(3),status)
+    call ftpcld(unit,16,i,1,1,uncertainty_array(2),status)
+    call ftpcld(unit,17,i,1,1,uncertainty_array(2)+uncertainty_array(1),status)
+    call ftpcld(unit,18,i,1,1,uncertainty_array(2)-uncertainty_array(3),status)
   enddo
 
 ! if RESULTS extension does not exist, create it, otherwise overwrite
