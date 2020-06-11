@@ -274,8 +274,10 @@ TYPE resultarray
         real(kind=dp) :: oii_rl_R2=0.d0
         real(kind=dp) :: ratio_5876_4471=0.d0
         real(kind=dp) :: ratio_6678_4471=0.d0
+        real(kind=dp) :: ratio_7281_6678=0.d0
         real(kind=dp) :: Te_5876_4471=0.d0
         real(kind=dp) :: Te_6678_4471=0.d0
+        real(kind=dp) :: Te_7281_6678=0.d0
         real(kind=dp) :: nii5754recCEL=0.d0
         real(kind=dp) :: oii7325recCEL=0.d0
         real(kind=dp) :: oiii4363recCEL=0.d0

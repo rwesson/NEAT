@@ -37,7 +37,7 @@ use mod_globals
         real(kind=dp) :: heiabund,heiiabund,Hetotabund, heICFfactor, OICFfactor, upsilon, upsilonprime
         real(kind=dp) :: Te_balmer, Te_paschen
         real(kind=dp) :: oii4649, oii4089,oii4662,oii_te,oii_ne
-        real(kind=dp) :: ratio_5876_4471, ratio_6678_4471, te_5876_4471, te_6678_4471
+        real(kind=dp) :: ratio_5876_4471, ratio_6678_4471, ratio_7281_6678, te_5876_4471, te_6678_4471, te_7281_6678
         real(kind=dp) :: aeff_hb,em_hb
 
         type(weightingarray) :: weights, weights_orig
@@ -676,13 +676,19 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 ! Te(5876/4471) = a*r**4 + b*r**3 + c*r**2 + d*r + e + f/(r-g)
 ! a=6858; b=-99452.0; c=541944.8; d=-1317918.7; e=1210016.1; f=23.21; g=2.833
 ! accurate to +-50K
+
 ! Te(6678/4471) = a*r**2+b*r+c (r<0.775)
 !                 a*r**4+b**r*3+c**r*2+d**r+e (r>0.775)
 
+! Te(7281/6678) = a*r**4+b**r*3+c**r*2+d**r+e
+! coefficients are 2.695e7, -1.112e7, 1.824e6, 1.366e4, -1.025e3
+
         ratio_5876_4471=0.d0
         ratio_6678_4471=0.d0
+        ratio_7281_6678=0.d0
         Te_5876_4471=0.d0
         Te_6678_4471=0.d0
+        Te_7281_6678=0.d0
 
         if (HeI_lines(10) .gt. 0 .and. HeI_lines(15) .gt.0) then
           ratio_5876_4471=linelist(HeI_lines(15))%int_dered/linelist(HeI_lines(10))%int_dered
@@ -700,10 +706,17 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
           endif
         endif
 
+        if (HeI_lines(16).gt. 0 .and. HeI_lines(18).gt.0) then
+          ratio_7281_6678=linelist(HeI_lines(18))%int_dered/linelist(HeI_lines(16))%int_dered
+          Te_7281_6678 = 2.695e7*ratio_7281_6678**4 - 1.112e7*ratio_7281_6678**3 + 1.824e6*ratio_7281_6678**2 + 1.366e4*ratio_7281_6678 - 1.025e3
+        endif
+
         iteration_result%ratio_5876_4471=ratio_5876_4471
         iteration_result%ratio_6678_4471=ratio_6678_4471
+        iteration_result%ratio_7281_6678=ratio_7281_6678
         iteration_result%Te_5876_4471=Te_5876_4471
         iteration_result%Te_6678_4471=Te_6678_4471
+        iteration_result%Te_7281_6678=Te_7281_6678
 
 ! get te and ne from OII RL diagnostics if we have them
 
