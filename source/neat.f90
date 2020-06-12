@@ -43,7 +43,7 @@ program neat
         character :: switch_ext !switch for extinction laws
         character :: switch_he  !switch for helium atomic data
         character :: switch_icf !switch for which ICF scheme to use
-        integer :: I, j, runs, Narg !runs = number of runs for randomiser
+        integer :: I, runs !runs = number of runs for randomiser
 
 !file reading variables
 
@@ -51,7 +51,6 @@ program neat
         type(line),dimension(:), allocatable :: linelist
         type(line),dimension(:), allocatable :: linelist_original
         type(line),dimension(:,:), allocatable :: all_linelists
-        character(len=1) :: blank
         integer :: listlength, ncols, strpos
         real(kind=dp) :: normalise
 
@@ -59,7 +58,6 @@ program neat
 
         type(resultarray), dimension(:), allocatable :: all_results
         type(resultarray), dimension(1) :: iteration_result
-        real(kind=dp), dimension(:), allocatable :: quantity_result
 
 !atomic data
 
@@ -143,7 +141,7 @@ program neat
         print *
         print *,gettime(),"starting code"
 
-        call readcommandline(runs,switch_ext,switch_he,switch_icf,meanextinction,diagnostics,verbosity,R,identifylines,identifyconfirm,nbins,normalise,norp,calculate_extinction,subtract_recombination,configfile,nperbin)
+        call readcommandline(runs,switch_ext,switch_he,switch_icf,meanextinction,diagnostics,verbosity,R,identifylines,identifyconfirm,nbins,norp,calculate_extinction,subtract_recombination,configfile,nperbin)
 
 ! set up filenames. if input file is FITS, output will be written to it. Output will be put in same directory as input by default.
 ! todo: allow non-FITS to be requested
@@ -167,7 +165,7 @@ program neat
 
         strpos=index(filename,".",.true.)+1
         if (trim(filename(strpos:len(filename))).eq."fit" .or. trim(filename(strpos:len(filename))).eq."fits".or.trim(filename(strpos:len(filename))).eq."FIT".or.trim(filename(strpos:len(filename))).eq."FITS") then
-          call read_fits_linelist(linelist,listlength,ncols,runs)
+          call read_fits_linelist(linelist,listlength,ncols)
         else
           call read_text_linelist(linelist,listlength,ncols,runs)
         endif
@@ -372,7 +370,7 @@ program neat
 !now write out the line list and results files
 
         if (outputformat.eq."fits") then
-          call write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,nbins,subtract_recombination)
+          call write_fits(runs,listlength,ncols,all_linelists,all_results,nbins)
         elseif (outputformat.eq."text") then
           call write_output(runs,listlength,ncols,all_linelists,all_results,verbosity,nbins,subtract_recombination)
         endif

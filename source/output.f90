@@ -12,7 +12,6 @@ subroutine write_output(runs,listlength,ncols,all_linelists,all_results,verbosit
 
         type(line), dimension(:,:) :: all_linelists
         type(resultarray), dimension(:) :: all_results
-        type(resultarray), dimension(1) :: iteration_result
         real(kind=dp), dimension(:), allocatable :: quantity_result
         real(kind=dp), dimension(:,:), allocatable :: resultprocessingarray
         character(len=40), dimension(:,:), allocatable :: resultprocessingtext
@@ -279,16 +278,15 @@ subroutine write_output(runs,listlength,ncols,all_linelists,all_results,verbosit
 
 end subroutine write_output
 
-subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,verbosity,nbins,subtract_recombination)
+subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,nbins)
 ! fits output. requires input to have been ALFA-generated FITS, which will have four columns.
 
   implicit none
   type(line), dimension(:,:) :: all_linelists
   type(resultarray), dimension(:) :: all_results
-  type(resultarray), dimension(1) :: iteration_result
   real(kind=dp), dimension(:), allocatable :: quantity_result
-  integer :: runs,listlength,ncols,verbosity
-  integer :: nbins,subtract_recombination
+  integer :: runs,listlength,ncols
+  integer :: nbins
   real(kind=dp), dimension(:,:), allocatable :: resultprocessingarray
   character(len=40), dimension(:,:), allocatable :: resultprocessingtext
   integer :: i,j

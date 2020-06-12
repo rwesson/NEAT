@@ -82,7 +82,7 @@ use mod_globals
 ! abundances relative to Halpha? todo, implement as command line option
 
         logical :: relativetoha=.false.
-        real, dimension(3) :: hafactor !factor for low, medium and high temperatures and densities
+        real(kind=dp), dimension(3) :: hafactor !factor for low, medium and high temperatures and densities
 
 ! strong line variables
         real(kind=dp) :: X23,O_R23upper, O_R23lower, N2,O_N2, O3N2, O_O3N2, Ar3O3, O_Ar3O3, S3O3, O_S3O3, x23temp1, x23temp2, x23temp3, x23temp4
@@ -811,7 +811,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
 ! o2+
 !       call oii_rec_lines(medtemp,meddens,1.d0,oiiRLs,aeff_hb,em_hb)
-       call oii_rec_lines_s2017(medtemp,meddens,1.d0,oiiRLs_s2017,aeff_hb,em_hb)
+       call oii_rec_lines_s2017(medtemp,meddens,1.d0,oiiRLs_s2017,em_hb)
        do i = 1,listlength
          do j = 1,size(oiiRLs_s2017)
           if (abs(linelist(i)%wavelength-oiiRLs_s2017(j)%Wave) .le. 0.006) then
@@ -828,7 +828,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 
 !N2+
 
-       call nii_rec_lines(medtemp,meddens,1.d0,niiRLs,aeff_hb,em_hb)
+       call nii_rec_lines(medtemp,1.d0,niiRLs,em_hb)
 
        do i = 1,listlength
          do j = 1,size(niiRLs)
@@ -841,7 +841,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
        enddo
 
 !C2+
-       call cii_rec_lines(medtemp,meddens,1.d0,ciiRLs,aeff_hb,em_hb)
+       call cii_rec_lines(medtemp,1.d0,ciiRLs,aeff_hb)
 
        do i = 1,listlength
          do j = 1,size(ciiRLs)
@@ -854,7 +854,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
        enddo
 
 !Ne2+
-       call neii_rec_lines(medtemp,meddens,1.d0,neiiRLs,aeff_hb,em_hb)
+       call neii_rec_lines(medtemp,1.d0,neiiRLs,aeff_hb)
 
        do i = 1,listlength
          do j = 1,size(neiiRLs)
@@ -867,7 +867,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
        enddo
 
 !C3+, N3+
-       call xiii_rec_lines(medtemp,meddens,1.d0,xiiiRLs,aeff_hb,em_hb)
+       call xiii_rec_lines(medtemp,1.d0,xiiiRLs,aeff_hb)
 
        do i = 1,listlength
          do j = 1,size(xiiiRLs)

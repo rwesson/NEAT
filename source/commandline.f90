@@ -6,7 +6,7 @@ use mod_functions
 
 contains
 
-subroutine readcommandline(runs,switch_ext,switch_he,switch_icf,meanextinction,diagnostics,verbosity,R,identifylines,identifyconfirm,nbins,normalise,norp,calculate_extinction,subtract_recombination,configfile,nperbin)
+subroutine readcommandline(runs,switch_ext,switch_he,switch_icf,meanextinction,diagnostics,verbosity,R,identifylines,identifyconfirm,nbins,norp,calculate_extinction,subtract_recombination,configfile,nperbin)
 
   implicit none
 
@@ -18,7 +18,7 @@ subroutine readcommandline(runs,switch_ext,switch_he,switch_icf,meanextinction,d
   character :: switch_icf !switch for which ICF scheme to use
   logical :: file_exists,identifylines,identifyconfirm,norp,calculate_extinction
   type(diagnostic_array) :: diagnostics
-  real(kind=dp) :: meanextinction, R, normalise
+  real(kind=dp) :: meanextinction, R
 
 #ifdef CO
         print *,"subroutine: readcommandline"

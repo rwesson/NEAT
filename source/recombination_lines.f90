@@ -393,10 +393,10 @@ oii_A_3p2S_low => oii_coefficients(36,:)
 
 end subroutine read_orl_data
 
-subroutine oii_rec_lines(te,ne,abund,oiiRLs,aeff_hb,em_hb)
+subroutine oii_rec_lines(te,ne,abund,oiiRLs,em_hb)
 
       implicit none
-      real(kind=dp) :: aeff, aeff_hb, em_hb, Te, Ne, abund, tered
+      real(kind=dp) :: aeff, em_hb, Te, Ne, abund, tered
 
       type(oiiRL), dimension(:) :: oiiRLs
 
@@ -635,14 +635,13 @@ enddo
 
 end subroutine read_oii_s2017
 
-subroutine oii_rec_lines_s2017(Te,Ne,abund,oiiRLs_s2017,aeff_hb,em_hb)
+subroutine oii_rec_lines_s2017(Te,Ne,abund,oiiRLs_s2017,em_hb)
 ! supersedes oii_rec_lines
 ! first interpolates logarithmically in Te and Ne to get all the recombination coefficients
 ! then calculates the predicted intensities
 
 implicit none
-real(kind=dp) :: aeff, aeff_hb, em_hb, Te, Ne, abund, tered
-real(kind=dp) :: logte,logne
+real(kind=dp) :: em_hb, Te, Ne, abund
 real(kind=dp) :: aa1, aa2, bb1, bb2, interp_te, interp_ne, em_t1, em_t2
 integer :: te1,ne1,te2,ne2
 integer :: i
@@ -707,10 +706,10 @@ enddo
 
 end subroutine oii_rec_lines_s2017
 
-subroutine nii_rec_lines(te, ne, abund, niiRLs,aeff_hb,em_hb)
+subroutine nii_rec_lines(te, abund, niiRLs, em_hb)
 
       implicit none
-      real(kind=dp) :: aeff_hb, em_hb, Te, Ne, abund, tered
+      real(kind=dp) :: em_hb, Te, abund, tered
 
       type(niiRL), dimension(:) :: niiRLs
 
@@ -943,10 +942,10 @@ subroutine nii_rec_lines(te, ne, abund, niiRLs,aeff_hb,em_hb)
 
 end subroutine nii_rec_lines
 
-subroutine cii_rec_lines(te, ne, abund, ciiRLs,aeff_hb,em_hb)
+subroutine cii_rec_lines(te, abund, ciiRLs,aeff_hb)
 
       implicit none
-      real(kind=dp) :: aeff_Hb, em_hb, Te, Ne, abund, tered
+      real(kind=dp) :: aeff_Hb, Te, abund, tered
 
       type(ciiRL), dimension(:) :: ciiRLs
 
@@ -966,10 +965,10 @@ subroutine cii_rec_lines(te, ne, abund, ciiRLs,aeff_hb,em_hb)
 
 end subroutine cii_rec_lines
 
-subroutine neii_rec_lines(te, ne, abund, neiiRLs,aeff_hb,em_hb)
+subroutine neii_rec_lines(te, abund, neiiRLs,aeff_hb)
 
       implicit none
-      real(kind=dp) :: aeff_Hb, em_hb, Te, Ne, abund, tered
+      real(kind=dp) :: aeff_Hb, Te, abund, tered
 
       type(neiiRL), dimension(:) :: neiiRLs
 
@@ -990,10 +989,10 @@ subroutine neii_rec_lines(te, ne, abund, neiiRLs,aeff_hb,em_hb)
 
 end subroutine neii_rec_lines
 
-subroutine xiii_rec_lines(te, ne, abund, xiiiRLs,aeff_hb,em_hb)
+subroutine xiii_rec_lines(te, abund, xiiiRLs,aeff_hb)
 
       implicit none
-      real(kind=dp) :: aeff_Hb, em_hb, Te, Ne, abund, tered
+      real(kind=dp) :: aeff_Hb, Te, abund, tered
 
       type(xiiiRL), dimension(:) :: xiiiRLs
 

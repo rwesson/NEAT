@@ -28,9 +28,8 @@ type(line), dimension(listlength) :: linelist_copy
 real(kind=dp), dimension(20) :: linelist_compare
 
 integer :: I, J, n_neatlines, IO, assign_1, assign_2, count
-real(kind=dp) :: temp_wave, diff, shift, rms
+real(kind=dp) :: diff, shift, rms
 character(len=1) :: readchar
-character(len=5) :: temp_ion1, temp_ion2
 logical :: identifyconfirm
 
 !debugging
