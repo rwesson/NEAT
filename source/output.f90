@@ -381,15 +381,15 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,nbins)
   do i=1,listlength
     quantity_result = all_linelists(i,:)%int_dered
     call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins)
-    call ftpcld(unit,13,i,1,1,uncertainty_array(2),status)
-    call ftpcld(unit,14,i,1,1,uncertainty_array(2)+uncertainty_array(1),status)
-    call ftpcld(unit,15,i,1,1,uncertainty_array(2)-uncertainty_array(3),status)
+    call ftpcld(unit,13,i,1,1,(/uncertainty_array(2)/),status)
+    call ftpcld(unit,14,i,1,1,(/uncertainty_array(2)+uncertainty_array(1)/),status)
+    call ftpcld(unit,15,i,1,1,(/uncertainty_array(2)-uncertainty_array(3)/),status)
 
     quantity_result = all_linelists(i,:)%abundance
     call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins)
     call ftpcld(unit,16,i,1,1,uncertainty_array(2),status)
-    call ftpcld(unit,17,i,1,1,uncertainty_array(2)+uncertainty_array(1),status)
-    call ftpcld(unit,18,i,1,1,uncertainty_array(2)-uncertainty_array(3),status)
+    call ftpcld(unit,17,i,1,1,(/uncertainty_array(2)+uncertainty_array(1)/),status)
+    call ftpcld(unit,18,i,1,1,(/uncertainty_array(2)-uncertainty_array(3)/),status)
   enddo
 
 ! if RESULTS extension does not exist, create it, otherwise overwrite
@@ -433,8 +433,8 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,nbins)
     call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins)
     call ftpcls(unit,1,j,1,1,resultprocessingtext(j,1),status)
     call ftpcld(unit,2,j,1,1,uncertainty_array(2),status)
-    call ftpcld(unit,3,j,1,1,uncertainty_array(2)+uncertainty_array(1),status)
-    call ftpcld(unit,4,j,1,1,uncertainty_array(2)-uncertainty_array(3),status)
+    call ftpcld(unit,3,j,1,1,(/uncertainty_array(2)+uncertainty_array(1)/),status)
+    call ftpcld(unit,4,j,1,1,(/uncertainty_array(2)-uncertainty_array(3)/),status)
   enddo
 
 ! create extension QC
