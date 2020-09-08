@@ -118,37 +118,42 @@ subroutine readcommandline(runs,switch_ext,switch_he,switch_icf,meanextinction,d
             read (options(i+1),*) R
           endif
           if ((trim(options(i))=="-nbins") .and. (i+1).le. Narg) then
-             read (options(i+1),*) nbins
+            read (options(i+1),*) nbins
           endif
           if (trim(options(i))=="-rp") then
-             norp=.false.
+            norp=.false.
           endif
           if ((trim(options(i))=="-cf" .or. trim(options(i))=="--configuration-file") .and. (i+1) .le. Narg) then
-             configfile=trim(options(i+1))
+            configfile=trim(options(i+1))
           endif
           if ((trim(options(i))=="-sr" .or. trim(options(i))=="--subtract-recombination")) then
              subtract_recombination = 2
           endif
           if (trim(options(i))=="--citation") then
-             print *
-             print *,"NEAT was described in Wesson, Stock and Scicluna, MNRAS, 2012, 422, 3516.  The bibtex data for this paper is:"
-             print *
-             print *,"@ARTICLE{2012MNRAS.422.3516W,"
-             print *,"   author = {{Wesson}, R. and {Stock}, D.~J. and {Scicluna}, P.},"
-             print *,"    title = ""{Understanding and reducing statistical uncertainties in nebular abundance determinations}"","
-             print *,"  journal = {\mnras},"
-             print *,"archivePrefix = ""arXiv"","
-             print *,"   eprint = {1203.0567},"
-             print *," keywords = {atomic processes, methods: statistical, ISM: abundances},"
-             print *,"     year = 2012,"
-             print *,"    month = jun,"
-             print *,"   volume = 422,"
-             print *,"    pages = {3516-3526},"
-             print *,"      doi = {10.1111/j.1365-2966.2012.20863.x},"
-             print *,"   adsurl = {http://adsabs.harvard.edu/abs/2012MNRAS.422.3516W},"
-             print *,"  adsnote = {Provided by the SAO/NASA Astrophysics Data System}"
-             print *,"}"
-             call exit(0)
+            print *
+            print *,"NEAT was described in Wesson, Stock and Scicluna, MNRAS, 2012, 422, 3516"
+            print *,"https://ui.adsabs.harvard.edu/abs/2012MNRAS.422.3516W/"
+            print *,"The bibtex data for this paper is:"
+            print *
+
+            print *,"@ARTICLE{2012MNRAS.422.3516W,"
+            print *,"       author = {{Wesson}, R. and {Stock}, D.~J. and {Scicluna}, P.},"
+            print *,'        title = "{Understanding and reducing statistical uncertainties in nebular abundance determinations}",'
+            print *,"      journal = {\mnras},"
+            print *,"     keywords = {atomic processes, methods: statistical, ISM: abundances, Astrophysics - Astrophysics of Galaxies, Astrophysics - Instrumentation and Methods for Astrophysics},"
+            print *,"         year = 2012,"
+            print *,"        month = jun,"
+            print *,"       volume = {422},"
+            print *,"       number = {4},"
+            print *,"        pages = {3516-3526},"
+            print *,"          doi = {10.1111/j.1365-2966.2012.20863.x},"
+            print *,"archivePrefix = {arXiv},"
+            print *,"       eprint = {1203.0567},"
+            print *," primaryClass = {astro-ph.GA},"
+            print *,"       adsurl = {https://ui.adsabs.harvard.edu/abs/2012MNRAS.422.3516W},"
+            print *,"      adsnote = {Provided by the SAO/NASA Astrophysics Data System}"
+            print *,"}"
+            call exit(0)
           endif
           if ((trim(options(i))=="-o" .or. trim(options(i))=="--output-dir") .and. (i+1) .le. Narg) then
             outputdirectory=trim(options(i+1))
