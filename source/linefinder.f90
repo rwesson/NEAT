@@ -62,7 +62,7 @@ xcorr_array%match = 0
 
         rewind (100)
         do I=1,n_neatlines
-                read(100,"(F8.2,2X,A12,X,A12,X,A12,X,A12,X,I12,X,I9)",end=102) neatlines(i)%wavelength,neatlines(i)%ion,neatlines(i)%multiplet,neatlines(i)%lowerterm,neatlines(i)%upperterm,neatlines(i)%g1,neatlines(i)%g2
+                read(100,"(F8.2,2X,A11,X,A12,X,A12,X,A12,X,I12,X,I9)",end=102) neatlines(i)%wavelength,neatlines(i)%ion,neatlines(i)%multiplet,neatlines(i)%lowerterm,neatlines(i)%upperterm,neatlines(i)%g1,neatlines(i)%g2
         enddo
         102 print *
         close(100)
@@ -161,23 +161,23 @@ do I=1,listlength
     endif
   enddo
   if (diff .le. rms) then
-    print "(F8.2,A4,F8.2,1X,A10,F6.3)",linelist(assign_1)%wavelength," ->  ",neatlines(assign_2), diff
+    print "(F8.2,A4,F8.2,1X,A10,F6.3)",linelist(assign_1)%wavelength," ->  ",neatlines(assign_2)%wavelength,neatlines(assign_2)%ion,diff
 !            write (100,105) neatlines(assign_2)%wavelength, linelist(assign_1)%flux, linelist(assign_1)%uncertainty
     linelist(assign_1)%wavelength = neatlines(assign_2)%wavelength
     count=count+1
   elseif (diff .gt. rms .and. diff .le. 2*rms) then
-    print "(F8.2,A4,F8.2,1X,A10,F6.3)",linelist(assign_1)%wavelength," -> ",neatlines(assign_2), diff
+    print "(F8.2,A4,F8.2,1X,A10,F6.3)",linelist(assign_1)%wavelength," ->  ",neatlines(assign_2)%wavelength,neatlines(assign_2)%ion,diff
 !            write (100,105) neatlines(assign_2)%wavelength, linelist(assign_1)%flux, linelist(assign_1)%uncertainty
     linelist(assign_1)%wavelength = neatlines(assign_2)%wavelength
     count=count+1
   elseif (diff .gt. 2*rms .and. diff .le. 3*rms) then
-    print "(F8.2,A4,F8.2,1X,A10,F6.3)",linelist(assign_1)%wavelength," -> ",neatlines(assign_2), diff
+    print "(F8.2,A4,F8.2,1X,A10,F6.3)",linelist(assign_1)%wavelength," ->  ",neatlines(assign_2)%wavelength,neatlines(assign_2)%ion,diff
 !            write (100,105) neatlines(assign_2)%wavelength, linelist(assign_1)%flux, linelist(assign_1)%uncertainty
     linelist(assign_1)%wavelength = neatlines(assign_2)%wavelength
     count=count+1
   else
 !            write (100,105) linelist(assign_1)%wavelength, linelist(assign_1)%flux, linelist(assign_1)%uncertainty
-    print "(F8.2,A30,F8.2,1X,A10,A21)",linelist(assign_1)%wavelength," unrecognised. nearest known: ",neatlines(assign_2)
+    print "(F8.2,A30,F8.2,1X,A10,A11)",linelist(assign_1)%wavelength," unrecognised. nearest known: ",neatlines(assign_2)%wavelength,neatlines(assign_2)%ion
   endif
 enddo
 print *,"-------------------------------------"
