@@ -140,6 +140,28 @@ The \-u switch causes the code to run 10,000 times. In each iteration, the line 
 
 If the \fB-rp\fR option is specified, then for lines with a signal to noise ratio of less than 6, the line flux is drawn from a log-normal distribution which becomes more skewed the lower the signal to noise ratio is. This corrects the low SNR lines for the upward bias in their measurement described by Rola & Pelat (1994). The full procedure is described in Wesson et al. (2012).  However, use of this option is no longer recommended as the bias is highly dependent on the fitting procedure \- see Wesson et al. (2016).
 
+.SS Error codes
+
+If the code does not complete the analysis, it will return one of the following exit codes:
+
+ 100  no input file specified
+ 101  input file does not exist
+ 102  config file does not exist
+ 103  invalid number of iterations
+ 104  invalid output format requested
+ 105  could not read input line list
+ 106  could not read LINES extension in FITS input
+ 107  error reading line list from FITS
+ 108  error creating FITS output
+ 109  invalid configuration file
+
+ 200  invalid temperature or density
+ 201  no Hbeta found
+ 202  unknown ion
+ 203  line identifications rejected
+
+In the case of a FITS handling error, it will also return the CFITSIO exit code.
+
 .SH METHODOLOGY
 
 .SS Extinction correction
