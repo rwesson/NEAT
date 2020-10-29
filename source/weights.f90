@@ -39,7 +39,7 @@ subroutine setweights(configfile,weights,linelist,ILs,H_Balmer,H_Paschen,HeII_li
 
         if (index(filecheck,"NEAT configuration").eq.0) then
           print *,"           ",trim(configfile)," doesn't appear to be a NEAT configuration file"
-          call exit(1)
+          call exit(109)
         endif
 
         do while (IO .ge. 0)

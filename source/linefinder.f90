@@ -195,7 +195,7 @@ if (.not. identifyconfirm) then
   read (5,*) readchar
   if (readchar .ne. "y" .and. readchar .ne. "Y") then
     print *,gettime()," : analysis cancelled."
-    call exit(1)
+    call exit(203)
   endif
 else
   print *,gettime()," : line finder finished, assignments automatically accepted"

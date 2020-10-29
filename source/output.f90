@@ -445,7 +445,7 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,nbins)
   if (status.ne.0) then
     call ftgerr(status,cfitsioerror)
     print *,gettime(),"FITS output error: ",trim(outputfilename),": ",status,cfitsioerror
-    call exit(1)
+    call exit(108)
   endif
 
 ! close

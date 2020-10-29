@@ -29,7 +29,7 @@ subroutine readcommandline(runs,switch_ext,switch_he,switch_icf,meanextinction,d
   if (Narg .eq. 0) then
      print *,"Syntax: neat [option1 value1] [option2 value2] .. [optionx valuex]"
      print *,"type  man neat  for help"
-     stop
+     call exit(0)
   endif
 
   call get_command(commandline)
@@ -162,7 +162,7 @@ subroutine readcommandline(runs,switch_ext,switch_he,switch_icf,meanextinction,d
             outputformat=trim(options(i+1))
             if (outputformat.ne."fits" .and. outputformat.ne."text") then
               print *,gettime(),"invalid output format. valid options are 'text' and 'fits'"
-              call exit(1)
+              call exit(104)
             endif
           endif
   !  to be fully implemented:
@@ -176,14 +176,14 @@ subroutine readcommandline(runs,switch_ext,switch_he,switch_icf,meanextinction,d
 
    if (filename=="") then
           print *,gettime(),"error: No input file specified"
-          call exit(1)
+          call exit(100)
    endif
 
    inquire(file=filename, exist=file_exists) ! see if the input file is present
 
    if (.not. file_exists) then
           print *,gettime(),"error: input file ",trim(filename)," does not exist"
-          call exit(1)
+          call exit(101)
    endif
 
    if (configfile .ne. "") then
@@ -192,7 +192,7 @@ subroutine readcommandline(runs,switch_ext,switch_he,switch_icf,meanextinction,d
 
    if (.not. file_exists) then
           print *,gettime(),"error: configuration file ",trim(configfile)," does not exist"
-          call exit(1)
+          call exit(102)
    endif
 
 !check number of runs
@@ -203,7 +203,7 @@ subroutine readcommandline(runs,switch_ext,switch_he,switch_icf,meanextinction,d
      print*,gettime(),': error: number of iterations does not divide exactly by number of bins'
      print*,'            Please set number of iterations to an exact multiple of ',nbins
      print*,'            or modify the number of bins using -nbins'
-     call exit(1)
+     call exit(103)
   endif
 
   deallocate(options)

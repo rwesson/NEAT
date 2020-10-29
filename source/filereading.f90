@@ -197,10 +197,10 @@ subroutine read_text_linelist(linelist,listlength,ncols,runs)
         if (btest(errstat,0)) then
                 print *,gettime(),"error: line list reading failed"
                 print *,"            This can happen if it doesn't have three columns"
-                call exit(1)
+                call exit(105)
         elseif (btest(errstat,1)) then
                 print*, gettime(),"cheese shop error - no inputs"
-                call exit(1)
+                call exit(100)
         elseif (btest(errstat,2) .and. runs .gt. 1) then !only relevant if uncertainties were requested
                 print*, gettime(),"warning: no uncertainties given, arbitrarily assuming 10 per cent for everything"
         elseif (btest(errstat,3)) then
@@ -247,7 +247,7 @@ subroutine read_fits_linelist(linelist,listlength,ncols)
   if (status.ne.0) then
     call ftgerr(status,cfitsioerror)
     print *,gettime(),"error opening file ",trim(filename),": ",status,cfitsioerror
-    call exit(1)
+    call exit(106)
   endif
 
 ! get number of rows, allocate, initialise
@@ -297,7 +297,7 @@ subroutine read_fits_linelist(linelist,listlength,ncols)
   if (status.ne.0) then
     call ftgerr(status,cfitsioerror)
     print *,gettime(),"error opening file ",trim(filename),": ",status,cfitsioerror
-    call exit(1)
+    call exit(107)
   endif
 
 ! close
@@ -469,7 +469,7 @@ integer function get_ion(ionname, ILs)
 
         get_ion = 0
         print *,"           Nudge Nudge, wink, wink error. Ion not found, say no more. ", ionname,i
-        call exit(1)
+        call exit(202)
 
 end function
 

@@ -184,7 +184,7 @@ program neat
           normalise = 100.d0/linelist(minloc(abs(linelist(:)%wavelength - 4861.33),1))%intensity
         else
           print *,gettime(),"error: no H beta detected. No further analysis possible"
-          call exit(1)
+          call exit(201)
         endif
 
         linelist%intensity = linelist%intensity * normalise
@@ -364,7 +364,7 @@ program neat
 !$OMP END PARALLEL
         else
                 print*, gettime(),"error: I didn't want to be a barber anyway. I wanted to be... a lumberjack!   Also, a positive number of runs helps.."
-                call exit(1)
+                call exit(103)
         endif
 
 !now write out the line list and results files

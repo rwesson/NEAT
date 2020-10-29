@@ -178,7 +178,7 @@
           if (TEMP.LE.0.D0.OR.DENS.LE.0.D0) then
             write (6,6100)
                 print *,"Temp = ", TEMP, ", Dens = ", DENS, ", Ion = ",ion,diagtype
-            call exit(1)
+            call exit(200)
           endif
           DLOGD = log10(DENS)
           TLOGT = log10(TEMP)
@@ -529,7 +529,7 @@ end subroutine get_diagnostic
           if (TEMP.LE.0.D0.OR.DENS.LE.0.D0) then
             write (6,6100)
             print *,"Temp = ", TEMP, ", Dens = ", DENS, ", Ion = ",ion
-            call exit(1)
+            call exit(200)
           endif
           DLOGD = log10(DENS)
           TLOGT = log10(TEMP)

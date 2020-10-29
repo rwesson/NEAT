@@ -174,7 +174,7 @@ use mod_globals
             print "(4X,A9,F6.2)","H beta = ",(linelist(H_Balmer(4))%intensity)
           else
             print *,"   Specify the extinction from the command line with the -c option to proceed"
-            stop
+            call exit(201)
           endif
         endif
 
