@@ -457,7 +457,14 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,nbins)
     print *,gettime(),"updating QC extension"
     call ftgcno(unit,.false.,"RL abundance    ",ncols,status)
     if (status.eq.219) then
+! get number of columns already present
+      status=0
+      call ftgncl(unit,ncols,status)
+! add the new ones
+      ncols=ncols+1
       call fticls(unit,ncols,2,ttype_qc,tform_qc,status)
+    else
+      ncols=ncols+1
     endif
     status=0
   endif
