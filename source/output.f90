@@ -455,18 +455,17 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,nbins)
   if (status.eq.301) then
     print *,gettime(),"created QC extension"
     status=0
-!    call ftibin(unit,1,tfields,ttype_qc,tform_qc,tunit_qc,extname,varidat,status)
-    call ftibin(unit,1,tfields,(/"NIIRLsReliable  ","OIIRLsReliable  "/),(/"1L ","1L "/),(/"                ","                "/),extname,varidat,status)
+    call ftibin(unit,1,tfields,ttype_qc,tform_qc,tunit_qc,extname,varidat,status)
   else
     print *,gettime(),"updating QC extension"
-    call ftgcno(unit,.false.,"NII RLs reliable",ncols,status)
+    call ftgcno(unit,.false.,"NIIRLsReliable  ",ncols,status)
     if (status.eq.219) then
 ! get number of columns already present
       status=0
       call ftgncl(unit,ncols,status)
 ! add the new ones
       ncols=ncols+1
-!      call fticls(unit,ncols,2,ttype_qc,tform_qc,status)
+      call fticls(unit,ncols,2,ttype_qc,tform_qc,status)
     endif
     status=0
   endif
