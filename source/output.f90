@@ -407,7 +407,7 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,nbins)
   if (status.eq.301) then
     print *,gettime(),"created RESULTS extension"
     status=0
-    call ftmnhd(unit,-1,"QC",0,status) ! if the input file was produced by ALFA it will have this header
+    call ftmnhd(unit,-1,"LINES",0,status) ! get the number of the LINES extension to put RESULTS after it
     status=0
     call ftibin(unit,166,tfields,ttype_results,tform_results,tunit_results,extname,varidat,status)
   else
@@ -443,8 +443,8 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,nbins)
 
   tfields=2
   extname="QC"
-  ttype_qc=(/"RL abundance    ","Reliable?       "/)
-  tform_qc=(/"3A ","1L "/)
+  ttype_qc=(/"N2+ RL reliable?","O2+ RL reliable?"/)
+  tform_qc=(/"1L ","1L "/)
   tunit_qc=(/"                ","                "/)
 
   call ftmnhd(unit,-1,"QC",0,status)
@@ -471,8 +471,8 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,nbins)
 
 ! write out the flags
 
-  call ftpcls(unit,ncols,1,1,2,(/"NII","OII"/),status)
-  call ftpcll(unit,ncols+1,1,1,2,(/all(all_results%niiRLreliable .eqv. .true.),all(all_results%niiRLreliable .eqv. .true.)/),status)
+  call ftpcll(unit,ncols,1,1,1,all(all_results%niiRLreliable .eqv. .true.),status)
+  call ftpcll(unit,ncols+1,1,1,1,all(all_results%oiiRLreliable .eqv. .true.),status)
 
 ! break if there were errors
 
