@@ -300,6 +300,7 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,nbins)
   character(len=16),dimension(12) :: ttype_lines,tform_lines,tunit_lines
   character(len=16),dimension(6) :: ttype_lines_analysis,tform_lines_analysis,tunit_lines_analysis
   character(len=16),dimension(4) :: ttype_results,tform_results,tunit_results
+  character(len=16),dimension(2) :: ttype_qc,tform_qc,tunit_qc
   character(len=30) :: cfitsioerror
 
 #ifdef CO
@@ -437,8 +438,32 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,nbins)
     call ftpcld(unit,4,j,1,1,(/uncertainty_array(2)-uncertainty_array(3)/),status)
   enddo
 
-! create extension QC
-! contains reliability flags
+! if QC extension does not exist, create it, otherwise overwrite
+! contains reliability of O and N RL abundances
+
+  tfields=2
+  extname="QC"
+  ttype_qc=(/"RL abundance    ","Reliable?       "/)
+  tform_qc=(/"3A ","1L "/)
+  tunit_qc=(/"                ","                "/)
+
+  call ftmnhd(unit,-1,"QC",0,status)
+  if (status.eq.301) then
+    print *,gettime(),"created QC extension"
+    ncols=1
+    status=0
+    call ftibin(unit,1,tfields,ttype_qc,tform_qc,tunit_qc,extname,varidat,status)
+  else
+    print *,gettime(),"overwriting previous NEAT output in QC extension"
+    call ftgcno(unit,.false.,"RL abundance    ",ncols,status)
+    call fticls(unit,ncols,2,ttype_qc,tform_qc,status)
+    status=0
+  endif
+
+! write out the flags
+
+  call ftpcls(unit,ncols,1,1,2,(/"NII","OII"/),status)
+  call ftpcll(unit,ncols+1,1,1,2,(/all(all_results%niiRLreliable .eqv. .true.),all(all_results%niiRLreliable .eqv. .true.)/),status)
 
 ! break if there were errors
 
