@@ -443,7 +443,7 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,nbins)
 
   tfields=2
   extname="QC"
-  ttype_qc=(/"NII RLs reliable","OII RLs reliable"/)
+  ttype_qc=(/"NIIRLsReliable  ","OIIRLsReliable  "/)
   tform_qc=(/"1L ","1L "/)
   tunit_qc=(/"                ","                "/)
 
@@ -455,7 +455,8 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,nbins)
   if (status.eq.301) then
     print *,gettime(),"created QC extension"
     status=0
-    call ftibin(unit,1,tfields,ttype_qc,tform_qc,tunit_qc,extname,varidat,status)
+!    call ftibin(unit,1,tfields,ttype_qc,tform_qc,tunit_qc,extname,varidat,status)
+    call ftibin(unit,1,tfields,(/"NIIRLsReliable  ","OIIRLsReliable  "/),(/"1L ","1L "/),(/"                ","                "/),extname,varidat,status)
   else
     print *,gettime(),"updating QC extension"
     call ftgcno(unit,.false.,"NII RLs reliable",ncols,status)
@@ -465,7 +466,7 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,nbins)
       call ftgncl(unit,ncols,status)
 ! add the new ones
       ncols=ncols+1
-      call fticls(unit,ncols,2,ttype_qc,tform_qc,status)
+!      call fticls(unit,ncols,2,ttype_qc,tform_qc,status)
     endif
     status=0
   endif
