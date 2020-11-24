@@ -454,9 +454,11 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,nbins)
     status=0
     call ftibin(unit,1,tfields,ttype_qc,tform_qc,tunit_qc,extname,varidat,status)
   else
-    print *,gettime(),"overwriting previous NEAT output in QC extension"
+    print *,gettime(),"updating QC extension"
     call ftgcno(unit,.false.,"RL abundance    ",ncols,status)
-    call fticls(unit,ncols,2,ttype_qc,tform_qc,status)
+    if (status.eq.219) then
+      call fticls(unit,ncols,2,ttype_qc,tform_qc,status)
+    endif
     status=0
   endif
 
