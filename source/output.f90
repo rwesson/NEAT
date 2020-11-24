@@ -443,19 +443,22 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,nbins)
 
   tfields=2
   extname="QC"
-  ttype_qc=(/"N2+ RL reliable?","O2+ RL reliable?"/)
+  ttype_qc=(/"NII RLs reliable","OII RLs reliable"/)
   tform_qc=(/"1L ","1L "/)
   tunit_qc=(/"                ","                "/)
 
+  ncols=1
+  status=0
+
   call ftmnhd(unit,-1,"QC",0,status)
+
   if (status.eq.301) then
     print *,gettime(),"created QC extension"
-    ncols=1
     status=0
     call ftibin(unit,1,tfields,ttype_qc,tform_qc,tunit_qc,extname,varidat,status)
   else
     print *,gettime(),"updating QC extension"
-    call ftgcno(unit,.false.,"RL abundance    ",ncols,status)
+    call ftgcno(unit,.false.,"NII RLs reliable",ncols,status)
     if (status.eq.219) then
 ! get number of columns already present
       status=0
@@ -463,8 +466,6 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,nbins)
 ! add the new ones
       ncols=ncols+1
       call fticls(unit,ncols,2,ttype_qc,tform_qc,status)
-    else
-      ncols=ncols+1
     endif
     status=0
   endif
