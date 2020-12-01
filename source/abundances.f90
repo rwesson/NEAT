@@ -1955,7 +1955,7 @@ subroutine get_average_abundance(startion,endion,abundance)
 end subroutine get_average_abundance
 
 subroutine fix_siii
-!SIII 9069 and 9531 doublet is a special case due to absorption lines. See Liu, Barlow etc 1995 (Far Red IR Lines in a PN), one of 9069/9531 is ALWAYS absorbed but the other is then always fine.  We can tell which is is by looking at the ratio 9069/9531.
+!SIII 9069 and 9531 doublet is a special case due to absorption lines. See Liu et al 1995 (https://ui.adsabs.harvard.edu/abs/1995MNRAS.273...47L): one of 9069/9531 is ALWAYS absorbed but the other is then always fine.  We can tell which is is by looking at the ratio 9069/9531.
 
         implicit none
         real(kind=dp) :: ratio!,factor
