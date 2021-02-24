@@ -16,157 +16,98 @@ subroutine calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction,
         real(kind=dp) :: c1, c2, c3, weightha, weighthg, weighthd, meanextinction
         real(kind=dp) :: temp, dens
         real(kind=dp), dimension(:,:,:,:), allocatable :: hidata
+        real(kind=dp), dimension(3:6) :: balmerratios,extinctioncoefficients,r1,r2,r3,r4,r5,r6
+        integer :: temperaturestart,densitystart,temperatureend,densityend,i
+        real(kind=dp) :: temperatureinterpolation,densityinterpolation
 
 !debugging
 #ifdef CO
         print *,"subroutine: calc_extinction_coeffs. Te=",temp,", ne=",dens,", weights=",weightha, weighthg, weighthd
 #endif
 
-!set up weights
+!interpolate HI emissivities to temp and dens
+!first temperature
 
-        if (weightha .eq. -1 .and. H_Balmer(3) .gt. 0) then
-          weightha = linelist(H_Balmer(3))%intensity
-        endif
-        if (weighthg .eq. -1 .and. H_Balmer(5) .gt. 0) then
-          weighthg = linelist(H_Balmer(5))%intensity
-        endif
-        if (weighthd .eq. -1 .and. H_Balmer(6) .gt. 0) then
-          weighthd = linelist(H_Balmer(6))%intensity
-        endif
+        do temperatureend=1,ntemps
+          if (temp .lt. temperatures(temperatureend)) then
+            exit
+          endif
+        enddo
 
-!Section with interpolations for Balmer ratios for T_e (temp) and N_e (dens)
-!interpolating over 6 Te points, 5,7.5,10,12.5,15,20kK and 3 Ne points 10^2, 10^3 10^4 cm^(-3)
-
-        if (H_Balmer(3) .gt. 0 .and. H_Balmer(4) .gt. 0) then
-          c1 = log10( ( linelist(H_Balmer(3))%intensity / linelist(H_Balmer(4))%intensity )/ calc_balmer_ratios(temp, dens, 1) )/(-linelist(H_Balmer(3))%flambda)
+        if (temperatureend.eq.1) then
+          temperatureend=1
+          temperatureinterpolation=0.
+        elseif (temperatureend.ge.ntemps) then ! because in do i=1,10, final value of i is 11
+          temperaturestart=ntemps
+          temperatureend=ntemps
+          temperatureinterpolation=0.
         else
-          c1 = 0.d0
-          weightha = 0.d0
+          temperaturestart=temperatureend-1
+          temperatureinterpolation=(temp-temperatures(temperaturestart))/(temperatures(temperatureend)-temperatures(temperaturestart))
         endif
 
-        if (H_Balmer(5) .gt. 0 .and. H_Balmer(4) .gt. 0) then
-          c2 = log10( ( linelist(H_Balmer(5))%intensity / linelist(H_Balmer(4))%intensity )/ calc_balmer_ratios(temp, dens, 2) )/(-linelist(H_Balmer(5))%flambda)
+!then density which runs from 2 to 8 in the data file
+!so that log10(density)=2 corresponds to array index 1
+!note: the following line if uncommented causes a segmentation fault. why?
+!dens=1200.
+
+        densitystart=floor(log10(dens))-1
+        if (densitystart.lt.1) then
+          densitystart=1
+          densityend=1
+          densityinterpolation=0.
+        elseif (densitystart.gt.7) then
+          densitystart=7
+          densityend=7
+          densityinterpolation=0.
         else
-          c2=0.d0
-          weighthg=0.d0
+          densityend=densitystart+1
+          densityinterpolation=(log10(dens)-densitystart)/(densityend-densitystart)
         endif
 
-        if (H_Balmer(6) .gt. 0 .and. H_Balmer(4) .gt. 0) then
-          c3 = log10( ( linelist(H_Balmer(6))%intensity / linelist(H_Balmer(4))%intensity )/ calc_balmer_ratios(temp, dens, 3) )/(-linelist(H_Balmer(6))%flambda)
+!now interpolate
+
+        r1=hidata(temperaturestart,densitystart,3:6,2) / hidata(temperaturestart,densitystart,4,2)
+        r2=hidata(temperaturestart,densityend,3:6,2) / hidata(temperaturestart,densityend,4,2)
+        r3=hidata(temperatureend,densitystart,3:6,2) / hidata(temperatureend,densitystart,4,2)
+        r4=hidata(temperatureend,densityend,3:6,2) / hidata(temperatureend,densityend,4,2)
+
+        r5=densityinterpolation*(r2-r1)+r1
+        r6=densityinterpolation*(r4-r3)+r3
+
+        balmerratios=temperatureinterpolation*(r6-r5)+r5
+
+! calculate extinction coefficients
+
+        extinctioncoefficients=0
+        where (linelist(H_Balmer(3:6))%intensity .gt. 0)
+          extinctioncoefficients=log10( ( linelist(H_Balmer(3:6))%intensity / linelist(H_Balmer(4))%intensity )/ balmerratios(:) )/(-linelist(H_Balmer(3:6))%flambda)
+        endwhere
+
+! set negative values to zero
+
+        if (any(extinctioncoefficients.lt.0)) then
+          where(extinctioncoefficients.lt.0)
+            extinctioncoefficients=0
+          endwhere
+!          print *,"some extinction coefficients were negative, set to zero"
+        endif
+
+! calculate weighted mean, Ha to Hd for now
+
+!        meanextinction=sum(extinctioncoefficients*linelist(H_Balmer(:))%weight)/sum(linelist(H_Balmer(:))%weight)
+
+        if (sum(linelist(H_Balmer(3:6))%weight).gt.0) then
+          meanextinction=sum(extinctioncoefficients(3:6)*linelist(H_Balmer(3:6))%weight)/(sum(linelist(H_Balmer(3:6))%weight)-linelist(H_Balmer(4))%weight)
         else
-          c3 = 0.d0
-          weighthd = 0.d0
+          meanextinction=0
         endif
 
-        if (c1<0) then
-!        print *,"Warning: c(Ha) less than zero"
-          c1=0
-        endif
-        if (c2<0) then
-!        print *,"Warning: c(Hg) less than zero"
-          c2=0
-        endif
-        if (c3<0) then
-!        print *,"Warning: c(Hd) less than zero"
-          c3=0
-        endif
-
-        if ((weightha + weighthg + weighthd) .gt. 0) then
-          meanextinction = (c1*weightha + c2*weighthg + c3*weighthd) / (weightha + weighthg + weighthd)
-        else
-          meanextinction = 0.d0 ! todo: print a warning here
-        endif
+        c1=extinctioncoefficients(3)
+        c2=extinctioncoefficients(5)
+        c3=extinctioncoefficients(6)
 
 end subroutine calc_extinction_coeffs
-
-real(kind=dp) function calc_balmer_ratios(temp, dens, line)
-        implicit none
-        integer :: i, j, line
-        real(kind=dp) :: d1, d2, temp, dens
-        real(kind=dp), dimension(6,3,4) :: HS
-
-!debugging
-#ifdef CO
-        !print *,"function: calc_balmer_ratios"
-#endif
-
-        !Ha/Hb
-        HS(1,1,:) = (/ 5000., 3.04, 3.02, 3.00/)
-        HS(2,1,:) = (/ 7500., 2.93, 2.92, 2.90/)
-        HS(3,1,:) = (/10000., 2.86, 2.86, 2.85/)
-        HS(4,1,:) = (/12500., 2.82, 2.82, 2.81/)
-        HS(5,1,:) = (/15000., 2.79, 2.79, 2.78/)
-        HS(6,1,:) = (/20000., 2.75, 2.75, 2.74/)
-        !Hg/Hb
-        HS(1,2,:) = (/ 5000., 0.458, 0.459, 0.460/)
-        HS(2,2,:) = (/ 7500., 0.465, 0.465, 0.466/)
-        HS(3,2,:) = (/10000., 0.468, 0.469, 0.469/)
-        HS(4,2,:) = (/12500., 0.471, 0.471, 0.472/)
-        HS(5,2,:) = (/15000., 0.473, 0.473, 0.473/)
-        HS(6,2,:) = (/20000., 0.475, 0.475, 0.476/)
-        !Hd/Hb
-        HS(1,3,:) = (/ 5000., 0.251, 0.252, 0.253/)
-        HS(2,3,:) = (/ 7500., 0.256, 0.256, 0.257/)
-        HS(3,3,:) = (/10000., 0.259, 0.259, 0.260/)
-        HS(4,3,:) = (/12500., 0.261, 0.261, 0.261/)
-        HS(5,3,:) = (/15000., 0.262, 0.263, 0.263/)
-        HS(6,3,:) = (/20000., 0.264, 0.264, 0.264/)
-
-
-        do i = 1,5
-                if(temp .ge. HS(i,line,1) .and. temp .lt. HS(i+1,line, 1) )then
-                        exit
-                endif
-        enddo
-
-        do j = 2,3
-                if(dens .ge. 10**j .and. dens .le. 10**(j+1) )then
-                        exit
-                endif
-        enddo
-
-        if(temp .lt. HS(1,line,1))then
-                if(dens .lt. 10**2)then
-                        calc_balmer_ratios = HS(1,line,2)
-                        return
-                elseif(dens .ge. 10**4)then
-                        calc_balmer_ratios = HS(1,line,4)
-                        return
-                endif
-                !print*, j
-                calc_balmer_ratios=( (HS(1,line,j+1)-HS(1,line,j)) / (10**(j+1)-10**j) )*(dens-(10**j))+HS(1,line,j)
-                return
-        elseif(temp .ge. HS(6,line,1))then
-                if(dens .lt. 10**2)then
-                        calc_balmer_ratios = HS(6,line,2)
-                        return
-                elseif(dens .gt. 10**4)then
-                        calc_balmer_ratios = HS(6,line,4)
-                        return
-                endif
-                calc_balmer_ratios =( ( HS(6,line,j+1)-HS(6,line,j) )/ (10**(j+1)-10**j) )*(dens-(10**j) ) + HS(6,line,j)
-                return
-        endif
-
-        if(dens .lt. 10**2)then
-                calc_balmer_ratios = ((HS(i+1,line,2)-HS(i,line,2))/(HS(i+1,line,1)-HS(i,line,1)))*(temp-HS(i,line,1))+HS(i,line,2)
-                return
-        elseif(dens .gt. 10**4)then
-                calc_balmer_ratios = ((HS(i+1,line,4)-HS(i,line,4))/(HS(i+1,line,1)-HS(i,line,1)))*(temp-HS(i,line,1))+HS(i,line,4)
-                return
-        endif
-
-        !        print*, j
-        !PRINT*, i, j
-
-        d1=((HS(i+1,line,j)-HS(i,line,j))/(HS(i+1,line,1)-HS(i,line,1)))*(temp-HS(i,line,1))+HS(i,line,j)
-        d2=((HS(i+1,line,j+1)-HS(i,line,j+1))/(HS(i+1,line,1)-HS(i,line,1)))*(temp-HS(i,line,1))+HS(i,line,j+1)
-
-        !print*, d1, d2
-
-        calc_balmer_ratios =  ( (d2-d1) /(10**(j+1) - 10**j))*(dens - (10**j) ) + d1  !(d1+d2)/2
-
-end function
 
 subroutine get_flambda(linelist, switch_ext, R)
 !calculat flambda for the chosen law, or if it was not recognised, attempt to read in from file
