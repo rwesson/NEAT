@@ -3,17 +3,19 @@
 module mod_extinction
 use mod_types
 use mod_globals
+use mod_hydrogen
 
 implicit none
 
 contains
 
-subroutine calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction, temp, dens, weightha, weighthg, weighthd)
+subroutine calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction, temp, dens, weightha, weighthg, weighthd,hidata)
         IMPLICIT NONE
         type(line), dimension(:), intent(in) :: linelist
         integer, dimension(3:40) :: H_Balmer
         real(kind=dp) :: c1, c2, c3, weightha, weighthg, weighthd, meanextinction
         real(kind=dp) :: temp, dens
+        real(kind=dp), dimension(:,:,:,:), allocatable :: hidata
 
 !debugging
 #ifdef CO
