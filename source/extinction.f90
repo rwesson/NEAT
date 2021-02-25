@@ -80,7 +80,7 @@ subroutine calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction,
 ! calculate extinction coefficients
 
         extinctioncoefficients=0
-        where (linelist(H_Balmer(:))%intensity .gt. 0)
+        where (H_Balmer(:) .gt. 0)
           extinctioncoefficients=log10( ( linelist(H_Balmer(:))%intensity / linelist(H_Balmer(4))%intensity )/ balmerratios(:) )/(-linelist(H_Balmer(:))%flambda)
         endwhere
 
