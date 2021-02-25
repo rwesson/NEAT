@@ -309,6 +309,7 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,nbins)
 
   status=0
   readwrite=1
+  varidat=0
 
 ! get a unit number
 
