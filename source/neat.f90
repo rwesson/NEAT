@@ -147,9 +147,6 @@ program neat
 ! todo: allow non-FITS to be requested
 
         write (outputfilename,"(A)") filename(index(filename,"/",back=.true.)+1:len(trim(filename)))
-        if (trim(outputfilename(index(outputfilename,".",.true.)+1:len(filename))).ne."fits") then
-          outputfilename=trim(outputfilename)//".fits"
-        endif
 
         if (trim(outputdirectory).eq."") then
           outputdirectory=trim(filename(1:index(filename,"/",.true.)))

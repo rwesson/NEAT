@@ -31,8 +31,8 @@ subroutine write_output(runs,listlength,ncols,all_linelists,all_results,verbosit
 
         allocate(quantity_result(runs))
         quantity_result=0d0
-        open (650,file=trim(filename)//"_linelist", status='replace', access='sequential', action='write')
-        open (651,file=trim(filename)//"_linelist.tex", status='replace', access='sequential', action='write')
+        open (650,file=trim(outputfilename)//"_linelist", status='replace', access='sequential', action='write')
+        open (651,file=trim(outputfilename)//"_linelist.tex", status='replace', access='sequential', action='write')
 
         if (ncols .ge. 4) then
             write (650,*) " Lambda    (Rest)  Ion         F(line)  I(line)      Abundance"
@@ -157,8 +157,8 @@ subroutine write_output(runs,listlength,ncols,all_linelists,all_results,verbosit
         close(651)
 
         print *,gettime(),"Linelist written to files:"
-        print *,"              ",trim(filename),"_linelist"
-        print *,"              ",trim(filename),"_linelist.tex"
+        print *,"              ",trim(outputfilename),"_linelist"
+        print *,"              ",trim(outputfilename),"_linelist.tex"
 
 !now write out the summary files and all the binned data
 
@@ -273,8 +273,8 @@ subroutine write_output(runs,listlength,ncols,all_linelists,all_results,verbosit
         close(651)
 
         print *,gettime(),"Results written to files:"
-        print *,"              ",trim(filename),"_results"
-        print *,"              ",trim(filename),"_results.tex"
+        print *,"              ",trim(outputfilename),"_results"
+        print *,"              ",trim(outputfilename),"_results.tex"
 
 end subroutine write_output
 
@@ -306,6 +306,10 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,nbins)
 #ifdef CO
         print *,"subroutine: write_fits"
 #endif
+
+  if (trim(outputfilename(index(outputfilename,".",.true.)+1:len(filename))).ne."fits") then
+    outputfilename=trim(outputfilename)//".fits"
+  endif
 
   status=0
   readwrite=1
