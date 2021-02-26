@@ -29,7 +29,7 @@ subroutine calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction,
 !first temperature
 
         do temperatureend=1,ntemps
-          if (temp .lt. temperatures(temperatureend)) then
+          if (temp .lt. hidatatemperatures(temperatureend)) then
             exit
           endif
         enddo
@@ -43,7 +43,7 @@ subroutine calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction,
           temperatureinterpolation=0.
         else
           temperaturestart=temperatureend-1
-          temperatureinterpolation=(temp-temperatures(temperaturestart))/(temperatures(temperatureend)-temperatures(temperaturestart))
+          temperatureinterpolation=(temp-hidatatemperatures(temperaturestart))/(hidatatemperatures(temperatureend)-hidatatemperatures(temperaturestart))
         endif
 
 !then density which runs from 2 to 8 in the data file

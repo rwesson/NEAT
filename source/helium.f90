@@ -6,7 +6,7 @@ use mod_types
 
       implicit none
       real(kind=dp), dimension(:,:,:,:), allocatable :: heiidata
-      real(kind=dp), dimension(:), allocatable :: temperatures
+      real(kind=dp), dimension(:), allocatable :: heiidatatemperatures
       integer :: ntemps, ndens, nlevs
 
       contains
@@ -601,7 +601,7 @@ nlevs=25 ! maximum number of levels shown in intrat data file
 !allocate the emissivities array, dimensions are temperature, density, level 1, level 2
 
 allocate(heiidata(ntemps, ndens, nlevs, nlevs))
-allocate(temperatures(ntemps))
+allocate(heiidatatemperatures(ntemps))
 
 heiidata(:,:,:,:)=0.d0
 
@@ -611,7 +611,7 @@ do i=1,ntemps
   do j=1,ndens
     read (357,*) invar(1:6) !line at top of each block has density, charge, temperature, case, maximum level calculated and maximum level displayed
     if (j.eq.1) then
-      read(invar(3),"(E9.2)") temperatures(i) ! get the temperatures for later use in interpolating
+      read(invar(3),"(E9.2)") heiidatatemperatures(i) ! get the temperatures for later use in interpolating
     endif
     do k=nlevs,1,-1
       do l=1,k-1
@@ -662,7 +662,7 @@ allocate(emissivityarray(size(heiidata,3),size(heiidata,4)))
 !get the box it's in in te vs. ne grid:
 
 do i=1,ntemps-1
-  if (medtemp .ge. temperatures(i) .and. medtemp .le. temperatures(i+1)) then
+  if (medtemp .ge. heiidatatemperatures(i) .and. medtemp .le. heiidatatemperatures(i+1)) then
     exit
   endif
 enddo
@@ -675,9 +675,9 @@ d=floor(log10(density))
   if (i .lt. 1) then
     t1=1
     t2=1
-  elseif (i .eq. size(temperatures)) then
-    t1=size(temperatures)
-    t2=size(temperatures)
+  elseif (i .eq. size(heiidatatemperatures)) then
+    t1=size(heiidatatemperatures)
+    t2=size(heiidatatemperatures)
   else
     t1=i
     t2=i+1
@@ -694,8 +694,8 @@ d=floor(log10(density))
     d2=d
   endif
 
-  x1=temperatures(t1)
-  x2=temperatures(t2)
+  x1=heiidatatemperatures(t1)
+  x2=heiidatatemperatures(t2)
   y1=real(d1+1)
   y2=real(d2+1)
   y=log10(density)

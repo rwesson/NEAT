@@ -6,7 +6,7 @@ use mod_globals
 
 implicit none
 real(kind=dp), dimension(:,:,:,:), allocatable :: hidata
-real(kind=dp), dimension(:), allocatable :: temperatures
+real(kind=dp), dimension(:), allocatable :: hidatatemperatures
 integer :: ntemps, ndens, nlevs
 
 contains
@@ -31,7 +31,7 @@ nlevs=25 ! maximum number of levels shown in intrat data file
 !allocate the emissivities array, dimensions are temperature, density, level 1, level 2
 
 allocate(hidata(ntemps, ndens, nlevs, nlevs))
-allocate(temperatures(ntemps))
+allocate(hidatatemperatures(ntemps))
 
 hidata(:,:,:,:)=0.d0
 
@@ -41,7 +41,7 @@ do i=1,ntemps
   do j=1,ndens
     read (357,*) invar(1:6) !line at top of each block has density, charge, temperature, case, maximum level calculated and maximum level displayed
     if (j.eq.1) then
-      read(invar(3),"(E9.2)") temperatures(i) ! get the temperatures for later use in interpolating
+      read(invar(3),"(E9.2)") hidatatemperatures(i) ! get the temperatures for later use in interpolating
     endif
     do k=nlevs,1,-1
       do l=1,k-1
@@ -94,7 +94,7 @@ allocate(searcharray(size(hidata,2),size(hidata,3),size(hidata,4)))
 !now find the temperature
 
 do i=1,ntemps
-  if (medtemp .lt. temperatures(i)) then
+  if (medtemp .lt. hidatatemperatures(i)) then
     exit
   endif
 enddo
@@ -105,10 +105,10 @@ if (i>ntemps) i=ntemps ! because in do i=1,10, final value of i is 11
 !if temperature is outside data limits, it is just set to the limit
 !lower limit is 500K, upper is 30000K
 
-if (medtemp .lt. temperatures(1) .or. medtemp .gt. temperatures(size(temperatures))) then
+if (medtemp .lt. hidatatemperatures(1) .or. medtemp .gt. hidatatemperatures(size(hidatatemperatures))) then
   searcharray(:,:,:)=hidata(i,:,:,:)
 else
-  interp_t=(medtemp-temperatures(i-1))/(temperatures(i)-temperatures(i-1))
+  interp_t=(medtemp-hidatatemperatures(i-1))/(hidatatemperatures(i)-hidatatemperatures(i-1))
   searcharray(:,:,:)=hidata(i-1,:,:,:)+interp_t*(hidata(i,:,:,:)-hidata(i,:,:,:))
 endif
 
@@ -203,7 +203,7 @@ allocate(searcharray(size(hidata,2),size(hidata,3),size(hidata,4)))
 !now find the temperature
 
 do i=1,ntemps
-  if (medtemp .lt. temperatures(i)) then
+  if (medtemp .lt. hidatatemperatures(i)) then
     exit
   endif
 enddo
@@ -214,10 +214,10 @@ if (i>ntemps) i=ntemps ! because in do i=1,10, final value of i is 11
 !if temperature is outside data limits, it is just set to the limit
 !lower limit is 500K, upper is 30000K
 
-if (medtemp .lt. temperatures(1) .or. medtemp .gt. temperatures(size(temperatures))) then
+if (medtemp .lt. hidatatemperatures(1) .or. medtemp .gt. hidatatemperatures(size(hidatatemperatures))) then
   searcharray(:,:,:)=hidata(i,:,:,:)
 else
-  interp_t=(medtemp-temperatures(i-1))/(temperatures(i)-temperatures(i-1))
+  interp_t=(medtemp-hidatatemperatures(i-1))/(hidatatemperatures(i)-hidatatemperatures(i-1))
   searcharray(:,:,:)=hidata(i-1,:,:,:)+interp_t*(hidata(i,:,:,:)-hidata(i,:,:,:))
 endif
 
