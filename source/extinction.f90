@@ -16,7 +16,7 @@ subroutine calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction,
         real(kind=dp) :: c1, c2, c3, weightha, weighthg, weighthd, meanextinction
         real(kind=dp) :: temp, dens
         real(kind=dp), dimension(:,:,:,:), allocatable :: hidata
-        real(kind=dp), dimension(3:40) :: balmerratios,extinctioncoefficients,r1,r2,r3,r4,r5,r6
+        real(kind=dp), dimension(3:25) :: balmerratios,extinctioncoefficients,r1,r2,r3,r4,r5,r6
         integer :: temperaturestart,densitystart,temperatureend,densityend,i
         real(kind=dp) :: temperatureinterpolation,densityinterpolation
 
@@ -67,10 +67,10 @@ subroutine calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction,
 
 !now interpolate
 
-        r1=hidata(temperaturestart,densitystart,3:40,2) / hidata(temperaturestart,densitystart,4,2)
-        r2=hidata(temperaturestart,densityend,3:40,2) / hidata(temperaturestart,densityend,4,2)
-        r3=hidata(temperatureend,densitystart,3:40,2) / hidata(temperatureend,densitystart,4,2)
-        r4=hidata(temperatureend,densityend,3:40,2) / hidata(temperatureend,densityend,4,2)
+        r1=hidata(temperaturestart,densitystart,3:25,2) / hidata(temperaturestart,densitystart,4,2)
+        r2=hidata(temperaturestart,densityend,3:25,2) / hidata(temperaturestart,densityend,4,2)
+        r3=hidata(temperatureend,densitystart,3:25,2) / hidata(temperatureend,densitystart,4,2)
+        r4=hidata(temperatureend,densityend,3:25,2) / hidata(temperatureend,densityend,4,2)
 
         r5=densityinterpolation*(r2-r1)+r1
         r6=densityinterpolation*(r4-r3)+r3
@@ -80,8 +80,8 @@ subroutine calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction,
 ! calculate extinction coefficients
 
         extinctioncoefficients=0
-        where (H_Balmer(:) .gt. 0)
-          extinctioncoefficients=log10( ( linelist(H_Balmer(:))%intensity / linelist(H_Balmer(4))%intensity )/ balmerratios(:) )/(-linelist(H_Balmer(:))%flambda)
+        where (H_Balmer(3:25) .gt. 0)
+          extinctioncoefficients=log10( ( linelist(H_Balmer(3:25))%intensity / linelist(H_Balmer(4))%intensity )/ balmerratios(:) )/(-linelist(H_Balmer(3:25))%flambda)
         endwhere
 
 ! set negative values to zero
@@ -94,8 +94,6 @@ subroutine calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction,
         endif
 
 ! calculate weighted mean, Ha to Hd for now
-
-!        meanextinction=sum(extinctioncoefficients*linelist(H_Balmer(:))%weight)/sum(linelist(H_Balmer(:))%weight)
 
         if (sum(linelist(H_Balmer(3:6))%weight).gt.0) then
           meanextinction=sum(extinctioncoefficients(3:6)*linelist(H_Balmer(3:6))%weight)/(sum(linelist(H_Balmer(3:6))%weight)-linelist(H_Balmer(4))%weight)
