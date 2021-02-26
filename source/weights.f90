@@ -26,14 +26,10 @@ subroutine setweights(configfile,weights,linelist,ILs,H_Balmer,H_Paschen,HeII_li
 
         where (H_Balmer.gt.0)
           linelist(H_Balmer)%weight = -1
-        elsewhere
-          linelist(H_Balmer)%weight = 0.d0
         endwhere
 
         where (H_Paschen.gt.0)
           linelist(H_Paschen)%weight = -1
-        elsewhere
-          linelist(H_Paschen)%weight = 0.d0
         endwhere
 
 !open config file
