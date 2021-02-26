@@ -176,8 +176,8 @@ subroutine write_output(runs,listlength,ncols,all_linelists,all_results,verbosit
 
 !open the files and write the headers
 
-        open (650,file=trim(filename)//"_results", status='replace', access='sequential', action='write')
-        open (651,file=trim(filename)//"_results.tex", status='replace', access='sequential', action='write')
+        open (650,file=trim(outputfilename)//"_results", status='replace', access='sequential', action='write')
+        open (651,file=trim(outputfilename)//"_results.tex", status='replace', access='sequential', action='write')
 
         write (650,*) "NEAT (nebular empirical analysis tool)"
         write (650,*) "======================================"
