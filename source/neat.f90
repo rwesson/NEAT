@@ -372,6 +372,23 @@ program neat
           call write_output(runs,listlength,ncols,all_linelists,all_results,verbosity,nbins,subtract_recombination)
         endif
 
+! deallocate
+        deallocate(all_linelists)
+        deallocate(all_results)
+        deallocate(linelist)
+        deallocate(linelist_original)
+        deallocate(hidata)
+        deallocate(heidata)
+        deallocate(heiidata)
+        deallocate(atomicdata)
+        deallocate(ciirls)
+        deallocate(niirls)
+        deallocate(oiirls)
+        deallocate(neiirls)
+        deallocate(xiiirls)
+        deallocate(hidatatemperatures)
+        deallocate(heiidatatemperatures)
+
         print *
         print *,gettime(),"all done"
         print *
