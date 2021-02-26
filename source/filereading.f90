@@ -359,7 +359,7 @@ subroutine read_celdata(ILs, ionlist)
         Iint = 1
 
         301 format(A11, 1X, A8, 1X, F7.2, 1X, A20,1X,A4,1X,A15)
-        open(201, file=trim(PREFIX)//"/share/neat/Ilines_levs", status='old')
+        open(201, file=trim(PREFIX)//"/share/neat/zones.dat", status='old')
                 read (201,*) numberoflines !number of lines to read in is given at the top of the file
 !                allocate (ILs(numberoflines)) todo: restore
                 Ils%name='           '

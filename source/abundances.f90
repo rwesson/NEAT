@@ -57,7 +57,7 @@ use mod_globals
 
 !atomic data
 
-        integer :: iion !# of ions in Ilines
+        integer :: iion !# of ions in zones.dat
         integer :: maxlevs,maxtemps
         type(atomic_data),dimension(24) :: atomicdata
         real(kind=dp), dimension(21,14,44) :: heidata
@@ -1924,7 +1924,7 @@ subroutine get_average_abundance(startion,endion,abundance)
         implicit none
         character(len=11) :: startion,endion
         real(kind=dp) :: abundance
-        real(kind=dp), dimension(9) :: weights, abundances ! Ilines_levs contains at most 9 lines per ion. this might need updating in the future
+        real(kind=dp), dimension(9) :: weights, abundances ! zones.dat contains at most 9 lines per ion. this might need updating in the future
         integer :: i,j
 
 !debugging
