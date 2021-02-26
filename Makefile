@@ -96,7 +96,6 @@ install: neat
 	test -e $(DESTDIR)$(PREFIX)/bin || mkdir -p $(DESTDIR)$(PREFIX)/bin
 	test -e $(MANDIR) || mkdir -p $(MANDIR)
 	install -m 644 Atomic-data/*.* $(DESTDIR)$(PREFIX)/share/neat
-	install -m 644 Atomic-data/zones.dat $(DESTDIR)$(PREFIX)/share/neat
 	install -m 644 utilities/complete_line_list $(DESTDIR)$(PREFIX)/share/neat
 	install -m 644 utilities/plot.sh $(DESTDIR)$(PREFIX)/share/neat
 	install -m 644 config/default.cfg $(DESTDIR)$(PREFIX)/share/neat
