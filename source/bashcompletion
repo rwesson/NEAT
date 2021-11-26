@@ -9,7 +9,7 @@ _neat()
 
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts="-i --input -u --uncertainties -n --n-iterations -e --extinction-law -c -nelow -nemed -nehigh -telow -temed -tehigh -he --helium-data -icf --ionisation-correction-scheme -v --verbosity -id --identify -idc --identify-confirm -rp -sr --subtract-recombination -cf --configuration-file --citation -o --output-dir -of --output-format"
+    opts="-i --input -u --uncertainties -n --n-iterations -e --extinction-law -c -nelow -nemed -nehigh -telow -temed -tehigh -he --helium-data -icf --ionisation-correction-scheme -v --verbosity -id --identify -idc --identify-confirm -rp -sr --subtract-recombination -cf --configuration-file --citation -o --output-dir -of --output-format -hb --hbeta-flux"
 
     COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
 
@@ -48,7 +48,7 @@ _neat()
             _filedir -d
             return 0
             ;;
-        -c|-nehigh|-nelow|-nemed|-n|--n-iterations|-tehigh|-telow|-temed|--citation)
+        -c|-nehigh|-nelow|-nemed|-n|--n-iterations|-tehigh|-telow|-temed|--citation|-hb|--hbeta-flux)
             COMPREPLY=()
             return 0
             ;;

@@ -6,7 +6,7 @@ use mod_functions
 
 contains
 
-subroutine readcommandline(runs,switch_ext,switch_he,switch_icf,meanextinction,diagnostics,verbosity,R,identifylines,identifyconfirm,nbins,norp,calculate_extinction,subtract_recombination,configfile,nperbin)
+subroutine readcommandline(runs,switch_ext,switch_he,switch_icf,meanextinction,diagnostics,verbosity,R,identifylines,identifyconfirm,nbins,norp,calculate_extinction,subtract_recombination,configfile,nperbin,hbetaflux)
 
   implicit none
 
@@ -18,7 +18,7 @@ subroutine readcommandline(runs,switch_ext,switch_he,switch_icf,meanextinction,d
   character :: switch_icf !switch for which ICF scheme to use
   logical :: file_exists,identifylines,identifyconfirm,norp,calculate_extinction
   type(diagnostic_array) :: diagnostics
-  real(kind=dp) :: meanextinction, R
+  real(kind=dp) :: meanextinction, R, hbetaflux
 
 #ifdef CO
         print *,"subroutine: readcommandline"
@@ -164,6 +164,9 @@ subroutine readcommandline(runs,switch_ext,switch_he,switch_icf,meanextinction,d
               print *,gettime(),"invalid output format. valid options are 'text' and 'fits'"
               call exit(104)
             endif
+          endif
+          if ((trim(options(i))=="-hb" .or. trim(options(i))=="--hbeta-flux") .and. (i+1) .le. Narg) then
+            read (options(i+1),*) hbetaflux
           endif
   !  to be fully implemented:
   !  -R                     : R (default 3.1) - only used with CCM at the moment

@@ -104,6 +104,10 @@ program neat
 
         type(diagnostic_array) :: diagnostics
 
+!manually set hbeta flux
+
+        real(kind=dp) :: hbetaflux
+
 ! default values
 
         runs=1
@@ -131,6 +135,7 @@ program neat
         configfile=""
         defaultconfigfile=trim(PREFIX)//"/share/neat/default.cfg"
         outputformat="fits"
+        hbetaflux=0.d0
 
         iion=24 ! number of ions for which we can calculate abundances
                 ! todo: calculate this automatically
@@ -141,7 +146,7 @@ program neat
         print *
         print *,gettime(),"starting code"
 
-        call readcommandline(runs,switch_ext,switch_he,switch_icf,meanextinction,diagnostics,verbosity,R,identifylines,identifyconfirm,nbins,norp,calculate_extinction,subtract_recombination,configfile,nperbin)
+        call readcommandline(runs,switch_ext,switch_he,switch_icf,meanextinction,diagnostics,verbosity,R,identifylines,identifyconfirm,nbins,norp,calculate_extinction,subtract_recombination,configfile,nperbin,hbetaflux)
 
 ! set up filenames. if input file is FITS, output will be written to it. Output will be put in same directory as input by default.
 ! todo: allow non-FITS to be requested
