@@ -172,6 +172,52 @@ program neat
           call read_text_linelist(linelist,listlength,ncols,runs)
         endif
 
+! add hbeta if manually specified
+        if (hbetaflux.gt.0d0) then
+          if (minval(abs(linelist(:)%wavelength - 4861.33)) .lt. 0.001) then
+! overwrite, warn
+            linelist(minloc(abs(linelist(:)%wavelength - 4861.33),1))%intensity=hbetaflux
+            print *,gettime(),"warning: manually specified Hbeta flux overrides value already in line list"
+          else
+! create array one element longer
+            listlength=listlength+1
+            allocate (linelist_original(listlength+1))
+
+! copy linelist to it
+            linelist_original = linelist
+
+! deallocate linelist, reallocate one element longer
+            deallocate(linelist)
+            allocate(linelist(listlength))
+
+! copy original lines back and deallocate
+            linelist(1:listlength)=linelist_original
+            deallocate(linelist_original)
+
+! add hbeta
+            linelist(listlength)%intensity = hbetaflux
+            linelist(listlength)%abundance = 0.D0
+            linelist(listlength)%weight = 0.d0
+            linelist(listlength)%freq=0d0
+            linelist(listlength)%wavelength=4861.33
+            linelist(listlength)%wavelength_observed=4861.33
+            linelist(listlength)%int_dered=0d0
+            linelist(listlength)%int_err=0d0
+            linelist(listlength)%blend_intensity=0.d0
+            linelist(listlength)%blend_int_err=0d0
+            linelist(listlength)%zone='    '
+            linelist(listlength)%transition='                    '
+            linelist(listlength)%location=0
+            linelist(listlength)%ion='H 4       '
+            linelist(listlength)%multiplet='H4          '
+            linelist(listlength)%lowerterm='2p+ 2P*     '
+            linelist(listlength)%upperterm='4d+ 2D      '
+            linelist(listlength)%g1=8
+            linelist(listlength)%g2=32
+
+          endif
+        endif
+
         allocate (linelist_original(listlength))
 
 ! run line identifier if required
