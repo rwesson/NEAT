@@ -76,6 +76,10 @@ Number of iterations. Default: 1
 By default, electron densities and temperatures are calculated from the available diagnostics, but their values can be overridden with these commands.  The required units are cm\-3 for densities and K for temperatures.
 
 .TP
+.B \-\-no\-omp
+This option disables parallelisation so that if uncertainties are being calculated, only one thread is used.
+
+.TP
 .B \-rp
 When calculating Monte Carlo uncertainties, \fBneat\fR's default behaviour is to assume that all uncertainties are Gaussian.  If \-rp is specified, it will compensate for the upward bias affecting weak lines described by Rola and Pelat (1994), assuming log normal probability distributions for weaker lines.
 Until version 1.8, the default behaviour was the opposite; log normal probability distributions were assumed unless \fB-norp\fR was specified.  This was changed after our discovery that the effect described by Rola and Pelat only occurred under extremely specific conditions: see Wesson et al. 2016 for details.

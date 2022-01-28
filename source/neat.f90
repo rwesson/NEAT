@@ -99,6 +99,7 @@ program neat
 !OpenMP
 
         integer :: omp_get_num_threads
+        logical :: noomp
 
 !diagnostic array
 
@@ -136,6 +137,7 @@ program neat
         defaultconfigfile=trim(PREFIX)//"/share/neat/default.cfg"
         outputformat="fits"
         hbetaflux=0.d0
+        noomp=.false.
 
         iion=24 ! number of ions for which we can calculate abundances
                 ! todo: calculate this automatically
@@ -146,7 +148,7 @@ program neat
         print *
         print *,gettime(),"starting code"
 
-        call readcommandline(runs,switch_ext,switch_he,switch_icf,meanextinction,diagnostics,verbosity,R,identifylines,identifyconfirm,nbins,norp,calculate_extinction,subtract_recombination,configfile,nperbin,hbetaflux)
+        call readcommandline(runs,switch_ext,switch_he,switch_icf,meanextinction,diagnostics,verbosity,R,identifylines,identifyconfirm,nbins,norp,calculate_extinction,subtract_recombination,configfile,nperbin,hbetaflux,noomp)
 
 ! set up filenames. if input file is FITS, output will be written to it. Output will be put in same directory as input by default.
 ! todo: allow non-FITS to be requested
@@ -357,6 +359,9 @@ program neat
 
         maxlevs = maxval(atomicdata%nlevs)
         maxtemps = maxval(atomicdata%ntemps)
+
+!omp setup
+        if (noomp) call omp_set_num_threads(1)
 
 !now check number of iterations.  If 1, line list is fine as is.  If more than one, randomize the fluxes
 
