@@ -34,6 +34,10 @@ Valid values are:
 Default: How
 
 .TP
+.B \-hb, \-\-hbeta\-flux [VALUE]
+Flux of H beta. If your line list does not include H beta, use this option to provide a value, so that NEAT can analyse the line list and compute abundances. If this command line option is used when H beta is already in the line list, the command line option will override the value in the line list.
+
+.TP
 .B \-he, \-\-helium\-data [VALUE]
 The atomic data to use for He I abundances
 
