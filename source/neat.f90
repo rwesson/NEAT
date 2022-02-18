@@ -234,6 +234,7 @@ program neat
           normalise = 100.d0/linelist(minloc(abs(linelist(:)%wavelength - 4861.33),1))%intensity
         else
           print *,gettime(),"error: no H beta detected. No further analysis possible"
+          print *,gettime(),"       -hb / --hbeta-flux command line option can be used to give a value"
           call exit(201)
         endif
 
