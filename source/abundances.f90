@@ -1488,7 +1488,7 @@ if (CELicfNe .lt. 1.) then
 endif
 if (CELicfS .lt. 1.) then
   CELicfS = 1.0
-  SabundCEL = (siiCELabund + siiiCELabund + siiiIRCELabund + sivIRCELabund)
+  SabundCEL = (siiCELabund + siiiCELabund + sivIRCELabund)
 endif
 if (CELicfCl .lt. 1.) then
   CELicfCl = 1.0
