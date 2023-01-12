@@ -185,7 +185,7 @@ use mod_globals
       do srloop=1,subtract_recombination
 
         if (calculate_extinction) then
-                call calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction, dble(10000.),dble(1000.),weights%ha,weights%hg,weights%hd,hidata)
+                call calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction, dble(10000.),dble(1000.),hidata)
 
                 if (meanextinction .lt. 0.0 .or. isnan(meanextinction)) then
                    meanextinction = 0.d0
@@ -415,7 +415,7 @@ use mod_globals
 
         !update extinction. DS 22/10/11
           meanextinction=0
-          call calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction, medtemp, lowdens,weights%ha,weights%hg,weights%hd,hidata)
+          call calc_extinction_coeffs(linelist,H_Balmer, c1, c2, c3, meanextinction, medtemp, lowdens, hidata)
 
           if (meanextinction .lt. 0.0 .or. isnan(meanextinction)) then
              meanextinction = 0.d0
