@@ -338,18 +338,18 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,nbins)
 
     call ftibin(unit,listlength,tfields,ttype_lines,tform_lines,tunit_lines,extname,varidat,status)
 
-    call ftpcld(unit,1,1,1,listlength,all_linelists(:,1)%wavelength,status)
-    call ftpcld(unit,2,1,1,listlength,all_linelists(:,1)%wavelength_observed,status)
-    call ftpcld(unit,3,1,1,listlength,all_linelists(:,1)%intensity,status)
-    call ftpcld(unit,4,1,1,listlength,all_linelists(:,1)%int_err,status)
-    call ftpcnd(unit,5,1,1,listlength,0.d0,status)
-    call ftpcnd(unit,6,1,1,listlength,0.d0,status)
-    call ftpcls(unit,7,1,1,listlength,all_linelists(:,1)%ion,status)
-    call ftpcls(unit,8,1,1,listlength,all_linelists(:,1)%multiplet,status)
-    call ftpcls(unit,9,1,1,listlength,all_linelists(:,1)%lowerterm,status)
-    call ftpcls(unit,10,1,1,listlength,all_linelists(:,1)%upperterm,status)
-    call ftpclj(unit,11,1,1,listlength,all_linelists(:,1)%g1,status)
-    call ftpclj(unit,12,1,1,listlength,all_linelists(:,1)%g2,status)
+    call ftpcld(unit,1,1,1,listlength,(/all_linelists(:,1)%wavelength/),status)
+    call ftpcld(unit,2,1,1,listlength,(/all_linelists(:,1)%wavelength_observed/),status)
+    call ftpcld(unit,3,1,1,listlength,(/all_linelists(:,1)%intensity/),status)
+    call ftpcld(unit,4,1,1,listlength,(/all_linelists(:,1)%int_err/),status)
+    call ftpcnd(unit,5,1,1,listlength,(/0.d0/),status)
+    call ftpcnd(unit,6,1,1,listlength,(/0.d0/),status)
+    call ftpcls(unit,7,1,1,listlength,(/all_linelists(:,1)%ion/),status)
+    call ftpcls(unit,8,1,1,listlength,(/all_linelists(:,1)%multiplet/),status)
+    call ftpcls(unit,9,1,1,listlength,(/all_linelists(:,1)%lowerterm/),status)
+    call ftpcls(unit,10,1,1,listlength,(/all_linelists(:,1)%upperterm/),status)
+    call ftpclj(unit,11,1,1,listlength,(/all_linelists(:,1)%g1/),status)
+    call ftpclj(unit,12,1,1,listlength,(/all_linelists(:,1)%g2/),status)
 
   else
 
@@ -393,7 +393,7 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,nbins)
 
     quantity_result = all_linelists(i,:)%abundance
     call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins)
-    call ftpcld(unit,16,i,1,1,uncertainty_array(2),status)
+    call ftpcld(unit,16,i,1,1,(/uncertainty_array(2)/),status)
     call ftpcld(unit,17,i,1,1,(/uncertainty_array(2)+uncertainty_array(1)/),status)
     call ftpcld(unit,18,i,1,1,(/uncertainty_array(2)-uncertainty_array(3)/),status)
   enddo
@@ -437,8 +437,8 @@ subroutine write_fits(runs,listlength,ncols,all_linelists,all_results,nbins)
   do j=1,166
     quantity_result=resultprocessingarray(j,:)
     call get_uncertainties(quantity_result, binned_quantity_result, uncertainty_array, unusual,nbins)
-    call ftpcls(unit,1,j,1,1,resultprocessingtext(j,1),status)
-    call ftpcld(unit,2,j,1,1,uncertainty_array(2),status)
+    call ftpcls(unit,1,j,1,1,(/resultprocessingtext(j,1)/),status)
+    call ftpcld(unit,2,j,1,1,(/uncertainty_array(2)/),status)
     call ftpcld(unit,3,j,1,1,(/uncertainty_array(2)+uncertainty_array(1)/),status)
     call ftpcld(unit,4,j,1,1,(/uncertainty_array(2)-uncertainty_array(3)/),status)
   enddo
