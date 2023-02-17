@@ -1651,7 +1651,7 @@ endif
 
 flux_no2 = get_cel_flux("oiii5007   ",linelist,ILs)
 if (flux_no1 .gt. 0 .and. flux_no2 .gt. 0 .and. H_Balmer(3) .gt. 0) then
-  O3N2 = log10((flux_no2*linelist(H_Balmer(3))%int_dered)/(flux_no1 * linelist(H_Balmer(3))%int_dered))
+  O3N2 = log10((flux_no2*linelist(H_Balmer(3))%int_dered)/(flux_no1 * linelist(H_Balmer(4))%int_dered))
   O_O3N2 = 8.73 - (0.32*O3N2)
   iteration_result(1)%O_O3N2 = O_O3N2
 endif
