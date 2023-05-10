@@ -73,7 +73,8 @@ subroutine read_text_linelist(linelist,listlength,ncols,runs)
         do while (IO .ge. 0)
           read (199,"(A)") rowdata
           if (index(adjustl(rowdata),"#") .ne. 1) then
-            read (rowdata,*,end=113) rowdata2(:)
+            read (rowdata,*,end=113) rowdata2(:4)
+            exit
           endif
         enddo
 
