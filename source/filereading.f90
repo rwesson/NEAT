@@ -308,7 +308,7 @@ subroutine read_fits_linelist(linelist,listlength,ncols)
 
 ! blends
 
-  do i=1,size(linelist)
+  do i=1,listlength
     if (linelist(i)%wavelength_observed.eq.0.d0) then
       linelist(i-1)%blend_intensity=linelist(i-1)%intensity
       linelist(i-1)%blend_int_err=linelist(i-1)%int_err

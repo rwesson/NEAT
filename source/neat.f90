@@ -367,12 +367,11 @@ program neat
 !now check number of iterations.  If 1, line list is fine as is.  If more than one, randomize the fluxes
 
         allocate(all_results(runs))
-        allocate(all_linelists(size(linelist),runs))
+        allocate(all_linelists(listlength,runs))
 
         if (runs == 1)then !calculates abundances without uncertainties
                 print *
                 print *,gettime(),"doing abundance calculations"
-
                 call abundances(linelist, listlength, iteration_result, meanextinction, calculate_extinction, ILs, diagnostics,iion,atomicdata,maxlevs,maxtemps, heidata, switch_he, switch_icf, H_Balmer, H_Paschen, HeI_lines, HeII_lines, weights,subtract_recombination)
 
                 all_results(1)=iteration_result(1) ! copy the iteration result to all_results to simplify the writing out of results later
