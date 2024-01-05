@@ -567,7 +567,7 @@ subroutine get_cels(ILs, linelist)
 
         do i = 1, size(ILs)
           do j = 1, size(linelist)
-            if(linelist(j)%wavelength .eq. ILs(i)%wavelength)then
+            if (abs(linelist(j)%wavelength - ILs(i)%wavelength).lt.0.01)then
               ILs(i)%location = j
               cycle
             endif
