@@ -86,6 +86,7 @@ new: clean all
 
 neat: source/globals.o source/types.o source/oii_diagnostics.o source/hydrogen.o source/extinction.o source/recombination_lines.o source/helium.o source/equib_routines.o source/quicksort.o source/functions.o source/filereading.o source/abundances.o source/commandline.o source/linefinder.o source/weights.o source/output.o source/neat.o
 	$(LD) $(LDFLAGS) $(FFLAGS) -o $@ $^ -lcfitsio
+	@echo "Installation complete"
 
 clean:
 	rm -f neat source/*.o source/*.mod man/neat.html
@@ -105,6 +106,7 @@ install: neat
 	test -e $(DESTDIR)$(PREFIX)/share/bash-completion/completions || mkdir -p $(DESTDIR)$(PREFIX)/share/bash-completion/completions
 	install -m 644 source/bashcompletion $(DESTDIR)$(PREFIX)/share/bash-completion/completions/neat
 	gzip -f $(MANDIR)/neat.1
+	@echo "Installation complete"
 
 uninstall:
 	rm -rf $(DESTDIR)$(PREFIX)/share/neat $(DESTDIR)$(PREFIX)/share/doc/neat
