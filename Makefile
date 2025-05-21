@@ -75,11 +75,13 @@ ifeq ($(FC),ifort)
   endif
 endif
 
-.PHONY: all clean install uninstall
+.PHONY: all clean install uninstall new htmlmanual
 
 all: neat
 
-new: clean all
+new:
+	$(MAKE) clean
+	$(MAKE) all
 
 %.o: %.f90
 	$(FC) $(FFLAGS) $< -c -o $@
@@ -87,6 +89,24 @@ new: clean all
 neat: source/globals.o source/types.o source/oii_diagnostics.o source/hydrogen.o source/extinction.o source/recombination_lines.o source/helium.o source/equib_routines.o source/quicksort.o source/functions.o source/filereading.o source/abundances.o source/commandline.o source/linefinder.o source/weights.o source/output.o source/neat.o
 	$(LD) $(LDFLAGS) $(FFLAGS) -o $@ $^ -lcfitsio
 	@echo "Installation complete"
+
+source/abundances.o : source/abundances.f90 source/globals.o source/hydrogen.o source/oii_diagnostics.o source/types.o source/types.o source/extinction.o source/recombination_lines.o source/helium.o source/filereading.o source/equib_routines.o source/types.o
+source/commandline.o : source/commandline.f90 source/functions.o source/globals.o
+source/equib_routines.o : source/equib_routines.f90 source/helium.o source/types.o source/globals.o
+source/extinction.o : source/extinction.f90 source/hydrogen.o source/globals.o source/types.o
+source/filereading.o : source/filereading.f90 source/functions.o source/globals.o source/types.o source/types.o
+source/functions.o : source/functions.f90 source/quicksort.o source/types.o source/types.o
+source/globals.o : source/globals.f90
+source/helium.o : source/helium.f90 source/types.o source/globals.o
+source/hydrogen.o : source/hydrogen.f90 source/globals.o source/types.o
+source/linefinder.o : source/linefinder.f90 source/quicksort.o source/types.o source/functions.o source/globals.o
+source/neat.o : source/neat.f90 source/output.o source/commandline.o source/functions.o source/weights.o source/oii_diagnostics.o source/helium.o source/hydrogen.o source/linefinder.o source/recombination_lines.o source/filereading.o source/types.o source/filereading.o source/quicksort.o source/extinction.o source/types.o source/globals.o source/types.o
+source/oii_diagnostics.o : source/oii_diagnostics.f90 source/globals.o
+source/output.o : source/output.f90 source/globals.o source/functions.o
+source/quicksort.o : source/quicksort.f90 source/globals.o
+source/recombination_lines.o : source/recombination_lines.f90 source/globals.o
+source/types.o : source/types.f90 source/globals.o
+source/weights.o : source/weights.f90 source/globals.o source/filereading.o source/types.o
 
 clean:
 	rm -f neat source/*.o source/*.mod man/neat.html
