@@ -88,7 +88,7 @@ new:
 
 neat: source/globals.o source/types.o source/oii_diagnostics.o source/hydrogen.o source/extinction.o source/recombination_lines.o source/helium.o source/equib_routines.o source/quicksort.o source/functions.o source/filereading.o source/abundances.o source/commandline.o source/linefinder.o source/weights.o source/output.o source/neat.o
 	$(LD) $(LDFLAGS) $(FFLAGS) -o $@ $^ -lcfitsio
-	@echo "Installation complete"
+	@echo "Compilation complete"
 
 source/abundances.o : source/abundances.f90 source/globals.o source/hydrogen.o source/oii_diagnostics.o source/types.o source/types.o source/extinction.o source/recombination_lines.o source/helium.o source/filereading.o source/equib_routines.o source/types.o
 source/commandline.o : source/commandline.f90 source/functions.o source/globals.o
