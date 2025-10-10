@@ -348,7 +348,7 @@ subroutine read_celdata(ILs, ionlist)
 !the routine also populates the list of ions which is then used to read in the relevant atomic data
 
         implicit none
-        type(cel), dimension(88) :: ILs !todo: restore this to allocatable once I've worked out why assumed shape caused it to become undefined on entry to abundances
+        type(cel), dimension(89) :: ILs !todo: restore this to allocatable once I've worked out why assumed shape caused it to become undefined on entry to abundances
         character(len=10), dimension(24) :: ionlist !todo: find a clever way of counting this instead of hard coding it if possible.
         integer :: iint, iion, numberoflines
 

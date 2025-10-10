@@ -53,7 +53,7 @@ use mod_globals
         integer, dimension(4:39) :: H_Paschen
         integer, dimension(44) :: HeI_lines
         integer, dimension(20,2:6) :: HeII_lines
-        type(cel), dimension(88) :: ILs !todo: work out why this becomes undefined on entry if its shape is assumed
+        type(cel), dimension(89) :: ILs !todo: work out why this becomes undefined on entry if its shape is assumed
 
 !atomic data
 
@@ -759,6 +759,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
         enddo
 
 ! calculate averages
+! each call gets the abundance weighted from all lines between the start ion and the end ion
 
         call get_average_abundance("nii5754    ","nii6584    ", niiCELabund)
         niiiIRCELabund = get_cel_abundance("niii57um   ",linelist,ILs)
@@ -1000,7 +1001,7 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 !  - neither V1 nor V10 is detected
 ! todo: report which multiplets exceed 3x
 
-      if (maxval(oiimultiplets%abundance,mask=(oiimultiplets%weight.gt.0.d0)) .gt. 3.0*minval(oiimultiplets%abundance,mask=(oiimultiplets%weight.gt.0.d0 .and. oiimultiplets%abundance.gt.0.d0)) .or. (oiimultiplets(1)%abundance.eq.0.d0 .and. oiimultiplets(4)%abundance.eq.0.d0) .or. count(oiimultiplets%abundance .gt. 0.d0) .le. 1) then
+      if (maxval(oiimultiplets%abundance,mask=(oiimultiplets%weight.gt.0.d0)) .gt. 13.0*minval(oiimultiplets%abundance,mask=(oiimultiplets%weight.gt.0.d0 .and. oiimultiplets%abundance.gt.0.d0)) .or. (oiimultiplets(1)%abundance.eq.0.d0 .and. oiimultiplets(4)%abundance.eq.0.d0) .or. count(oiimultiplets%abundance .gt. 0.d0) .le. 1) then
         oiiRLreliable = .false.
       else
         oiiRLreliable = .true.
