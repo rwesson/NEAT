@@ -1001,6 +1001,20 @@ iteration_result(1)%NeV_temp_ratio = nevTratio
 !  - neither V1 nor V10 is detected
 ! todo: report which multiplets exceed 3x
 
+!if (maxval(oiimultiplets%abundance,mask=(oiimultiplets%weight.gt.0.d0)) .gt. 13.0*minval(oiimultiplets%abundance,mask=(oiimultiplets%weight.gt.0.d0 .and. oiimultiplets%abundance.gt.0.d0))) then
+!  print *,"max greater than 3x min"
+!  print *,minloc(oiimultiplets%abundance,mask=(oiimultiplets%weight.gt.0.d0 .and. oiimultiplets%abundance.gt.0.d0))
+!  print *,maxloc(oiimultiplets%abundance,mask=(oiimultiplets%weight.gt.0.d0))
+!endif
+
+!if (oiimultiplets(1)%abundance.eq.0.d0 .and. oiimultiplets(4)%abundance.eq.0.d0) then
+!  print*,"neither V1 nor V10 detected"
+!endif
+
+!if (count(oiimultiplets%abundance .gt. 0.d0) .le. 1) then
+!  print*,"only one multiplet detected"
+!endif
+
       if (maxval(oiimultiplets%abundance,mask=(oiimultiplets%weight.gt.0.d0)) .gt. 13.0*minval(oiimultiplets%abundance,mask=(oiimultiplets%weight.gt.0.d0 .and. oiimultiplets%abundance.gt.0.d0)) .or. (oiimultiplets(1)%abundance.eq.0.d0 .and. oiimultiplets(4)%abundance.eq.0.d0) .or. count(oiimultiplets%abundance .gt. 0.d0) .le. 1) then
         oiiRLreliable = .false.
       else
